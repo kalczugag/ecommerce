@@ -1,8 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
-import { changeTitle, changeDescription, changePrice } from "../store";
+import { changeTitle, changeDescription, changePrice, addPost } from "../store";
+import Button from "./Button";
+import { useThunk } from "../hooks/use-thunk";
 
-const PostsForm = () => {
+const PostsForm = ({ onSubmit }) => {
     const dispatch = useDispatch();
+    const [doCreatePost, isLoading, error] = useThunk(addPost);
     const { title, description, price } = useSelector((state) => {
         return {
             title: state.postForm.title,
@@ -15,8 +18,23 @@ const PostsForm = () => {
         dispatch(changeTitle(event.target.value));
     };
 
+    const handleDescriptionChange = (event) => {
+        dispatch(changeDescription(event.target.value));
+    };
+
+    const handlePriceChange = (event) => {
+        dispatch(changePrice(parseInt(event.target.value)) || 0);
+    };
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        onSubmit();
+
+        doCreatePost({ title, description, price });
+    };
+
     return (
-        <div>
+        <form onSubmit={handleSubmit}>
             <div className="flex flex-col mb-2">
                 <label>Title</label>
                 <input
@@ -39,12 +57,17 @@ const PostsForm = () => {
                 <label>Price</label>
                 <input
                     type="number"
-                    value={price}
-                    onChange={hangePriceChange}
+                    value={price || ""}
+                    onChange={handlePriceChange}
                     className="border"
                 />
             </div>
-        </div>
+            {(
+                <Button loading={isLoading} type="submit">
+                    Add Post
+                </Button>
+            ) || error}
+        </form>
     );
 };
 

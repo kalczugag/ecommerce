@@ -17,7 +17,6 @@ const Modal = ({ onClose, children, actionBar }) => {
             <div className="fixed inset-60 p-10 bg-white">
                 <div className="flex flex-col justify-between h-full">
                     {children}
-                    <div className="flex justify-end">{actionBar}</div>
                 </div>
             </div>
         </div>,

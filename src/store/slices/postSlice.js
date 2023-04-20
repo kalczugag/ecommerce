@@ -15,4 +15,4 @@ const postSlice = createSlice({
     },
 });
 
-export const postReducer = postSlice.reducer;
+export const postsReducer = postSlice.reducer;

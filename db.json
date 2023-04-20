@@ -1,3 +1,22 @@
 {
-    "posts": []
+  "posts": [
+    {
+      "title": "xd",
+      "description": "xd",
+      "price": 123,
+      "id": 1
+    },
+    {
+      "title": "",
+      "description": "",
+      "price": 0,
+      "id": 2
+    },
+    {
+      "title": "",
+      "description": "",
+      "price": 0,
+      "id": 3
+    }
+  ]
 }

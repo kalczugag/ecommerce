@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { addPost } from "../thunks/addPost";
 
 const postFormSlice = createSlice({
     name: "postForm",
@@ -18,6 +19,13 @@ const postFormSlice = createSlice({
         changePrice(state, action) {
             state.price = action.payload;
         },
+    },
+    extraReducers(builder) {
+        builder.addCase(addPost, (state, action) => {
+            state.title = "";
+            state.description = "";
+            state.price = 0;
+        });
     },
 });
 

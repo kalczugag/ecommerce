@@ -6,26 +6,15 @@ import Button from "./componenets/Button";
 import { useState } from "react";
 
 const App = () => {
-    const [showModal, setShowModal] = useState(true);
+    const [showModal, setShowModal] = useState(false);
 
     const handleShowModal = () => {
         setShowModal(!showModal);
     };
 
-    const handleAddPost = () => {
-        setShowModal(!showModal);
-        //dispatch addPost
-    };
-
-    const actionBar = (
-        <div>
-            <Button onClick={handleAddPost}>Add Post</Button>
-        </div>
-    );
-
     const modal = (
-        <Modal onClose={handleShowModal} actionBar={actionBar}>
-            <PostsForm />
+        <Modal onClose={handleShowModal}>
+            <PostsForm onSubmit={handleShowModal} />
         </Modal>
     );
 
