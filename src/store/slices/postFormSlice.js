@@ -21,7 +21,7 @@ const postFormSlice = createSlice({
         },
     },
     extraReducers(builder) {
-        builder.addCase(addPost, (state, action) => {
+        builder.addCase(addPost.fulfilled, (state, action) => {
             state.title = "";
             state.description = "";
             state.price = 0;

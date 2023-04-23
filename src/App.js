@@ -1,25 +1,19 @@
 import { Link, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Admin from "./pages/Admin";
+import Navbar from "./componenets/Navbar";
 
 const App = () => {
     return (
-        <>
-            <nav>
-                <ul>
-                    <li>
-                        <Link to="/">Home</Link>
-                    </li>
-                    <li>
-                        <Link to="/admin">Admin</Link>
-                    </li>
-                </ul>
-            </nav>
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/admin" element={<Admin />} />
-            </Routes>
-        </>
+        <div>
+            <Navbar />
+            <div className="m-4 mt-12">
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/admin" element={<Admin />} />
+                </Routes>
+            </div>
+        </div>
     );
 };
 
