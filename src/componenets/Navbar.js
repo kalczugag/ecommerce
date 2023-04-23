@@ -12,7 +12,7 @@ const Navbar = () => {
     };
 
     const modal = (
-        <Modal onClose={handleShowModal}>
+        <Modal onClose={handleShowModal} container=".modal-container">
             <PostsForm onSubmit={handleShowModal} />
         </Modal>
     );

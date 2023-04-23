@@ -1,34 +1,3 @@
 {
-  "posts": [
-    {
-      "title": "Jacket",
-      "description": "xd",
-      "price": 500,
-      "id": 1
-    },
-    {
-      "title": "Shoes",
-      "description": "xd",
-      "price": 100,
-      "id": 2
-    },
-    {
-      "title": "T-shirt",
-      "description": "xd",
-      "price": 24,
-      "id": 3
-    },
-    {
-      "title": "Jeans",
-      "description": "shitty",
-      "price": 150,
-      "id": 4
-    },
-    {
-      "title": "xd",
-      "description": "123",
-      "price": 12313,
-      "id": 5
-    }
-  ]
+  "posts": []
 }

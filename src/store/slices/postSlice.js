@@ -45,7 +45,8 @@ const postSlice = createSlice({
             state.isLoading = false;
         });
         builder.addCase(removePost.fulfilled, (state, action) => {
-            state.data.filter((post) => {
+            state.isLoading = false;
+            state.data = state.data.filter((post) => {
                 return post.id !== action.payload.id;
             });
         });

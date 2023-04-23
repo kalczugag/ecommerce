@@ -17,9 +17,13 @@ const PostsList = () => {
 
     let content;
     if (isLoading) {
-        content = <Skeleton times={4} className="w-64 h-72" />;
+        content = <Skeleton times={4} className="w-full h-full" />;
     } else if (error) {
-        content = <div>Error fetching data.</div>;
+        content = (
+            <div className="text-center text-red-500 py-4">
+                Error fetching data.
+            </div>
+        );
     } else {
         content = data.map((post) => {
             return <PostsListItem key={post.id} post={post} />;
@@ -27,7 +31,7 @@ const PostsList = () => {
     }
 
     return (
-        <div className="grid grid-cols-4 gap-14 sm:grid-rows-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 max-w-screen-lg mx-auto px-4">
             {content}
         </div>
     );
@@ -35,7 +39,7 @@ const PostsList = () => {
 
 const PostsListContainer = () => {
     return (
-        <div style={{ overflow: "hidden", maxWidth: "100vw" }}>
+        <div style={{ overflow: "hidden" }}>
             <div className="flex justify-center mt-16">
                 <PostsList />
             </div>

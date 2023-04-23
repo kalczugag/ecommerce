@@ -6,6 +6,7 @@ const addPost = createAsyncThunk("posts/add", async (post) => {
         title: post.title,
         description: post.description,
         price: post.price,
+        image: post.image,
     });
 
     return response.data;

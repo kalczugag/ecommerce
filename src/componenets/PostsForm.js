@@ -1,16 +1,23 @@
 import { useDispatch, useSelector } from "react-redux";
-import { changeTitle, changeDescription, changePrice, addPost } from "../store";
+import {
+    changeTitle,
+    changeDescription,
+    changePrice,
+    addPost,
+    changeImage,
+} from "../store";
 import Button from "./Button";
 import { useThunk } from "../hooks/use-thunk";
 
 const PostsForm = ({ onSubmit }) => {
     const dispatch = useDispatch();
     const [doCreatePost, isLoading, error] = useThunk(addPost);
-    const { title, description, price } = useSelector((state) => {
+    const { title, description, price, image } = useSelector((state) => {
         return {
             title: state.postForm.title,
             description: state.postForm.description,
             price: state.postForm.price,
+            image: state.postForm.image,
         };
     });
 
@@ -26,44 +33,73 @@ const PostsForm = ({ onSubmit }) => {
         dispatch(changePrice(parseInt(event.target.value)) || 0);
     };
 
+    const handleImageChange = (event) => {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.onload = () => {
+            const imageUrl = reader.result;
+            dispatch(changeImage(imageUrl));
+        };
+        reader.readAsDataURL(file);
+    };
+
     const handleSubmit = (event) => {
         event.preventDefault();
         onSubmit();
 
-        doCreatePost({ title, description, price });
+        doCreatePost({ title, description, price, image });
     };
 
     return (
         <form onSubmit={handleSubmit}>
-            <div className="flex flex-col mb-2">
-                <label>Title</label>
+            <div className="flex flex-col">
+                <label className="text-sm font-semibold mb-1 text-gray-600">
+                    Title
+                </label>
                 <input
                     type="text"
                     value={title}
                     onChange={handleTitleChange}
-                    className="border"
+                    className="py-2 px-3 border rounded-md text-gray-700 focus:outline-none focus:border-blue-500"
                 />
             </div>
-            <div className="flex flex-col mb-2">
-                <label>Description</label>
-                <input
-                    type="text"
+            <div className="flex flex-col">
+                <label className="text-sm font-semibold mb-1 text-gray-600">
+                    Description
+                </label>
+                <textarea
                     value={description}
                     onChange={handleDescriptionChange}
-                    className="border"
+                    className="py-2 px-3 border rounded-md text-gray-700 focus:outline-none focus:border-blue-500 h-24 resize-none"
                 />
             </div>
-            <div className="flex flex-col mb-2">
-                <label>Price</label>
+            <div className="flex flex-col">
+                <label className="text-sm font-semibold mb-1 text-gray-600">
+                    Price
+                </label>
                 <input
                     type="number"
                     value={price || ""}
                     onChange={handlePriceChange}
-                    className="border"
+                    className="py-2 px-3 border rounded-md text-gray-700 focus:outline-none focus:border-blue-500"
+                />
+            </div>
+            <div className="flex flex-col">
+                <label className="text-sm font-semibold mb-1 text-gray-600">
+                    Image
+                </label>
+                <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
                 />
             </div>
             {(
-                <Button loading={isLoading} type="submit">
+                <Button
+                    loading={isLoading}
+                    type="submit"
+                    className="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
+                >
                     Add Post
                 </Button>
             ) || error}

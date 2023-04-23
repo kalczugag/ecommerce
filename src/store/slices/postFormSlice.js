@@ -19,6 +19,9 @@ const postFormSlice = createSlice({
         changePrice(state, action) {
             state.price = action.payload;
         },
+        changeImage(state, action) {
+            state.image = action.payload;
+        },
     },
     extraReducers(builder) {
         builder.addCase(addPost.fulfilled, (state, action) => {
@@ -30,5 +33,5 @@ const postFormSlice = createSlice({
 });
 
 export const postFormReducer = postFormSlice.reducer;
-export const { changeTitle, changeDescription, changePrice } =
+export const { changeTitle, changeDescription, changePrice, changeImage } =
     postFormSlice.actions;
