@@ -6,18 +6,18 @@ import PostsListItem from "./PostsListItem";
 import Skeleton from "./Skeleteon";
 
 const PostsList = () => {
-    const [doFetchUsers, isLoading, error] = useThunk(fetchPosts);
+    const [doFetchPosts, isLoading, error] = useThunk(fetchPosts);
     const { data } = useSelector((state) => {
         return state.posts;
     });
 
     useEffect(() => {
-        doFetchUsers();
-    }, [doFetchUsers]);
+        doFetchPosts();
+    }, [doFetchPosts]);
 
     let content;
     if (isLoading) {
-        content = <Skeleton times={4} className="w-full h-full" />;
+        content = <Skeleton times={3} className="w-64 h-96" />;
     } else if (error) {
         content = (
             <div className="text-center text-red-500 py-4">

@@ -10,6 +10,13 @@ const PostsListItem = ({ post }) => {
         doRemovePost(post);
     };
 
+    const MAX_DESCRIPTION_LENGTH = 100;
+
+    const truncatedDescription =
+        post.description.length > MAX_DESCRIPTION_LENGTH
+            ? post.description.substring(0, MAX_DESCRIPTION_LENGTH) + "..."
+            : post.description;
+
     return (
         <div className="flex flex-col w-64 h-96 bg-white rounded-lg shadow-md overflow-hidden">
             <div className="h-48 bg-gray-300">
@@ -21,7 +28,9 @@ const PostsListItem = ({ post }) => {
             </div>
             <div className="p-4 flex-grow">
                 <h3 className="text-lg font-semibold mb-2">{post.title}</h3>
-                <p className="text-gray-600 mb-4">{post.description}</p>
+                <p className="text-gray-600 mb-4" title={post.description}>
+                    {truncatedDescription}
+                </p>
                 <div className="flex items-center justify-between">
                     <div className="text-gray-700 font-bold">${post.price}</div>
                     {(
