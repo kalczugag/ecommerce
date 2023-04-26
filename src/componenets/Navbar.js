@@ -3,8 +3,10 @@ import { Link } from "react-router-dom";
 import Button from "../componenets/Button";
 import Modal from "../componenets/Modal";
 import PostsForm from "../componenets/PostsForm";
+import PostSearch from "./PostsSearch";
+import { GoHome, GoPlus } from "react-icons/go";
 
-const Navbar = () => {
+const Navbar = ({ isDev }) => {
     const [showModal, setShowModal] = useState(false);
 
     const handleShowModal = () => {
@@ -22,24 +24,27 @@ const Navbar = () => {
             <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 flex justify-between items-center">
                 <div className="flex-shrink-0">
                     <Link to="/" className="text-white font-bold text-xl">
-                        Home
+                        <GoHome className="text-2xl" />
                     </Link>
                 </div>
                 <div className="hidden md:block">
-                    <div className="ml-10 flex items-baseline space-x-4">
+                    <div className="relative ml-10 flex items-center space-x-4">
                         <Link
                             to="/admin"
                             className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                         >
                             Admin
                         </Link>
-                        <Button
-                            primary
-                            onClick={handleShowModal}
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                        >
-                            Add Post
-                        </Button>
+                        {isDev && (
+                            <Button
+                                primary
+                                onClick={handleShowModal}
+                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                            >
+                                <GoPlus />
+                            </Button>
+                        )}
+                        {isDev || <PostSearch />}
                     </div>
                 </div>
             </div>

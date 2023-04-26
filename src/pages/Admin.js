@@ -4,7 +4,7 @@ import { useThunk } from "../hooks/use-thunk";
 import { fetchPosts } from "../store";
 import Table from "../componenets/Table";
 
-const Admin = () => {
+const Admin = ({ devFn }) => {
     const [doFetchPosts] = useThunk(fetchPosts);
     const { data } = useSelector((state) => {
         return state.posts;

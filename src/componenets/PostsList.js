@@ -17,7 +17,7 @@ const PostsList = () => {
 
     let content;
     if (isLoading) {
-        content = <Skeleton times={3} className="w-64 h-96" />;
+        content = <Skeleton times={4} className="w-64 h-96" />;
     } else if (error) {
         content = (
             <div className="text-center text-red-500 py-4">
@@ -31,7 +31,7 @@ const PostsList = () => {
     }
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 max-w-screen-lg mx-auto px-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 max-w-screen-xl mx-auto px-4">
             {content}
         </div>
     );
