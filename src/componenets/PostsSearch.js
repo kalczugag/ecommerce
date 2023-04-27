@@ -11,13 +11,17 @@ const PostSearch = () => {
     });
     const [showSearch, setShowSearch] = useState(false);
     const searchRef = useRef(null);
+    const inputRef = useRef(null);
 
     useEffect(() => {
         document.addEventListener("click", handleClickOutside, true);
+        if (showSearch) {
+            inputRef.current.focus();
+        }
         return () => {
             document.removeEventListener("click", handleClickOutside, true);
         };
-    }, []);
+    }, [showSearch]);
 
     const handleShowSearch = () => {
         setShowSearch(!showSearch);
@@ -44,6 +48,7 @@ const PostSearch = () => {
             {showSearch && (
                 <div className="absolute right-1/4 bg-gray-800 p-1 mt-2 rounded">
                     <input
+                        ref={inputRef}
                         type="text"
                         value={searchTerm}
                         onChange={handleChangeSearchTern}
