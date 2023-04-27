@@ -2,6 +2,7 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Home from "./pages/Home";
 import Admin from "./pages/Admin";
+import Item from "./pages/Item";
 import Navbar from "./componenets/Navbar";
 
 const App = () => {
@@ -23,6 +24,7 @@ const App = () => {
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/admin" element={<Admin />} />
+                    <Route path="/item" element={<Item />} />
                 </Routes>
             </div>
         </div>

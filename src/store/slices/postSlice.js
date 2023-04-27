@@ -57,4 +57,5 @@ const postSlice = createSlice({
     },
 });
 
+export const { changeSearchTerm } = postSlice.actions;
 export const postsReducer = postSlice.reducer;

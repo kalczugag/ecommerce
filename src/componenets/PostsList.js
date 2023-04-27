@@ -7,8 +7,14 @@ import Skeleton from "./Skeleteon";
 
 const PostsList = () => {
     const [doFetchPosts, isLoading, error] = useThunk(fetchPosts);
-    const { data } = useSelector((state) => {
-        return state.posts;
+    const { posts } = useSelector(({ posts: { data, searchTerm } }) => {
+        const filteredPosts = data.filter((post) =>
+            post.title.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+
+        return {
+            posts: filteredPosts,
+        };
     });
 
     useEffect(() => {
@@ -17,7 +23,7 @@ const PostsList = () => {
 
     let content;
     if (isLoading) {
-        content = <Skeleton times={4} className="w-64 h-96" />;
+        content = <Skeleton times={4} className="w-full h-full" />;
     } else if (error) {
         content = (
             <div className="text-center text-red-500 py-4">
@@ -25,7 +31,7 @@ const PostsList = () => {
             </div>
         );
     } else {
-        content = data.map((post) => {
+        content = posts.map((post) => {
             return <PostsListItem key={post.id} post={post} />;
         });
     }
