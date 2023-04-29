@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import Button from "../componenets/Button";
 import Modal from "../componenets/Modal";
-import PostsForm from "../componenets/PostsForm";
+import PostsAddForm from "./PostsAddForm";
 import PostSearch from "./PostsSearch";
 import { GoHome, GoPlus } from "react-icons/go";
 
@@ -15,7 +15,7 @@ const Navbar = ({ isDev }) => {
 
     const modal = (
         <Modal onClose={handleShowModal} container=".modal-container">
-            <PostsForm onSubmit={handleShowModal} />
+            <PostsAddForm onSubmit={handleShowModal} />
         </Modal>
     );
 

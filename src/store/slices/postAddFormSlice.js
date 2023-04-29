@@ -1,8 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { addPost } from "../thunks/addPost";
+import { editPost } from "../thunks/editPost";
 
-const postFormSlice = createSlice({
-    name: "postForm",
+const postAddFormSlice = createSlice({
+    name: "postAddForm",
     initialState: {
         title: "",
         description: "",
@@ -32,6 +33,6 @@ const postFormSlice = createSlice({
     },
 });
 
-export const postFormReducer = postFormSlice.reducer;
+export const postAddFormReducer = postAddFormSlice.reducer;
 export const { changeTitle, changeDescription, changePrice, changeImage } =
-    postFormSlice.actions;
+    postAddFormSlice.actions;

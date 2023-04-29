@@ -3,21 +3,21 @@ import {
     changeTitle,
     changeDescription,
     changePrice,
-    addPost,
     changeImage,
+    addPost,
 } from "../store";
 import Button from "./Button";
 import { useThunk } from "../hooks/use-thunk";
 
-const PostsForm = ({ onSubmit }) => {
+const PostsAddForm = ({ onSubmit }) => {
     const dispatch = useDispatch();
     const [doCreatePost, isLoading, error] = useThunk(addPost);
     const { title, description, price, image } = useSelector((state) => {
         return {
-            title: state.postForm.title,
-            description: state.postForm.description,
-            price: state.postForm.price,
-            image: state.postForm.image,
+            title: state.postAddForm.title,
+            description: state.postAddForm.description,
+            price: state.postAddForm.price,
+            image: state.postAddForm.image,
         };
     });
 
@@ -107,4 +107,4 @@ const PostsForm = ({ onSubmit }) => {
     );
 };
 
-export default PostsForm;
+export default PostsAddForm;

@@ -4,7 +4,7 @@ import { useThunk } from "../hooks/use-thunk";
 import { fetchPosts } from "../store";
 import Table from "../componenets/Table";
 
-const Admin = ({ devFn }) => {
+const Admin = () => {
     const [doFetchPosts] = useThunk(fetchPosts);
     const { data } = useSelector((state) => {
         return state.posts;
@@ -18,12 +18,10 @@ const Admin = ({ devFn }) => {
         {
             label: "Item",
             render: (item) => item.title,
-            sortValue: (item) => item.title,
         },
         {
             label: "Description",
             render: (item) => item.description,
-            sortValue: (item) => item.description,
         },
         {
             label: "Price",
@@ -33,7 +31,7 @@ const Admin = ({ devFn }) => {
         {
             label: "Image (T or F)",
             render: (item) => (item.image ? "T" : "F"),
-            sortValue: (item) => item.image,
+            sortValue: (item) => (item.image ? "T" : "F"),
         },
     ];
 
