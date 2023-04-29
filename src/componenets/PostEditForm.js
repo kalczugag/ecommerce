@@ -1,36 +1,45 @@
 import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useThunk } from "../hooks/use-thunk";
 import {
-    changeTitle,
-    changeDescription,
-    changePrice,
-    changeImage,
+    changeEditTitle,
+    changeEditDescription,
+    changeEditPrice,
+    changeEditImage,
     editPost,
 } from "../store";
+import { GoX } from "react-icons/go";
 import Button from "./Button";
-import { useThunk } from "../hooks/use-thunk";
 
 const PostsAddForm = ({ onSubmit, post }) => {
     const dispatch = useDispatch();
     const [doEditPost, editLoading, editError] = useThunk(editPost);
     const { title, description, price, image } = useSelector((state) => {
         return {
-            title: state.postForm.title,
-            description: state.postForm.description,
-            price: state.postForm.price,
-            image: state.postForm.image,
+            title: state.postEditForm.title,
+            description: state.postEditForm.description,
+            price: state.postEditForm.price,
+            image: state.postEditForm.image,
         };
     });
 
+    useEffect(() => {
+        dispatch(changeEditTitle(post.title));
+        dispatch(changeEditDescription(post.description));
+        dispatch(changeEditPrice(post.price));
+        dispatch(changeEditImage(post.image));
+    }, [dispatch, post.title, post.description, post.price, post.image]);
+
     const handleTitleChange = (event) => {
-        dispatch(changeTitle(event.target.value));
+        dispatch(changeEditTitle(event.target.value));
     };
 
     const handleDescriptionChange = (event) => {
-        dispatch(changeDescription(event.target.value));
+        dispatch(changeEditDescription(event.target.value));
     };
 
     const handlePriceChange = (event) => {
-        dispatch(changePrice(parseInt(event.target.value)) || 0);
+        dispatch(changeEditPrice(parseInt(event.target.value)) || 0);
     };
 
     const handleImageChange = (event) => {
@@ -38,7 +47,7 @@ const PostsAddForm = ({ onSubmit, post }) => {
         const reader = new FileReader();
         reader.onload = () => {
             const imageUrl = reader.result;
-            dispatch(changeImage(imageUrl));
+            dispatch(changeEditImage(imageUrl));
         };
         reader.readAsDataURL(file);
     };
@@ -47,11 +56,16 @@ const PostsAddForm = ({ onSubmit, post }) => {
         event.preventDefault();
         onSubmit();
 
-        doEditPost({ title, description, price, image });
+        doEditPost({ title, description, price, image, id: post.id });
     };
 
     return (
         <form onSubmit={handleSubmit}>
+            <div className="flex justify-end items-center">
+                <Button onClick={onSubmit} className="border-0">
+                    <GoX className="text-xl" />
+                </Button>
+            </div>
             <div className="flex flex-col">
                 <label className="text-sm font-semibold mb-1 text-gray-600">
                     Title

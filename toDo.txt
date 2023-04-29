@@ -1,0 +1,5 @@
+1. isDev as state
+2. delete and edit buttons from PostsListItem only visable when isDev = true
+3. In PostsListItem add 'add to cart' button
+4. add cart component and cart page
+5. make sidebar component for admin page, with links: table('/admin/table') and orders('/admin/orders')

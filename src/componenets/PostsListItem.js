@@ -70,7 +70,7 @@ const PostsListItem = ({ post }) => {
                     </div>
                 </div>
             )}
-            {showEdit && <PostEditForm onSubmit={handleShowEdit} />}
+            {showEdit && <PostEditForm onSubmit={handleShowEdit} post={post} />}
         </div>
     );
 };

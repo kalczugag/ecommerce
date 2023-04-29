@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { editPost } from "../thunks/editPost";
 
 const postEditFormSlice = createSlice({
     name: "postAddForm",
@@ -22,14 +21,6 @@ const postEditFormSlice = createSlice({
         changeEditImage(state, action) {
             state.image = action.payload;
         },
-    },
-    extraReducers(builder) {
-        builder.addCase(editPost.fulfilled, (state, action) => {
-            state.title = "";
-            state.description = "";
-            state.price = 0;
-            state.image = null;
-        });
     },
 });
 
