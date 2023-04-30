@@ -1,13 +1,17 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useThunk } from "../hooks/use-thunk";
-import { removePost } from "../store";
+import useDevState from "../hooks/use-dev-state";
+import { removePost, addToCart } from "../store";
 import { GoTrashcan, GoGear } from "react-icons/go";
 import Button from "./Button";
 import PostEditForm from "./PostEditForm";
 
 const PostsListItem = ({ post }) => {
+    const dispatch = useDispatch();
     const [doRemovePost, removeLoading, removeError] = useThunk(removePost);
     const [showEdit, setShowEdit] = useState(false);
+    const isDev = useDevState();
 
     const handleRemovePost = () => {
         doRemovePost(post);
@@ -15,6 +19,10 @@ const PostsListItem = ({ post }) => {
 
     const handleShowEdit = () => {
         setShowEdit(!showEdit);
+    };
+
+    const handleAddToCart = () => {
+        dispatch(addToCart({ post }));
     };
 
     const MAX_DESCRIPTION_LENGTH = 100;
@@ -49,23 +57,36 @@ const PostsListItem = ({ post }) => {
                             <div className="text-gray-700 font-bold">
                                 ${post.price}
                             </div>
-                            <div className="flex flex-row space-x-2">
-                                <Button
-                                    onClick={handleShowEdit}
-                                    className="text-red-600 hover:text-red-700"
-                                >
-                                    <GoGear />
-                                </Button>
-                                {(
+                            {isDev || (
+                                <div className="flex justify-end">
                                     <Button
-                                        loading={removeLoading}
-                                        onClick={handleRemovePost}
+                                        primary
+                                        onClick={handleAddToCart}
+                                        className="hover:opacity-90"
+                                    >
+                                        Add To Cart
+                                    </Button>
+                                </div>
+                            )}
+                            {isDev && (
+                                <div className="flex flex-row space-x-2">
+                                    <Button
+                                        onClick={handleShowEdit}
                                         className="text-red-600 hover:text-red-700"
                                     >
-                                        <GoTrashcan />
+                                        <GoGear />
                                     </Button>
-                                ) || removeError}
-                            </div>
+                                    {(
+                                        <Button
+                                            loading={removeLoading}
+                                            onClick={handleRemovePost}
+                                            className="text-red-600 hover:text-red-700"
+                                        >
+                                            <GoTrashcan />
+                                        </Button>
+                                    ) || removeError}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
