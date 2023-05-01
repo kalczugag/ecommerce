@@ -10,7 +10,6 @@
 
 # production
 /build
-/.txt
 
 # misc
 .DS_Store
@@ -18,6 +17,7 @@
 .env.development.local
 .env.test.local
 .env.production.local
+.txt
 
 npm-debug.log*
 yarn-debug.log*
