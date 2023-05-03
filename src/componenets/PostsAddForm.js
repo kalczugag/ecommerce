@@ -52,7 +52,7 @@ const PostsAddForm = ({ onSubmit }) => {
 
     return (
         <form onSubmit={handleSubmit}>
-            <div className="flex flex-col">
+            <div className="flex flex-col mt-2">
                 <label className="text-sm font-semibold mb-1 text-gray-600">
                     Title
                 </label>
@@ -63,7 +63,7 @@ const PostsAddForm = ({ onSubmit }) => {
                     className="py-2 px-3 border rounded-md text-gray-700 focus:outline-none focus:border-blue-500"
                 />
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col mt-2">
                 <label className="text-sm font-semibold mb-1 text-gray-600">
                     Description
                 </label>
@@ -73,7 +73,32 @@ const PostsAddForm = ({ onSubmit }) => {
                     className="py-2 px-3 border rounded-md text-gray-700 focus:outline-none focus:border-blue-500 h-24 resize-none"
                 />
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col mt-2">
+                <div className="text-sm font-semibold mb-1 text-gray-600">
+                    Gender
+                </div>
+                <div className="flex justify-around">
+                    <icn>
+                        <input type="radio" name="gender" />
+                        <label>Men</label>
+                    </icn>
+                    <icn>
+                        <input type="radio" name="gender" />
+                        <label>Women</label>
+                    </icn>
+                </div>
+            </div>
+            <div className="flex flex-col mt-2">
+                <div className="text-sm font-semibold mb-1 text-gray-600">
+                    Category
+                </div>
+                <div className="flex justify-around">
+                    <div className="grid grid-cols-3 gap-3">
+                        {/* categories */}
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-col mt-2">
                 <label className="text-sm font-semibold mb-1 text-gray-600">
                     Price
                 </label>
@@ -84,7 +109,7 @@ const PostsAddForm = ({ onSubmit }) => {
                     className="py-2 px-3 border rounded-md text-gray-700 focus:outline-none focus:border-blue-500"
                 />
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col mt-2">
                 <label className="text-sm font-semibold mb-1 text-gray-600">
                     Image
                 </label>

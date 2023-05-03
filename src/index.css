@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+icn > input {
+    margin-right: 4px;
+    margin-left: 4px;
+}
