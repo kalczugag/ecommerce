@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { changeSearchTerm } from "../store";
+import { changePostSearchTerm } from "../store";
 import { GoSearch } from "react-icons/go";
 import Button from "./Button";
 
@@ -34,7 +34,7 @@ const PostSearch = () => {
     };
 
     const handleChangeSearchTern = (event) => {
-        dispatch(changeSearchTerm(event.target.value));
+        dispatch(changePostSearchTerm(event.target.value));
     };
 
     return (

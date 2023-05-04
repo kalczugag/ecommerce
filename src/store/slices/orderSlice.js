@@ -1,0 +1,64 @@
+import { createSlice } from "@reduxjs/toolkit";
+import { fetchOrders } from "../thunks/fetchOrders";
+import { addOrder } from "../thunks/addOrder";
+import { editOrder } from "../thunks/editOrder";
+
+const orderSlice = createSlice({
+    name: "orders",
+    initialState: {
+        data: [],
+        isLoading: false,
+        error: null,
+        searchTerm: "",
+    },
+    reducers: {
+        changeOrderSearchTerm(state, action) {
+            state.searchTerm = action.payload;
+        },
+    },
+    extraReducers(builder) {
+        builder.addCase(fetchOrders.pending, (state, action) => {
+            state.isLoading = true;
+        });
+        builder.addCase(fetchOrders.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.data = action.payload;
+        });
+        builder.addCase(fetchOrders.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.error;
+        });
+
+        builder.addCase(addOrder.pending, (state, action) => {
+            state.isLoading = true;
+        });
+        builder.addCase(addOrder.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.data.push(action.payload);
+        });
+        builder.addCase(addOrder.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.error;
+        });
+
+        builder.addCase(editOrder.pending, (state, action) => {
+            state.isLoading = true;
+        });
+        builder.addCase(editOrder.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.data = state.data.map((order) => {
+                if (order.id === action.payload.id) {
+                    return { ...order, ...action.payload };
+                }
+                return order;
+            });
+        });
+        builder.addCase(editOrder.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.error;
+        });
+    },
+});
+
+export const orderReducer = orderSlice.reducer;
+export const { changeOrderSearchTerm } = orderSlice.actions;

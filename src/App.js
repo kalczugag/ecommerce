@@ -8,7 +8,7 @@ import useChangeDevState from "./hooks/use-change-dev-state";
 import Navbar from "./componenets/Navbar";
 import Home from "./pages/Home";
 import Admin, { config } from "./pages/Admin";
-import Table from "./componenets/Table";
+import SortableTable from "./componenets/SortableTable";
 import Orders from "./componenets/Orders";
 
 const App = () => {
@@ -23,12 +23,20 @@ const App = () => {
             handleChangeDevMode(false);
         } else if (location.pathname === "/admin") {
             handleChangeDevMode(true);
+        } else if (location.pathname === "/admin/items") {
+            handleChangeDevMode(true);
             doFetchPosts();
+        } else if (location.pathname === "/admin/orders") {
+            handleChangeDevMode(true);
         }
     }, [handleChangeDevMode, location.pathname, doFetchPosts]);
 
     const handleModeChange = () => {
         handleChangeDevMode(!isDev);
+    };
+
+    const keyFn = (data) => {
+        return data.name;
     };
 
     return (
@@ -46,7 +54,13 @@ const App = () => {
                     <Route path="admin" element={<Admin />}>
                         <Route
                             path="items"
-                            element={<Table config={config} data={data} />}
+                            element={
+                                <SortableTable
+                                    config={config}
+                                    data={data}
+                                    keyFn={keyFn}
+                                />
+                            }
                         />
                         <Route path="orders" element={<Orders />} />
                     </Route>

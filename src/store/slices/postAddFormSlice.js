@@ -7,6 +7,7 @@ const postAddFormSlice = createSlice({
     initialState: {
         title: "",
         description: "",
+        category: "",
         price: 0,
         image: null,
     },
@@ -16,6 +17,9 @@ const postAddFormSlice = createSlice({
         },
         changeDescription(state, action) {
             state.description = action.payload;
+        },
+        changeCategory(state, action) {
+            state.category = action.payload;
         },
         changePrice(state, action) {
             state.price = action.payload;
@@ -28,11 +32,18 @@ const postAddFormSlice = createSlice({
         builder.addCase(addPost.fulfilled, (state, action) => {
             state.title = "";
             state.description = "";
+            state.category = "";
             state.price = 0;
+            state.image = null;
         });
     },
 });
 
 export const postAddFormReducer = postAddFormSlice.reducer;
-export const { changeTitle, changeDescription, changePrice, changeImage } =
-    postAddFormSlice.actions;
+export const {
+    changeTitle,
+    changeDescription,
+    changeCategory,
+    changePrice,
+    changeImage,
+} = postAddFormSlice.actions;

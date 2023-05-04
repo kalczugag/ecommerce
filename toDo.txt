@@ -1,5 +1,9 @@
-1. isDev as state-
-2. delete and edit buttons from PostsListItem only visable when isDev = true-
-3. In PostsListItem add 'add to cart' button-
-4. add cart component and cart page-
-5. make sidebar component for admin page, with links: table('/admin/table') and orders('/admin/orders')
+1. orderSlice reducer error ?
+2. table in orders with edit and removePost
+3. search input in orders by transaction id
+4. numbers of the same items in cart
+5. cart checkout page
+6. categories on add post
+7. sort by categories 
+    men/*
+    women/*

@@ -11,7 +11,7 @@ import {
 import { GoX } from "react-icons/go";
 import Button from "./Button";
 
-const PostsAddForm = ({ onSubmit, post }) => {
+const PostsEditForm = ({ onSubmit, post }) => {
     const dispatch = useDispatch();
     const [doEditPost, editLoading, editError] = useThunk(editPost);
     const { title, description, price, image } = useSelector((state) => {
@@ -121,4 +121,4 @@ const PostsAddForm = ({ onSubmit, post }) => {
     );
 };
 
-export default PostsAddForm;
+export default PostsEditForm;

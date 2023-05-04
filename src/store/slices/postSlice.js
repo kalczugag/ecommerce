@@ -13,7 +13,7 @@ const postSlice = createSlice({
         searchTerm: "",
     },
     reducers: {
-        changeSearchTerm(state, action) {
+        changePostSearchTerm(state, action) {
             state.searchTerm = action.payload;
         },
     },
@@ -75,5 +75,5 @@ const postSlice = createSlice({
     },
 });
 
-export const { changeSearchTerm } = postSlice.actions;
+export const { changePostSearchTerm } = postSlice.actions;
 export const postsReducer = postSlice.reducer;
