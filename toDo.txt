@@ -1,9 +1,10 @@
-1. orderSlice reducer error ?
-2. table in orders with edit and removePost
-3. search input in orders by transaction id
-4. numbers of the same items in cart
-5. cart checkout page
-6. categories on add post
-7. sort by categories 
+1. orderSlice reducer error ?-
+2. remove chaos from App.js and insert into Item.js page-
+3. table in orders with edit and removePost
+4. search input in orders by transaction id
+5. numbers of the same items in cart
+6. cart checkout page
+7. categories on add post
+8. sort by categories 
     men/*
     women/*

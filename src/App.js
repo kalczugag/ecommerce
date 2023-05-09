@@ -1,19 +1,14 @@
 import { Route, Routes, useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { useThunk } from "./hooks/use-thunk";
-import { fetchPosts } from "./store";
 import useDevState from "./hooks/use-dev-state";
 import useChangeDevState from "./hooks/use-change-dev-state";
 import Navbar from "./componenets/Navbar";
 import Home from "./pages/Home";
-import Admin, { config } from "./pages/Admin";
-import SortableTable from "./componenets/SortableTable";
-import Orders from "./componenets/Orders";
+import Admin from "./pages/Admin";
+import Items from "./pages/Items";
+import Orders from "./pages/Orders";
 
 const App = () => {
-    const [doFetchPosts] = useThunk(fetchPosts);
-    const data = useSelector((state) => state.posts.data) || [];
     const handleChangeDevMode = useChangeDevState();
     const location = useLocation();
     const isDev = useDevState();
@@ -25,18 +20,13 @@ const App = () => {
             handleChangeDevMode(true);
         } else if (location.pathname === "/admin/items") {
             handleChangeDevMode(true);
-            doFetchPosts();
         } else if (location.pathname === "/admin/orders") {
             handleChangeDevMode(true);
         }
-    }, [handleChangeDevMode, location.pathname, doFetchPosts]);
+    }, [handleChangeDevMode, location.pathname]);
 
     const handleModeChange = () => {
         handleChangeDevMode(!isDev);
-    };
-
-    const keyFn = (data) => {
-        return data.name;
     };
 
     return (
@@ -52,16 +42,7 @@ const App = () => {
                 <Routes>
                     <Route index element={<Home />} />
                     <Route path="admin" element={<Admin />}>
-                        <Route
-                            path="items"
-                            element={
-                                <SortableTable
-                                    config={config}
-                                    data={data}
-                                    keyFn={keyFn}
-                                />
-                            }
-                        />
+                        <Route path="items" element={<Items />} />
                         <Route path="orders" element={<Orders />} />
                     </Route>
                 </Routes>

@@ -28,4 +28,5 @@ export * from "./thunks/removePost";
 export * from "./thunks/editPost";
 export * from "./thunks/fetchOrders";
 export * from "./thunks/editOrder";
+export * from "./thunks/addOrder";
 export { changePostSearchTerm, changeOrderSearchTerm };

@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { addPost } from "../thunks/addPost";
-import { editPost } from "../thunks/editPost";
 
 const postAddFormSlice = createSlice({
     name: "postAddForm",

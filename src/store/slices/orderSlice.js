@@ -60,5 +60,5 @@ const orderSlice = createSlice({
     },
 });
 
-export const orderReducer = orderSlice.reducer;
 export const { changeOrderSearchTerm } = orderSlice.actions;
+export const orderReducer = orderSlice.reducer;
