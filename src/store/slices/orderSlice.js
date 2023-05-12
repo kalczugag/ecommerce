@@ -10,6 +10,7 @@ const orderSlice = createSlice({
         isLoading: false,
         error: null,
         searchTerm: "",
+        newOrders: 0,
     },
     reducers: {
         changeOrderSearchTerm(state, action) {
@@ -23,6 +24,7 @@ const orderSlice = createSlice({
         builder.addCase(fetchOrders.fulfilled, (state, action) => {
             state.isLoading = false;
             state.data = action.payload;
+            state.newOrders = 0;
         });
         builder.addCase(fetchOrders.rejected, (state, action) => {
             state.isLoading = false;
@@ -35,6 +37,7 @@ const orderSlice = createSlice({
         builder.addCase(addOrder.fulfilled, (state, action) => {
             state.isLoading = false;
             state.data.push(action.payload);
+            state.newOrders += 1;
         });
         builder.addCase(addOrder.rejected, (state, action) => {
             state.isLoading = false;

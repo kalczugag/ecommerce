@@ -12,7 +12,7 @@ const Sidebar = () => {
     const renderedLinks = links.map((link) => {
         const isActive = location.pathname === link.path;
         const activeClass = isActive
-            ? "font-bold border-l-4 border-blue-500 pl-1 bg-gray-100"
+            ? "font-bold border-l-4 border-blue-500 pl-1 md:bg-gray-100"
             : "";
 
         return (

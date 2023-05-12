@@ -1,15 +1,23 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { fetchPosts, removePost } from "../store";
 import { useThunk } from "../hooks/use-thunk";
+import { GoTrashcan } from "react-icons/go";
 import SortableTable from "../componenets/SortableTable";
 import Button from "../componenets/Button";
-import { GoTrashcan } from "react-icons/go";
+import SearchBar from "../componenets/SearchBar";
 
 const Items = () => {
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(10);
     const [doRemovePost, removeLoading] = useThunk(removePost);
     const [doFetchPost] = useThunk(fetchPosts);
+
     const data = useSelector((state) => state.posts.data) || [];
+    const totalItems = data.length;
+    const lastItemIndex = currentPage * itemsPerPage;
+    const firstItemIndex = lastItemIndex - itemsPerPage;
+    const currentItems = data.slice(firstItemIndex, lastItemIndex);
 
     useEffect(() => {
         doFetchPost();
@@ -51,13 +59,47 @@ const Items = () => {
         doRemovePost(item);
     };
 
+    const paginate = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+    const pageNumbers = [];
+    for (let i = 1; i <= totalPages; i++) {
+        pageNumbers.push(i);
+    }
+
     const keyFn = (data) => {
         return data.id;
     };
 
     return (
-        <div>
-            <SortableTable config={config} data={data} keyFn={keyFn} />
+        <div className="bg-white rounded-lg px-4 overflow-x-auto">
+            <div>
+                <SearchBar type="text" placeholder="Search by Item" />
+            </div>
+            <div className="bg-white rounded-lg shadow overflow-x-auto">
+                <SortableTable
+                    data={currentItems}
+                    config={config}
+                    keyFn={keyFn}
+                />
+            </div>
+            <div className="flex justify-center mt-4">
+                {pageNumbers.map((pageNumber) => (
+                    <Button
+                        key={pageNumber}
+                        className={`mx-1 px-3 py-1 rounded ${
+                            currentPage === pageNumber
+                                ? "bg-blue-500 text-white"
+                                : ""
+                        }`}
+                        onClick={() => paginate(pageNumber)}
+                    >
+                        {pageNumber}
+                    </Button>
+                ))}
+            </div>
         </div>
     );
 };

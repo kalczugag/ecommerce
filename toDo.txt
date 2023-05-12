@@ -1,10 +1,12 @@
 1. orderSlice reducer error ?-
 2. remove chaos from App.js and insert into Item.js page-
-3. table in orders with edit and removePost
-4. search input in orders by transaction id
+3. table in orders with edit and removePost-
+4. search input in orders by transaction id 
 5. numbers of the same items in cart
 6. cart checkout page
 7. categories on add post
 8. sort by categories 
     men/*
     women/*
+9. make pagination as hook.
+10. selection for items and orders as checkbox, buttons for select all, delete and edit.

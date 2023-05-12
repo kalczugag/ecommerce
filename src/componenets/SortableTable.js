@@ -18,7 +18,7 @@ const SortableTable = (props) => {
             ...column,
             header: () => (
                 <th
-                    className="cursor-pointer hover:bg-gray-100"
+                    className="cursor-pointer"
                     onClick={() => setSortColumn(column.label)}
                 >
                     <div className="flex items-center">
