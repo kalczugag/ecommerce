@@ -42,7 +42,7 @@ This is an eCommerce project built using [React](https://reactjs.org/) and [Redu
     ```
 
 5. Open the application in your browser:
-   http://localhost:3005
+   http://localhost:3000
 
 ## Contributing
 
