@@ -21,16 +21,25 @@ This is an eCommerce project built using [React](https://reactjs.org/) and [Redu
 
 2. Navigate to the project directory:
 
+    ```bash
     cd ecommerce
+    ```
 
 3. Install dependencies:
 
+    ```bash
     npm install
+    ```
 
 4. Start the development server and json-server:
 
+    ```bash
     npm run start:server
+    ```
+
+    ```bash
     npm start
+    ```
 
 5. Open the application in your browser:
    http://localhost:3005
@@ -43,3 +52,7 @@ Contributions are welcome! If you have any suggestions, bug fixes, or new featur
 
 This project is licensed under the MIT License.
 Feel free to copy and paste this content into your `README.md` file and modify it according to your specific eCommerce project.
+
+```
+
+```
