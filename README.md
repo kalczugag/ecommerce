@@ -52,7 +52,3 @@ Contributions are welcome! If you have any suggestions, bug fixes, or new featur
 
 This project is licensed under the MIT License.
 Feel free to copy and paste this content into your `README.md` file and modify it according to your specific eCommerce project.
-
-```
-
-```
