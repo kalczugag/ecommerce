@@ -1,13 +1,16 @@
 import { useSelector, useDispatch } from "react-redux";
 import classNames from "classnames";
-import { changeOrderSearchTerm } from "../store";
 
-const SearchBar = ({ placeholder, className, type }) => {
+const SearchBar = ({ placeholder, className, type, search, what }) => {
     const dispatch = useDispatch();
-    const searchTerm = useSelector((state) => state.orders.searchTerm);
+    const searchTerm = useSelector((state) => state[what].searchTerm);
 
     const handleChangeSearchTerm = (event) => {
-        dispatch(changeOrderSearchTerm(event.target.value) || 0);
+        if (type === "number") {
+            dispatch(search(parseInt(event.target.value)) || 0);
+        } else {
+            dispatch(search(event.target.value));
+        }
     };
 
     const inputClassNames = classNames(
@@ -19,7 +22,7 @@ const SearchBar = ({ placeholder, className, type }) => {
         <>
             <input
                 type={type}
-                value={searchTerm}
+                value={type === "number" ? searchTerm || "" : searchTerm}
                 placeholder={placeholder}
                 onChange={handleChangeSearchTerm}
                 className={inputClassNames}

@@ -7,6 +7,7 @@ import Home from "./pages/Home";
 import Admin from "./pages/Admin";
 import Items from "./pages/Items";
 import Orders from "./pages/Orders";
+import Checkout from "./pages/Checkout";
 
 const App = () => {
     const handleChangeDevMode = useChangeDevState();
@@ -45,6 +46,7 @@ const App = () => {
                         <Route path="items" element={<Items />} />
                         <Route path="orders" element={<Orders />} />
                     </Route>
+                    <Route path="checkout" element={<Checkout />} />
                 </Routes>
             </div>
         </div>

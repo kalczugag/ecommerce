@@ -1,8 +1,9 @@
+import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Button from "./Button";
 import CartListItem from "./CartListItem";
 
-const CartList = () => {
+const CartList = ({ showCart }) => {
     const { items, itemsCount, totalPrice } = useSelector((state) => {
         return {
             items: state.cart.items,
@@ -24,9 +25,14 @@ const CartList = () => {
             </div>
             <Button
                 className="mt-4 w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded border-0"
-                onClick={() => alert("Checkout clicked")}
+                onClick={showCart}
             >
-                Checkout
+                <Link
+                    className="flex justify-start w-full h-full"
+                    to="/checkout"
+                >
+                    Checkout
+                </Link>
             </Button>
         </>
     );

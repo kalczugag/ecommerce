@@ -42,7 +42,7 @@ const Cart = () => {
                     </div>
                 )}
             </Button>
-            {showCart && <CartList />}
+            {showCart && <CartList showCart={handleShowCart} />}
         </div>
     );
 };

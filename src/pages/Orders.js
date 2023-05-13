@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { fetchOrders, addOrder, editOrder } from "../store";
+import {
+    fetchOrders,
+    addOrder,
+    editOrder,
+    changeOrderSearchTerm,
+} from "../store";
 import { useThunk } from "../hooks/use-thunk";
 import { faker } from "@faker-js/faker";
 import { GoPlus } from "react-icons/go";
@@ -15,11 +20,19 @@ const Orders = () => {
     const [doAddOrder] = useThunk(addOrder);
     const [doEditOrder] = useThunk(editOrder);
 
-    const data = useSelector((state) => state.orders.data) || [];
-    const totalOrders = data.length;
+    const { orders } = useSelector(({ orders: { data, searchTerm } }) => {
+        const filteredOrders = data.filter((order) =>
+            order.item.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+
+        return {
+            orders: filteredOrders,
+        };
+    });
+    const totalOrders = orders.length;
     const lastOrderIndex = currentPage * ordersPerPage;
     const firstOrderIndex = lastOrderIndex - ordersPerPage;
-    const currentOrders = data.slice(firstOrderIndex, lastOrderIndex);
+    const currentOrders = orders.slice(firstOrderIndex, lastOrderIndex);
 
     useEffect(() => {
         doFetchOrders();
@@ -91,7 +104,12 @@ const Orders = () => {
                 </Button>
             </div>
             <div>
-                <SearchBar type="number" placeholder="Search by Id" />
+                <SearchBar
+                    type="text"
+                    placeholder="Search by Item"
+                    search={changeOrderSearchTerm}
+                    what={"orders"}
+                />
             </div>
             <div className="bg-white rounded-lg shadow overflow-x-auto">
                 <SortableTable

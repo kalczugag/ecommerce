@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { fetchPosts, removePost } from "../store";
+import { fetchPosts, removePost, changePostSearchTerm } from "../store";
 import { useThunk } from "../hooks/use-thunk";
 import { GoTrashcan } from "react-icons/go";
 import SortableTable from "../componenets/SortableTable";
@@ -13,11 +13,19 @@ const Items = () => {
     const [doRemovePost, removeLoading] = useThunk(removePost);
     const [doFetchPost] = useThunk(fetchPosts);
 
-    const data = useSelector((state) => state.posts.data) || [];
-    const totalItems = data.length;
+    const { posts } = useSelector(({ posts: { data, searchTerm } }) => {
+        const filteredPosts = data.filter((post) =>
+            post.title.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+
+        return {
+            posts: filteredPosts,
+        };
+    });
+    const totalItems = posts.length;
     const lastItemIndex = currentPage * itemsPerPage;
     const firstItemIndex = lastItemIndex - itemsPerPage;
-    const currentItems = data.slice(firstItemIndex, lastItemIndex);
+    const currentItems = posts.slice(firstItemIndex, lastItemIndex);
 
     useEffect(() => {
         doFetchPost();
@@ -76,12 +84,18 @@ const Items = () => {
     return (
         <div className="bg-white rounded-lg px-4 overflow-x-auto">
             <div>
-                <SearchBar type="text" placeholder="Search by Item" />
+                <SearchBar
+                    type="text"
+                    placeholder="Search by Item"
+                    search={changePostSearchTerm}
+                    what="posts"
+                />
             </div>
             <div className="bg-white rounded-lg shadow overflow-x-auto">
                 <SortableTable
                     data={currentItems}
                     config={config}
+                    // search={items}
                     keyFn={keyFn}
                 />
             </div>
