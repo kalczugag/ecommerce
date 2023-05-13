@@ -1,10 +1,9 @@
-
-4. search input in orders by transaction id -
-5. numbers of the same items in cart
-6. cart checkout page
-7. categories on add post
-8. sort by categories 
+1. search input in orders by transaction id -
+2. numbers of the same items in cart
+3. cart checkout page
+4. categories on add post
+5. sort by categories 
     men/*
     women/*
-9. make pagination as hook.
-10. selection for items and orders as checkbox, buttons for select all, delete and edit.
+6. make pagination as hook.
+7. selection for items and orders as checkbox, buttons for select all, delete and edit.

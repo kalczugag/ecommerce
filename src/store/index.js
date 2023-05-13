@@ -5,6 +5,7 @@ import { cartReducer } from "./slices/cartSlice";
 import { postEditFormReducer } from "./slices/postEditFormSlice";
 import { adminReducer } from "./slices/adminSlice";
 import { orderReducer, changeOrderSearchTerm } from "./slices/orderSlice";
+import { categoriesReducer } from "./slices/categoriesSlice";
 
 export const store = configureStore({
     reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
         postEditForm: postEditFormReducer,
         cart: cartReducer,
         admin: adminReducer,
+        categories: categoriesReducer,
     },
 });
 
@@ -29,4 +31,5 @@ export * from "./thunks/editPost";
 export * from "./thunks/fetchOrders";
 export * from "./thunks/editOrder";
 export * from "./thunks/addOrder";
+export * from "./thunks/fetchCategories";
 export { changePostSearchTerm, changeOrderSearchTerm };

@@ -1,6 +1,6 @@
 import PostsList from "../componenets/PostsList";
 
-const Home = () => {
+const MenHome = () => {
     return (
         <div>
             <PostsList />
@@ -8,4 +8,4 @@ const Home = () => {
     );
 };
 
-export default Home;
+export default MenHome;

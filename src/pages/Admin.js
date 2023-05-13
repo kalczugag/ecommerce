@@ -1,3 +1,4 @@
+import "../styles/TablesAdmin.css";
 import { Outlet, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Sidebar from "../componenets/Sidebar";

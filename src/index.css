@@ -6,37 +6,3 @@ icn > input {
     margin-right: 4px;
     margin-left: 4px;
 }
-
-.container {
-    max-width: 600px;
-}
-
-.table-container {
-    margin-top: 20px;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-th {
-    background-color: #f8f8f8;
-    border-bottom: 2px solid #ddd;
-    padding: 10px;
-    text-align: left;
-    user-select: none;
-}
-
-th:hover {
-    background-color: #e0e0e0;
-}
-
-td {
-    border-bottom: 1px solid #ddd;
-    padding: 10px;
-}
-
-tr:last-child td {
-    border-bottom: none;
-}

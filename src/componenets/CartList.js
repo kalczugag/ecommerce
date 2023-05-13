@@ -38,7 +38,7 @@ const CartList = ({ showCart }) => {
     );
 
     return (
-        <div className="absolute right-0 w-72 text-white text-lg p-3 rounded bg-gray-800 opacity-90">
+        <div className="absolute top-10 right-0 w-72 text-white text-lg p-3 pt-5 rounded bg-gray-800 opacity-90 z-10">
             <div className="max-h-80 overflow-y-auto">
                 {itemsCount === 0 ? (
                     "The cart is empty"

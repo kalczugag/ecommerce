@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import useDevState from "./hooks/use-dev-state";
 import useChangeDevState from "./hooks/use-change-dev-state";
 import Navbar from "./componenets/Navbar";
-import Home from "./pages/Home";
+import MenHome from "./pages/MenHome";
 import Admin from "./pages/Admin";
 import Items from "./pages/Items";
 import Orders from "./pages/Orders";
@@ -17,6 +17,7 @@ const App = () => {
     useEffect(() => {
         if (location.pathname === "/") {
             handleChangeDevMode(false);
+            window.location.href = "/men-home";
         } else if (location.pathname === "/admin") {
             handleChangeDevMode(true);
         } else if (location.pathname === "/admin/items") {
@@ -34,14 +35,14 @@ const App = () => {
         <div>
             <button
                 onClick={handleModeChange}
-                className="fixed right-2 border text-sm"
+                className="fixed top-16 right-2 border text-sm z-50"
             >
                 mode
             </button>
             <Navbar isDev={isDev} />
-            <div className="m-4 mt-12">
+            <div className="m-4 mt-10">
                 <Routes>
-                    <Route index element={<Home />} />
+                    <Route index path="men-home" element={<MenHome />} />
                     <Route path="admin" element={<Admin />}>
                         <Route path="items" element={<Items />} />
                         <Route path="orders" element={<Orders />} />

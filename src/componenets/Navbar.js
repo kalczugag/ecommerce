@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { GoPlus } from "react-icons/go";
 import Button from "../componenets/Button";
 import Modal from "../componenets/Modal";
 import PostsAddForm from "./PostsAddForm";
 import PostSearch from "./PostsSearch";
 import Cart from "./Cart";
-import { GoHome, GoPlus } from "react-icons/go";
+import BottomNavbar from "./BottomNavbar";
 
 const Navbar = ({ isDev }) => {
     const [showModal, setShowModal] = useState(false);
@@ -15,6 +16,13 @@ const Navbar = ({ isDev }) => {
         setShowModal(!showModal);
     };
 
+    const isActiveMen = location.pathname.startsWith("/men-home");
+    const isActiveWomen = location.pathname.startsWith("/women-home");
+    const menActiveClass = isActiveMen ? "bg-gray-700 hover:bg-gray-600" : "";
+    const womenActiveClass = isActiveWomen
+        ? "bg-gray-700 hover:bg-gray-600"
+        : "";
+
     const modal = (
         <Modal onClose={handleShowModal} container=".modal-container">
             <PostsAddForm onSubmit={handleShowModal} />
@@ -22,14 +30,28 @@ const Navbar = ({ isDev }) => {
     );
 
     return (
-        <nav className="fixed top-0 left-0 right-0 h-11 bg-gray-800">
+        <nav className="relative top-0 left-0 right-0 h-14 bg-gray-800">
             <div className="h-full max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 flex justify-between items-center">
-                <div className="flex-shrink-0">
+                <div className="flex flex-row items-center text-white space-x-2">
                     <Link
-                        to="/"
+                        to="/men-home"
+                        className={`p-1 px-2 hover:bg-gray-600 ${menActiveClass}`}
+                    >
+                        Men
+                    </Link>
+                    <Link
+                        to="/women-home"
+                        className={`p-1 px-2 hover:bg-gray-600 ${womenActiveClass}`}
+                    >
+                        Women
+                    </Link>
+                </div>
+                <div>
+                    <Link
+                        to="/men-home"
                         className="text-white font-bold text-2xl py-2 rounded-md"
                     >
-                        <GoHome />
+                        HOME
                     </Link>
                 </div>
                 <div className="hidden md:block">
@@ -52,14 +74,15 @@ const Navbar = ({ isDev }) => {
                             </Button>
                         )}
                         {isDev || (
-                            <div className="flex">
+                            <div className="flex flex-row items-center">
                                 <PostSearch />
-                                {location.pathname === "/checkout" || <Cart />}
+                                <Cart />
                             </div>
                         )}
                     </div>
                 </div>
             </div>
+            <BottomNavbar />
             {showModal && modal}
         </nav>
     );
