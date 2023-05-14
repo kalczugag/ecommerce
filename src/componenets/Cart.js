@@ -5,7 +5,7 @@ import Button from "./Button";
 import CartList from "./CartList";
 
 const Cart = () => {
-    const [showCart, setShowCart] = useState(false);
+    const [showCart, setShowCart] = useState(true);
     const itemsCount = useSelector((state) => state.cart.itemsCount);
     const cartRef = useRef(null);
 
