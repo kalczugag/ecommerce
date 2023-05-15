@@ -9,20 +9,54 @@ const cartSlice = createSlice({
     },
     reducers: {
         addToCart(state, action) {
-            state.items.push(action.payload);
-            state.totalPrice += action.payload.price;
-            state.itemsCount += 1;
+            const newItem = action.payload;
+            const existingItem = state.items.find(
+                (item) => item.id === newItem.id
+            );
+
+            if (existingItem) {
+                existingItem.count += 1;
+                state.totalPrice += newItem.price;
+            } else {
+                state.items.push({ ...newItem, count: 1 });
+                state.totalPrice += newItem.price;
+            }
+            state.itemsCount += action.payload.count;
         },
 
         removeFromCart(state, action) {
-            state.items = state.items.filter((post) => {
-                return post.id !== action.payload.id;
-            });
-            state.totalPrice -= action.payload.price;
-            state.itemsCount -= 1;
+            const removedItems = state.items.filter(
+                (item) => item.id === action.payload.id
+            );
+
+            state.items = state.items.filter(
+                (item) => item.id !== action.payload.id
+            );
+            state.totalPrice -= removedItems.reduce(
+                (total, item) => total + item.price * item.count,
+                0
+            );
+            state.itemsCount -= removedItems.reduce(
+                (total, item) => total + item.count,
+                0
+            );
+        },
+
+        changeItemsAmount(state, action) {
+            //when action.payload is negative it doesn't work
+            const itemIndex = state.items.findIndex(
+                (item) => item.id === action.payload.id
+            );
+
+            if (state.items[itemIndex].count !== 0) {
+                state.items[itemIndex].count += action.payload.count;
+                state.totalPrice += action.payload.price;
+                state.itemsCount += action.payload.count;
+            }
         },
     },
 });
 
 export const cartReducer = cartSlice.reducer;
-export const { addToCart, removeFromCart } = cartSlice.actions;
+export const { addToCart, removeFromCart, changeItemsAmount } =
+    cartSlice.actions;

@@ -37,10 +37,7 @@ const PostSearch = () => {
     return (
         <div>
             {showSearch || (
-                <Button
-                    className="border-0 text-white text-xl"
-                    onClick={handleShowSearch}
-                >
+                <Button className="border-0 text-xl" onClick={handleShowSearch}>
                     <GoSearch />
                 </Button>
             )}

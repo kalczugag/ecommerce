@@ -3,11 +3,12 @@ import { useEffect } from "react";
 import useDevState from "./hooks/use-dev-state";
 import useChangeDevState from "./hooks/use-change-dev-state";
 import Navbar from "./componenets/Navbar";
-import MenHome from "./pages/MenHome";
-import Admin from "./pages/Admin";
-import Items from "./pages/Items";
-import Orders from "./pages/Orders";
-import Checkout from "./pages/Checkout";
+import MenHomePage from "./pages/MenHomePage";
+import AdminPage from "./pages/AdminPage";
+import ItemsPage from "./pages/ItemsPage";
+import OrdersPage from "./pages/OrdersPage";
+import CheckoutPage from "./pages/CheckoutPage";
+import WishlistPage from "./pages/WishlistPage";
 
 const App = () => {
     const handleChangeDevMode = useChangeDevState();
@@ -42,12 +43,13 @@ const App = () => {
             <Navbar isDev={isDev} />
             <div className="m-4 mt-10">
                 <Routes>
-                    <Route index path="men-home" element={<MenHome />} />
-                    <Route path="admin" element={<Admin />}>
-                        <Route path="items" element={<Items />} />
-                        <Route path="orders" element={<Orders />} />
+                    <Route index path="men-home" element={<MenHomePage />} />
+                    <Route path="admin" element={<AdminPage />}>
+                        <Route path="items" element={<ItemsPage />} />
+                        <Route path="orders" element={<OrdersPage />} />
                     </Route>
-                    <Route path="checkout" element={<Checkout />} />
+                    <Route path="checkout" element={<CheckoutPage />} />
+                    <Route path="wishlist" element={<WishlistPage />} />
                 </Routes>
             </div>
         </div>

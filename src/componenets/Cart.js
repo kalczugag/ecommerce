@@ -5,7 +5,7 @@ import Button from "./Button";
 import CartList from "./CartList";
 
 const Cart = () => {
-    const [showCart, setShowCart] = useState(true);
+    const [showCart, setShowCart] = useState(false);
     const itemsCount = useSelector((state) => state.cart.itemsCount);
     const cartRef = useRef(null);
 
@@ -28,11 +28,8 @@ const Cart = () => {
     };
 
     return (
-        <div ref={cartRef} className="relative">
-            <Button
-                onClick={handleShowCart}
-                className="relative border-0 text-white text-xl"
-            >
+        <div ref={cartRef} className="relative text-xl">
+            <Button onClick={handleShowCart} className="relative border-0">
                 <BsCart3 />
                 {itemsCount === 0 ? (
                     ""

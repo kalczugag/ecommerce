@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { GoPlus } from "react-icons/go";
+import { VscAccount } from "react-icons/vsc";
 import Button from "../componenets/Button";
 import Modal from "../componenets/Modal";
 import PostsAddForm from "./PostsAddForm";
 import PostSearch from "./PostsSearch";
 import Cart from "./Cart";
 import BottomNavbar from "./BottomNavbar";
+import Wishlist from "./Wishlist";
 
 const Navbar = ({ isDev }) => {
     const [showModal, setShowModal] = useState(false);
@@ -74,9 +76,13 @@ const Navbar = ({ isDev }) => {
                             </Button>
                         )}
                         {isDev || (
-                            <div className="flex flex-row items-center">
+                            <div className="flex flex-row items-center text-white text-2xl">
                                 <PostSearch />
+                                <Wishlist />
                                 <Cart />
+                                <Button className="border-0">
+                                    <VscAccount />
+                                </Button>
                             </div>
                         )}
                     </div>

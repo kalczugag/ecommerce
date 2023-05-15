@@ -22,7 +22,7 @@ const PostsListItem = ({ post }) => {
     };
 
     const handleAddToCart = () => {
-        dispatch(addToCart(post));
+        dispatch(addToCart({ ...post, count: 1 }));
     };
 
     const MAX_DESCRIPTION_LENGTH = 100;
