@@ -43,15 +43,18 @@ const cartSlice = createSlice({
         },
 
         changeItemsAmount(state, action) {
-            //when action.payload is negative it doesn't work
-            const itemIndex = state.items.findIndex(
-                (item) => item.id === action.payload.id
-            );
+            const { id, amount } = action.payload;
+            const item = state.items.find((item) => item.id === id);
 
-            if (state.items[itemIndex].count !== 0) {
-                state.items[itemIndex].count += action.payload.count;
-                state.totalPrice += action.payload.price;
-                state.itemsCount += action.payload.count;
+            if (item) {
+                if (amount === -1 && item.count === 1) {
+                    return;
+                }
+
+                const newCount = item.count + amount;
+                item.count = newCount > 0 ? newCount : 0;
+                state.itemsCount += amount;
+                state.totalPrice += item.price * amount;
             }
         },
     },

@@ -8,6 +8,7 @@ const postAddFormSlice = createSlice({
         description: "",
         category: "",
         price: 0,
+        wishlist: false,
         image: null,
     },
     reducers: {

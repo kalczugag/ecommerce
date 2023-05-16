@@ -95,7 +95,6 @@ const Items = () => {
                 <SortableTable
                     data={currentItems}
                     config={config}
-                    // search={items}
                     keyFn={keyFn}
                 />
             </div>

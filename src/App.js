@@ -16,9 +16,11 @@ const App = () => {
     const isDev = useDevState();
 
     useEffect(() => {
-        if (location.pathname === "/") {
+        if (location.pathname === "/" || location.pathname === "/men-home") {
             handleChangeDevMode(false);
-            window.location.href = "/men-home";
+            if (location.pathname !== "/men-home") {
+                window.location.href = "/men-home";
+            }
         } else if (location.pathname === "/admin") {
             handleChangeDevMode(true);
         } else if (location.pathname === "/admin/items") {

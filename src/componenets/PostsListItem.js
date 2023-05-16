@@ -2,15 +2,17 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useThunk } from "../hooks/use-thunk";
 import useDevState from "../hooks/use-dev-state";
-import { removePost, addToCart } from "../store";
+import { removePost, editPost, addToCart, togglePostWishlist } from "../store";
 import { GoTrashcan, GoGear } from "react-icons/go";
+import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import Button from "./Button";
 import PostEditForm from "./PostEditForm";
 
 const PostsListItem = ({ post }) => {
     const dispatch = useDispatch();
-    const [doRemovePost, removeLoading, removeError] = useThunk(removePost);
     const [showEdit, setShowEdit] = useState(false);
+    const [doRemovePost, removeLoading, removeError] = useThunk(removePost);
+    const [doEditPost] = useThunk(editPost);
     const isDev = useDevState();
 
     const handleRemovePost = () => {
@@ -25,6 +27,10 @@ const PostsListItem = ({ post }) => {
         dispatch(addToCart({ ...post, count: 1 }));
     };
 
+    const handleAddToWishlist = () => {
+        doEditPost({ ...post, wishlist: !post.wishlist });
+    };
+
     const MAX_DESCRIPTION_LENGTH = 100;
 
     const truncatedDescription =
@@ -35,7 +41,19 @@ const PostsListItem = ({ post }) => {
     return (
         <div>
             {showEdit || (
-                <div className="flex flex-col bg-white rounded-lg shadow-md overflow-hidden">
+                <div className="relative flex flex-col bg-white rounded-lg shadow-md overflow-hidden">
+                    <div className="absolute top-3 right-0 flex items-center justify-center h-10 w-10 bg-white">
+                        <Button
+                            className="border-0 text-3xl"
+                            onClick={handleAddToWishlist}
+                        >
+                            {post.wishlist ? (
+                                <AiFillHeart />
+                            ) : (
+                                <AiOutlineHeart />
+                            )}
+                        </Button>
+                    </div>
                     <div className="h-auto bg-gray-300">
                         <img
                             src={post.image}

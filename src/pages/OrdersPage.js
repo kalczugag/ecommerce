@@ -65,6 +65,7 @@ const Orders = () => {
                     onChange={() => handleStatusChange(order)}
                 />
             ),
+            sortValue: (order) => order.status,
         },
     ];
 

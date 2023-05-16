@@ -6,6 +6,7 @@ const editPost = createAsyncThunk("posts/edit", async (post) => {
         title: post.title,
         description: post.description,
         price: post.price,
+        wishlist: post.wishlist,
         image: post.image,
     });
 

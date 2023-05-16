@@ -1,5 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { postsReducer, changePostSearchTerm } from "./slices/postSlice";
+import {
+    postsReducer,
+    changePostSearchTerm,
+    togglePostWishlist,
+} from "./slices/postSlice";
 import { postAddFormReducer } from "./slices/postAddFormSlice";
 import { cartReducer } from "./slices/cartSlice";
 import { postEditFormReducer } from "./slices/postEditFormSlice";
@@ -32,4 +36,4 @@ export * from "./thunks/fetchOrders";
 export * from "./thunks/editOrder";
 export * from "./thunks/addOrder";
 export * from "./thunks/fetchCategories";
-export { changePostSearchTerm, changeOrderSearchTerm };
+export { changePostSearchTerm, changeOrderSearchTerm, togglePostWishlist };

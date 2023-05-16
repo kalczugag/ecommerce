@@ -5,17 +5,17 @@ const CartListItemCounter = ({ item }) => {
     const dispatch = useDispatch();
 
     const handleIncrementItemsAmount = () => {
-        dispatch(changeItemsAmount({ ...item, count: 1 }));
+        dispatch(changeItemsAmount({ id: item.id, amount: 1 }));
     };
 
     const handleDecrementItemsAmount = () => {
-        dispatch(changeItemsAmount({ ...item, count: -1 }));
+        dispatch(changeItemsAmount({ id: item.id, amount: -1 }));
     };
 
     return (
         <div className="flex flex-row items-center mx-2">
             <button
-                onAbort={handleDecrementItemsAmount}
+                onClick={handleDecrementItemsAmount}
                 className="rounded-l-full border w-6 px-1 border-gray-500 hover:bg-gray-600"
             >
                 -
