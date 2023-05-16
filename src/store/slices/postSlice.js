@@ -16,13 +16,6 @@ const postSlice = createSlice({
         changePostSearchTerm(state, action) {
             state.searchTerm = action.payload;
         },
-        // togglePostWishlist(state, action) {
-        //     const postId = action.payload;
-        //     const post = state.data.find((post) => post.id === postId);
-        //     if (post) {
-        //         post.wishlist = !post.wishlist;
-        //     }
-        // },
     },
     extraReducers(builder) {
         builder.addCase(fetchPosts.pending, (state, action) => {
@@ -82,5 +75,5 @@ const postSlice = createSlice({
     },
 });
 
-export const { changePostSearchTerm, togglePostWishlist } = postSlice.actions;
+export const { changePostSearchTerm } = postSlice.actions;
 export const postsReducer = postSlice.reducer;
