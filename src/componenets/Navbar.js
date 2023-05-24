@@ -48,14 +48,14 @@ const Navbar = ({ isDev }) => {
                         Women
                     </Link>
                 </div>
-                <div>
+                {/* <div>
                     <Link
-                        to="/men-home"
+                        to={isActiveMen ? "/men-home" : "/women-home"}
                         className="text-white font-bold text-2xl py-2 rounded-md"
                     >
                         HOME
                     </Link>
-                </div>
+                </div> */}
                 <div className="hidden md:block">
                     <div className="relative ml-10 flex space-x-4">
                         {isDev && (

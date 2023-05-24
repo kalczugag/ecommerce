@@ -48,23 +48,33 @@ const PostsListItem = ({ post }) => {
                             onClick={handleAddToWishlist}
                         >
                             {post.wishlist ? (
-                                <AiFillHeart />
+                                <AiFillHeart className="text-orange-400" />
                             ) : (
                                 <AiOutlineHeart />
                             )}
                         </Button>
                     </div>
-                    <div className="h-auto bg-gray-300">
+                    <a
+                        href={`/product/${post.title.toLowerCase()}`}
+                        alt={post.title}
+                        className="h-auto bg-gray-300"
+                    >
                         <img
                             src={post.image}
                             alt={post.title}
                             className="w-full h-full object-cover"
                         />
-                    </div>
+                    </a>
                     <div className="p-4 flex-grow">
-                        <h3 className="text-lg font-semibold mb-2">
-                            {post.title}
-                        </h3>
+                        <a
+                            href={`/product/${post.title.toLowerCase()}`}
+                            alt={post.title}
+                        >
+                            <h3 className="text-lg font-semibold mb-2">
+                                {post.title}
+                            </h3>
+                        </a>
+
                         <p
                             className="text-gray-600 mb-4"
                             title={post.description}
