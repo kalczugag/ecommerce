@@ -15,7 +15,7 @@ This is an eCommerce project built using [React](https://reactjs.org/) and [Redu
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/your-username/eCommerce-project.git
+    git clone https://github.com/kalczugag/ecommerce.git
 
     ```
 
