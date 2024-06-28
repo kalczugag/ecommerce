@@ -18,8 +18,9 @@ import {
     LocalMallOutlined,
     Search,
 } from "@mui/icons-material";
+import Categories from "./Categories";
 
-const pages = ["Products", "Pricing", "Blog"];
+const pages = ["Women", "Men", "Company", "Stores"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 interface HeaderProps {
@@ -29,6 +30,10 @@ interface HeaderProps {
 const Header = ({ deliveryBar }: HeaderProps) => {
     const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+    const [openCategories, setOpenCategories] = useState<{
+        isOpen: boolean;
+        page: string;
+    }>({ isOpen: false, page: "" });
 
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElNav(event.currentTarget);
@@ -182,7 +187,18 @@ const Header = ({ deliveryBar }: HeaderProps) => {
                             {pages.map((page) => (
                                 <Button
                                     key={page}
-                                    onClick={handleCloseNavMenu}
+                                    onMouseOver={() =>
+                                        setOpenCategories({
+                                            isOpen: true,
+                                            page,
+                                        })
+                                    }
+                                    onMouseLeave={() =>
+                                        setOpenCategories({
+                                            isOpen: false,
+                                            page,
+                                        })
+                                    }
                                     sx={{
                                         my: 2,
                                         color: "black",
@@ -193,7 +209,6 @@ const Header = ({ deliveryBar }: HeaderProps) => {
                                 </Button>
                             ))}
                         </Box>
-
                         <Box sx={{ flexGrow: 0 }} className="space-x-2">
                             <Tooltip title="Open settings">
                                 <IconButton
@@ -251,6 +266,7 @@ const Header = ({ deliveryBar }: HeaderProps) => {
                     </Toolbar>
                 </Container>
             </AppBar>
+            {openCategories.isOpen && <Categories page={openCategories.page} />}
         </>
     );
 };
