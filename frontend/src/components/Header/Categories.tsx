@@ -32,7 +32,9 @@ const Categories = ({ page }: { page: string }) => {
                                 return (
                                     <li key={subcategory._id}>
                                         <Link
-                                            to={subcategory.label.toLowerCase()}
+                                            to={subcategory.label
+                                                .toLowerCase()
+                                                .replace(/\s+/g, "-")}
                                         >
                                             {subcategory.label}
                                         </Link>

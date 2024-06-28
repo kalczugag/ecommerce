@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
     Box,
     AppBar,
@@ -28,6 +29,8 @@ interface HeaderProps {
 }
 
 const Header = ({ deliveryBar }: HeaderProps) => {
+    const navigate = useNavigate();
+
     const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
     const [openCategories, setOpenCategories] = useState<{
@@ -42,12 +45,31 @@ const Header = ({ deliveryBar }: HeaderProps) => {
         setAnchorElUser(event.currentTarget);
     };
 
-    const handleCloseNavMenu = () => {
+    const handleCloseNavMenu = (page: string) => {
         setAnchorElNav(null);
+        navigate(page.toLowerCase());
     };
 
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
+    };
+
+    const handleMouseOver = (page: string) => {
+        setOpenCategories({ isOpen: true, page });
+    };
+
+    const handleMouseLeave = () => {
+        setOpenCategories((prevState) => ({
+            ...prevState,
+            isOpen: false,
+        }));
+    };
+
+    const handleCategoriesMouseEnter = () => {
+        setOpenCategories((prevState) => ({
+            ...prevState,
+            isOpen: true,
+        }));
     };
 
     return (
@@ -144,7 +166,7 @@ const Header = ({ deliveryBar }: HeaderProps) => {
                                 {pages.map((page) => (
                                     <MenuItem
                                         key={page}
-                                        onClick={handleCloseNavMenu}
+                                        onClick={() => handleCloseNavMenu(page)}
                                     >
                                         <Typography textAlign="center">
                                             {page}
@@ -187,18 +209,7 @@ const Header = ({ deliveryBar }: HeaderProps) => {
                             {pages.map((page) => (
                                 <Button
                                     key={page}
-                                    onMouseOver={() =>
-                                        setOpenCategories({
-                                            isOpen: true,
-                                            page,
-                                        })
-                                    }
-                                    onMouseLeave={() =>
-                                        setOpenCategories({
-                                            isOpen: false,
-                                            page,
-                                        })
-                                    }
+                                    onMouseOver={() => handleMouseOver(page)}
                                     sx={{
                                         my: 2,
                                         color: "black",
@@ -266,7 +277,14 @@ const Header = ({ deliveryBar }: HeaderProps) => {
                     </Toolbar>
                 </Container>
             </AppBar>
-            {openCategories.isOpen && <Categories page={openCategories.page} />}
+            {openCategories.isOpen && (
+                <Box
+                    onMouseEnter={handleCategoriesMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                >
+                    <Categories page={openCategories.page} />
+                </Box>
+            )}
         </>
     );
 };
