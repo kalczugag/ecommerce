@@ -116,7 +116,7 @@ const Header = ({ deliveryBar }: HeaderProps) => {
                             variant="h6"
                             noWrap
                             component="a"
-                            href="#app-bar-with-responsive-menu"
+                            href="/"
                             sx={{
                                 mr: 2,
                                 display: { xs: "none", md: "flex" },
@@ -209,6 +209,7 @@ const Header = ({ deliveryBar }: HeaderProps) => {
                             {pages.map((page) => (
                                 <Button
                                     key={page}
+                                    onClick={() => navigate(page.toLowerCase())}
                                     onMouseOver={() => handleMouseOver(page)}
                                     sx={{
                                         my: 2,
