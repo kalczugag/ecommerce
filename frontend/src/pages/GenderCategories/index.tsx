@@ -1,11 +1,13 @@
-import { useLocation } from "react-router-dom";
-import Categories from "../../components/Header/Categories";
+import ProductsList from "../../components/ProductsList";
+import DefaultPage from "../../layouts/Layout/DefaultPage";
+import data from "../../testData/ecommerce-products-data-master/Women/women_dress.json";
 
 const GenderCategories = () => {
-    const { pathname } = useLocation();
-    const page = pathname.slice(1);
-
-    return <Categories page={page} />;
+    return (
+        <DefaultPage>
+            <ProductsList data={data} />
+        </DefaultPage>
+    );
 };
 
 export default GenderCategories;

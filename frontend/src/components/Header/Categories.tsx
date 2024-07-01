@@ -1,6 +1,6 @@
 import { Container } from "@mui/material";
 import { Link } from "react-router-dom";
-import { categories, subcategories } from "./data";
+import { categories, subcategories } from "../../testData/data";
 
 const Categories = ({ page }: { page: string }) => {
     return (
@@ -32,9 +32,13 @@ const Categories = ({ page }: { page: string }) => {
                                 return (
                                     <li key={subcategory._id}>
                                         <Link
-                                            to={subcategory.label
-                                                .toLowerCase()
-                                                .replace(/\s+/g, "-")}
+                                            to={
+                                                page.toLowerCase() +
+                                                "/" +
+                                                subcategory.label
+                                                    .toLowerCase()
+                                                    .replace(/\s+/g, "-")
+                                            }
                                         >
                                             {subcategory.label}
                                         </Link>
