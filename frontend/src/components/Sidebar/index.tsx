@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Form, Field } from "react-final-form";
+import { useAppSelector } from "../../hooks/useStore";
 import {
     styled,
     Accordion as MuiAccordion,
@@ -25,23 +26,13 @@ const Accordion = styled((props: AccordionProps) => (
     },
 }));
 
-export interface SidebarProps {
-    data?: {
-        colorsCount: {
-            color: string;
-            count: number;
-        }[];
-        availableSizes: string[];
-        maxPrice: number;
-    };
-}
-
 const valuetext = (value: number) => `${value}PLN`;
 
 const minDistance = 10;
 
-const Sidebar = ({ data }: SidebarProps) => {
-    const [value, setValue] = useState<number[]>([0, data?.maxPrice || 0]);
+const Sidebar = () => {
+    const { data } = useAppSelector((state) => state.sidebar);
+    const [value, setValue] = useState<number[]>([0, data?.maxPrice || 9999]);
 
     const handleChange = (
         event: Event,

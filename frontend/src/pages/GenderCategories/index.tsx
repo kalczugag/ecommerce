@@ -1,9 +1,14 @@
-import ProductsList from "../../components/ProductsList";
-import ProductsPage from "../../layouts/Layout/ProductsPage";
+import { useEffect, useMemo } from "react";
+import { useAppDispatch } from "../../hooks/useStore";
+import { setData } from "../../store";
 import _ from "lodash";
+import ProductsList from "../../components/ProductsList";
+import ListLayout from "../../layouts/ListLayout";
 import data from "../../testData/ecommerce-products-data-master/Women/women_dress.json";
 
 const GenderCategories = () => {
+    const dispatch = useAppDispatch();
+
     const colorCounts = _.countBy(data.map((item) => item.color));
 
     const uniqueColorsCount = Object.keys(colorCounts).map((color) => ({
@@ -17,16 +22,23 @@ const GenderCategories = () => {
 
     const maxPrice = _.maxBy(data, "price")?.price || 1000;
 
-    const simplifiedData = {
-        colorsCount: uniqueColorsCount,
-        availableSizes: availableSizes,
-        maxPrice: maxPrice,
-    };
+    const simplifiedData = useMemo(
+        () => ({
+            colorsCount: uniqueColorsCount,
+            availableSizes,
+            maxPrice,
+        }),
+        [uniqueColorsCount, availableSizes, maxPrice]
+    );
+
+    useEffect(() => {
+        dispatch(setData(simplifiedData));
+    }, [dispatch, simplifiedData]);
 
     return (
-        <ProductsPage data={simplifiedData}>
+        <ListLayout>
             <ProductsList data={data} />
-        </ProductsPage>
+        </ListLayout>
     );
 };
 

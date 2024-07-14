@@ -1,14 +1,13 @@
 import { Container } from "@mui/material";
 import { ReactNode } from "react";
-import Sidebar from "../../../components/Sidebar";
-import SortBar from "../../../components/SortBar";
+import Sidebar from "../../components/Sidebar";
+import SortBar from "../../components/SortBar";
 
 interface DefaultPageProps {
-    data?: any;
     children: ReactNode;
 }
 
-const DefaultPage = ({ children, data }: DefaultPageProps) => {
+const DefaultPage = ({ children }: DefaultPageProps) => {
     return (
         <Container
             maxWidth="xl"
@@ -16,7 +15,7 @@ const DefaultPage = ({ children, data }: DefaultPageProps) => {
         >
             <SortBar />
             <div className="flex flex-row">
-                <Sidebar data={data} />
+                <Sidebar />
                 {children}
             </div>
         </Container>
