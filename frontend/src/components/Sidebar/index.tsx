@@ -30,33 +30,50 @@ const valuetext = (value: number) => `${value}PLN`;
 
 const minDistance = 10;
 
-const Sidebar = () => {
-    const { data } = useAppSelector((state) => state.sidebar);
+interface SidebarProps {
+    data: {
+        colorsCount: {
+            color: string;
+            count: number;
+        }[];
+        availableSizes: string[];
+        maxPrice: number;
+    };
+    onSubmit: (values: any) => void;
+}
+
+const Sidebar = ({ data, onSubmit }: SidebarProps) => {
     const [value, setValue] = useState<number[]>([0, data?.maxPrice || 9999]);
+    const [discountValue, setDiscountValue] = useState<number[]>([0, 100]);
 
     const handleChange = (
         event: Event,
         newValue: number | number[],
-        activeThumb: number
+        activeThumb: number,
+        setValueFunction: React.Dispatch<React.SetStateAction<number[]>>
     ) => {
         if (!Array.isArray(newValue)) {
             return;
         }
 
-        if (activeThumb === 0) {
-            setValue([Math.min(newValue[0], value[1] - minDistance), value[1]]);
-        } else {
-            setValue([value[0], Math.max(newValue[1], value[0] + minDistance)]);
-        }
-    };
-
-    const handleSubmit = (values: any) => {
-        console.log(values);
+        setValueFunction((prevValue) => {
+            if (activeThumb === 0) {
+                return [
+                    Math.min(newValue[0], prevValue[1] - minDistance),
+                    prevValue[1],
+                ];
+            } else {
+                return [
+                    prevValue[0],
+                    Math.max(newValue[1], prevValue[0] + minDistance),
+                ];
+            }
+        });
     };
 
     return (
         <Form
-            onSubmit={(e) => handleSubmit({ ...e, value })}
+            onSubmit={(e) => onSubmit({ ...e, value, discountValue })}
             render={({ handleSubmit }) => (
                 <form
                     onSubmit={handleSubmit}
@@ -145,7 +162,14 @@ const Sidebar = () => {
                                 <Slider
                                     getAriaLabel={() => "Minimum distance"}
                                     value={value}
-                                    onChange={handleChange}
+                                    onChange={(event, newValue, activeThumb) =>
+                                        handleChange(
+                                            event,
+                                            newValue,
+                                            activeThumb,
+                                            setValue
+                                        )
+                                    }
                                     max={data?.maxPrice}
                                     valueLabelDisplay="auto"
                                     getAriaValueText={valuetext}
@@ -162,7 +186,24 @@ const Sidebar = () => {
                             >
                                 Discount Range
                             </AccordionSummary>
-                            <AccordionDetails></AccordionDetails>
+                            <AccordionDetails>
+                                <Slider
+                                    getAriaLabel={() => "Minimum distance"}
+                                    value={discountValue}
+                                    onChange={(event, newValue, activeThumb) =>
+                                        handleChange(
+                                            event,
+                                            newValue,
+                                            activeThumb,
+                                            setDiscountValue
+                                        )
+                                    }
+                                    max={100}
+                                    valueLabelDisplay="auto"
+                                    getAriaValueText={valuetext}
+                                    disableSwap
+                                />
+                            </AccordionDetails>
                         </Accordion>
                         <Divider />
                         <Accordion>

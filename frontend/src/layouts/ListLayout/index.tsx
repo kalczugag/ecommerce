@@ -14,10 +14,7 @@ const DefaultPage = ({ children }: DefaultPageProps) => {
             sx={{ display: "flex", flexDirection: "column", marginY: "40px" }}
         >
             <SortBar />
-            <div className="flex flex-row">
-                <Sidebar />
-                {children}
-            </div>
+            <div className="flex flex-row">{children}</div>
         </Container>
     );
 };

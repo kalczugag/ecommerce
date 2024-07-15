@@ -1,14 +1,11 @@
-import { useEffect, useMemo } from "react";
-import { useAppDispatch } from "../../hooks/useStore";
-import { setData } from "../../store";
+import { useMemo, useState } from "react";
 import _ from "lodash";
 import ProductsList from "../../components/ProductsList";
+import Sidebar from "../../components/Sidebar";
 import ListLayout from "../../layouts/ListLayout";
 import data from "../../testData/ecommerce-products-data-master/Women/women_dress.json";
 
 const GenderCategories = () => {
-    const dispatch = useAppDispatch();
-
     const colorCounts = _.countBy(data.map((item) => item.color));
 
     const uniqueColorsCount = Object.keys(colorCounts).map((color) => ({
@@ -31,12 +28,13 @@ const GenderCategories = () => {
         [uniqueColorsCount, availableSizes, maxPrice]
     );
 
-    useEffect(() => {
-        dispatch(setData(simplifiedData));
-    }, [dispatch, simplifiedData]);
+    const handleSubmit = (values: any) => {
+        console.log(values);
+    };
 
     return (
         <ListLayout>
+            <Sidebar data={simplifiedData} onSubmit={handleSubmit} />
             <ProductsList data={data} />
         </ListLayout>
     );
