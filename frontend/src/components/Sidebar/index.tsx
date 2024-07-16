@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { Form, Field } from "react-final-form";
-import { useAppSelector } from "../../hooks/useStore";
+import { Form, Field, FormSpy } from "react-final-form";
 import {
     styled,
     Accordion as MuiAccordion,
@@ -76,7 +75,10 @@ const Sidebar = ({ data, onSubmit }: SidebarProps) => {
 
     return (
         <Form
-            onSubmit={(e) => onSubmit({ ...e, priceRange, discountRange })}
+            onSubmit={(e) => {
+                onSubmit({ ...e, priceRange, discountRange });
+            }}
+            subscription={{}}
             render={({ handleSubmit }) => (
                 <form
                     onSubmit={handleSubmit}
@@ -205,16 +207,58 @@ const Sidebar = ({ data, onSubmit }: SidebarProps) => {
                             </AccordionDetails>
                         </Accordion>
                         <Divider />
-                        <Accordion>
-                            <AccordionSummary expandIcon={<ExpandMore />}>
-                                Availability
-                            </AccordionSummary>
-                            <AccordionDetails></AccordionDetails>
-                        </Accordion>
+
+                        <Field name="availability" type="checkbox">
+                            {({ input }) => (
+                                <Accordion>
+                                    <AccordionSummary
+                                        expandIcon={<ExpandMore />}
+                                    >
+                                        Availability
+                                    </AccordionSummary>
+                                    <AccordionDetails
+                                        sx={{
+                                            display: "flex",
+                                            flexDirection: "column",
+                                        }}
+                                    >
+                                        <FormControlLabel
+                                            control={<Checkbox />}
+                                            name={input.name}
+                                            value={input.value}
+                                            onChange={input.onChange}
+                                            label="Yes"
+                                        />
+                                        <FormControlLabel
+                                            control={<Checkbox />}
+                                            name={input.name}
+                                            value={input.value}
+                                            onChange={() => input.onChange}
+                                            label="No"
+                                        />
+                                    </AccordionDetails>
+                                </Accordion>
+                            )}
+                        </Field>
                     </div>
-                    <Button type="submit" variant="contained">
-                        Apply
-                    </Button>
+                    <FormSpy subscription={{ values: true, dirty: true }}>
+                        {({ values, dirty }) => {
+                            const priceRangeChanged =
+                                values.priceRange !== priceRange;
+                            const discountRangeChanged =
+                                values.discountRange !== discountRange;
+
+                            return (
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    disabled={!dirty}
+                                >
+                                    Apply
+                                </Button>
+                            );
+                        }}
+                    </FormSpy>
                 </form>
             )}
         />

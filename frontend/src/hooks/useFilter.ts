@@ -33,8 +33,15 @@ export const useFilter = (data: Product[], maxPrice: number) => {
                     product.discountPersent >= filters.discountRange[0] &&
                     product.discountPersent <= filters.discountRange[1];
             }
+            const isAvailable = product.size.some(
+                (size) => size.quantity > 0 && filters.availability
+            );
             return (
-                isColorMatch && isSizeMatch && isPriceMatch && isDiscountMatch
+                isColorMatch &&
+                isSizeMatch &&
+                isPriceMatch &&
+                isDiscountMatch &&
+                isAvailable
             );
         });
     };
