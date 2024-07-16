@@ -43,8 +43,11 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ data, onSubmit }: SidebarProps) => {
-    const [value, setValue] = useState<number[]>([0, data?.maxPrice || 9999]);
-    const [discountValue, setDiscountValue] = useState<number[]>([0, 100]);
+    const [priceRange, setpriceRange] = useState<number[]>([
+        0,
+        data?.maxPrice || 9999,
+    ]);
+    const [discountRange, setDiscountRange] = useState<number[]>([0, 100]);
 
     const handleChange = (
         event: Event,
@@ -73,7 +76,7 @@ const Sidebar = ({ data, onSubmit }: SidebarProps) => {
 
     return (
         <Form
-            onSubmit={(e) => onSubmit({ ...e, value, discountValue })}
+            onSubmit={(e) => onSubmit({ ...e, priceRange, discountRange })}
             render={({ handleSubmit }) => (
                 <form
                     onSubmit={handleSubmit}
@@ -161,13 +164,13 @@ const Sidebar = ({ data, onSubmit }: SidebarProps) => {
                             <AccordionDetails>
                                 <Slider
                                     getAriaLabel={() => "Minimum distance"}
-                                    value={value}
+                                    value={priceRange}
                                     onChange={(event, newValue, activeThumb) =>
                                         handleChange(
                                             event,
                                             newValue,
                                             activeThumb,
-                                            setValue
+                                            setpriceRange
                                         )
                                     }
                                     max={data?.maxPrice}
@@ -179,23 +182,19 @@ const Sidebar = ({ data, onSubmit }: SidebarProps) => {
                         </Accordion>
                         <Divider />
                         <Accordion>
-                            <AccordionSummary
-                                expandIcon={<ExpandMore />}
-                                aria-controls="panel2-content"
-                                id="panel2-header"
-                            >
+                            <AccordionSummary expandIcon={<ExpandMore />}>
                                 Discount Range
                             </AccordionSummary>
                             <AccordionDetails>
                                 <Slider
                                     getAriaLabel={() => "Minimum distance"}
-                                    value={discountValue}
+                                    value={discountRange}
                                     onChange={(event, newValue, activeThumb) =>
                                         handleChange(
                                             event,
                                             newValue,
                                             activeThumb,
-                                            setDiscountValue
+                                            setDiscountRange
                                         )
                                     }
                                     max={100}
@@ -207,11 +206,7 @@ const Sidebar = ({ data, onSubmit }: SidebarProps) => {
                         </Accordion>
                         <Divider />
                         <Accordion>
-                            <AccordionSummary
-                                expandIcon={<ExpandMore />}
-                                aria-controls="panel2-content"
-                                id="panel2-header"
-                            >
+                            <AccordionSummary expandIcon={<ExpandMore />}>
                                 Availability
                             </AccordionSummary>
                             <AccordionDetails></AccordionDetails>

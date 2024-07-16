@@ -1,6 +1,5 @@
 import { Container } from "@mui/material";
 import { ReactNode } from "react";
-import Sidebar from "../../components/Sidebar";
 import SortBar from "../../components/SortBar";
 
 interface DefaultPageProps {
