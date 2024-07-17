@@ -25,23 +25,16 @@ export const useFilter = (data: Product[], maxPrice: number) => {
                 !filters.size ||
                 product.size.some((size) => size.name === filters.size);
             const isPriceMatch =
-                product.price >= filters.priceRange[0] &&
-                product.price <= filters.priceRange[1];
-            let isDiscountMatch;
-            if (product.discountPersent) {
-                isDiscountMatch =
-                    product.discountPersent >= filters.discountRange[0] &&
-                    product.discountPersent <= filters.discountRange[1];
-            }
-            const isAvailable = product.size.some(
-                (size) => size.quantity > 0 && filters.availability
-            );
+                !filters.priceRange ||
+                (product.price >= filters.priceRange[0] &&
+                    product.price <= filters.priceRange[1]);
+            const isDiscountMatch =
+                !filters.discountRange ||
+                (product.discountPersent! >= filters.discountRange[0] &&
+                    product.discountPersent! <= filters.discountRange[1]);
+
             return (
-                isColorMatch &&
-                isSizeMatch &&
-                isPriceMatch &&
-                isDiscountMatch &&
-                isAvailable
+                isColorMatch && isSizeMatch && isPriceMatch && isDiscountMatch
             );
         });
     };

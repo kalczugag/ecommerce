@@ -27,8 +27,6 @@ const Accordion = styled((props: AccordionProps) => (
 
 const valuetext = (value: number) => `${value}PLN`;
 
-const minDistance = 10;
-
 interface SidebarProps {
     data: {
         colorsCount: {
@@ -42,42 +40,9 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ data, onSubmit }: SidebarProps) => {
-    const [priceRange, setpriceRange] = useState<number[]>([
-        0,
-        data?.maxPrice || 9999,
-    ]);
-    const [discountRange, setDiscountRange] = useState<number[]>([0, 100]);
-
-    const handleChange = (
-        event: Event,
-        newValue: number | number[],
-        activeThumb: number,
-        setValueFunction: React.Dispatch<React.SetStateAction<number[]>>
-    ) => {
-        if (!Array.isArray(newValue)) {
-            return;
-        }
-
-        setValueFunction((prevValue) => {
-            if (activeThumb === 0) {
-                return [
-                    Math.min(newValue[0], prevValue[1] - minDistance),
-                    prevValue[1],
-                ];
-            } else {
-                return [
-                    prevValue[0],
-                    Math.max(newValue[1], prevValue[0] + minDistance),
-                ];
-            }
-        });
-    };
-
     return (
         <Form
-            onSubmit={(e) => {
-                onSubmit({ ...e, priceRange, discountRange });
-            }}
+            onSubmit={onSubmit}
             subscription={{}}
             render={({ handleSubmit }) => (
                 <form
@@ -243,6 +208,7 @@ const Sidebar = ({ data, onSubmit }: SidebarProps) => {
                                             value={input.value}
                                             onChange={input.onChange}
                                             label="Yes"
+                                            disabled
                                         />
                                         <FormControlLabel
                                             control={<Checkbox />}
@@ -250,6 +216,7 @@ const Sidebar = ({ data, onSubmit }: SidebarProps) => {
                                             value={input.value}
                                             onChange={() => input.onChange}
                                             label="No"
+                                            disabled
                                         />
                                     </AccordionDetails>
                                 </Accordion>

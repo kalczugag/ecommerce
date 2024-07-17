@@ -3,12 +3,19 @@ import type { Product } from "../../types/product";
 
 interface ProductsListProps {
     data: Product[];
+    page: number;
+    rowsPerPage: number;
 }
 
-const ProductsList = ({ data }: ProductsListProps) => {
+const ProductsList = ({ data, page, rowsPerPage }: ProductsListProps) => {
+    const startIndex = (page - 1) * rowsPerPage;
+    const endIndex = startIndex + rowsPerPage;
+
+    const paginatedData = data.slice(startIndex, endIndex);
+
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {data.map((product, index) => (
+            {paginatedData.map((product, index) => (
                 <ProductCard
                     key={product.title + "_" + index.toString()}
                     {...product}
