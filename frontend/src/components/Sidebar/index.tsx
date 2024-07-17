@@ -159,55 +159,70 @@ const Sidebar = ({ data, onSubmit }: SidebarProps) => {
                             )}
                         </Field>
                         <Divider />
-                        <Accordion>
-                            <AccordionSummary expandIcon={<ExpandMore />}>
-                                Price
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                <Slider
-                                    getAriaLabel={() => "Minimum distance"}
-                                    value={priceRange}
-                                    onChange={(event, newValue, activeThumb) =>
-                                        handleChange(
-                                            event,
-                                            newValue,
-                                            activeThumb,
-                                            setpriceRange
-                                        )
-                                    }
-                                    max={data?.maxPrice}
-                                    valueLabelDisplay="auto"
-                                    getAriaValueText={valuetext}
-                                    disableSwap
-                                />
-                            </AccordionDetails>
-                        </Accordion>
+                        <Field
+                            name="priceRange"
+                            parse={(value) => value || [0, data?.maxPrice]}
+                        >
+                            {({ input }) => (
+                                <Accordion>
+                                    <AccordionSummary
+                                        expandIcon={<ExpandMore />}
+                                    >
+                                        Price
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                        <Slider
+                                            name={input.name}
+                                            value={
+                                                input.value || [
+                                                    0,
+                                                    data?.maxPrice,
+                                                ]
+                                            }
+                                            onChange={(_, value) => {
+                                                input.onChange(value);
+                                            }}
+                                            max={data?.maxPrice}
+                                            valueLabelDisplay="auto"
+                                            getAriaValueText={valuetext}
+                                            disableSwap
+                                        />
+                                    </AccordionDetails>
+                                </Accordion>
+                            )}
+                        </Field>
                         <Divider />
-                        <Accordion>
-                            <AccordionSummary expandIcon={<ExpandMore />}>
-                                Discount Range
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                <Slider
-                                    getAriaLabel={() => "Minimum distance"}
-                                    value={discountRange}
-                                    onChange={(event, newValue, activeThumb) =>
-                                        handleChange(
-                                            event,
-                                            newValue,
-                                            activeThumb,
-                                            setDiscountRange
-                                        )
-                                    }
-                                    max={100}
-                                    valueLabelDisplay="auto"
-                                    getAriaValueText={valuetext}
-                                    disableSwap
-                                />
-                            </AccordionDetails>
-                        </Accordion>
+                        <Field
+                            name="discountRange"
+                            parse={(value) => value || [0, 100]}
+                        >
+                            {({ input }) => (
+                                <Accordion>
+                                    <AccordionSummary
+                                        expandIcon={<ExpandMore />}
+                                    >
+                                        Discount Range
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                        <Slider
+                                            name={input.name}
+                                            getAriaLabel={() =>
+                                                "Minimum distance"
+                                            }
+                                            value={input.value || [0, 100]}
+                                            onChange={(_, value) => {
+                                                input.onChange(value);
+                                            }}
+                                            max={100}
+                                            valueLabelDisplay="auto"
+                                            getAriaValueText={valuetext}
+                                            disableSwap
+                                        />
+                                    </AccordionDetails>
+                                </Accordion>
+                            )}
+                        </Field>
                         <Divider />
-
                         <Field name="availability" type="checkbox">
                             {({ input }) => (
                                 <Accordion>
@@ -241,23 +256,16 @@ const Sidebar = ({ data, onSubmit }: SidebarProps) => {
                             )}
                         </Field>
                     </div>
-                    <FormSpy subscription={{ values: true, dirty: true }}>
-                        {({ values, dirty }) => {
-                            const priceRangeChanged =
-                                values.priceRange !== priceRange;
-                            const discountRangeChanged =
-                                values.discountRange !== discountRange;
-
-                            return (
-                                <Button
-                                    type="submit"
-                                    variant="contained"
-                                    disabled={!dirty}
-                                >
-                                    Apply
-                                </Button>
-                            );
-                        }}
+                    <FormSpy subscription={{ dirty: true }}>
+                        {({ dirty }) => (
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                disabled={!dirty}
+                            >
+                                Apply
+                            </Button>
+                        )}
                     </FormSpy>
                 </form>
             )}
