@@ -38,7 +38,7 @@ const GenderCategories = () => {
         <ListLayout
             pagination
             page={page}
-            count={10}
+            count={Math.ceil(filteredData.length / rowsPerPage)}
             onPageChange={handlePageChange}
         >
             <Sidebar data={simplifiedData} onSubmit={handleSubmit} />
