@@ -17,7 +17,10 @@ const ProductCard = (data: Product) => {
     }
 
     return (
-        <Link to={`/${data.title.toLowerCase()}`} className="flex flex-col">
+        <Link
+            to={`/product/${data.title.toLowerCase()}}`}
+            className="flex flex-col"
+        >
             <div>
                 <img
                     src={data.imageUrl}

@@ -1,15 +1,16 @@
 import { Route, Routes } from "react-router-dom";
 import PrivateOutlet from "./pages/PrivateOutlet";
-import GenderCategories from "./pages/GenderCategories";
-import Home from "./pages/Home";
+import Dashboard from "./pages/Dashboard";
+import Category from "./pages/Category";
+import ProductDetails from "./pages/ProductDetails";
 
 const App = () => {
     return (
         <Routes>
             <Route element={<PrivateOutlet />}>
-                <Route index element={<Home />} />
-                <Route path="/women/:category" element={<GenderCategories />} />
-                <Route path="/men/:category" element={<GenderCategories />} />
+                <Route index element={<Dashboard />} />
+                <Route path="/:page/:category" element={<Category />} />
+                <Route path="/product/:id" element={<ProductDetails />} />
             </Route>
         </Routes>
     );

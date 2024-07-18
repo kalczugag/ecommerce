@@ -1,6 +1,6 @@
 import { Container, Typography } from "@mui/material";
 
-const Home = () => {
+const Dashboard = () => {
     return (
         <Container
             maxWidth={false}
@@ -23,4 +23,4 @@ const Home = () => {
     );
 };
 
-export default Home;
+export default Dashboard;

@@ -8,7 +8,7 @@ import data from "../../testData/ecommerce-products-data-master/Women/women_dres
 
 const rowsPerPage = 8;
 
-const GenderCategories = () => {
+const Category = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const queryParams = new URLSearchParams(location.search);
@@ -51,4 +51,4 @@ const GenderCategories = () => {
     );
 };
 
-export default GenderCategories;
+export default Category;
