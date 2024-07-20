@@ -1,22 +1,13 @@
-import { Container, Pagination } from "@mui/material";
+import { Container } from "@mui/material";
 import { ReactNode } from "react";
 import SortBar from "../../components/SortBar";
 
 interface DefaultPageProps {
     children: ReactNode;
-    pagination?: boolean;
-    page?: number;
-    count?: number;
-    onPageChange?: (event: React.ChangeEvent<unknown>, value: number) => void;
+    pagination?: JSX.Element;
 }
 
-const DefaultPage = ({
-    children,
-    pagination,
-    page,
-    count,
-    onPageChange,
-}: DefaultPageProps) => {
+const DefaultPage = ({ children, pagination }: DefaultPageProps) => {
     return (
         <Container
             maxWidth="xl"
@@ -25,14 +16,7 @@ const DefaultPage = ({
             <SortBar />
             <div className="flex flex-col">
                 <div className="flex flex-row">{children}</div>
-                {pagination && (
-                    <Pagination
-                        count={count}
-                        page={page}
-                        onChange={onPageChange}
-                        sx={{ marginTop: "60px", alignSelf: "center" }}
-                    />
-                )}
+                {pagination}
             </div>
         </Container>
     );

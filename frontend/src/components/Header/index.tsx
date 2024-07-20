@@ -1,28 +1,18 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import {
     Box,
     AppBar,
     Toolbar,
-    IconButton,
     Typography,
     Button,
-    Menu,
-    MenuItem,
-    Avatar,
-    Tooltip,
     Container,
 } from "@mui/material";
-import {
-    Menu as MenuIcon,
-    Adb,
-    LocalMallOutlined,
-    Search,
-} from "@mui/icons-material";
+import { Adb } from "@mui/icons-material";
 import Categories from "./Categories";
+import AccountTools from "./AccountTools";
 
 const pages = ["Women", "Men", "Company", "Stores"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 interface HeaderProps {
     deliveryBar?: boolean;
@@ -32,7 +22,6 @@ const Header = ({ deliveryBar }: HeaderProps) => {
     const navigate = useNavigate();
 
     const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
-    const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
     const [openCategories, setOpenCategories] = useState<{
         isOpen: boolean;
         page: string;
@@ -41,17 +30,10 @@ const Header = ({ deliveryBar }: HeaderProps) => {
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElNav(event.currentTarget);
     };
-    const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorElUser(event.currentTarget);
-    };
 
     const handleCloseNavMenu = (page: string) => {
         setAnchorElNav(null);
         navigate(page.toLowerCase());
-    };
-
-    const handleCloseUserMenu = () => {
-        setAnchorElUser(null);
     };
 
     const handleMouseOver = (page: string) => {
@@ -105,101 +87,17 @@ const Header = ({ deliveryBar }: HeaderProps) => {
             >
                 <Container maxWidth="xl">
                     <Toolbar disableGutters>
-                        <Adb
-                            sx={{
-                                display: { xs: "none", md: "flex" },
-                                mr: 1,
-                                color: "black",
-                            }}
-                        />
-                        <Typography
-                            variant="h6"
-                            noWrap
-                            component="a"
-                            href="/"
-                            sx={{
-                                mr: 2,
-                                display: { xs: "none", md: "flex" },
-                                fontFamily: "monospace",
-                                fontWeight: 700,
-                                letterSpacing: ".3rem",
-                                color: "black",
-                                textDecoration: "none",
-                            }}
-                        >
-                            LOGO
-                        </Typography>
-                        <Box
-                            sx={{
-                                flexGrow: 1,
-                                display: { xs: "flex", md: "none" },
-                            }}
-                        >
-                            <IconButton
-                                size="large"
-                                aria-label="account of current user"
-                                aria-controls="menu-appbar"
-                                aria-haspopup="true"
-                                onClick={handleOpenNavMenu}
-                                sx={{ color: "black" }}
-                            >
-                                <MenuIcon />
-                            </IconButton>
-                            <Menu
-                                id="menu-appbar"
-                                anchorEl={anchorElNav}
-                                anchorOrigin={{
-                                    vertical: "bottom",
-                                    horizontal: "left",
-                                }}
-                                keepMounted
-                                transformOrigin={{
-                                    vertical: "top",
-                                    horizontal: "left",
-                                }}
-                                open={Boolean(anchorElNav)}
-                                onClose={handleCloseNavMenu}
-                                sx={{
-                                    display: { xs: "block", md: "none" },
-                                }}
-                            >
-                                {pages.map((page) => (
-                                    <MenuItem
-                                        key={page}
-                                        onClick={() => handleCloseNavMenu(page)}
-                                    >
-                                        <Typography textAlign="center">
-                                            {page}
-                                        </Typography>
-                                    </MenuItem>
-                                ))}
-                            </Menu>
-                        </Box>
-                        <Adb
-                            sx={{
-                                display: { xs: "flex", md: "none" },
-                                mr: 1,
-                                color: "black",
-                            }}
-                        />
-                        <Typography
-                            variant="h5"
-                            noWrap
-                            component="a"
-                            href="#app-bar-with-responsive-menu"
-                            sx={{
-                                mr: 2,
-                                display: { xs: "flex", md: "none" },
-                                flexGrow: 1,
-                                fontFamily: "monospace",
-                                fontWeight: 700,
-                                letterSpacing: ".3rem",
-                                color: "black",
-                                textDecoration: "none",
-                            }}
-                        >
-                            LOGO
-                        </Typography>
+                        <div className="flex items-center flex-1 md:flex-none">
+                            <div className="flex items-center mr-2 flex-grow ">
+                                <Adb className="mr-1 text-black" />
+                                <Link
+                                    to="/"
+                                    className="font-mono font-bold text-xl tracking-[.3rem] text-black no-underline"
+                                >
+                                    LOGO
+                                </Link>
+                            </div>
+                        </div>
                         <Box
                             sx={{
                                 flexGrow: 1,
@@ -221,60 +119,7 @@ const Header = ({ deliveryBar }: HeaderProps) => {
                                 </Button>
                             ))}
                         </Box>
-                        <Box sx={{ flexGrow: 0 }} className="space-x-2">
-                            <Tooltip title="Open settings">
-                                <IconButton
-                                    onClick={handleOpenUserMenu}
-                                    sx={{ p: 0 }}
-                                >
-                                    <Avatar
-                                        sx={{ bgcolor: "#5146E7" }}
-                                        alt="Remy Sharp"
-                                        src="/static/images/avatar/2.jpg"
-                                    />
-                                </IconButton>
-                            </Tooltip>
-                            <Menu
-                                sx={{ mt: "45px" }}
-                                id="menu-appbar"
-                                anchorEl={anchorElUser}
-                                anchorOrigin={{
-                                    vertical: "top",
-                                    horizontal: "right",
-                                }}
-                                keepMounted
-                                transformOrigin={{
-                                    vertical: "top",
-                                    horizontal: "right",
-                                }}
-                                open={Boolean(anchorElUser)}
-                                onClose={handleCloseUserMenu}
-                            >
-                                {settings.map((setting) => (
-                                    <MenuItem
-                                        key={setting}
-                                        onClick={handleCloseUserMenu}
-                                    >
-                                        <Typography textAlign="center">
-                                            {setting}
-                                        </Typography>
-                                    </MenuItem>
-                                ))}
-                            </Menu>
-                            <IconButton>
-                                <Search />
-                            </IconButton>
-                            <IconButton>
-                                <LocalMallOutlined
-                                    sx={{ position: "relative" }}
-                                />
-                                {!true && (
-                                    <div className="absolute -right-2 top-0 flex justify-center items-center  rounded-full w-5 h-5 text-xs text-white bg-red-500">
-                                        1
-                                    </div>
-                                )}
-                            </IconButton>
-                        </Box>
+                        <AccountTools />
                     </Toolbar>
                 </Container>
             </AppBar>

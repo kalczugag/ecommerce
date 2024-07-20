@@ -1,6 +1,7 @@
 import { useFilter, useFilterProps } from "../../hooks/useFilter";
 import usePagination from "../../hooks/usePagination";
 import ListLayout from "../../layouts/ListLayout";
+import { Pagination } from "@mui/material";
 import ProductsList from "../../components/ProductsList";
 import Sidebar from "../../components/Sidebar";
 import data from "../../testData/ecommerce-products-data-master/Women/women_dress.json";
@@ -19,10 +20,14 @@ const Category = () => {
 
     return (
         <ListLayout
-            pagination
-            page={page}
-            count={count}
-            onPageChange={handlePageChange}
+            pagination={
+                <Pagination
+                    count={count}
+                    page={page}
+                    onChange={handlePageChange}
+                    sx={{ marginTop: "60px", alignSelf: "center" }}
+                />
+            }
         >
             <Sidebar data={simplifiedData} onSubmit={handleSubmit} />
             <ProductsList
