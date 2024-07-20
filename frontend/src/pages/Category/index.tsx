@@ -1,51 +1,34 @@
-import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 import { useFilter, useFilterProps } from "../../hooks/useFilter";
+import usePagination from "../../hooks/usePagination";
 import ListLayout from "../../layouts/ListLayout";
 import ProductsList from "../../components/ProductsList";
 import Sidebar from "../../components/Sidebar";
 import data from "../../testData/ecommerce-products-data-master/Women/women_dress.json";
 
-const rowsPerPage = 8;
+const ROWS_PER_PAGE = 8;
 
 const Category = () => {
-    const location = useLocation();
-    const navigate = useNavigate();
-    const queryParams = new URLSearchParams(location.search);
-    const initialPage = parseInt(queryParams.get("page")!) || 1;
-
-    const [page, setPage] = useState<number>(initialPage);
-
+    const [handlePageChange, page] = usePagination();
     const simplifiedData = useFilterProps(data);
     const { handleSubmit, filteredData } = useFilter(
         data,
         simplifiedData.maxPrice
     );
 
-    useEffect(() => {
-        navigate(`?page=${page}`);
-        window.scrollTo(0, 0);
-    }, [page, navigate]);
-
-    const handlePageChange = (
-        event: React.ChangeEvent<unknown>,
-        value: number
-    ) => {
-        setPage(value);
-    };
+    const count = Math.ceil(filteredData.length / ROWS_PER_PAGE);
 
     return (
         <ListLayout
             pagination
             page={page}
-            count={Math.ceil(filteredData.length / rowsPerPage)}
+            count={count}
             onPageChange={handlePageChange}
         >
             <Sidebar data={simplifiedData} onSubmit={handleSubmit} />
             <ProductsList
                 data={filteredData}
                 page={page}
-                rowsPerPage={rowsPerPage}
+                rowsPerPage={ROWS_PER_PAGE}
             />
         </ListLayout>
     );

@@ -1,18 +1,18 @@
 import { Route, Routes } from "react-router-dom";
-import PrivateOutlet from "./pages/PrivateOutlet";
+import Layout from "./layouts/Layout";
 import Dashboard from "./pages/Dashboard";
 import Category from "./pages/Category";
 import ProductDetails from "./pages/ProductDetails";
 
 const App = () => {
     return (
-        <Routes>
-            <Route element={<PrivateOutlet />}>
+        <Layout>
+            <Routes>
                 <Route index element={<Dashboard />} />
                 <Route path="/:page/:category" element={<Category />} />
                 <Route path="/product/:id" element={<ProductDetails />} />
-            </Route>
-        </Routes>
+            </Routes>
+        </Layout>
     );
 };
 
