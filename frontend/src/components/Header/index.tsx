@@ -21,20 +21,10 @@ interface HeaderProps {
 const Header = ({ deliveryBar }: HeaderProps) => {
     const navigate = useNavigate();
 
-    const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
     const [openCategories, setOpenCategories] = useState<{
         isOpen: boolean;
         page: string;
     }>({ isOpen: false, page: "" });
-
-    const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorElNav(event.currentTarget);
-    };
-
-    const handleCloseNavMenu = (page: string) => {
-        setAnchorElNav(null);
-        navigate(page.toLowerCase());
-    };
 
     const handleMouseOver = (page: string) => {
         setOpenCategories({ isOpen: true, page });
