@@ -9,7 +9,6 @@ const Header = () => {
             sx={{
                 backgroundColor: "#1E1F20",
                 boxShadow: "none",
-                color: "white",
             }}
         >
             <Container maxWidth="xl">

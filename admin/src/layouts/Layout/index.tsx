@@ -9,7 +9,7 @@ const Layout = ({ children }: LayoutProps) => {
     return (
         <div>
             <Header />
-            {children}
+            <div className="flex flex-row">{children}</div>
         </div>
     );
 };
