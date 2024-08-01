@@ -22,7 +22,7 @@ const items = [
 
 const Sidebar = () => {
     return (
-        <div className="flex flex-col py-6 h-screen bg-light-secondary dark:bg-[#171717]">
+        <div className="flex flex-col py-6 h-screen bg-light-secondary dark:bg-darker">
             <div className="flex items-center px-6 mb-10">
                 <Adb className="mr-1" />
                 <Link
