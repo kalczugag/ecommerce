@@ -2,10 +2,12 @@ import { useState } from "react";
 import {
     Modal,
     Box,
+    Button,
     IconButton,
     Typography,
     Switch,
     FormControlLabel,
+    DialogActions,
 } from "@mui/material";
 import { Settings } from "@mui/icons-material";
 import useTheme from "../../hooks/useTheme";
@@ -48,6 +50,15 @@ const SettingsModal = () => {
                         }
                         label="Dark Mode"
                     />
+                    <DialogActions>
+                        <Button
+                            data-testid="closeButton"
+                            variant="contained"
+                            onClick={handleClose}
+                        >
+                            Save
+                        </Button>
+                    </DialogActions>
                 </Box>
             </Modal>
         </div>
