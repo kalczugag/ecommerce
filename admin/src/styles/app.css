@@ -1,0 +1,21 @@
+:root {
+    --bg-color: #ffffff;
+    --text-color: #28292b;
+}
+
+body.dark {
+    --bg-color: #1e1f20;
+    --text-color: #e5e5e5;
+}
+
+html,
+body {
+    html,
+    body {
+        height: 100%;
+        margin: 0;
+        font-family: sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+    }
+}

@@ -16,7 +16,7 @@ const TitledIconButton = ({
     return (
         <Link
             to={to}
-            className="flex flex-row space-x-4 py-2 truncate hover:bg-gray-200"
+            className="flex flex-row space-x-4 py-2 px-6 truncate w-full rounded hover:bg-lighter dark:hover:bg-dark-primary"
             onClick={handleClick}
         >
             {icon}

@@ -1,18 +1,25 @@
-import "./assets/styles/app.css";
+import "./styles/app.css";
 
 import { Routes, Route } from "react-router-dom";
+import { ThemeProvider } from "@mui/material";
+// import { appTheme } from "./styles/theme";
 import NavigationLayout from "./layouts/NavigationLayout";
 import Dashboard from "./pages/Dashboard";
 import ProductAdd from "./pages/Products/add";
+import useTheme from "./hooks/useTheme";
 
 const App = () => {
+    const { theme } = useTheme();
+
     return (
-        <NavigationLayout>
-            <Routes>
-                <Route index element={<Dashboard />} />
-                <Route path="/products/add" element={<ProductAdd />} />
-            </Routes>
-        </NavigationLayout>
+        <ThemeProvider theme={theme}>
+            <NavigationLayout>
+                <Routes>
+                    <Route index element={<Dashboard />} />
+                    <Route path="/products/add" element={<ProductAdd />} />
+                </Routes>
+            </NavigationLayout>
+        </ThemeProvider>
     );
 };
 
