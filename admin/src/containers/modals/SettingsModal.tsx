@@ -7,10 +7,9 @@ import {
     Typography,
     Switch,
     FormControlLabel,
-    DialogActions,
 } from "@mui/material";
 import { Settings } from "@mui/icons-material";
-import useTheme from "../../hooks/useTheme";
+import useTheme from "@/hooks/useTheme";
 
 const SettingsModal = () => {
     const { mode, toggleTheme } = useTheme();
@@ -50,15 +49,7 @@ const SettingsModal = () => {
                         }
                         label="Dark Mode"
                     />
-                    <DialogActions>
-                        <Button
-                            data-testid="closeButton"
-                            variant="contained"
-                            onClick={handleClose}
-                        >
-                            Save
-                        </Button>
-                    </DialogActions>
+                    <Button data-testid="closeButton" onClick={handleClose} />
                 </Box>
             </Modal>
         </div>

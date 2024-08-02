@@ -6,6 +6,10 @@
         "useDefineForClassFields": true,
         "lib": ["ES2020", "DOM", "DOM.Iterable"],
         "types": ["vitest/globals"],
+        "baseUrl": "src",
+        "paths": {
+            "@/*": ["./*"]
+        },
         "module": "ESNext",
         "skipLibCheck": true,
 

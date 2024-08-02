@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
-import Sidebar from "../../components/Sidebar";
+import Sidebar from "@/components/Sidebar";
+import Header from "@/components/Header";
 
 interface LayoutProps {
     children: ReactNode;
@@ -9,7 +10,10 @@ const Layout = ({ children }: LayoutProps) => {
     return (
         <div className="flex flex-row">
             <Sidebar />
-            <div className="p-6 text-lg">{children}</div>
+            <div className="flex-1 flex flex-col">
+                <Header />
+                {children}
+            </div>
         </div>
     );
 };

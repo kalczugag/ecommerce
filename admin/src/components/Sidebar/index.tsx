@@ -1,9 +1,7 @@
-import { MoveToInbox, Email, Adb, Settings } from "@mui/icons-material";
-import { IconButton } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { MoveToInbox, Email, Adb } from "@mui/icons-material";
 import TitledIconButton from "../TitledIconButton";
-import { useState } from "react";
-import SettingsModal from "../../containers/modals/SettingsModal";
+import SettingsModal from "@/containers/modals/SettingsModal";
 
 const items = [
     { title: "Dashboard", to: "/", icon: <MoveToInbox /> },
@@ -21,8 +19,10 @@ const items = [
 ];
 
 const Sidebar = () => {
+    const { pathname } = useLocation();
+
     return (
-        <div className="flex flex-col py-6 h-screen bg-light-secondary dark:bg-darker">
+        <div className="hidden flex-col py-6 h-screen bg-light-secondary dark:bg-darker md:flex">
             <div className="flex items-center px-6 mb-10">
                 <Adb className="mr-1" />
                 <Link
@@ -37,6 +37,7 @@ const Sidebar = () => {
                     <TitledIconButton
                         key={item.title + "_" + index.toString()}
                         {...item}
+                        active={pathname === item.to}
                     />
                 ))}
             </div>
