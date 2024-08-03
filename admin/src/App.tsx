@@ -6,7 +6,8 @@ import NavigationLayout from "@/layouts/NavigationLayout";
 import useTheme from "@/hooks/useTheme";
 import Dashboard from "@/pages/Dashboard";
 import ProductAdd from "@/pages/Products/add";
-import Settings from "@/pages/Settings";
+import GeneralSettings from "@/pages/Settings/GeneralSettings";
+import AccountSettings from "@/pages/Settings/AccountSettings";
 import NotFound from "@/pages/404";
 
 const App = () => {
@@ -18,7 +19,10 @@ const App = () => {
                 <Routes>
                     <Route index element={<Dashboard />} />
                     <Route path="/products/add" element={<ProductAdd />} />
-                    <Route path="/settings" element={<Settings />} />
+                    <Route path="/settings">
+                        <Route index element={<GeneralSettings />} />
+                        <Route path="account" element={<AccountSettings />} />
+                    </Route>
                     <Route path="*" element={<NotFound />} />
                 </Routes>
             </NavigationLayout>

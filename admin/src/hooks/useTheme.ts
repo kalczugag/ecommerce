@@ -3,8 +3,10 @@ import darkTheme from "../styles/theme/dark";
 import lightTheme from "../styles/theme/light";
 import { Theme } from "@mui/material/styles";
 
+type ModeType = "light" | "dark";
+
 const useTheme = () => {
-    const [mode, setMode] = useState<"light" | "dark">(() => {
+    const [mode, setMode] = useState<ModeType>(() => {
         const savedTheme = localStorage.getItem("theme");
         return savedTheme === "dark" ? "dark" : "light";
     });
@@ -16,12 +18,11 @@ const useTheme = () => {
         localStorage.setItem("theme", mode);
     }, [mode]);
 
-    const toggleTheme = () =>
-        setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
+    const handleChange = (arg: ModeType) => setMode(arg);
 
     const theme: Theme = mode === "dark" ? darkTheme : lightTheme;
 
-    return { theme, mode, toggleTheme };
+    return { theme, mode, handleChange };
 };
 
 export default useTheme;

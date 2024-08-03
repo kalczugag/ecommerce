@@ -1,7 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { MoveToInbox, Email, Adb } from "@mui/icons-material";
 import TitledIconButton from "../TitledIconButton";
-import SettingsModal from "@/containers/modals/SettingsModal";
 
 const dashboardItems = [
     { title: "Dashboard", to: "/", icon: <MoveToInbox /> },
@@ -18,13 +17,16 @@ const dashboardItems = [
     { title: "Add Product", to: "/products/add", icon: <Email /> },
 ];
 
-const settingsItems = [{ title: "Account", to: "/settings" }];
-
+const settingsItems = [
+    { title: "General", to: "/settings" },
+    { title: "Account", to: "/settings/account" },
+];
 const Sidebar = () => {
     const { pathname } = useLocation();
 
-    const itemsToRender =
-        pathname === "/settings" ? settingsItems : dashboardItems;
+    const itemsToRender = pathname.startsWith("/settings")
+        ? settingsItems
+        : dashboardItems;
 
     return (
         <div className="hidden flex-col py-6 h-screen bg-light-secondary w-[215.156px] dark:bg-darker md:flex">
@@ -46,7 +48,6 @@ const Sidebar = () => {
                     />
                 ))}
             </div>
-            <SettingsModal />
         </div>
     );
 };
