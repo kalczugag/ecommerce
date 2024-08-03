@@ -3,9 +3,11 @@ import "@/styles/app.css";
 import { Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@mui/material";
 import NavigationLayout from "@/layouts/NavigationLayout";
+import useTheme from "@/hooks/useTheme";
 import Dashboard from "@/pages/Dashboard";
 import ProductAdd from "@/pages/Products/add";
-import useTheme from "@/hooks/useTheme";
+import Settings from "@/pages/Settings";
+import NotFound from "@/pages/404";
 
 const App = () => {
     const { theme } = useTheme();
@@ -16,6 +18,8 @@ const App = () => {
                 <Routes>
                     <Route index element={<Dashboard />} />
                     <Route path="/products/add" element={<ProductAdd />} />
+                    <Route path="/settings" element={<Settings />} />
+                    <Route path="*" element={<NotFound />} />
                 </Routes>
             </NavigationLayout>
         </ThemeProvider>

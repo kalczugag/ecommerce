@@ -3,7 +3,7 @@ import { MoveToInbox, Email, Adb } from "@mui/icons-material";
 import TitledIconButton from "../TitledIconButton";
 import SettingsModal from "@/containers/modals/SettingsModal";
 
-const items = [
+const dashboardItems = [
     { title: "Dashboard", to: "/", icon: <MoveToInbox /> },
     { title: "Products", to: "/products", icon: <Email /> },
     { title: "Customers", to: "/customers", icon: <MoveToInbox /> },
@@ -18,11 +18,16 @@ const items = [
     { title: "Add Product", to: "/products/add", icon: <Email /> },
 ];
 
+const settingsItems = [{ title: "Account", to: "/settings" }];
+
 const Sidebar = () => {
     const { pathname } = useLocation();
 
+    const itemsToRender =
+        pathname === "/settings" ? settingsItems : dashboardItems;
+
     return (
-        <div className="hidden flex-col py-6 h-screen bg-light-secondary dark:bg-darker md:flex">
+        <div className="hidden flex-col py-6 h-screen bg-light-secondary w-[215.156px] dark:bg-darker md:flex">
             <div className="flex items-center px-6 mb-10">
                 <Adb className="mr-1" />
                 <Link
@@ -33,7 +38,7 @@ const Sidebar = () => {
                 </Link>
             </div>
             <div className="flex flex-col space-y-2">
-                {items.map((item, index) => (
+                {itemsToRender.map((item, index) => (
                     <TitledIconButton
                         key={item.title + "_" + index.toString()}
                         {...item}
