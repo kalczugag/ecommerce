@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import darkTheme from "../styles/theme/dark";
 import lightTheme from "../styles/theme/light";
 import { Theme } from "@mui/material/styles";
+import { SelectChangeEvent } from "@mui/material";
 
 type ModeType = "light" | "dark";
 
@@ -18,7 +19,10 @@ const useTheme = () => {
         localStorage.setItem("theme", mode);
     }, [mode]);
 
-    const handleChange = (arg: ModeType) => setMode(arg);
+    const handleChange = (event: SelectChangeEvent<ModeType>) => {
+        setMode(event.target.value as ModeType);
+        location.reload();
+    };
 
     const theme: Theme = mode === "dark" ? darkTheme : lightTheme;
 
