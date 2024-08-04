@@ -97,7 +97,7 @@ const Header = () => {
                     <MenuItem
                         onClick={() => {
                             handleClose();
-                            navigate("/settings");
+                            navigate("/settings/general");
                         }}
                     >
                         <ListItemIcon>

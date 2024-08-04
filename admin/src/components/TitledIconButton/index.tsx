@@ -1,23 +1,17 @@
 import { Link } from "react-router-dom";
-
-interface TitledIconButtonProps {
-    title: string;
-    to: string;
-    icon?: JSX.Element;
-    active?: boolean;
-    handleClick?: () => void;
-}
+import type { SidebarContent } from "@/types/Content";
 
 const TitledIconButton = ({
-    title,
+    label,
     to,
     icon,
     active,
     handleClick,
-}: TitledIconButtonProps) => {
+}: SidebarContent) => {
     return (
         <Link
             to={to}
+            data-testid="sidebar-item"
             className={`flex flex-row space-x-4 py-2 px-6 truncate w-full rounded hover:bg-lighter dark:hover:bg-dark-primary ${
                 active &&
                 "bg-lighter dark:bg-dark-primary hover:bg-gray-200 dark:hover:bg-hover-dark"
@@ -25,7 +19,7 @@ const TitledIconButton = ({
             onClick={handleClick}
         >
             {icon}
-            <span>{title}</span>
+            <span>{label}</span>
         </Link>
     );
 };
