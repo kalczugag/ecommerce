@@ -1,31 +1,21 @@
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import Sidebar from "@/components/Sidebar";
-import type { SidebarContent } from "@/types/Content";
 
 describe("Sidebar", () => {
-    const content: SidebarContent[] = [
-        {
-            label: "Dashboard",
-            to: "/dashboard",
-            icon: <div>Dashboard Icon</div>,
-        },
-        { label: "Products", to: "/products", icon: <div>Products Icon</div> },
-    ];
-
     it("renders the correct number of sidebar items", () => {
         render(
             <MemoryRouter initialEntries={["/dashboard"]}>
-                <Sidebar content={content} />
+                <Sidebar />
             </MemoryRouter>
         );
-        expect(screen.getAllByTestId("sidebar-item")).toHaveLength(2);
+        expect(screen.getAllByTestId("sidebar-item")).toHaveLength(8);
     });
 
     it("renders the correct label for each sidebar item", () => {
         render(
             <MemoryRouter initialEntries={["/dashboard"]}>
-                <Sidebar content={content} />
+                <Sidebar />
             </MemoryRouter>
         );
         expect(screen.getByText("Dashboard")).toBeInTheDocument();
@@ -35,7 +25,7 @@ describe("Sidebar", () => {
     it("renders the correct icon for each sidebar item", () => {
         render(
             <MemoryRouter initialEntries={["/dashboard"]}>
-                <Sidebar content={content} />
+                <Sidebar />
             </MemoryRouter>
         );
         expect(screen.getByText("Dashboard Icon")).toBeInTheDocument();
@@ -45,7 +35,7 @@ describe("Sidebar", () => {
     it("marks the active item as active", () => {
         render(
             <MemoryRouter initialEntries={["/dashboard"]}>
-                <Sidebar content={content} />
+                <Sidebar />
             </MemoryRouter>
         );
         expect(screen.getByText("Dashboard").parentElement).toHaveClass(
