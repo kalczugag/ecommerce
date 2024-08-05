@@ -6,6 +6,8 @@ import path from "path";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 
+import appRouter from "./routes/v1";
+
 const app = express();
 
 app.use(
@@ -16,7 +18,7 @@ app.use(
 app.use(cookieParser());
 app.use(bodyParser.json());
 
-// app.use("/api", router());
+app.use("/api/v1", appRouter());
 
 if (process.env.NODE_ENV === "production") {
     const clientBuildPath = path.join(__dirname, "../../frontend/build");

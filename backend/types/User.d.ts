@@ -1,12 +1,15 @@
-export interface User {
-    _id: string;
+export type Permission = "create" | "read" | "update" | "delete";
+
+export interface UserProps {
     firstName: string;
     lastName: string;
+    isAdmin: boolean;
+    role: string;
     gender: string;
     birthday: Date;
     address: string;
     city: string;
-    State: string;
+    state: string;
     postalCode: Number;
     country: string;
     phone: string;
