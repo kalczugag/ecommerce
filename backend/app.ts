@@ -1,20 +1,14 @@
 import express from "express";
-
 import cors from "cors";
 import path from "path";
-
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
-
 import appRouter from "./routes/v1";
+import "./services/passport";
 
 const app = express();
 
-app.use(
-    cors({
-        credentials: true,
-    })
-);
+app.use(cors());
 app.use(cookieParser());
 app.use(bodyParser.json());
 

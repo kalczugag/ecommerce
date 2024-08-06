@@ -6,8 +6,12 @@ import { User } from "../../models/User";
 export const login = async (req: express.Request, res: express.Response) => {
     const { email, password } = req.body;
 
+    if (!email || !password) {
+        return res.status(400).json({ error: "Missing required fields" });
+    }
+
     try {
-        const existingUser = await User.findOne({ email });
+        const existingUser = await User.findOne({ email }).select("+password");
         if (!existingUser) {
             return res.status(401).json({ error: "Invalid credentials" });
         }
@@ -19,25 +23,29 @@ export const login = async (req: express.Request, res: express.Response) => {
 
         const token = jwt.sign(
             {
-                userId: existingUser._id,
+                userId: existingUser._id.toString(),
                 email: existingUser.email,
             },
-            process.env.SECRET_KEY!,
-            { expiresIn: "1h" }
+            process.env.PRIVATE_KEY!,
+            { expiresIn: "1d", algorithm: "RS256" }
         );
 
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             data: { token },
         });
-    } catch (err) {
-        console.error(err);
-        return res.sendStatus(500);
+    } catch (err: any) {
+        console.error(err.message);
+        return res.status(500).json({ error: "Internal server error" });
     }
 };
 
 export const register = async (req: express.Request, res: express.Response) => {
     const { firstName, lastName, gender, email, password } = req.body;
+
+    if (!firstName || !lastName || !gender || !email || !password) {
+        return res.status(400).json({ error: "Missing required fields" });
+    }
 
     try {
         const hashedPassword = await hashPassword(password);
@@ -56,16 +64,21 @@ export const register = async (req: express.Request, res: express.Response) => {
                 userId: newUser._id,
                 email: newUser.email,
             },
-            process.env.SECRET_KEY!,
-            { expiresIn: "1h" }
+            process.env.PRIVATE_KEY!,
+            { expiresIn: "1d", algorithm: "RS256" }
         );
 
-        res.status(201).json({
+        return res.status(201).json({
             success: true,
             data: { token },
         });
     } catch (err) {
-        console.error(err);
+        if (err instanceof Error) {
+            console.error(err);
+            if (err.message.includes("duplicate key")) {
+                return res.status(400).json({ error: "Email already exists" });
+            }
+        }
         return res.sendStatus(500);
     }
 };
