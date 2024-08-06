@@ -27,7 +27,7 @@ export const login = async (req: express.Request, res: express.Response) => {
                 email: existingUser.email,
             },
             process.env.PRIVATE_KEY!,
-            { expiresIn: "1d", algorithm: "RS256" }
+            { expiresIn: "10h" }
         );
 
         return res.status(200).json({
@@ -65,7 +65,7 @@ export const register = async (req: express.Request, res: express.Response) => {
                 email: newUser.email,
             },
             process.env.PRIVATE_KEY!,
-            { expiresIn: "1d", algorithm: "RS256" }
+            { expiresIn: "1d" }
         );
 
         return res.status(201).json({
