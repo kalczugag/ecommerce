@@ -1,13 +1,13 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import type { UserProps } from "../types/User";
 
 const userSchema = new mongoose.Schema<UserProps>({
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     role: {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: "Role",
         required: false,
-        default: "read",
     },
     gender: { type: String, required: true },
     birthday: { type: Date, required: false },

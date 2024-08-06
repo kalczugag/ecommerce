@@ -1,10 +1,12 @@
+import { Role } from "../models/Role";
+
 export type Permission = "create" | "read" | "update" | "delete";
 
 export interface UserProps {
     firstName: string;
     lastName: string;
     isAdmin: boolean;
-    role: string;
+    role: Role | null;
     gender: string;
     birthday: Date;
     address: string;
