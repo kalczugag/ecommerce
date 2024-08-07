@@ -8,20 +8,20 @@ import { User } from "@/models/User";
 
 const opts: StrategyOptionsWithoutRequest = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: process.env.PRIVATE_KEY!,
+    secretOrKey: process.env.PUBLIC_KEY!,
+    algorithms: ["RS256"],
 };
 
 passport.use(
-    new Strategy(opts, (jwt_payload, done) => {
-        User.findOne({ _id: jwt_payload.sub }, (err: any, user: any) => {
-            if (err) {
-                return done(err, false);
-            }
-            if (user) {
-                return done(null, user);
-            } else {
-                return done(null, false);
-            }
-        });
+    new Strategy(opts, (payload, done) => {
+        User.findOne({ _id: payload.sub })
+            .then((user) => {
+                if (user) {
+                    return done(null, user);
+                } else {
+                    return done(null, false);
+                }
+            })
+            .catch((err) => done(err, null));
     })
 );

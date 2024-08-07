@@ -3,6 +3,7 @@ import { Role } from "@/models/Role";
 export type Permission = "create" | "read" | "update" | "delete";
 
 export interface UserProps {
+    _id?: string;
     firstName: string;
     lastName: string;
     isAdmin: boolean;
@@ -16,5 +17,6 @@ export interface UserProps {
     country: string;
     phone: string;
     email: string;
-    password: string;
+    hash: string;
+    salt: string;
 }

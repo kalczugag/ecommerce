@@ -1,34 +1,63 @@
-import bcrypt from "bcrypt";
+import crypto from "crypto";
+import jwt from "jsonwebtoken";
+import { UserProps } from "@/types/User";
 
 /**
- * Hashes a plain text password.
- * @param {string} password - The plain text password.
- * @returns {Promise<string>} - The hashed password.
+ * Validates a password by comparing it with a hash and a salt.
+ *
+ * @param password - The password to be validated.
+ * @param hash - The hashed password.
+ * @param salt - The salt used to hash the password.
+ * @returns Returns true if the password is valid, false otherwise.
  */
-export const hashPassword = async (password: string): Promise<string> => {
-    try {
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
-        return hashedPassword;
-    } catch (err) {
-        throw new Error("Error hashing password");
-    }
+export const validPassword = (password: string, hash: string, salt: string) => {
+    const hashVerify = crypto
+        .pbkdf2Sync(password, salt, 10000, 64, "sha512")
+        .toString("hex");
+    return hash === hashVerify;
 };
 
 /**
- * Compares a plain text password with a hashed password.
- * @param {string} password - The plain text password.
- * @param {string} hashedPassword - The hashed password.
- * @returns {Promise<boolean>} - True if passwords match, false otherwise.
+ * Generates a salt and a hashed password using the given password.
+ *
+ * @param password - The password to be hashed.
+ * @returns An object containing the generated salt and the hashed password.
  */
-export const comparePassword = async (
-    password: string,
-    hashedPassword: string
-): Promise<boolean> => {
-    try {
-        const isMatch = await bcrypt.compare(password, hashedPassword);
-        return isMatch;
-    } catch (err) {
-        throw new Error("Error comparing passwords");
-    }
+export const genPassword = (password: string) => {
+    const salt = crypto.randomBytes(32).toString("hex");
+    const genHash = crypto
+        .pbkdf2Sync(password, salt, 10000, 64, "sha512")
+        .toString("hex");
+
+    return {
+        salt: salt,
+        hash: genHash,
+    };
+};
+
+/**
+ * Generates a JSON Web Token (JWT) for the given user.
+ *
+ * @param {UserProps} user - The user object containing the user's ID.
+ * @return {{token: string, expires: string}} - An object containing the generated JWT and its expiration time.
+ */
+export const issueJWT = (user: UserProps) => {
+    const _id = user._id;
+
+    const expiresIn = "1d";
+
+    const payload = {
+        sub: _id,
+        iat: Date.now(),
+    };
+
+    const signedToken = jwt.sign(payload, process.env.PRIVATE_KEY!, {
+        expiresIn,
+        algorithm: "RS256",
+    });
+
+    return {
+        token: `Bearer ${signedToken}`,
+        expires: expiresIn,
+    };
 };

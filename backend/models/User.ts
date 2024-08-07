@@ -19,7 +19,8 @@ const userSchema = new mongoose.Schema<UserProps>(
         country: { type: String, required: false },
         phone: { type: String, required: false },
         email: { type: String, required: true, unique: true },
-        password: { type: String, required: true, select: false },
+        hash: { type: String, required: true, select: false },
+        salt: { type: String, required: true, select: false },
     },
     { timestamps: true }
 );

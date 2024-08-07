@@ -1,6 +1,6 @@
 import express from "express";
 import jwt from "jsonwebtoken";
-import { hashPassword, comparePassword } from "@/utlis/helpers";
+import { validPassword, genPassword, issueJWT } from "@/utlis/helpers";
 import { User } from "@/models/User";
 
 export const login = async (req: express.Request, res: express.Response) => {
@@ -11,28 +11,27 @@ export const login = async (req: express.Request, res: express.Response) => {
     }
 
     try {
-        const existingUser = await User.findOne({ email }).select("+password");
+        const existingUser = await User.findOne({ email }).select(
+            "+hash +salt"
+        );
         if (!existingUser) {
             return res.status(401).json({ error: "Invalid credentials" });
         }
 
-        const isMatch = await comparePassword(password, existingUser.password);
+        const isMatch = validPassword(
+            password,
+            existingUser.hash,
+            existingUser.salt
+        );
         if (!isMatch) {
             return res.status(401).json({ error: "Invalid credentials" });
         }
 
-        const token = jwt.sign(
-            {
-                userId: existingUser._id.toString(),
-                email: existingUser.email,
-            },
-            process.env.PRIVATE_KEY!,
-            { expiresIn: "1d" }
-        );
+        const token = issueJWT(existingUser);
 
         return res.status(200).json({
             success: true,
-            data: { token },
+            ...token,
         });
     } catch (err: any) {
         console.error(err.message);
@@ -48,29 +47,24 @@ export const register = async (req: express.Request, res: express.Response) => {
     }
 
     try {
-        const hashedPassword = await hashPassword(password);
+        const { salt, hash } = genPassword(password);
+
         const newUser = new User({
             firstName,
             lastName,
             gender,
             email,
-            password: hashedPassword,
+            hash,
+            salt,
         });
 
         await newUser.save();
 
-        const token = jwt.sign(
-            {
-                userId: newUser._id,
-                email: newUser.email,
-            },
-            process.env.PRIVATE_KEY!,
-            { expiresIn: "1d" }
-        );
+        const token = issueJWT(newUser);
 
         return res.status(201).json({
             success: true,
-            data: { token },
+            ...token,
         });
     } catch (err) {
         if (err instanceof Error) {
