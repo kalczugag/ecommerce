@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import type { Permission } from "../types/User";
+import type { Permission } from "@/types/User";
 
 interface RoleProps {
     name: string;

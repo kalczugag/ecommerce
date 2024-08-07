@@ -1,7 +1,7 @@
 import express from "express";
 import jwt from "jsonwebtoken";
-import { hashPassword, comparePassword } from "../../utlis/helpers";
-import { User } from "../../models/User";
+import { hashPassword, comparePassword } from "@/utlis/helpers";
+import { User } from "@/models/User";
 
 export const login = async (req: express.Request, res: express.Response) => {
     const { email, password } = req.body;
@@ -27,7 +27,7 @@ export const login = async (req: express.Request, res: express.Response) => {
                 email: existingUser.email,
             },
             process.env.PRIVATE_KEY!,
-            { expiresIn: "10h" }
+            { expiresIn: "1d" }
         );
 
         return res.status(200).json({

@@ -4,7 +4,7 @@ import path from "path";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 import appRouter from "./routes/v1";
-import "./services/passport";
+import "./config/passport";
 
 const app = express();
 
