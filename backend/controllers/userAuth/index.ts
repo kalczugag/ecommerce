@@ -1,5 +1,4 @@
 import express from "express";
-import jwt from "jsonwebtoken";
 import { validPassword, genPassword, issueJWT } from "@/utlis/helpers";
 import { User } from "@/models/User";
 
@@ -14,6 +13,7 @@ export const login = async (req: express.Request, res: express.Response) => {
         const existingUser = await User.findOne({ email }).select(
             "+hash +salt"
         );
+
         if (!existingUser) {
             return res.status(401).json({ error: "Invalid credentials" });
         }
@@ -23,6 +23,7 @@ export const login = async (req: express.Request, res: express.Response) => {
             existingUser.hash,
             existingUser.salt
         );
+
         if (!isMatch) {
             return res.status(401).json({ error: "Invalid credentials" });
         }
