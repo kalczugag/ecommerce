@@ -1,0 +1,1 @@
+export { hasRole } from "./hasRole";

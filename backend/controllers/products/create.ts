@@ -1,27 +1,13 @@
 import express from "express";
-import Joi from "joi";
+import schema from "./schemaValidate";
 import { ProductModel } from "@/models/Product";
 import { Product } from "@/types/Product";
-
-const productSchema = Joi.object({
-    imageUrl: Joi.string().uri().required(),
-    brand: Joi.string().min(2).required(),
-    title: Joi.string().min(2).required(),
-    color: Joi.string().required(),
-    price: Joi.number().positive().required(),
-    size: Joi.string().required(),
-    quantity: Joi.number().integer().positive().required(),
-    topLevelCategory: Joi.string().required(),
-    secondLevelCategory: Joi.string().required(),
-    thirdLevelCategory: Joi.string().required(),
-    description: Joi.string().min(10).required(),
-});
 
 export const createProduct = async (
     req: express.Request<{}, {}, Product>,
     res: express.Response
 ) => {
-    const { error } = productSchema.validate(req.body);
+    const { error } = schema.validate(req.body);
 
     if (error) {
         return res.status(400).json({

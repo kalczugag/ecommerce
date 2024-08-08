@@ -4,6 +4,7 @@ import {
     StrategyOptionsWithoutRequest,
 } from "passport-jwt";
 import passport from "passport";
+import { User } from "@/types/User";
 import { UserModel } from "@/models/User";
 
 const opts: StrategyOptionsWithoutRequest = {
@@ -13,15 +14,18 @@ const opts: StrategyOptionsWithoutRequest = {
 };
 
 passport.use(
-    new Strategy(opts, (payload, done) => {
-        UserModel.findOne({ _id: payload.sub })
-            .then((user) => {
-                if (user) {
-                    return done(null, user);
-                } else {
-                    return done(null, false);
-                }
-            })
-            .catch((err) => done(err, null));
+    new Strategy(opts, async (payload, done) => {
+        try {
+            const user = (await UserModel.findById(payload.sub)
+                .populate("role")
+                .exec()) as User;
+            if (user) {
+                return done(null, user);
+            } else {
+                return done(null, false);
+            }
+        } catch (error) {
+            return done(error, false);
+        }
     })
 );
