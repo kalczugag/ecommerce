@@ -1,6 +1,6 @@
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
-import { UserProps } from "@/types/User";
+import { User } from "@/types/User";
 
 /**
  * Validates a password by comparing it with a hash and a salt.
@@ -38,10 +38,10 @@ export const genPassword = (password: string) => {
 /**
  * Generates a JSON Web Token (JWT) for the given user.
  *
- * @param {UserProps} user - The user object containing the user's ID.
+ * @param {User} user - The user object containing the user's ID.
  * @return {{token: string, expires: string}} - An object containing the generated JWT and its expiration time.
  */
-export const issueJWT = (user: UserProps) => {
+export const issueJWT = (user: User) => {
     const _id = user._id;
 
     const expiresIn = "1d";

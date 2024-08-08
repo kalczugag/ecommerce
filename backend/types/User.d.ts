@@ -2,7 +2,7 @@ import { Role } from "@/models/Role";
 
 export type Permission = "create" | "read" | "update" | "delete";
 
-export interface UserProps {
+export interface User {
     _id?: string;
     firstName: string;
     lastName: string;

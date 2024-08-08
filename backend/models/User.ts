@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
-import type { UserProps } from "@/types/User";
+import type { User } from "@/types/User";
 
-const userSchema = new mongoose.Schema<UserProps>(
+const userSchema = new mongoose.Schema<User>(
     {
         firstName: { type: String, required: true },
         lastName: { type: String, required: true },
@@ -25,4 +25,4 @@ const userSchema = new mongoose.Schema<UserProps>(
     { timestamps: true }
 );
 
-export const User = mongoose.model("User", userSchema);
+export const UserModel = mongoose.model("User", userSchema);

@@ -1,6 +1,6 @@
 import express from "express";
 import { validPassword, genPassword, issueJWT } from "@/utlis/helpers";
-import { User } from "@/models/User";
+import { UserModel } from "@/models/User";
 
 export const login = async (req: express.Request, res: express.Response) => {
     const { email, password } = req.body;
@@ -10,7 +10,7 @@ export const login = async (req: express.Request, res: express.Response) => {
     }
 
     try {
-        const existingUser = await User.findOne({ email }).select(
+        const existingUser = await UserModel.findOne({ email }).select(
             "+hash +salt"
         );
 
@@ -50,7 +50,7 @@ export const register = async (req: express.Request, res: express.Response) => {
     try {
         const { salt, hash } = genPassword(password);
 
-        const newUser = new User({
+        const newUser = new UserModel({
             firstName,
             lastName,
             gender,
@@ -74,6 +74,6 @@ export const register = async (req: express.Request, res: express.Response) => {
                 return res.status(400).json({ error: "Email already exists" });
             }
         }
-        return res.sendStatus(500);
+        return res.status(500).json({ error: "Internal server error" });
     }
 };

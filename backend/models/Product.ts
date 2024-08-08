@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import type { ProductProps } from "@/types/Product";
+import type { Product } from "@/types/Product";
 
-const productSchema = new mongoose.Schema<ProductProps>({
+const productSchema = new mongoose.Schema<Product>({
     imageUrl: { type: String, required: true },
     brand: { type: String, required: true },
     title: { type: String, required: true },
@@ -22,4 +22,4 @@ const productSchema = new mongoose.Schema<ProductProps>({
     description: { type: String },
 });
 
-export const Product = mongoose.model("Product", productSchema);
+export const ProductModel = mongoose.model("Product", productSchema);

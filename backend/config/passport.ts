@@ -4,7 +4,7 @@ import {
     StrategyOptionsWithoutRequest,
 } from "passport-jwt";
 import passport from "passport";
-import { User } from "@/models/User";
+import { UserModel } from "@/models/User";
 
 const opts: StrategyOptionsWithoutRequest = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -14,7 +14,7 @@ const opts: StrategyOptionsWithoutRequest = {
 
 passport.use(
     new Strategy(opts, (payload, done) => {
-        User.findOne({ _id: payload.sub })
+        UserModel.findOne({ _id: payload.sub })
             .then((user) => {
                 if (user) {
                     return done(null, user);
