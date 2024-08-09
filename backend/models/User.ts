@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema<User>(
             type: Schema.Types.ObjectId,
             ref: "Role",
             required: false,
+            default: "client",
         },
         gender: { type: String, required: true },
         birthday: { type: Date, required: false },

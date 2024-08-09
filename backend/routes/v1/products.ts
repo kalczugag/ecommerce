@@ -7,29 +7,33 @@ import { hasRole } from "@/middlewares";
 const products = (router: express.Router) => {
     router.get(
         "/products",
-        methods.read,
         passport.authenticate("jwt", { session: false }),
-        hasRole("admin")
+        hasRole("client"),
+        methods.read
     );
     router.get(
         "/products/:id",
-        methods.readById,
-        passport.authenticate("jwt", { session: false })
+        passport.authenticate("jwt", { session: false }),
+        hasRole("client"),
+        methods.readById
     );
     router.post(
         "/products",
-        methods.create,
-        passport.authenticate("jwt", { session: false })
+        passport.authenticate("jwt", { session: false }),
+        hasRole("admin"),
+        methods.create
     );
     router.patch(
         "/products/:id",
-        methods.update,
-        passport.authenticate("jwt", { session: false })
+        passport.authenticate("jwt", { session: false }),
+        hasRole("admin"),
+        methods.update
     );
     router.delete(
         "/products/:id",
-        methods.delete,
-        passport.authenticate("jwt", { session: false })
+        passport.authenticate("jwt", { session: false }),
+        hasRole("admin"),
+        methods.delete
     );
 };
 

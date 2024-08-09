@@ -1,9 +1,6 @@
 import express from "express";
 import { ProductModel } from "@/models/Product";
 
-import mongoose from "mongoose";
-const Model = mongoose.model("Product");
-
 export const getAllProducts = async (
     req: express.Request,
     res: express.Response

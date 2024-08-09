@@ -1,10 +1,14 @@
 import "module-alias/register";
 import express from "express";
+
 import cors from "cors";
 import path from "path";
+
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
+
 import appRouter from "./routes/v1";
+
 import "./config/passport";
 
 const app = express();

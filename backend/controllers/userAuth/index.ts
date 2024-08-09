@@ -1,6 +1,7 @@
 import express from "express";
 import { validPassword, genPassword, issueJWT } from "@/utlis/helpers";
 import { UserModel } from "@/models/User";
+import { RoleModel } from "@/models/Role";
 
 export const login = async (req: express.Request, res: express.Response) => {
     const { email, password } = req.body;
@@ -50,6 +51,15 @@ export const register = async (req: express.Request, res: express.Response) => {
     try {
         const { salt, hash } = genPassword(password);
 
+        let defaultRole = await RoleModel.findOne({ name: "client" }).exec();
+
+        if (!defaultRole) {
+            defaultRole = await RoleModel.create({
+                name: "client",
+                permissions: ["read"],
+            });
+        }
+
         const newUser = new UserModel({
             firstName,
             lastName,
@@ -57,6 +67,7 @@ export const register = async (req: express.Request, res: express.Response) => {
             email,
             hash,
             salt,
+            role: defaultRole._id,
         });
 
         await newUser.save();

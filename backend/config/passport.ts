@@ -4,7 +4,6 @@ import {
     StrategyOptionsWithoutRequest,
 } from "passport-jwt";
 import passport from "passport";
-import { User } from "@/types/User";
 import { UserModel } from "@/models/User";
 
 const opts: StrategyOptionsWithoutRequest = {
@@ -16,9 +15,10 @@ const opts: StrategyOptionsWithoutRequest = {
 passport.use(
     new Strategy(opts, async (payload, done) => {
         try {
-            const user = (await UserModel.findById(payload.sub)
+            const user = await UserModel.findById(payload.sub)
                 .populate("role")
-                .exec()) as User;
+                .exec();
+
             if (user) {
                 return done(null, user);
             } else {
