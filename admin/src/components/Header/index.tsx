@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "@/hooks/useStore";
+import { logout } from "@/store";
 import {
     AppBar,
     Toolbar,
@@ -16,6 +18,7 @@ import { Logout, Settings } from "@mui/icons-material";
 
 const Header = () => {
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -105,7 +108,12 @@ const Header = () => {
                         </ListItemIcon>
                         Settings
                     </MenuItem>
-                    <MenuItem onClick={handleClose}>
+                    <MenuItem
+                        onClick={() => {
+                            handleClose();
+                            dispatch(logout());
+                        }}
+                    >
                         <ListItemIcon>
                             <Logout fontSize="small" />
                         </ListItemIcon>

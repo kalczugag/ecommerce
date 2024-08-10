@@ -7,6 +7,7 @@ import Dashboard from "@/pages/Dashboard";
 import ProductAdd from "@/pages/Products/add";
 import Settings from "@/pages/Settings";
 import Login from "./pages/Login";
+import Register from "@/pages/Register";
 import PrivateOutlet from "./pages/PrivateOutlet";
 import NotFound from "@/pages/404";
 
@@ -17,6 +18,7 @@ const App = () => {
         <ThemeProvider theme={theme}>
             <Routes>
                 <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
                 <Route element={<PrivateOutlet />}>
                     <Route index element={<Dashboard />} />
                     <Route path="/products/add" element={<ProductAdd />} />

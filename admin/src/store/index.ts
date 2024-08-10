@@ -20,4 +20,4 @@ export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
 export * from "./sidebar/sidebarSlice";
-export { login, logout } from "./user/userSlice";
+export { login, register, logout } from "./user/userSlice";
