@@ -2,11 +2,12 @@ import "@/styles/app.css";
 
 import { Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@mui/material";
-import NavigationLayout from "@/layouts/NavigationLayout";
 import useTheme from "@/hooks/useTheme";
 import Dashboard from "@/pages/Dashboard";
 import ProductAdd from "@/pages/Products/add";
 import Settings from "@/pages/Settings";
+import Login from "./pages/Login";
+import PrivateOutlet from "./pages/PrivateOutlet";
 import NotFound from "@/pages/404";
 
 const App = () => {
@@ -14,8 +15,9 @@ const App = () => {
 
     return (
         <ThemeProvider theme={theme}>
-            <NavigationLayout>
-                <Routes>
+            <Routes>
+                <Route path="/login" element={<Login />} />
+                <Route element={<PrivateOutlet />}>
                     <Route index element={<Dashboard />} />
                     <Route path="/products/add" element={<ProductAdd />} />
                     <Route
@@ -23,8 +25,8 @@ const App = () => {
                         element={<Settings />}
                     />
                     <Route path="*" element={<NotFound />} />
-                </Routes>
-            </NavigationLayout>
+                </Route>
+            </Routes>
         </ThemeProvider>
     );
 };
