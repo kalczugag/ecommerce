@@ -8,8 +8,6 @@ export const getAllUsers = async (
     try {
         const users = await UserModel.find();
 
-        console.log(req.user);
-
         if (!users || users.length === 0) {
             return res.status(404).json({ error: "No users found" });
         }

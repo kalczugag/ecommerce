@@ -1,7 +1,13 @@
 import express from "express";
 import { validPassword, genPassword, issueJWT } from "@/utlis/helpers";
+import schema from "./schemaValidate";
 import { UserModel } from "@/models/User";
 import { RoleModel } from "@/models/Role";
+import { User } from "@/types/User";
+
+interface RegisterRequestBody extends User {
+    password: string;
+}
 
 export const login = async (req: express.Request, res: express.Response) => {
     const { email, password } = req.body;
@@ -41,15 +47,20 @@ export const login = async (req: express.Request, res: express.Response) => {
     }
 };
 
-export const register = async (req: express.Request, res: express.Response) => {
-    const { firstName, lastName, gender, email, password } = req.body;
+export const register = async (
+    req: express.Request<{}, {}, RegisterRequestBody>,
+    res: express.Response
+) => {
+    const { error } = schema.validate(req.body);
 
-    if (!firstName || !lastName || !gender || !email || !password) {
-        return res.status(400).json({ error: "Missing required fields" });
+    if (error) {
+        return res.status(400).json({
+            error: error.details.map((detail) => detail.message).join(", "),
+        });
     }
 
     try {
-        const { salt, hash } = genPassword(password);
+        const { salt, hash } = genPassword(req.body.password);
 
         let defaultRole = await RoleModel.findOne({ name: "client" }).exec();
 
@@ -61,10 +72,7 @@ export const register = async (req: express.Request, res: express.Response) => {
         }
 
         const newUser = new UserModel({
-            firstName,
-            lastName,
-            gender,
-            email,
+            ...req.body,
             hash,
             salt,
             role: defaultRole._id,
