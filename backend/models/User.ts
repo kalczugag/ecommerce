@@ -11,7 +11,6 @@ const userSchema = new mongoose.Schema<User>(
             required: false,
             default: "client",
         },
-        gender: { type: String, required: true },
         birthday: { type: Date, required: false },
         address: { type: String, required: false },
         city: { type: String, required: false },

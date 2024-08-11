@@ -7,7 +7,6 @@ export interface User {
     firstName: string;
     lastName: string;
     role: Role | null;
-    gender?: string;
     birthday?: Date;
     address?: string;
     city?: string;

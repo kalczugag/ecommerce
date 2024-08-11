@@ -12,7 +12,6 @@ export type RegisterParams = {
     lastName: string;
     email: string;
     password: string;
-    gender: string;
 };
 
 export interface SidebarState {

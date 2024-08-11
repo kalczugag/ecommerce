@@ -112,6 +112,7 @@ const Header = () => {
                         onClick={() => {
                             handleClose();
                             dispatch(logout());
+                            window.location.reload();
                         }}
                     >
                         <ListItemIcon>

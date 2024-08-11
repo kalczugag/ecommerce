@@ -10,16 +10,14 @@ const PrivateOutlet = () => {
 
     useEffect(() => {
         if (!token && pathname !== "/login") navigate("/login");
-    }, [token]);
+    }, []);
 
     return (
-        <>
-            {token && (
-                <NavigationLayout>
-                    <Outlet />
-                </NavigationLayout>
-            )}
-        </>
+        token && (
+            <NavigationLayout>
+                <Outlet />
+            </NavigationLayout>
+        )
     );
 };
 
