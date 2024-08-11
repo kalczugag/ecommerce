@@ -13,9 +13,13 @@ const PrivateOutlet = () => {
     }, [token]);
 
     return (
-        <NavigationLayout>
-            <Outlet />
-        </NavigationLayout>
+        <>
+            {token && (
+                <NavigationLayout>
+                    <Outlet />
+                </NavigationLayout>
+            )}
+        </>
     );
 };
 
