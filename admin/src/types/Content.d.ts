@@ -5,6 +5,11 @@ export interface Content {
     icon?: JSX.Element;
 }
 
+export interface CrudContent {
+    label: string;
+    element: JSX.Element;
+}
+
 export interface SidebarContent {
     label: string;
     to: string;

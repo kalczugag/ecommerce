@@ -5,6 +5,7 @@ import { ThemeProvider } from "@mui/material";
 import useTheme from "@/hooks/useTheme";
 import Dashboard from "@/pages/Dashboard";
 import ProductAdd from "@/pages/Products/add";
+import ProductsList from "@/pages/Products/list";
 import Settings from "@/pages/Settings";
 import Login from "./pages/Login";
 import Register from "@/pages/Register";
@@ -21,6 +22,7 @@ const App = () => {
                 <Route path="/register" element={<Register />} />
                 <Route element={<PrivateOutlet />}>
                     <Route index element={<Dashboard />} />
+                    <Route path="/products" element={<ProductsList />} />
                     <Route path="/products/add" element={<ProductAdd />} />
                     <Route
                         path="/settings/:settingsKey"
