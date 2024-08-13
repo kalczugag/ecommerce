@@ -1,18 +1,14 @@
 import { Form } from "react-final-form";
 import SortForm from "@/forms/SortForm";
 import CrudLayout from "@/layouts/CrudLayout";
-import type { SortFormProps } from "@/forms/SortForm";
+import type { ConfigType } from "@/forms/SortForm";
 
 interface CrudModuleProps {
-    config: SortFormProps;
-    fields: {
-        label: string;
-        value: string;
-    }[];
+    config: ConfigType[];
     sortFn: (values: any) => void;
 }
 
-const CrudModule = ({ config, fields, sortFn }: CrudModuleProps) => {
+const CrudModule = ({ config, sortFn }: CrudModuleProps) => {
     const FormContainer = () => (
         <Form
             onSubmit={sortFn}
@@ -21,7 +17,7 @@ const CrudModule = ({ config, fields, sortFn }: CrudModuleProps) => {
                     onSubmit={handleSubmit}
                     className="flex flex-col space-y-4 md:space-y-0 md:flex-row md:space-x-4"
                 >
-                    <SortForm {...config} form={form} />
+                    <SortForm config={config} form={form} />
                 </form>
             )}
         />
