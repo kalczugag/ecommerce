@@ -165,7 +165,7 @@ const CustomPaginationActionsTable = ({
             >
                 <Table sx={{ minWidth: 500 }}>
                     <TableHead>
-                        <TableRow className="bg-lighter dark:bg-darker">
+                        <TableRow>
                             {headerOptions.map(({ label }, index) => {
                                 if (index <= 1) {
                                     return (
