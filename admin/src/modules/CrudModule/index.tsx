@@ -1,14 +1,21 @@
+import { ReactNode } from "react";
 import { Form } from "react-final-form";
 import SortForm from "@/forms/SortForm";
 import CrudLayout from "@/layouts/CrudLayout";
+import Table from "@/components/Table";
 import type { ConfigType } from "@/forms/SortForm";
 
 interface CrudModuleProps {
     config: ConfigType[];
+    fields: {
+        label: string;
+        render: (row: any) => ReactNode;
+    }[];
+    data: any[];
     sortFn: (values: any) => void;
 }
 
-const CrudModule = ({ config, sortFn }: CrudModuleProps) => {
+const CrudModule = ({ config, fields, data, sortFn }: CrudModuleProps) => {
     const FormContainer = () => (
         <Form
             onSubmit={sortFn}
@@ -29,8 +36,12 @@ const CrudModule = ({ config, sortFn }: CrudModuleProps) => {
             topLabel="Sort"
             bottomLabel="All Products"
         >
-            {/* data table */}
-            <div>x</div>
+            <Table
+                headerOptions={fields}
+                rowData={data}
+                totalItems={55}
+                isLoading={false}
+            />
         </CrudLayout>
     );
 };

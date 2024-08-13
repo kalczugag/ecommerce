@@ -1,44 +1,34 @@
 import { useTitle } from "@/hooks/useTitle";
+import { useGetAllProductsQuery } from "@/store";
 import CrudModule from "@/modules/CrudModule";
+import { sortConfig, tableConfig } from "./config";
 
 const ProductsList = () => {
     useTitle("Products");
+
+    const { data } = useGetAllProductsQuery();
+
+    if (!data) {
+        return <div>no products</div>;
+    }
 
     const sortFn = (values: any) => {
         console.log(values);
     };
 
+    const fields = {
+        tableConfig,
+        data,
+    };
+
+    console.log(fields);
+
     return (
         <CrudModule
-            config={[
-                {
-                    label: "Category",
-                    items: [
-                        { label: "dresses", value: "dress" },
-                        { label: "shoes", value: "shoes" },
-                    ],
-                },
-                {
-                    label: "Availability",
-                    items: [
-                        { label: "more than 10", value: "more than 10" },
-                        { label: "less than 10", value: "less than 10" },
-                    ],
-                },
-                {
-                    label: "Sort By Price",
-                    items: [
-                        { label: "Low to high", value: "asc" },
-                        { label: "High to low", value: "desc" },
-                    ],
-                },
-            ]}
+            config={sortConfig}
+            fields={tableConfig}
+            data={data}
             sortFn={sortFn}
-            // fields={[
-            //     { label: "Name", value: "name" },
-            //     { label: "sdfigj0", value: "sdfigj0" },
-            //     { label: "ZDSo", value: "ZDSo" },
-            // ]}
         />
     );
 };

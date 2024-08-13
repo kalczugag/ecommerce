@@ -8,13 +8,11 @@ const products = (router: express.Router) => {
     router.get(
         "/products",
         passport.authenticate("jwt", { session: false }),
-        hasRole("client"),
         methods.read
     );
     router.get(
         "/products/:id",
         passport.authenticate("jwt", { session: false }),
-        hasRole("client"),
         methods.readById
     );
     router.post(

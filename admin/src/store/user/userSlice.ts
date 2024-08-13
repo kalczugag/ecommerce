@@ -14,7 +14,7 @@ export type RegisterParams = {
     password: string;
 };
 
-export interface SidebarState {
+interface UserState {
     token: string | null;
     isLoading: boolean;
     isSuccess: boolean;
@@ -23,7 +23,7 @@ export interface SidebarState {
 
 const tokenFromStorage = localStorage.getItem("authToken");
 
-export const initialState: SidebarState = {
+const initialState: UserState = {
     token: tokenFromStorage ? tokenFromStorage : null,
     isSuccess: false,
     isLoading: false,
@@ -101,3 +101,4 @@ export const register = createAsyncThunk(
 export const { logout } = userSlice.actions;
 
 export default userSlice.reducer;
+export type { UserState };

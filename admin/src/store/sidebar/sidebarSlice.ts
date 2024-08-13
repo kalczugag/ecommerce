@@ -2,11 +2,11 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { config } from "./config";
 import type { SidebarContent } from "@/types/Content";
 
-export interface SidebarState {
+interface SidebarState {
     content: SidebarContent[];
 }
 
-export const initialState: SidebarState = {
+const initialState: SidebarState = {
     content: config,
 };
 
@@ -23,3 +23,4 @@ const sidebarSlice = createSlice({
 export const { setSidebarContent } = sidebarSlice.actions;
 
 export default sidebarSlice.reducer;
+export type { SidebarState };
