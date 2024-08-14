@@ -1,6 +1,4 @@
-import { Role } from "@/models/Role";
-
-export type Permission = "create" | "read" | "update" | "delete";
+import type { Role } from "./Role";
 
 export interface User {
     _id?: string;
