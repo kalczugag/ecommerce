@@ -22,7 +22,7 @@ interface SelectFieldProps {
 
 export interface SortFormProps {
     config: ConfigType[];
-    form?: FormApi<any, Partial<any>>;
+    form: FormApi<any, Partial<any>>;
 }
 
 const SelectField = ({

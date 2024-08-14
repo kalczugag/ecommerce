@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { User } from "@/types/User";
 
 export const userApi = createApi({
-    reducerPath: "user",
+    reducerPath: "users",
     baseQuery: fetchBaseQuery({
         baseUrl:
             window.location.protocol +
@@ -32,7 +32,7 @@ export const userApi = createApi({
 
         getUsersByRole: builder.query<User[], string>({
             query: (roleName) => ({
-                url: "/users",
+                url: "/users/byRole",
                 method: "GET",
                 headers: {
                     Authorization: localStorage.getItem("authToken") || "",
@@ -49,7 +49,21 @@ export const userApi = createApi({
                       }))
                     : [{ type: "Users", id: "LIST" }],
         }),
+
+        getUserById: builder.query<User[], string>({
+            query: (id) => ({
+                url: `/users/${id}`,
+                method: "GET",
+                headers: {
+                    Authorization: localStorage.getItem("authToken") || "",
+                },
+            }),
+        }),
     }),
 });
 
-export const { useGetAllUsersQuery, useGetUsersByRoleQuery } = userApi;
+export const {
+    useGetAllUsersQuery,
+    useGetUsersByRoleQuery,
+    useGetUserByIdQuery,
+} = userApi;

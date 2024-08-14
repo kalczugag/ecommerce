@@ -1,6 +1,8 @@
+import { Form } from "react-final-form";
 import { useTitle } from "@/hooks/useTitle";
 import { useGetAllProductsQuery } from "@/store";
 import CrudModule from "@/modules/CrudModule";
+import SortForm from "@/forms/SortForm";
 import { sortConfig, tableConfig } from "./config";
 
 const ProductsList = () => {
@@ -16,19 +18,30 @@ const ProductsList = () => {
         console.log(values);
     };
 
-    const fields = {
-        tableConfig,
-        data,
-    };
-
-    console.log(fields);
+    const FormContainer = () => (
+        <Form
+            onSubmit={sortFn}
+            render={({ handleSubmit, form }) => (
+                <form
+                    onSubmit={handleSubmit}
+                    className="flex flex-col space-y-4 md:space-y-0 md:flex-row md:space-x-4"
+                >
+                    <SortForm config={sortConfig} form={form} />
+                </form>
+            )}
+        />
+    );
 
     return (
         <CrudModule
-            config={sortConfig}
+            config={{
+                topLabel: "Sort",
+                bottomLabel: "All Products",
+            }}
+            actionForm={<FormContainer />}
             fields={tableConfig}
             data={data}
-            sortFn={sortFn}
+            handleSubmit={sortFn}
         />
     );
 };

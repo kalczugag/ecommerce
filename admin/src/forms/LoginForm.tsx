@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Field } from "react-final-form";
-import { required, validateEmail } from "@/utils/validators";
+import { required, validateEmail, compose } from "@/utils/validators";
 import {
     FormControl,
     IconButton,
@@ -29,7 +29,7 @@ const LoginForm = ({ isLoading }: LoginFormProps) => {
 
     return (
         <div className="space-y-4">
-            <Field name="email" validate={validateEmail}>
+            <Field name="email" validate={compose(required, validateEmail)}>
                 {(props) => (
                     <TextField
                         label="Email"

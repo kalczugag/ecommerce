@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { Divider } from "@mui/material";
 
 interface CrudLayoutProps {
-    headerPanel: JSX.Element;
+    headerPanel?: ReactNode;
     topLabel?: string;
     bottomLabel?: string;
     children: ReactNode;
@@ -26,7 +26,7 @@ const CrudLayout = ({
     return (
         <div className="flex flex-col space-y-6 px-6">
             {topLabel ? LabelledContent(topLabel, headerPanel) : headerPanel}
-            <Divider />
+            {bottomLabel && <Divider />}
             {bottomLabel ? LabelledContent(bottomLabel, children) : children}
         </div>
     );

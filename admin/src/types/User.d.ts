@@ -13,6 +13,4 @@ export interface User {
     country?: string;
     phone?: string;
     email: string;
-    hash: string;
-    salt: string;
 }

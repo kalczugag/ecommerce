@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Field } from "react-final-form";
-import { validateEmail, required } from "@/utils/validators";
+import { validateEmail, required, compose } from "@/utils/validators";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
     FormControl,
@@ -65,7 +65,7 @@ const RegisterForm = ({ isLoading }: RegisterFormProps) => {
                     )}
                 </Field>
             </div>
-            <Field name="email" validate={validateEmail}>
+            <Field name="email" validate={compose(required, validateEmail)}>
                 {(props) => (
                     <TextField
                         label="Email"

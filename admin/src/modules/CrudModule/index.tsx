@@ -1,47 +1,43 @@
 import { ReactNode } from "react";
-import { Form } from "react-final-form";
-import SortForm from "@/forms/SortForm";
 import CrudLayout from "@/layouts/CrudLayout";
 import Table from "@/components/Table";
-import type { ConfigType } from "@/forms/SortForm";
 
 interface CrudModuleProps {
-    config: ConfigType[];
-    fields: {
+    config: {
+        topLabel?: string;
+        bottomLabel?: string;
+    };
+    actionForm: ReactNode;
+    fields?: {
         label: string;
         render: (row: any) => ReactNode;
     }[];
-    data: any[];
-    sortFn: (values: any) => void;
+    data?: any[];
+    formOnly?: boolean;
+    handleSubmit: (values: any) => void;
 }
 
-const CrudModule = ({ config, fields, data, sortFn }: CrudModuleProps) => {
-    const FormContainer = () => (
-        <Form
-            onSubmit={sortFn}
-            render={({ handleSubmit, form }) => (
-                <form
-                    onSubmit={handleSubmit}
-                    className="flex flex-col space-y-4 md:space-y-0 md:flex-row md:space-x-4"
-                >
-                    <SortForm config={config} form={form} />
-                </form>
-            )}
-        />
-    );
-
+const CrudModule = ({
+    config: { topLabel, bottomLabel },
+    actionForm,
+    fields = [],
+    data = [],
+    formOnly,
+}: CrudModuleProps) => {
     return (
         <CrudLayout
-            headerPanel={<FormContainer />}
-            topLabel="Sort"
-            bottomLabel="All Products"
+            headerPanel={actionForm}
+            topLabel={topLabel}
+            bottomLabel={bottomLabel}
         >
-            <Table
-                headerOptions={fields}
-                rowData={data}
-                totalItems={55}
-                isLoading={false}
-            />
+            {!formOnly && (
+                <Table
+                    headerOptions={fields}
+                    rowData={data}
+                    totalItems={data.length}
+                    isLoading={false}
+                />
+            )}
         </CrudLayout>
     );
 };
