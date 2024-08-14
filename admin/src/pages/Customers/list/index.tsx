@@ -3,15 +3,16 @@ import { useTitle } from "@/hooks/useTitle";
 import { useGetUsersByRoleQuery } from "@/store";
 import CrudModule from "@/modules/CrudModule";
 import SortForm from "@/forms/SortForm";
+import NotFound from "@/components/NotFound";
 import { sortConfig, tableConfig } from "./config";
 
 const CustomersList = () => {
     useTitle("Customers");
 
-    const { data, isLoading } = useGetUsersByRoleQuery("client");
+    const { data, isSuccess } = useGetUsersByRoleQuery("client");
 
-    if (!data && !isLoading) {
-        return <div>no customers</div>;
+    if (!data && isSuccess) {
+        return <NotFound />;
     }
 
     const sortFn = (values: any) => {

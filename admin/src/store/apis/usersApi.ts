@@ -1,6 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { User } from "@/types/User";
 
+interface ResultUserById {
+    msg: string;
+    data: User;
+}
+
 export const userApi = createApi({
     reducerPath: "users",
     baseQuery: fetchBaseQuery({
@@ -58,6 +63,22 @@ export const userApi = createApi({
                     Authorization: localStorage.getItem("authToken") || "",
                 },
             }),
+            providesTags: (result, error, id) => [{ type: "Users", id: id }],
+        }),
+
+        editUser: builder.mutation<ResultUserById, User>({
+            query: (values) => ({
+                url: `/users/${values._id}`,
+                method: "PATCH",
+                body: values,
+                headers: {
+                    Authorization: localStorage.getItem("authToken") || "",
+                },
+            }),
+            invalidatesTags: (result) => [
+                { type: "Users", id: result?.data._id },
+                { type: "Users", id: "LIST" },
+            ],
         }),
     }),
 });
@@ -66,4 +87,5 @@ export const {
     useGetAllUsersQuery,
     useGetUsersByRoleQuery,
     useGetUserByIdQuery,
+    useEditUserMutation,
 } = userApi;
