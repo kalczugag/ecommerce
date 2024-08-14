@@ -12,15 +12,15 @@ const users = (router: express.Router) => {
         methods.read
     );
     router.get(
+        "/users/byRole",
+        passport.authenticate("jwt", { session: false }),
+        methods.readByRole
+    );
+    router.get(
         "/users/:id",
         passport.authenticate("jwt", { session: false }),
         hasRole("admin"),
         methods.readById
-    );
-    router.get(
-        "/users/byRole",
-        passport.authenticate("jwt", { session: false }),
-        methods.readByRole
     );
     router.patch(
         "/users/:userId",

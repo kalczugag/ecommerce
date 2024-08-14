@@ -31,4 +31,8 @@ export * from "./sidebar/sidebarSlice";
 export * from "./table/tableSlice";
 export * from "./user/userSlice";
 export { useGetAllProductsQuery } from "./apis/productsApi";
-export { useGetAllUsersQuery, useGetUsersByRoleQuery } from "./apis/usersApi";
+export {
+    useGetAllUsersQuery,
+    useGetUsersByRoleQuery,
+    useGetUserByIdQuery,
+} from "./apis/usersApi";
