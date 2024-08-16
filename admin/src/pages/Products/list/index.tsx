@@ -3,12 +3,11 @@ import { useTitle } from "@/hooks/useTitle";
 import { sortConfig, tableConfig } from "./config";
 import CrudModule from "@/modules/CrudModule";
 import SortForm from "@/forms/SortForm";
-import NotFound from "@/components/NotFound";
 
 const ProductsList = () => {
     useTitle("Products");
 
-    const { data, isLoading, isSuccess } = useGetAllProductsQuery();
+    const { data, isLoading } = useGetAllProductsQuery();
 
     const sortFn = (values: any) => {
         console.log(values);

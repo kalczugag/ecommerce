@@ -31,7 +31,7 @@ const SelectField = ({
     onChange,
     onSubmit,
 }: SelectFieldProps) => (
-    <FormControl fullWidth sx={{ maxWidth: "250px" }}>
+    <FormControl fullWidth className="truncate">
         <InputLabel>{label}</InputLabel>
         <Select
             value={value}
@@ -57,7 +57,10 @@ const SortForm = ({ config, handleSubmit }: SortFormProps) => {
         <Form
             onSubmit={handleSubmit}
             render={({ handleSubmit, form }) => (
-                <form onSubmit={handleSubmit}>
+                <form
+                    onSubmit={handleSubmit}
+                    className="flex flex-col space-y-2 sm:space-y-0 sm:space-x-2 sm:flex-row"
+                >
                     {config.map(({ label, items }) => {
                         return (
                             <Field
