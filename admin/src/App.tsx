@@ -25,17 +25,15 @@ const App = () => {
                 <Route path="/register" element={<Register />} />
                 <Route element={<PrivateOutlet />}>
                     <Route index element={<Dashboard />} />
-                    <Route path="/products" element={<ProductsList />} />
-                    <Route
-                        path="/products/edit/:id"
-                        element={<ProductsEdit />}
-                    />
-                    <Route path="/products/add" element={<ProductAdd />} />
-                    <Route path="/customers" element={<CustomersList />} />
-                    <Route
-                        path="/customers/edit/:id"
-                        element={<CustomersEdit />}
-                    />
+                    <Route path="/products">
+                        <Route index element={<ProductsList />} />
+                        <Route path="edit/:id" element={<ProductsEdit />} />
+                        <Route path="add" element={<ProductAdd />} />
+                    </Route>
+                    <Route path="/customers">
+                        <Route index element={<CustomersList />} />
+                        <Route path="edit/:id" element={<CustomersEdit />} />
+                    </Route>
                     <Route
                         path="/settings/:settingsKey"
                         element={<Settings />}

@@ -31,7 +31,7 @@ const SelectField = ({
     onChange,
     onSubmit,
 }: SelectFieldProps) => (
-    <FormControl fullWidth className="truncate">
+    <FormControl fullWidth>
         <InputLabel>{label}</InputLabel>
         <Select
             value={value}

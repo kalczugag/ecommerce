@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "@/hooks/useStore";
-import { logout } from "@/store";
+import useIsMobile from "@/hooks/useIsMobile";
+import { logout, toggleSidebar } from "@/store";
 import {
     AppBar,
     Toolbar,
@@ -14,17 +15,21 @@ import {
     Divider,
     ListItemIcon,
 } from "@mui/material";
-import { Logout, Settings } from "@mui/icons-material";
+import { Logout, Settings, Menu as MenuIcon } from "@mui/icons-material";
 
 const Header = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
+    const isMobile = useIsMobile();
+
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
+
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
     };
+
     const handleClose = () => {
         setAnchorEl(null);
     };
@@ -37,7 +42,14 @@ const Header = () => {
                 background: "transparent",
             }}
         >
-            <Toolbar sx={{ justifyContent: "end" }}>
+            <Toolbar
+                sx={{ justifyContent: isMobile ? "space-between" : "end" }}
+            >
+                {isMobile && (
+                    <IconButton onClick={() => dispatch(toggleSidebar(true))}>
+                        <MenuIcon />
+                    </IconButton>
+                )}
                 <Box
                     sx={{
                         display: "flex",

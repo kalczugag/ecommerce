@@ -1,18 +1,31 @@
 import { Link, useLocation } from "react-router-dom";
-import { useAppSelector } from "@/hooks/useStore";
+import useIsMobile from "@/hooks/useIsMobile";
+import { useAppSelector, useAppDispatch } from "@/hooks/useStore";
+import { toggleSidebar } from "@/store";
+import { Drawer } from "@mui/material";
 import { Adb } from "@mui/icons-material";
 import TitledIconButton from "../TitledIconButton";
 
 const Sidebar = () => {
+    const dispatch = useAppDispatch();
     const { pathname } = useLocation();
-    const { content } = useAppSelector((state) => state.sidebar);
+    const { content, isOpen } = useAppSelector((state) => state.sidebar);
 
-    return (
-        <div className="hidden flex-col py-6 h-screen bg-light-secondary w-[215.156px] dark:bg-darker md:flex">
+    const isMobile = useIsMobile();
+
+    const handleClick = () => {
+        if (isMobile) {
+            dispatch(toggleSidebar(false));
+        }
+    };
+
+    const sidebarContent = (
+        <div className="flex-col py-6 h-screen bg-light-secondary w-[215.156px] dark:bg-darker">
             <div className="flex items-center px-6 mb-10">
                 <Adb className="mr-1" />
                 <Link
                     to="/"
+                    onClick={handleClick}
                     className="font-mono font-bold text-xl tracking-[.3rem] no-underline"
                 >
                     LOGO
@@ -24,10 +37,27 @@ const Sidebar = () => {
                         key={item.label + "_" + index.toString()}
                         {...item}
                         active={pathname === item.to}
+                        handleClick={handleClick}
                     />
                 ))}
             </div>
         </div>
+    );
+
+    return (
+        <>
+            {isMobile ? (
+                <Drawer
+                    anchor="left"
+                    open={isOpen}
+                    onClose={() => dispatch(toggleSidebar(false))}
+                >
+                    {sidebarContent}
+                </Drawer>
+            ) : (
+                sidebarContent
+            )}
+        </>
     );
 };
 
