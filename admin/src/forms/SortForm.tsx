@@ -1,5 +1,4 @@
-import { Field } from "react-final-form";
-import { FormApi } from "final-form";
+import { Field, Form } from "react-final-form";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
 interface SelectItem {
@@ -22,7 +21,7 @@ interface SelectFieldProps {
 
 export interface SortFormProps {
     config: ConfigType[];
-    form: FormApi<any, Partial<any>>;
+    handleSubmit: (values: any) => void;
 }
 
 const SelectField = ({
@@ -53,25 +52,34 @@ const SelectField = ({
     </FormControl>
 );
 
-const SortForm = ({ config, form }: SortFormProps) => {
+const SortForm = ({ config, handleSubmit }: SortFormProps) => {
     return (
-        <>
-            {config.map(({ label, items }) => {
-                return (
-                    <Field name={label.toLowerCase()} type="select" key={label}>
-                        {(props) => (
-                            <SelectField
-                                label={label}
-                                items={items}
-                                value={props.input.value}
-                                onChange={props.input.onChange}
-                                onSubmit={() => form?.submit()}
-                            />
-                        )}
-                    </Field>
-                );
-            })}
-        </>
+        <Form
+            onSubmit={handleSubmit}
+            render={({ handleSubmit, form }) => (
+                <form onSubmit={handleSubmit}>
+                    {config.map(({ label, items }) => {
+                        return (
+                            <Field
+                                name={label.toLowerCase()}
+                                type="select"
+                                key={label}
+                            >
+                                {(props) => (
+                                    <SelectField
+                                        label={label}
+                                        items={items}
+                                        value={props.input.value}
+                                        onChange={props.input.onChange}
+                                        onSubmit={() => form?.submit()}
+                                    />
+                                )}
+                            </Field>
+                        );
+                    })}
+                </form>
+            )}
+        />
     );
 };
 

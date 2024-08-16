@@ -12,7 +12,7 @@ const Row = ({ children }: { children: ReactNode }) => {
 
 const CustomerForm = ({ isLoading }: CustomerFormProps) => {
     return (
-        <>
+        <div className="space-y-4">
             <Row>
                 <Field name="firstName">
                     {(props) => (
@@ -183,7 +183,7 @@ const CustomerForm = ({ isLoading }: CustomerFormProps) => {
                     )}
                 </Field>
             </Row>
-        </>
+        </div>
     );
 };
 

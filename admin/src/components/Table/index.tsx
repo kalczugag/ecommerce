@@ -20,8 +20,10 @@ import {
     KeyboardArrowRight,
     LastPage,
 } from "@mui/icons-material";
+import Loading from "../Loading";
 import { setPagination, reset } from "@/store";
 import { useAppDispatch, useAppSelector } from "@/hooks/useStore";
+import type { TableColumnProps } from "@/modules/CrudModule";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     wordBreak: "normal",
@@ -114,13 +116,8 @@ const TablePaginationActions = (props: TablePaginationActionsProps) => {
     );
 };
 
-interface HeaderOption {
-    label: string;
-    render: (row: any) => React.ReactNode;
-}
-
 interface CustomPaginationActionsTableProps {
-    headerOptions: HeaderOption[];
+    headerOptions: TableColumnProps[];
     rowData: any[];
     totalItems?: number;
     isLoading: boolean;
@@ -158,7 +155,7 @@ const CustomPaginationActionsTable = ({
     }, []);
 
     return (
-        <>
+        <Loading isLoading={isLoading}>
             <TableContainer
                 component={Paper}
                 className="text-text-light dark:text-text-dark"
@@ -184,32 +181,39 @@ const CustomPaginationActionsTable = ({
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {(pageSize > 0
-                            ? rowData.slice(0, pageSize)
-                            : rowData
-                        ).map((row, rowIndex) => (
-                            <TableRow key={rowIndex}>
-                                {headerOptions.map(({ render }, colIndex) => {
-                                    if (colIndex <= 1) {
-                                        return (
+                        {rowData.length === 0 && !isLoading ? (
+                            <TableRow>
+                                <TableCell
+                                    colSpan={headerOptions.length}
+                                    align="center"
+                                    sx={{ fontSize: "24px" }}
+                                >
+                                    No data available
+                                </TableCell>
+                            </TableRow>
+                        ) : (
+                            (pageSize > 0
+                                ? rowData.slice(0, pageSize)
+                                : rowData
+                            ).map((row, rowIndex) => (
+                                <TableRow key={rowIndex}>
+                                    {headerOptions.map(
+                                        ({ render }, colIndex) => (
                                             <TableCell
-                                                component="th"
-                                                scope="row"
                                                 key={colIndex}
+                                                align={
+                                                    colIndex > 1
+                                                        ? "right"
+                                                        : "left"
+                                                }
                                             >
                                                 {render(row)}
                                             </TableCell>
-                                        );
-                                    }
-
-                                    return (
-                                        <TableCell key={colIndex} align="right">
-                                            {render(row)}
-                                        </TableCell>
-                                    );
-                                })}
-                            </TableRow>
-                        ))}
+                                        )
+                                    )}
+                                </TableRow>
+                            ))
+                        )}
                     </TableBody>
                     <TableFooter>
                         <TableRow>
@@ -240,7 +244,7 @@ const CustomPaginationActionsTable = ({
                     </TableFooter>
                 </Table>
             </TableContainer>
-        </>
+        </Loading>
     );
 };
 

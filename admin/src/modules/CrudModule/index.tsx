@@ -1,41 +1,30 @@
-import { ReactNode } from "react";
 import CrudLayout from "@/layouts/CrudLayout";
 import Table from "@/components/Table";
 
-interface CrudModuleProps {
-    config: {
-        topLabel?: string;
-        bottomLabel?: string;
-    };
-    actionForm: ReactNode;
-    fields?: {
-        label: string;
-        render: (row: any) => ReactNode;
-    }[];
-    data?: any[];
-    formOnly?: boolean;
-    handleSubmit: (values: any) => void;
+export interface TableColumnProps {
+    label: string;
+    render: (row: any) => JSX.Element | string;
 }
 
-const CrudModule = ({
-    config: { topLabel, bottomLabel },
-    actionForm,
-    fields = [],
-    data = [],
-    formOnly,
-}: CrudModuleProps) => {
+interface CrudModuleProps {
+    config?: {
+        tableConfig: TableColumnProps[];
+        tableData: any[];
+        isLoading: boolean;
+    };
+    actionForm: JSX.Element;
+}
+
+const CrudModule = ({ config, actionForm }: CrudModuleProps) => {
+    const hasTableConfig = config && config.tableConfig && config.tableData;
+
     return (
-        <CrudLayout
-            headerPanel={actionForm}
-            topLabel={topLabel}
-            bottomLabel={bottomLabel}
-        >
-            {!formOnly && (
+        <CrudLayout headerPanel={actionForm}>
+            {hasTableConfig && (
                 <Table
-                    headerOptions={fields}
-                    rowData={data}
-                    totalItems={data.length}
-                    isLoading={false}
+                    headerOptions={config.tableConfig}
+                    rowData={config.tableData}
+                    isLoading={config.isLoading}
                 />
             )}
         </CrudLayout>

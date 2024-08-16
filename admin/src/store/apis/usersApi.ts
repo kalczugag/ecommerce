@@ -89,3 +89,5 @@ export const {
     useGetUserByIdQuery,
     useEditUserMutation,
 } = userApi;
+
+export type { ResultUserById };

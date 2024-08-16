@@ -6,6 +6,7 @@ import useTheme from "@/hooks/useTheme";
 import Dashboard from "@/pages/Dashboard";
 import ProductAdd from "@/pages/Products/add";
 import ProductsList from "@/pages/Products/list";
+import ProductsEdit from "@/pages/Products/edit";
 import CustomersList from "@/pages/Customers/list";
 import CustomersEdit from "@/pages/Customers/edit";
 import Settings from "@/pages/Settings";
@@ -25,6 +26,10 @@ const App = () => {
                 <Route element={<PrivateOutlet />}>
                     <Route index element={<Dashboard />} />
                     <Route path="/products" element={<ProductsList />} />
+                    <Route
+                        path="/products/edit/:id"
+                        element={<ProductsEdit />}
+                    />
                     <Route path="/products/add" element={<ProductAdd />} />
                     <Route path="/customers" element={<CustomersList />} />
                     <Route
