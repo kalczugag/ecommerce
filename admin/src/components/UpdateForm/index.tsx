@@ -4,19 +4,19 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 import Loading from "../Loading";
 
-interface CreateFormProps {
+interface UpdateModalProps {
     formElements: ReactNode;
     initialValues: any[];
     isLoading: boolean;
     handleSubmit: (values: any) => void;
 }
 
-const CreateForm = ({
+const UpdateForm = ({
     handleSubmit,
     initialValues,
     formElements,
     isLoading,
-}: CreateFormProps) => {
+}: UpdateModalProps) => {
     const navigate = useNavigate();
 
     return (
@@ -47,4 +47,4 @@ const CreateForm = ({
     );
 };
 
-export default CreateForm;
+export default UpdateForm;

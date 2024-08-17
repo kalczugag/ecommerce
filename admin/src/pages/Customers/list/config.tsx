@@ -50,7 +50,7 @@ export const tableConfig = [
         label: "Actions",
         render: (row: RowProps) => (
             <ActionButtons
-                id={row._id!}
+                id={row._id || ""}
                 disabled={row.isLoading}
                 handleDelete={row.handleDelete}
             />

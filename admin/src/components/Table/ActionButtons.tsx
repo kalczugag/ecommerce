@@ -24,7 +24,7 @@ const ActionButtons = ({ id, disabled, handleDelete }: Props) => {
     return (
         <div className="flex flex-row items-center justify-end space-x-2">
             <IconButton
-                onClick={() => handleNavigate(`edit/${id}`)}
+                onClick={() => handleNavigate(id.toString())}
                 aria-label="edit"
                 sx={{ padding: 0 }}
                 disabled={disabled}
@@ -33,7 +33,7 @@ const ActionButtons = ({ id, disabled, handleDelete }: Props) => {
             </IconButton>
             <IconButton
                 onClick={onDeleteClick}
-                aria-label="edit"
+                aria-label="delete"
                 sx={{ padding: 0 }}
                 disabled={disabled}
             >

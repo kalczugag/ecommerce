@@ -27,12 +27,12 @@ const App = () => {
                     <Route index element={<Dashboard />} />
                     <Route path="/products">
                         <Route index element={<ProductsList />} />
-                        <Route path="edit/:id" element={<ProductsEdit />} />
+                        <Route path=":id" element={<ProductsEdit />} />
                         <Route path="add" element={<ProductAdd />} />
                     </Route>
                     <Route path="/customers">
                         <Route index element={<CustomersList />} />
-                        <Route path="edit/:id" element={<CustomersEdit />} />
+                        <Route path=":id" element={<CustomersEdit />} />
                     </Route>
                     <Route
                         path="/settings/:settingsKey"

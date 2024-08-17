@@ -4,8 +4,8 @@ import { useTitle } from "@/hooks/useTitle";
 import CrudModule from "@/modules/CrudModule";
 import CustomerForm from "@/forms/CustomerForm";
 import NotFound from "@/components/NotFound";
-import type { User } from "@/types/User";
 import UpdateForm from "@/components/UpdateForm";
+import type { User } from "@/types/User";
 
 const CustomersEdit = () => {
     const { id } = useParams();
