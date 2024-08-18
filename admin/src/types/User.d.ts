@@ -6,11 +6,16 @@ export interface User {
     lastName: string;
     role: Role | string;
     birthday?: Date;
-    address?: string;
-    city?: string;
-    state?: string;
-    postalCode?: number;
-    country?: string;
+    address?: {
+        street: string;
+        apartment?: string;
+        city: string;
+        state?: string;
+        postalCode: number;
+        country: string;
+    };
     phone?: string;
     email: string;
+    hash: string;
+    salt: string;
 }

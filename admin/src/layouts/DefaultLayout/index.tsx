@@ -5,7 +5,7 @@ interface DefaultLayoutProps {
 }
 
 const DefaultLayout = ({ children }: DefaultLayoutProps) => {
-    return <div className="px-6 text-lg">{children}</div>;
+    return <div className="p-6 text-lg lg:py-0">{children}</div>;
 };
 
 export default DefaultLayout;

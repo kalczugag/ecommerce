@@ -10,10 +10,10 @@ interface RowProps extends User {
 
 export const sortConfig = [
     {
-        label: "Sort By",
+        label: "Sort By Price",
         items: [
-            { label: "A-Z", value: "asc" },
-            { label: "Z-A", value: "desc" },
+            { label: "Low to high", value: "asc" },
+            { label: "High to low", value: "desc" },
         ],
     },
 ];
@@ -31,16 +31,12 @@ export const tableConfig = [
     {
         label: "Address",
         render: (row: RowProps) =>
-            row.address &&
-            row.address.city &&
-            row.address.street &&
-            row.address.postalCode &&
-            row.address.country ? (
+            row.address && row.city && row.postalCode && row.country ? (
                 <Address
-                    address={row.address.street}
-                    city={row.address.city}
-                    postalCode={row.address.postalCode}
-                    country={row.address.country}
+                    address={row.address}
+                    city={row.city}
+                    postalCode={row.postalCode}
+                    country={row.country}
                 />
             ) : (
                 <span>No address</span>

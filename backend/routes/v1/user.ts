@@ -14,6 +14,7 @@ const users = (router: express.Router) => {
     router.get(
         "/users/byRole",
         passport.authenticate("jwt", { session: false }),
+        hasRole("admin"),
         methods.readByRole
     );
     router.get(
