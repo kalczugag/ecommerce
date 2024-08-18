@@ -14,8 +14,6 @@ const CustomersEdit = () => {
     const { data, isSuccess, isLoading } = useGetUserByIdQuery(id || "");
     const [editUser, result] = useEditUserMutation();
 
-    console.log(data);
-
     if (!data && !isSuccess && !isLoading) return <NotFound />;
 
     const handleSubmit = (values: User) => {

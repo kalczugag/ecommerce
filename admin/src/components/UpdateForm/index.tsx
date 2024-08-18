@@ -3,6 +3,7 @@ import { Form } from "react-final-form";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 import Loading from "../Loading";
+import AlertDialog from "../AlertDialog";
 
 interface UpdateModalProps {
     formElements: ReactNode;
@@ -36,9 +37,23 @@ const UpdateForm = ({
                             >
                                 Cancel
                             </Button>
-                            <Button type="submit" variant="contained">
-                                Save
-                            </Button>
+                            <AlertDialog
+                                title="Are you sure?"
+                                content="You won't be able to revert this!"
+                                cancel="Cancel"
+                                confirm="Yes"
+                                onConfirm={handleSubmit}
+                            >
+                                {(props) => (
+                                    <Button
+                                        type="button"
+                                        variant="contained"
+                                        onClick={props.open}
+                                    >
+                                        Save
+                                    </Button>
+                                )}
+                            </AlertDialog>
                         </div>
                     </form>
                 )}
