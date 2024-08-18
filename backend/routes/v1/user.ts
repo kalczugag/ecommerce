@@ -28,6 +28,12 @@ const users = (router: express.Router) => {
         hasRole("admin"),
         methods.update
     );
+    router.delete(
+        "/users/:id",
+        passport.authenticate("jwt", { session: false }),
+        hasRole("admin"),
+        methods.delete
+    );
 };
 
 export default users;

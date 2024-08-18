@@ -80,6 +80,17 @@ export const userApi = createApi({
                 { type: "Users", id: "LIST" },
             ],
         }),
+
+        deleteUser: builder.mutation<string, string>({
+            query: (id) => ({
+                url: `/users/${id}`,
+                method: "DELETE",
+                headers: {
+                    Authorization: localStorage.getItem("authToken") || "",
+                },
+            }),
+            invalidatesTags: (result, error, id) => [{ type: "Users", id: id }],
+        }),
     }),
 });
 
@@ -88,6 +99,7 @@ export const {
     useGetUsersByRoleQuery,
     useGetUserByIdQuery,
     useEditUserMutation,
+    useDeleteUserMutation,
 } = userApi;
 
 export type { ResultUserById };

@@ -10,6 +10,7 @@ interface CrudModuleProps {
     config?: {
         tableConfig: TableColumnProps[];
         tableData: any[];
+        action?: (arg: string) => void;
         isLoading: boolean;
     };
     actionForm: JSX.Element;
@@ -18,12 +19,20 @@ interface CrudModuleProps {
 const CrudModule = ({ config, actionForm }: CrudModuleProps) => {
     const hasTableConfig = config && config.tableConfig && config.tableData;
 
+    const enhancedTableData =
+        config?.tableData && config?.action
+            ? config.tableData.map((row) => ({
+                  ...row,
+                  handleDelete: () => config.action!(row._id),
+              }))
+            : config?.tableData;
+
     return (
         <CrudLayout headerPanel={actionForm}>
             {hasTableConfig && (
                 <Table
                     headerOptions={config.tableConfig}
-                    rowData={config.tableData}
+                    rowData={enhancedTableData!}
                     isLoading={config.isLoading}
                 />
             )}

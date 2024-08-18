@@ -7,7 +7,6 @@ import {
     DialogContentText,
     DialogTitle,
 } from "@mui/material";
-import useTheme from "@/hooks/useTheme";
 
 interface AlertDialogProps {
     title: string;
@@ -27,9 +26,6 @@ const AlertDialog = ({
     children,
 }: AlertDialogProps) => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const { mode } = useTheme();
-
-    const color = mode === "light" ? "primary" : "inherit";
 
     const handleOpen = () => setIsOpen(true);
 
@@ -46,15 +42,15 @@ const AlertDialog = ({
                     <DialogContentText>{content}</DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose} color={color}>
+                    <Button onClick={handleClose} color="info">
                         {cancel}
                     </Button>
                     <Button
                         onClick={() => {
                             onConfirm();
-                            setIsOpen(false);
+                            handleClose();
                         }}
-                        color={color}
+                        color="info"
                     >
                         {confirm}
                     </Button>

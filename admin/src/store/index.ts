@@ -36,4 +36,5 @@ export {
     useGetUsersByRoleQuery,
     useGetUserByIdQuery,
     useEditUserMutation,
+    useDeleteUserMutation,
 } from "./apis/usersApi";

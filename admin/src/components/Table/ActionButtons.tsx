@@ -1,5 +1,6 @@
 import { IconButton } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
+import AlertDialog from "../AlertDialog";
 import { useNavigate } from "react-router-dom";
 
 interface Props {
@@ -31,14 +32,24 @@ const ActionButtons = ({ id, disabled, handleDelete }: Props) => {
             >
                 <Edit />
             </IconButton>
-            <IconButton
-                onClick={onDeleteClick}
-                aria-label="delete"
-                sx={{ padding: 0 }}
-                disabled={disabled}
+            <AlertDialog
+                title="Are you sure?"
+                content="You won't be able to revert this!"
+                cancel="Cancel"
+                confirm="Yes"
+                onConfirm={onDeleteClick}
             >
-                <Delete />
-            </IconButton>
+                {(props) => (
+                    <IconButton
+                        onClick={props.open}
+                        aria-label="delete"
+                        sx={{ padding: 0 }}
+                        disabled={disabled}
+                    >
+                        <Delete />
+                    </IconButton>
+                )}
+            </AlertDialog>
         </div>
     );
 };

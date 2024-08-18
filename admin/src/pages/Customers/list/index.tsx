@@ -1,4 +1,4 @@
-import { useGetUsersByRoleQuery } from "@/store";
+import { useGetUsersByRoleQuery, useDeleteUserMutation } from "@/store";
 import { sortConfig, tableConfig } from "./config";
 import { useTitle } from "@/hooks/useTitle";
 import CrudModule from "@/modules/CrudModule";
@@ -8,6 +8,7 @@ const CustomersList = () => {
     useTitle("Customers");
 
     const { data, isLoading } = useGetUsersByRoleQuery("client");
+    const [deleteUser] = useDeleteUserMutation();
 
     const sortFn = (values: any) => {
         console.log(values);
@@ -16,6 +17,7 @@ const CustomersList = () => {
     const config = {
         tableConfig,
         tableData: data || [],
+        action: deleteUser,
         isLoading,
     };
 
