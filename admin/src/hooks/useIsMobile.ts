@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import useDebounce from "./useDebounce";
 
-const useIsMobile = () => {
+const useIsMobile = (arg?: number) => {
     const [width, setWidth] = useState<number>(window.innerWidth);
 
     const debouncedHandleWindowSizeChange = useDebounce(() => {
@@ -20,7 +20,9 @@ const useIsMobile = () => {
         };
     }, []);
 
-    const isMobile = width <= 1024;
+    const threshold = arg || 1024;
+
+    const isMobile = width <= threshold;
 
     return isMobile;
 };

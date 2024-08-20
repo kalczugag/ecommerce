@@ -37,7 +37,7 @@ export const tableConfig = [
             row.address.postalCode &&
             row.address.country ? (
                 <Address
-                    address={row.address.street}
+                    street={row.address.street}
                     city={row.address.city}
                     postalCode={row.address.postalCode}
                     country={row.address.country}

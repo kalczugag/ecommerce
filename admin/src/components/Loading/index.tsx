@@ -1,12 +1,12 @@
-import { ReactNode } from "react";
+import { HTMLAttributes, ReactNode } from "react";
 import { Box, CircularProgress } from "@mui/material";
 
-interface LoadingProps {
+interface LoadingProps extends HTMLAttributes<HTMLElement> {
     isLoading: boolean;
     children: ReactNode;
 }
 
-const Loading = ({ isLoading, children }: LoadingProps) => {
+const Loading = ({ isLoading, children, ...rest }: LoadingProps) => {
     return (
         <Box
             sx={{
@@ -15,6 +15,7 @@ const Loading = ({ isLoading, children }: LoadingProps) => {
                 justifyContent: "center",
                 alignItems: "center",
             }}
+            {...rest}
         >
             {isLoading && (
                 <Box

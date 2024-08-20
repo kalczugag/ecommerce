@@ -1,4 +1,4 @@
-interface ImageProps {
+export interface ImageProps {
     src: string;
     alt: string;
     size?: "sm" | "md" | "xl";

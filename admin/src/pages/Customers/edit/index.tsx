@@ -11,10 +11,10 @@ const CustomersEdit = () => {
     const { id } = useParams();
     useTitle("Customers - Edit");
 
-    const { data, isSuccess, isLoading } = useGetUserByIdQuery(id || "");
+    const { data, isError, isLoading } = useGetUserByIdQuery(id || "");
     const [editUser, result] = useEditUserMutation();
 
-    if (!data && !isSuccess && !isLoading) return <NotFound />;
+    if (isError || (!isLoading && !data)) return <NotFound />;
 
     const handleSubmit = (values: User) => {
         editUser(values);

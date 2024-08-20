@@ -1,11 +1,9 @@
-import type { User } from "@/types/User";
-import { Address } from "@/components/TableFields";
-import { Title } from "@/components/TableFields";
+import type { Order } from "@/types/Order";
+import { Status } from "@/components/TableFields";
 import ActionButtons from "@/components/Table/ActionButtons";
 
-interface RowProps extends User {
+interface RowProps extends Order {
     isLoading: boolean;
-    handleDelete: () => void;
 }
 
 export const sortConfig = [
@@ -20,40 +18,35 @@ export const sortConfig = [
 
 export const tableConfig = [
     {
-        label: "Full Name",
+        label: "Number of items",
         render: (row: RowProps) => (
-            <Title
-                title={row.firstName + " " + row.lastName}
-                subtitle={row.email}
-            />
+            <span className="font-bold">
+                {row.items.length} {row.items.length > 1 ? "items" : "item"}
+            </span>
         ),
     },
     {
-        label: "Address",
-        render: (row: RowProps) =>
-            row.address && row.city && row.postalCode && row.country ? (
-                <Address
-                    address={row.address}
-                    city={row.city}
-                    postalCode={row.postalCode}
-                    country={row.country}
-                />
-            ) : (
-                <span>No address</span>
-            ),
+        label: "Title",
+        render: (row: RowProps) => row.items[0].title,
     },
     {
-        label: "Phone",
-        render: (row: RowProps) => row.phone || "No phone number",
+        label: "Price",
+        render: (row: RowProps) => `$${row.total}`,
+    },
+    {
+        label: "Id",
+        render: (row: RowProps) => row._id!,
+    },
+    {
+        label: "Status",
+        render: (row: RowProps) => (
+            <div className="flex justify-end">
+                <Status status={row.status} />
+            </div>
+        ),
     },
     {
         label: "Actions",
-        render: (row: RowProps) => (
-            <ActionButtons
-                id={row._id || ""}
-                disabled={row.isLoading}
-                handleDelete={row.handleDelete}
-            />
-        ),
+        render: (row: RowProps) => <ActionButtons id={row._id!} info />,
     },
 ];

@@ -5,6 +5,7 @@ import userReducer from "./user/userSlice";
 import tableReducer from "./table/tableSlice";
 import { productApi } from "./apis/productsApi";
 import { userApi } from "./apis/usersApi";
+import { orderApi } from "./apis/ordersApi";
 
 export const store = configureStore({
     reducer: {
@@ -13,13 +14,15 @@ export const store = configureStore({
         table: tableReducer,
         [productApi.reducerPath]: productApi.reducer,
         [userApi.reducerPath]: userApi.reducer,
+        [orderApi.reducerPath]: orderApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
             serializableCheck: false,
         })
             .concat(productApi.middleware)
-            .concat(userApi.middleware),
+            .concat(userApi.middleware)
+            .concat(orderApi.middleware),
 });
 
 setupListeners(store.dispatch);
@@ -38,3 +41,4 @@ export {
     useEditUserMutation,
     useDeleteUserMutation,
 } from "./apis/usersApi";
+export { useGetAllOrdersQuery, useGetOrderByIdQuery } from "./apis/ordersApi";

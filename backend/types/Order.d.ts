@@ -1,13 +1,24 @@
 import { User } from "./User";
 
+export interface Item {
+    product?: string;
+    color: string;
+    size: string;
+    unitPrice: number;
+    quantity: number;
+}
+
 export interface Order {
     _id?: string;
     _user: User;
-    items: {
-        _id: string;
-        quantity: number;
-    }[];
-    status?: string;
+    items: itemSchema[];
+    status?:
+        | "placed"
+        | "confirmed"
+        | "shipped"
+        | "in_delivery"
+        | "delivered"
+        | "cancelled";
     total: number;
     paymentMethod: string;
     paymentStatus?: string;
