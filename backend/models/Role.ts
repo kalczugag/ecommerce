@@ -1,12 +1,7 @@
 import mongoose from "mongoose";
-import type { Permission } from "@/types/User";
+import type { Role } from "@/types/Role";
 
-interface RoleProps {
-    name: string;
-    permissions: Permission[];
-}
-
-const roleSchema = new mongoose.Schema<RoleProps>(
+const roleSchema = new mongoose.Schema<Role>(
     {
         name: {
             type: String,

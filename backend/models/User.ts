@@ -21,7 +21,6 @@ const userSchema = new mongoose.Schema<User>(
             type: mongoose.Schema.Types.ObjectId,
             ref: "Role",
             required: false,
-            default: "client",
         },
         birthday: { type: Date, required: false },
         address: { type: addressSchema, required: false },

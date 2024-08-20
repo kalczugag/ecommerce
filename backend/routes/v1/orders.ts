@@ -2,7 +2,7 @@ import express from "express";
 import passport from "passport";
 
 import methods from "@/controllers/orders";
-import { hasRole } from "@/middlewares";
+import { hasRole, hasAddress } from "@/middlewares";
 
 const orders = (router: express.Router) => {
     router.get(
@@ -19,6 +19,7 @@ const orders = (router: express.Router) => {
     router.post(
         "/orders",
         passport.authenticate("jwt", { session: false }),
+        hasAddress,
         methods.create
     );
 };
