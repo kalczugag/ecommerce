@@ -3,7 +3,11 @@ import type { Order } from "@/types/Order";
 
 const itemSchema = new mongoose.Schema(
     {
-        _id: { type: mongoose.Schema.ObjectId, ref: "Product", required: true },
+        product: {
+            type: mongoose.Schema.ObjectId,
+            ref: "Product",
+            required: true,
+        },
         quantity: { type: Number, required: true, min: 1 },
     },
     { _id: false }

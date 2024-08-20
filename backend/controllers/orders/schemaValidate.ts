@@ -4,7 +4,7 @@ const schema = Joi.object({
     _user: Joi.string().required(),
     items: Joi.array()
         .items({
-            _id: Joi.string().required(),
+            product: Joi.string().required(),
             quantity: Joi.number().integer().positive().required(),
         })
         .required(),

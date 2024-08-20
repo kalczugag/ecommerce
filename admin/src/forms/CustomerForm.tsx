@@ -53,10 +53,10 @@ const CustomerForm = ({ isLoading }: CustomerFormProps) => {
             </Row>
             {/* <Field name="role"></Field>
             <Field name="birthday"></Field> */}
-            <Field name="address">
+            <Field name="address.street">
                 {(props) => (
                     <TextField
-                        label="Address"
+                        label="Street"
                         name={props.input.name}
                         value={props.input.value}
                         onChange={props.input.onChange}
@@ -72,7 +72,7 @@ const CustomerForm = ({ isLoading }: CustomerFormProps) => {
                 )}
             </Field>
             <Row>
-                <Field name="city">
+                <Field name="address.city">
                     {(props) => (
                         <TextField
                             label="City"
@@ -90,7 +90,7 @@ const CustomerForm = ({ isLoading }: CustomerFormProps) => {
                         />
                     )}
                 </Field>
-                <Field name="state">
+                <Field name="address.state">
                     {(props) => (
                         <TextField
                             label="State"
@@ -108,7 +108,7 @@ const CustomerForm = ({ isLoading }: CustomerFormProps) => {
                         />
                     )}
                 </Field>
-                <Field name="postalCode">
+                <Field name="address.postalCode">
                     {(props) => (
                         <TextField
                             label="Postal Code"
@@ -127,7 +127,7 @@ const CustomerForm = ({ isLoading }: CustomerFormProps) => {
                     )}
                 </Field>
             </Row>
-            <Field name="country">
+            <Field name="address.country">
                 {(props) => (
                     <TextField
                         label="Country"

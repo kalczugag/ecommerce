@@ -16,6 +16,4 @@ export interface User {
     };
     phone?: string;
     email: string;
-    hash: string;
-    salt: string;
 }

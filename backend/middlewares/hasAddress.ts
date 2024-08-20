@@ -9,11 +9,11 @@ export const hasAddress = (
     const user = req.user as User;
 
     if (
-        user.address &&
-        !user.address.street &&
-        !user.address.city &&
-        !user.address.postalCode &&
-        !user.address.country
+        !user ||
+        !user.address?.street ||
+        !user.address?.city ||
+        !user.address?.postalCode ||
+        !user.address?.country
     ) {
         return res.status(403).json({ error: "Address is required" });
     }

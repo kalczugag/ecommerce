@@ -18,7 +18,10 @@ export const getOrderById = async (
                 path: "_user",
                 select: "firstName lastName phone address",
             })
-            .populate("items")
+            .populate({
+                path: "items.product",
+                model: "Product",
+            })
             .exec();
 
         if (!order) {

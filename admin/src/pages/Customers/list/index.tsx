@@ -7,7 +7,7 @@ import SortForm from "@/forms/SortForm";
 const CustomersList = () => {
     useTitle("Customers");
 
-    const { data, isLoading } = useGetUsersByRoleQuery("client");
+    const { data, isLoading } = useGetUsersByRoleQuery("admin");
     const [deleteUser] = useDeleteUserMutation();
 
     const sortFn = (values: any) => {

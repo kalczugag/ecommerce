@@ -1,4 +1,4 @@
-type Permission = "create" | "read" | "update" | "delete";
+export type Permission = "create" | "read" | "update" | "delete";
 
 export interface Role {
     name: string;
