@@ -19,11 +19,8 @@ export const sortConfig = [
 export const tableConfig = [
     {
         label: "Number of items",
-        render: (row: RowProps) => (
-            <span className="font-bold">
-                {row.items.length} {row.items.length > 1 ? "items" : "item"}
-            </span>
-        ),
+        render: (row: RowProps) =>
+            row.items.reduce((a, b) => a + b.quantity, 0),
     },
     {
         label: "Payment Method",
