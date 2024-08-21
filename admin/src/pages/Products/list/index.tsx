@@ -1,4 +1,4 @@
-import { useGetAllProductsQuery } from "@/store";
+import { useGetAllProductsQuery, useDeleteProductMutation } from "@/store";
 import { useTitle } from "@/hooks/useTitle";
 import { sortConfig, tableConfig } from "./config";
 import CrudModule from "@/modules/CrudModule";
@@ -8,6 +8,7 @@ const ProductsList = () => {
     useTitle("Products");
 
     const { data, isLoading } = useGetAllProductsQuery();
+    const [deleteProduct] = useDeleteProductMutation();
 
     const sortFn = (values: any) => {
         console.log(values);
@@ -16,6 +17,7 @@ const ProductsList = () => {
     const config = {
         tableConfig,
         tableData: data || [],
+        action: deleteProduct,
         isLoading,
     };
 

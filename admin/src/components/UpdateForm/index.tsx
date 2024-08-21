@@ -4,10 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 import Loading from "../Loading";
 import AlertDialog from "../AlertDialog";
+import Review from "../Review";
 
 interface UpdateModalProps {
     formElements: ReactNode;
-    initialValues: any[];
+    initialValues: any;
     isLoading: boolean;
     handleSubmit: (values: any) => void;
 }
@@ -25,7 +26,7 @@ const UpdateForm = ({
             <Form
                 onSubmit={handleSubmit}
                 initialValues={initialValues}
-                render={({ handleSubmit }) => (
+                render={({ handleSubmit, values }) => (
                     <form onSubmit={handleSubmit}>
                         {formElements}
                         <div className="flex space-x-2 mt-8">
@@ -39,14 +40,13 @@ const UpdateForm = ({
                             </Button>
                             <AlertDialog
                                 title="Are you sure?"
-                                content="You won't be able to revert this!"
+                                content={<Review values={values} />}
                                 cancel="Cancel"
                                 confirm="Yes"
                                 onConfirm={handleSubmit}
                             >
                                 {(props) => (
                                     <Button
-                                        type="button"
                                         variant="contained"
                                         onClick={props.open}
                                     >

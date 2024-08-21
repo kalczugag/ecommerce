@@ -24,7 +24,7 @@ const CustomersEdit = () => {
         <CrudModule
             actionForm={
                 <UpdateForm
-                    initialValues={data || []}
+                    initialValues={data}
                     handleSubmit={handleSubmit}
                     isLoading={isLoading}
                     formElements={<CustomerForm isLoading={result.isLoading} />}

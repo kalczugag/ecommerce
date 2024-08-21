@@ -1,11 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { User } from "@/types/User";
 
-interface ResultUserById {
-    msg: string;
-    data: User;
-}
-
 export const userApi = createApi({
     reducerPath: "users",
     baseQuery: fetchBaseQuery({
@@ -55,7 +50,7 @@ export const userApi = createApi({
                     : [{ type: "Users", id: "LIST" }],
         }),
 
-        getUserById: builder.query<User[], string>({
+        getUserById: builder.query<User, string>({
             query: (id) => ({
                 url: `/users/${id}`,
                 method: "GET",
@@ -66,7 +61,7 @@ export const userApi = createApi({
             providesTags: (result, error, id) => [{ type: "Users", id: id }],
         }),
 
-        editUser: builder.mutation<ResultUserById, User>({
+        editUser: builder.mutation<User, User>({
             query: (values) => ({
                 url: `/users/${values._id}`,
                 method: "PATCH",
@@ -75,8 +70,8 @@ export const userApi = createApi({
                     Authorization: localStorage.getItem("authToken") || "",
                 },
             }),
-            invalidatesTags: (result) => [
-                { type: "Users", id: result?.data._id },
+            invalidatesTags: (result, error, values) => [
+                { type: "Users", id: values._id },
                 { type: "Users", id: "LIST" },
             ],
         }),
@@ -101,5 +96,3 @@ export const {
     useEditUserMutation,
     useDeleteUserMutation,
 } = userApi;
-
-export type { ResultUserById };

@@ -10,7 +10,7 @@ import {
 
 interface AlertDialogProps {
     title: string;
-    content: string;
+    content: string | JSX.Element;
     confirm: string;
     cancel: string;
     onConfirm: () => void;
@@ -39,7 +39,9 @@ const AlertDialog = ({
             <Dialog open={isOpen} onClose={handleClose}>
                 <DialogTitle>{title}</DialogTitle>
                 <DialogContent>
-                    <DialogContentText>{content}</DialogContentText>
+                    <DialogContentText component="div">
+                        {content}
+                    </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="info">

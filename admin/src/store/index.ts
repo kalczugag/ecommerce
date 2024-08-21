@@ -33,7 +33,13 @@ export type AppDispatch = typeof store.dispatch;
 export * from "./sidebar/sidebarSlice";
 export * from "./table/tableSlice";
 export * from "./user/userSlice";
-export { useGetAllProductsQuery } from "./apis/productsApi";
+export {
+    useGetAllProductsQuery,
+    useGetProductByIdQuery,
+    useAddProductMutation,
+    useEditProductMutation,
+    useDeleteProductMutation,
+} from "./apis/productsApi";
 export {
     useGetAllUsersQuery,
     useGetUsersByRoleQuery,

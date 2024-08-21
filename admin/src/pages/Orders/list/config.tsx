@@ -26,8 +26,8 @@ export const tableConfig = [
         ),
     },
     {
-        label: "Title",
-        render: (row: RowProps) => row.items[0].title,
+        label: "Payment Method",
+        render: (row: RowProps) => row.paymentMethod,
     },
     {
         label: "Price",

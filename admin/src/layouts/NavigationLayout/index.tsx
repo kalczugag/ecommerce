@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { Container } from "@mui/material";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 
@@ -12,7 +13,7 @@ const Layout = ({ children }: LayoutProps) => {
             <Sidebar />
             <div className="flex-1 flex flex-col">
                 <Header />
-                {children}
+                <Container maxWidth="xl">{children}</Container>
             </div>
         </div>
     );
