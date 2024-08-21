@@ -22,26 +22,22 @@ const Status = ({ status }: StatusProps) => {
     const isMobile = useIsMobile(768);
 
     return (
-        <>
+        <Stepper activeStep={stepKeys.indexOf(status)}>
             {isMobile ? (
-                <Stepper>
-                    <Step>
-                        <StepLabel>{steps[status]}</StepLabel>
-                    </Step>
-                </Stepper>
+                <Step>
+                    <StepLabel>Status: {steps[status]}</StepLabel>
+                </Step>
             ) : (
-                <Stepper activeStep={stepKeys.indexOf(status)}>
-                    {stepKeys.map((key) => {
-                        if (key !== "cancelled")
-                            return (
-                                <Step key={key}>
-                                    <StepLabel>{steps[key]}</StepLabel>
-                                </Step>
-                            );
-                    })}
-                </Stepper>
+                stepKeys.map((key, index) => {
+                    if (key !== "cancelled")
+                        return (
+                            <Step key={key + index}>
+                                <StepLabel>{steps[key]}</StepLabel>
+                            </Step>
+                        );
+                })
             )}
-        </>
+        </Stepper>
     );
 };
 

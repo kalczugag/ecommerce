@@ -34,7 +34,7 @@ const Sidebar = () => {
             <div className="flex flex-col space-y-2">
                 {content.map((item, index) => (
                     <TitledIconButton
-                        key={item.label + "_" + index.toString()}
+                        key={item.label + "_" + index}
                         {...item}
                         active={pathname === item.to}
                         handleClick={handleClick}
