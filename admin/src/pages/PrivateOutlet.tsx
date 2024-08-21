@@ -1,24 +1,15 @@
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import NavigationLayout from "@/layouts/NavigationLayout";
-import { useAppSelector } from "@/hooks/useStore";
-import { useEffect } from "react";
+import { useLocation, Navigate, Outlet } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectCurrentToken } from "@/store";
 
-const PrivateOutlet = () => {
-    const { token } = useAppSelector((state) => state.user);
-    const { pathname } = useLocation();
-    const navigate = useNavigate();
+const RequireAuth = () => {
+    const token = useSelector(selectCurrentToken);
+    const location = useLocation();
 
-    useEffect(() => {
-        if (!token && pathname !== "/login") navigate("/login");
-    }, []);
-
-    return (
-        token && (
-            <NavigationLayout>
-                <Outlet />
-            </NavigationLayout>
-        )
+    return token ? (
+        <Outlet />
+    ) : (
+        <Navigate to="/login" state={{ from: location }} replace />
     );
 };
-
-export default PrivateOutlet;
+export default RequireAuth;

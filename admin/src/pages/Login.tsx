@@ -1,22 +1,27 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Form } from "react-final-form";
-import { useAppDispatch, useAppSelector } from "@/hooks/useStore";
+import { useLoginMutation, setCredentials } from "@/store";
+import { useAppDispatch } from "@/hooks/useStore";
 import { useTitle } from "@/hooks/useTitle";
-import { login } from "@/store";
 import { Button } from "@mui/material";
 import AuthModule from "@/modules/AuthModule";
 import LoginForm from "@/forms/LoginForm";
 
 const Login = () => {
-    const { isLoading, isSuccess } = useAppSelector((state) => state.user);
     const navigate = useNavigate();
+
+    const [login, { isLoading, isSuccess }] = useLoginMutation();
     const dispatch = useAppDispatch();
 
     useTitle("Sign In");
 
-    const handleSubmit = (values: { email: string; password: string }) => {
-        dispatch(login(values));
+    const handleSubmit = async (values: {
+        email: string;
+        password: string;
+    }) => {
+        const userData = await login(values).unwrap();
+        dispatch(setCredentials({ ...userData, email: values.email }));
     };
 
     useEffect(() => {

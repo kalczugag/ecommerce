@@ -18,7 +18,7 @@ export const userApi = createApi({
                 url: "/users",
                 method: "GET",
                 headers: {
-                    Authorization: localStorage.getItem("authToken") || "",
+                    Authorization: localStorage.getItem("token") || "",
                 },
             }),
             providesTags: (result) =>
@@ -35,7 +35,7 @@ export const userApi = createApi({
                 url: "/users/byRole",
                 method: "GET",
                 headers: {
-                    Authorization: localStorage.getItem("authToken") || "",
+                    Authorization: localStorage.getItem("token") || "",
                 },
                 params: {
                     roleName,
@@ -55,7 +55,7 @@ export const userApi = createApi({
                 url: `/users/${id}`,
                 method: "GET",
                 headers: {
-                    Authorization: localStorage.getItem("authToken") || "",
+                    Authorization: localStorage.getItem("token") || "",
                 },
             }),
             providesTags: (result, error, id) => [{ type: "Users", id: id }],
@@ -67,7 +67,7 @@ export const userApi = createApi({
                 method: "PATCH",
                 body: values,
                 headers: {
-                    Authorization: localStorage.getItem("authToken") || "",
+                    Authorization: localStorage.getItem("token") || "",
                 },
             }),
             invalidatesTags: (result, error, values) => [
@@ -81,7 +81,7 @@ export const userApi = createApi({
                 url: `/users/${id}`,
                 method: "DELETE",
                 headers: {
-                    Authorization: localStorage.getItem("authToken") || "",
+                    Authorization: localStorage.getItem("token") || "",
                 },
             }),
             invalidatesTags: (result, error, id) => [{ type: "Users", id: id }],

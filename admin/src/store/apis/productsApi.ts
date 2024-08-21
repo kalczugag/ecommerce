@@ -18,7 +18,7 @@ export const productApi = createApi({
                 url: "/products",
                 method: "GET",
                 headers: {
-                    Authorization: localStorage.getItem("authToken") || "",
+                    Authorization: localStorage.getItem("token") || "",
                 },
             }),
             providesTags: (result) =>
@@ -35,7 +35,7 @@ export const productApi = createApi({
                 url: `/products/${id}`,
                 method: "GET",
                 headers: {
-                    Authorization: localStorage.getItem("authToken") || "",
+                    Authorization: localStorage.getItem("token") || "",
                 },
             }),
             providesTags: (result, error, id) => [{ type: "Products", id: id }],
@@ -47,7 +47,7 @@ export const productApi = createApi({
                 method: "POST",
                 body: values,
                 headers: {
-                    Authorization: localStorage.getItem("authToken") || "",
+                    Authorization: localStorage.getItem("token") || "",
                 },
             }),
             invalidatesTags: (result, error, values) => [
@@ -61,7 +61,7 @@ export const productApi = createApi({
                 method: "PATCH",
                 body: values,
                 headers: {
-                    Authorization: localStorage.getItem("authToken") || "",
+                    Authorization: localStorage.getItem("token") || "",
                 },
             }),
             invalidatesTags: (result, error, values) => [
@@ -75,7 +75,7 @@ export const productApi = createApi({
                 url: `/products/${id}`,
                 method: "DELETE",
                 headers: {
-                    Authorization: localStorage.getItem("authToken") || "",
+                    Authorization: localStorage.getItem("token") || "",
                 },
             }),
             invalidatesTags: (result, error, id) => [

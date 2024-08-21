@@ -21,7 +21,7 @@ interface UserState {
     error: any;
 }
 
-const tokenFromStorage = localStorage.getItem("authToken");
+const tokenFromStorage = localStorage.getItem("token");
 
 const initialState: UserState = {
     token: tokenFromStorage ? tokenFromStorage : null,
@@ -36,7 +36,7 @@ const userSlice = createSlice({
     reducers: {
         logout(state) {
             state.token = null;
-            localStorage.removeItem("authToken");
+            localStorage.removeItem("token");
         },
     },
     extraReducers(builder) {
@@ -51,7 +51,7 @@ const userSlice = createSlice({
                     state.isSuccess = true;
                     state.token = action.payload.token;
 
-                    localStorage.setItem("authToken", action.payload.token);
+                    localStorage.setItem("token", action.payload.token);
                 }
             )
             .addCase(login.rejected, (state, action) => {
@@ -70,7 +70,7 @@ const userSlice = createSlice({
                     state.isSuccess = true;
                     state.token = action.payload.token;
 
-                    localStorage.setItem("authToken", action.payload.token);
+                    localStorage.setItem("token", action.payload.token);
                 }
             )
             .addCase(register.rejected, (state, action) => {

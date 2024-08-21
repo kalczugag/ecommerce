@@ -18,7 +18,7 @@ export const orderApi = createApi({
                 url: "/orders",
                 method: "GET",
                 headers: {
-                    Authorization: localStorage.getItem("authToken") || "",
+                    Authorization: localStorage.getItem("token") || "",
                 },
             }),
             providesTags: (result) =>
@@ -35,7 +35,7 @@ export const orderApi = createApi({
                 url: `/orders/${id}`,
                 method: "GET",
                 headers: {
-                    Authorization: localStorage.getItem("authToken") || "",
+                    Authorization: localStorage.getItem("token") || "",
                 },
             }),
             providesTags: (result, error, id) => [{ type: "Orders", id: id }],
