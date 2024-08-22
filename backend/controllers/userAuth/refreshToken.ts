@@ -14,18 +14,24 @@ export const refreshToken = async (
         return res.status(403).json({ error: "Refresh token required" });
     }
 
-    const refreshToken = cookies.refreshToken;
+    let refreshToken = cookies.refreshToken;
+
+    if (refreshToken.startsWith("Bearer ")) {
+        refreshToken = refreshToken.slice(7);
+    }
 
     try {
         const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN!);
 
-        const user = await UserModel.findById(decoded.sub);
+        const user = await UserModel.findById(decoded.sub).select(
+            "+refreshToken"
+        );
 
         if (!user) {
             return res.status(401).json({ error: "Invalid refresh token" });
         }
 
-        if (user.refreshToken.token !== refreshToken) {
+        if (user.refreshToken.token !== cookies.refreshToken) {
             return res
                 .status(403)
                 .json({ error: "Invalid or expired refresh token" });
