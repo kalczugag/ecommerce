@@ -1,11 +1,12 @@
 import express from "express";
 import passport from "passport";
 
-import { login, register } from "@/controllers/userAuth";
+import methods from "@/controllers/userAuth";
 
 const auth = (router: express.Router) => {
-    router.post("/auth/login", login);
-    router.post("/auth/register", register);
+    router.post("/auth/login", methods.login);
+    router.post("/auth/register", methods.register);
+    router.get("/auth/refresh", methods.refreshToken);
 };
 
 export default auth;

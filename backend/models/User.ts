@@ -13,6 +13,14 @@ const addressSchema = new mongoose.Schema(
     { _id: false }
 );
 
+const refreshTokenSchema = new mongoose.Schema(
+    {
+        token: { type: String, required: true },
+        expires: { type: String, required: true },
+    },
+    { _id: false }
+);
+
 const userSchema = new mongoose.Schema<User>(
     {
         firstName: { type: String, required: true },
@@ -28,6 +36,11 @@ const userSchema = new mongoose.Schema<User>(
         email: { type: String, required: true, unique: true },
         hash: { type: String, required: true, select: false },
         salt: { type: String, required: true, select: false },
+        refreshToken: {
+            type: refreshTokenSchema,
+            required: false,
+            select: false,
+        },
     },
     { timestamps: true }
 );

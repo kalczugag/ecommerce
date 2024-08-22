@@ -41,17 +41,22 @@ export const genPassword = (password: string) => {
  * @param {User} user - The user object containing the user's ID.
  * @return {{token: string, expires: string}} - An object containing the generated JWT and its expiration time.
  */
-export const issueJWT = (user: User) => {
+export const issueJWT = (user: User, type: "access" | "refresh") => {
     const _id = user._id;
+    const expiresIn = type === "access" ? "15m" : "7d";
 
-    const expiresIn = "1d";
+    const secret =
+        type === "access"
+            ? process.env.PRIVATE_KEY!
+            : process.env.REFRESH_TOKEN!;
 
     const payload = {
         sub: _id,
         iat: Date.now(),
+        type,
     };
 
-    const signedToken = jwt.sign(payload, process.env.PRIVATE_KEY!, {
+    const signedToken = jwt.sign(payload, secret, {
         expiresIn,
         algorithm: "RS256",
     });

@@ -20,8 +20,13 @@ const Login = () => {
         email: string;
         password: string;
     }) => {
-        const userData = await login(values).unwrap();
-        dispatch(setCredentials({ ...userData, email: values.email }));
+        await login(values)
+            .unwrap()
+            .then((data) =>
+                dispatch(
+                    setCredentials({ token: data.token, user: values.email })
+                )
+            );
     };
 
     useEffect(() => {

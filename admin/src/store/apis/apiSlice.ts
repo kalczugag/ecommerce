@@ -16,7 +16,7 @@ const baseQuery = fetchBaseQuery({
         const token = state.auth.token;
 
         if (token) {
-            headers.set("authorization", `Bearer ${token}`);
+            headers.set("authorization", token);
         }
 
         return headers;
@@ -41,7 +41,12 @@ const baseQueryWithReauth = async (
             const state = api.getState() as RootState;
             const user = state.auth.user;
 
-            api.dispatch(setCredentials({ ...refreshResult.data, user }));
+            api.dispatch(
+                setCredentials({
+                    token: (refreshResult.data as { token: string }).token,
+                    user,
+                })
+            );
 
             result = await baseQuery(args, api, extraOptions);
         } else {
@@ -55,4 +60,5 @@ const baseQueryWithReauth = async (
 export const apiSlice = createApi({
     baseQuery: baseQueryWithReauth,
     endpoints: (builder) => ({}),
+    tagTypes: ["Orders", "Products", "Users"],
 });

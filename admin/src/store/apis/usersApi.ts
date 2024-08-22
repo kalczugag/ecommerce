@@ -1,25 +1,13 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { apiSlice } from "./apiSlice";
 import type { User } from "@/types/User";
 
-export const userApi = createApi({
-    reducerPath: "users",
-    baseQuery: fetchBaseQuery({
-        baseUrl:
-            window.location.protocol +
-            "//" +
-            window.location.host +
-            "/api" +
-            "/v1",
-    }),
-    tagTypes: ["Users"],
+export const userApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getAllUsers: builder.query<User[], void>({
             query: () => ({
                 url: "/users",
                 method: "GET",
-                headers: {
-                    Authorization: localStorage.getItem("token") || "",
-                },
+                keepUnusedDataFor: 300,
             }),
             providesTags: (result) =>
                 result
@@ -34,9 +22,7 @@ export const userApi = createApi({
             query: (roleName) => ({
                 url: "/users/byRole",
                 method: "GET",
-                headers: {
-                    Authorization: localStorage.getItem("token") || "",
-                },
+                keepUnusedDataFor: 300,
                 params: {
                     roleName,
                 },
@@ -54,9 +40,7 @@ export const userApi = createApi({
             query: (id) => ({
                 url: `/users/${id}`,
                 method: "GET",
-                headers: {
-                    Authorization: localStorage.getItem("token") || "",
-                },
+                keepUnusedDataFor: 300,
             }),
             providesTags: (result, error, id) => [{ type: "Users", id: id }],
         }),
@@ -66,9 +50,6 @@ export const userApi = createApi({
                 url: `/users/${values._id}`,
                 method: "PATCH",
                 body: values,
-                headers: {
-                    Authorization: localStorage.getItem("token") || "",
-                },
             }),
             invalidatesTags: (result, error, values) => [
                 { type: "Users", id: values._id },
@@ -80,9 +61,6 @@ export const userApi = createApi({
             query: (id) => ({
                 url: `/users/${id}`,
                 method: "DELETE",
-                headers: {
-                    Authorization: localStorage.getItem("token") || "",
-                },
             }),
             invalidatesTags: (result, error, id) => [{ type: "Users", id: id }],
         }),

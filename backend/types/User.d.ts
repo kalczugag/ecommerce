@@ -16,6 +16,10 @@ export interface User {
     };
     phone?: string;
     email: string;
+    refreshToken: {
+        token: string;
+        expires: string;
+    };
     hash: string;
     salt: string;
 }

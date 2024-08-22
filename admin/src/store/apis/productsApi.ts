@@ -1,25 +1,12 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { apiSlice } from "./apiSlice";
 import type { Product } from "@/types/Product";
 
-export const productApi = createApi({
-    reducerPath: "product",
-    baseQuery: fetchBaseQuery({
-        baseUrl:
-            window.location.protocol +
-            "//" +
-            window.location.host +
-            "/api" +
-            "/v1",
-    }),
-    tagTypes: ["Products"],
+export const productApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getAllProducts: builder.query<Product[], void>({
             query: () => ({
                 url: "/products",
                 method: "GET",
-                headers: {
-                    Authorization: localStorage.getItem("token") || "",
-                },
             }),
             providesTags: (result) =>
                 result
@@ -34,9 +21,6 @@ export const productApi = createApi({
             query: (id) => ({
                 url: `/products/${id}`,
                 method: "GET",
-                headers: {
-                    Authorization: localStorage.getItem("token") || "",
-                },
             }),
             providesTags: (result, error, id) => [{ type: "Products", id: id }],
         }),
@@ -46,9 +30,6 @@ export const productApi = createApi({
                 url: "/products",
                 method: "POST",
                 body: values,
-                headers: {
-                    Authorization: localStorage.getItem("token") || "",
-                },
             }),
             invalidatesTags: (result, error, values) => [
                 { type: "Products", id: values._id },
@@ -60,9 +41,6 @@ export const productApi = createApi({
                 url: `/products/${values._id}`,
                 method: "PATCH",
                 body: values,
-                headers: {
-                    Authorization: localStorage.getItem("token") || "",
-                },
             }),
             invalidatesTags: (result, error, values) => [
                 { type: "Products", id: values._id },
@@ -74,9 +52,6 @@ export const productApi = createApi({
             query: (id) => ({
                 url: `/products/${id}`,
                 method: "DELETE",
-                headers: {
-                    Authorization: localStorage.getItem("token") || "",
-                },
             }),
             invalidatesTags: (result, error, id) => [
                 { type: "Products", id: id },
