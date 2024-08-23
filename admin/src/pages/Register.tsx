@@ -2,24 +2,19 @@ import { useEffect } from "react";
 import { Form } from "react-final-form";
 import { useNavigate } from "react-router-dom";
 import { useTitle } from "@/hooks/useTitle";
-import { useAppDispatch, useAppSelector } from "@/hooks/useStore";
-import { setCredentials, useRegisterMutation } from "@/store";
-import { RegisterInput } from "@/store/auth/authApiSlice";
+import { useMutationHandler } from "@/hooks/useMutationHandler";
+import { useRegisterMutation } from "@/store";
 import { Button } from "@mui/material";
 import AuthModule from "@/modules/AuthModule";
 import RegisterForm from "@/forms/RegisterForm";
 
 const Register = () => {
     const navigate = useNavigate();
-
     const [register, { isLoading, isSuccess }] = useRegisterMutation();
-    const dispatch = useAppDispatch();
-
     useTitle("Sign Up");
 
-    const handleSubmit = (values: RegisterInput) => {
-        register(values);
-    };
+    const { handleMutation: handleRegister, errorMessage } =
+        useMutationHandler(register);
 
     useEffect(() => {
         if (isSuccess) navigate("/");
@@ -27,7 +22,7 @@ const Register = () => {
 
     const FormContainer = () => (
         <Form
-            onSubmit={handleSubmit}
+            onSubmit={handleRegister}
             render={({ handleSubmit }) => (
                 <form onSubmit={handleSubmit} className="space-y-8">
                     <RegisterForm isLoading={isLoading} />
@@ -39,6 +34,7 @@ const Register = () => {
                     >
                         Sign Up
                     </Button>
+                    {errorMessage && <p>{errorMessage}</p>}
                 </form>
             )}
         />

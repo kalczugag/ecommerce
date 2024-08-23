@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { useLocation, Navigate, Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectCurrentToken, useRefreshTokenQuery } from "@/store";
@@ -6,18 +5,14 @@ import NavigationLayout from "@/layouts/NavigationLayout";
 import LoadingBackdrop from "@/components/LoadingBackdrop";
 
 const RequireAuth = () => {
-    useRefreshTokenQuery();
-
     const token = useSelector(selectCurrentToken);
     const location = useLocation();
-
-    const [isLoading, setIsLoading] = useState(true);
-
-    useEffect(() => {
-        if (token) {
-            setIsLoading(false);
-        }
-    }, [token]);
+    const { isLoading } = useRefreshTokenQuery(undefined, {
+        skip:
+            !!token ||
+            location.pathname === "/login" ||
+            location.pathname === "/register",
+    });
 
     if (isLoading) {
         return <LoadingBackdrop isLoading={isLoading} />;

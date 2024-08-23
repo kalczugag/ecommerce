@@ -1,24 +1,20 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Form } from "react-final-form";
-import { useLoginMutation, setCredentials } from "@/store";
-import { useAppDispatch } from "@/hooks/useStore";
+import { useLoginMutation } from "@/store";
 import { useTitle } from "@/hooks/useTitle";
+import { useMutationHandler } from "@/hooks/useMutationHandler";
 import { Button } from "@mui/material";
 import AuthModule from "@/modules/AuthModule";
 import LoginForm from "@/forms/LoginForm";
 
 const Login = () => {
     const navigate = useNavigate();
-
     const [login, { isLoading, isSuccess }] = useLoginMutation();
-    const dispatch = useAppDispatch();
-
     useTitle("Sign In");
 
-    const handleSubmit = (values: { email: string; password: string }) => {
-        login(values);
-    };
+    const { handleMutation: handleLogin, errorMessage } =
+        useMutationHandler(login);
 
     useEffect(() => {
         if (isSuccess) navigate("/");
@@ -26,7 +22,7 @@ const Login = () => {
 
     const FormContainer = () => (
         <Form
-            onSubmit={handleSubmit}
+            onSubmit={handleLogin}
             render={({ handleSubmit }) => (
                 <form onSubmit={handleSubmit} className="space-y-8">
                     <LoginForm isLoading={isLoading} />
@@ -38,6 +34,7 @@ const Login = () => {
                     >
                         Sign In
                     </Button>
+                    <p>{errorMessage}</p>
                 </form>
             )}
         />
