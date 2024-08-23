@@ -52,8 +52,7 @@ export const refreshToken = async (
 
         return res.status(200).json({
             success: true,
-            accessToken: accessToken.token,
-            expiresIn: accessToken.expires,
+            ...accessToken,
         });
     } catch (err) {
         console.error(err);

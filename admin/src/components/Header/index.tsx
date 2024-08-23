@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "@/hooks/useStore";
 import useIsMobile from "@/hooks/useIsMobile";
-import { logout, toggleSidebar } from "@/store";
+import { toggleSidebar, useLogoutMutation } from "@/store";
 import {
     AppBar,
     Toolbar,
@@ -18,6 +18,7 @@ import {
 import { Logout, Settings, Menu as MenuIcon } from "@mui/icons-material";
 
 const Header = () => {
+    const [logout, { isLoading }] = useLogoutMutation();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
@@ -32,6 +33,12 @@ const Header = () => {
 
     const handleClose = () => {
         setAnchorEl(null);
+    };
+
+    const handleLogout = async () => {
+        handleClose();
+        await logout();
+        navigate("/login");
     };
 
     return (
@@ -120,13 +127,7 @@ const Header = () => {
                         </ListItemIcon>
                         Settings
                     </MenuItem>
-                    <MenuItem
-                        onClick={() => {
-                            handleClose();
-                            dispatch(logout());
-                            window.location.reload();
-                        }}
-                    >
+                    <MenuItem onClick={handleLogout}>
                         <ListItemIcon>
                             <Logout fontSize="small" />
                         </ListItemIcon>

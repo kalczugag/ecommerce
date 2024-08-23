@@ -25,9 +25,13 @@ export type AppDispatch = typeof store.dispatch;
 
 export * from "./sidebar/sidebarSlice";
 export * from "./table/tableSlice";
-export * from "./auth/userSlice";
 export * from "./auth/authSlice";
-export { useLoginMutation } from "./auth/authApiSlice";
+export {
+    useLoginMutation,
+    useRegisterMutation,
+    useRefreshTokenQuery,
+    useLogoutMutation,
+} from "./auth/authApiSlice";
 export {
     useGetAllProductsQuery,
     useGetProductByIdQuery,

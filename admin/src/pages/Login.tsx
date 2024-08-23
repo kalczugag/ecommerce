@@ -16,17 +16,8 @@ const Login = () => {
 
     useTitle("Sign In");
 
-    const handleSubmit = async (values: {
-        email: string;
-        password: string;
-    }) => {
-        await login(values)
-            .unwrap()
-            .then((data) =>
-                dispatch(
-                    setCredentials({ token: data.token, user: values.email })
-                )
-            );
+    const handleSubmit = (values: { email: string; password: string }) => {
+        login(values);
     };
 
     useEffect(() => {

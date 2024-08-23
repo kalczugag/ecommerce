@@ -3,12 +3,12 @@ import { RootState } from "..";
 
 interface AuthState {
     token: string | null;
-    user: string | null;
+    expires: string | null;
 }
 
 const initialState: AuthState = {
     token: null,
-    user: null,
+    expires: null,
 };
 
 const authSlice = createSlice({
@@ -19,7 +19,7 @@ const authSlice = createSlice({
             return {
                 ...state,
                 token: action.payload.token,
-                user: action.payload.user,
+                expires: action.payload.expires,
             };
         },
 
@@ -27,7 +27,7 @@ const authSlice = createSlice({
             return {
                 ...state,
                 token: null,
-                user: null,
+                expires: null,
             };
         },
     },
@@ -38,5 +38,5 @@ export const { setCredentials, logOut } = authSlice.actions;
 export default authSlice.reducer;
 export type { AuthState };
 
-export const selectCurrentUser = (state: RootState) => state.auth.user;
+export const selectTokenExpiresIn = (state: RootState) => state.auth.expires;
 export const selectCurrentToken = (state: RootState) => state.auth.token;

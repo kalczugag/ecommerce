@@ -3,21 +3,22 @@ import { Form } from "react-final-form";
 import { useNavigate } from "react-router-dom";
 import { useTitle } from "@/hooks/useTitle";
 import { useAppDispatch, useAppSelector } from "@/hooks/useStore";
-import { register } from "@/store";
-import { RegisterParams } from "@/store/user/userSlice";
+import { setCredentials, useRegisterMutation } from "@/store";
+import { RegisterInput } from "@/store/auth/authApiSlice";
 import { Button } from "@mui/material";
 import AuthModule from "@/modules/AuthModule";
 import RegisterForm from "@/forms/RegisterForm";
 
 const Register = () => {
-    const { isLoading, isSuccess } = useAppSelector((state) => state.user);
     const navigate = useNavigate();
+
+    const [register, { isLoading, isSuccess }] = useRegisterMutation();
     const dispatch = useAppDispatch();
 
     useTitle("Sign Up");
 
-    const handleSubmit = (values: RegisterParams) => {
-        dispatch(register(values));
+    const handleSubmit = (values: RegisterInput) => {
+        register(values);
     };
 
     useEffect(() => {

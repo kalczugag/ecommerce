@@ -39,12 +39,12 @@ const baseQueryWithReauth = async (
 
         if (refreshResult?.data) {
             const state = api.getState() as RootState;
-            const user = state.auth.user;
+            const expires = state.auth.expires;
 
             api.dispatch(
                 setCredentials({
                     token: (refreshResult.data as { token: string }).token,
-                    user,
+                    expires,
                 })
             );
 
