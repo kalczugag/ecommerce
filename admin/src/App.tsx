@@ -2,7 +2,6 @@ import "@/styles/app.css";
 
 import { Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@mui/material";
-import { useRefreshTokenQuery } from "./store";
 import useTheme from "@/hooks/useTheme";
 import Dashboard from "@/pages/Dashboard";
 import ProductAdd from "@/pages/Products/add";
