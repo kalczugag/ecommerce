@@ -93,3 +93,10 @@ npm run dev
 ```
 
 This command will start the frontend server, and you'll be able to access the website on localhost:3000 in your web browser.
+
+### Breakdown of Changes:
+- **Admin Panel Setup** section is separated under its own header for clarity.
+- Clear steps for backend, frontend, and admin panel to differentiate installation processes.
+- Adjusted phrasing to maintain clarity. 
+
+Let me know if you need any further adjustments!
