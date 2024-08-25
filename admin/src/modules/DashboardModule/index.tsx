@@ -37,17 +37,13 @@ const DashboardModule = () => {
     ];
 
     return (
-        <DefaultLayout className="flex flex-col ">
-            <div className="flex flex-row">
-                <div className="grid gap-2 sm:grid-cols-2">
-                    {content.map((item, index) => (
-                        <SummaryCard key={index} {...item} />
-                    ))}
-                </div>
-                {/* <div>
-                    <PreviewCard />
-                </div> */}
+        <DefaultLayout className="flex flex-col xl:flex-row xl:space-x-8">
+            <div className="grid gap-x-8 xl:w-2/3 sm:grid-cols-2">
+                {content.map((item, index) => (
+                    <SummaryCard key={index} {...item} />
+                ))}
             </div>
+            <PreviewCard />
         </DefaultLayout>
     );
 };

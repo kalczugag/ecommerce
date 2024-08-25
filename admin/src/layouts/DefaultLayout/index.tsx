@@ -6,7 +6,7 @@ interface DefaultLayoutProps extends HTMLAttributes<HTMLDivElement> {
 
 const DefaultLayout = ({ children, ...rest }: DefaultLayoutProps) => {
     return (
-        <div className={`p-6 text-lg lg:py-0 ${rest.className}`} {...rest}>
+        <div className={`text-lg md:p-6 lg:py-0 ${rest.className}`} {...rest}>
             {children}
         </div>
     );

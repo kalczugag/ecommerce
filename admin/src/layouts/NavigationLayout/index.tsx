@@ -13,7 +13,9 @@ const Layout = ({ children }: LayoutProps) => {
             <Sidebar />
             <div className="flex-1 flex flex-col">
                 <Header />
-                <Container maxWidth="xl">{children}</Container>
+                <Container maxWidth="xl" className="pt-8 md:pt-0">
+                    {children}
+                </Container>
             </div>
         </div>
     );

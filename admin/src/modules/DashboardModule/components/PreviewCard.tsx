@@ -1,82 +1,129 @@
-import { AreaChart } from "@tremor/react";
+import Box from "@/components/Box";
+import {
+    Area,
+    AreaChart,
+    CartesianGrid,
+    ResponsiveContainer,
+    Tooltip,
+    TooltipProps,
+    XAxis,
+    YAxis,
+} from "recharts";
 
 const chartdata = [
     {
         date: "Jan 22",
-        SolarPanels: 2890,
-        Inverters: 2338,
+        income: 2890,
     },
     {
         date: "Feb 22",
-        SolarPanels: 2756,
-        Inverters: 2103,
+        income: 2756,
     },
     {
         date: "Mar 22",
-        SolarPanels: 3322,
-        Inverters: 2194,
+        income: 3322,
     },
     {
         date: "Apr 22",
-        SolarPanels: 3470,
-        Inverters: 2108,
+        income: 3470,
     },
     {
         date: "May 22",
-        SolarPanels: 3475,
-        Inverters: 1812,
+        income: 3475,
     },
     {
         date: "Jun 22",
-        SolarPanels: 3129,
-        Inverters: 1726,
+        income: 3129,
     },
     {
         date: "Jul 22",
-        SolarPanels: 3490,
-        Inverters: 1982,
+        income: 3490,
     },
     {
         date: "Aug 22",
-        SolarPanels: 2903,
-        Inverters: 2012,
+        income: 2903,
     },
     {
         date: "Sep 22",
-        SolarPanels: 2643,
-        Inverters: 2342,
+        income: 2643,
     },
     {
         date: "Oct 22",
-        SolarPanels: 2837,
-        Inverters: 2473,
+        income: 2837,
     },
     {
         date: "Nov 22",
-        SolarPanels: 2954,
-        Inverters: 3848,
+        income: 2954,
     },
     {
         date: "Dec 22",
-        SolarPanels: 3239,
-        Inverters: 3736,
+        income: 3239,
     },
 ];
 
-const dataFormatter = (value: number) =>
-    `$${Intl.NumberFormat("us").format(value).toString()}`;
+interface CustomTooltipProps extends TooltipProps<number, string> {}
+
+const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
+    if (active && payload && payload.length) {
+        return (
+            <div className="custom-tooltip bg-white p-3 border border-gray-300 rounded-md dark:bg-darker dark:text-text-dark">
+                <p className="label font-bold">{`Date: ${label}`}</p>
+                {payload.map((item, index) => (
+                    <p key={index} className="intro">
+                        {`${item.name}: $${item.value}`}
+                    </p>
+                ))}
+            </div>
+        );
+    }
+
+    return null;
+};
 
 const PreviewCard = () => {
     return (
-        <AreaChart
-            className="h-80"
-            data={chartdata}
-            index="date"
-            categories={["SolarPanels", "Inverters"]}
-            colors={["indigo", "rose"]}
-            valueFormatter={dataFormatter}
-            yAxisWidth={60}
-        />
+        <Box className="flex items-center w-full">
+            <ResponsiveContainer height={300}>
+                <AreaChart
+                    width={730}
+                    height={250}
+                    data={chartdata}
+                    margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                >
+                    <defs>
+                        <linearGradient
+                            id="incomeColor"
+                            x1="0"
+                            y1="0"
+                            x2="0"
+                            y2="1"
+                        >
+                            <stop
+                                offset="5%"
+                                stopColor="#3B7DDD"
+                                stopOpacity={0.8}
+                            />
+                            <stop
+                                offset="95%"
+                                stopColor="#3B7DDD"
+                                stopOpacity={0}
+                            />
+                        </linearGradient>
+                    </defs>
+                    <XAxis dataKey="date" />
+                    <YAxis />
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <Tooltip content={<CustomTooltip />} />
+                    <Area
+                        type="monotone"
+                        dataKey="income"
+                        stroke="#3B7DDD"
+                        fillOpacity={1}
+                        fill="url(#incomeColor)"
+                    />
+                </AreaChart>
+            </ResponsiveContainer>
+        </Box>
     );
 };
 

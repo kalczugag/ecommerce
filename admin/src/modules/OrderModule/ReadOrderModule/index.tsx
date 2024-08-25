@@ -1,5 +1,5 @@
 import Loading from "@/components/Loading";
-import Box from "../components/Box";
+import Box from "@/components/Box";
 import Contact from "../components/Address";
 import type { Order } from "@/types/Order";
 import Status from "../components/Status";

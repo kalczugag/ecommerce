@@ -20,7 +20,7 @@ const Sidebar = () => {
     };
 
     const sidebarContent = (
-        <div className="flex-col py-6 h-screen w-[215.156px] bg-dark-primary text-text-dark dark:bg-darker">
+        <div className="flex-col py-6 h-screen w-[215.156px] bg-dark-primary text-text-dark md:min-h-screen dark:bg-darker">
             <div className="flex items-center px-6 mb-10">
                 <Adb className="mr-1" />
                 <Link

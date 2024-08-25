@@ -1,3 +1,5 @@
+import Box from "@/components/Box";
+
 interface SummaryCardProps {
     title: string;
     value: number;
@@ -7,7 +9,7 @@ interface SummaryCardProps {
 
 const SummaryCard = ({ title, value, icon, summary }: SummaryCardProps) => {
     return (
-        <div className="flex flex-col space-y-4 p-4 bg-white shadow-md dark:bg-darker">
+        <Box className="flex flex-col">
             <div className="flex flex-row justify-between">
                 <h5 className="font-bold text-gray-500 dark:text-gray-400">
                     {title}
@@ -31,7 +33,7 @@ const SummaryCard = ({ title, value, icon, summary }: SummaryCardProps) => {
                     Since Last week
                 </p>
             </div>
-        </div>
+        </Box>
     );
 };
 
