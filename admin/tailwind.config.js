@@ -18,7 +18,8 @@ export default {
                 "text-dark": "#e5e5e5",
                 "text-light": "#28292b",
 
-                "hover-light": "#E6E6E6",
+                "hover-light-primary": "#272727",
+                "hover-light-secondary": "#3D3D3D",
                 "hover-dark": "#717171",
             },
         },
