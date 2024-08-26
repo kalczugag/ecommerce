@@ -22,4 +22,6 @@ export interface Order {
     total: number;
     paymentMethod: string;
     paymentStatus?: string;
+    createdAt: Date;
+    updatedAt: Date;
 }

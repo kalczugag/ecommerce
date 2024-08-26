@@ -22,4 +22,6 @@ export interface User {
     };
     hash: string;
     salt: string;
+    createdAt: Date;
+    updatedAt: Date;
 }

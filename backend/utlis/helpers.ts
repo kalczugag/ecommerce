@@ -66,3 +66,15 @@ export const issueJWT = (user: User, type: "access" | "refresh") => {
         expires: expiresIn,
     };
 };
+
+/**
+ * Returns the date of the start of the week (Monday at 00:00:00).
+ *
+ * @return {Date} The start of the week.
+ */
+export const getStartOfThisWeek = () => {
+    const now = new Date();
+    const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
+    startOfWeek.setHours(0, 0, 0, 0);
+    return startOfWeek;
+};

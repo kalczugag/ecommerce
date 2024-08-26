@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import { SummaryModel } from "./Summary";
+import { getStartOfThisWeek } from "@/utlis/helpers";
 import type { User } from "@/types/User";
 
 const addressSchema = new mongoose.Schema(
@@ -44,5 +46,29 @@ const userSchema = new mongoose.Schema<User>(
     },
     { timestamps: true }
 );
+
+userSchema.post("save", async (doc) => {
+    try {
+        const userDate = new Date(new Date(doc.get("createdAt")));
+        const startOfWeek = getStartOfThisWeek();
+
+        const summary = await SummaryModel.findOneAndUpdate(
+            {},
+            { $setOnInsert: { createdAt: new Date() } },
+            { upsert: true, new: true }
+        );
+
+        summary.users.count += 1;
+
+        const isThisWeek = userDate >= startOfWeek;
+        if (isThisWeek) {
+            summary.users.thisWeek += 1;
+        }
+
+        await summary.save();
+    } catch (error) {
+        console.error("Error updating summary after user save:", error);
+    }
+});
 
 export const UserModel = mongoose.model("User", userSchema);

@@ -1,5 +1,6 @@
 import "module-alias/register";
 import express from "express";
+import { summaryCronJob } from "./config/cronJob";
 
 import cors from "cors";
 import path from "path";
@@ -10,6 +11,7 @@ import bodyParser from "body-parser";
 import appRouter from "./routes/v1";
 
 import "./config/passport";
+import "./config/cron";
 
 const app = express();
 
@@ -18,6 +20,11 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 
 app.use("/api/v1", appRouter());
+
+app.post("/trigger-summary-cron", (req, res) => {
+    summaryCronJob();
+    res.status(200).send("Summary cron job triggered");
+});
 
 if (process.env.NODE_ENV === "production") {
     const clientBuildPath = path.join(__dirname, "../../frontend/build");

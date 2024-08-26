@@ -1,4 +1,7 @@
 import mongoose from "mongoose";
+import _ from "lodash";
+import { SummaryModel } from "./Summary";
+import { getStartOfThisWeek } from "@/utlis/helpers";
 import type { Order, Item } from "@/types/Order";
 
 const itemSchema = new mongoose.Schema<Item>(
@@ -27,5 +30,39 @@ const orderSchema = new mongoose.Schema<Order>(
     },
     { timestamps: true }
 );
+
+orderSchema.post("save", async function (doc) {
+    try {
+        const orderTotal = doc.total;
+        const orderDate = new Date(new Date(doc.get("createdAt")));
+        const startOfWeek = getStartOfThisWeek();
+
+        const totalItems = _.sumBy(doc.items, "quantity");
+
+        const summary = await SummaryModel.findOneAndUpdate(
+            {},
+            { $setOnInsert: { createdAt: new Date() } },
+            { upsert: true, new: true }
+        );
+
+        const isThisWeek = orderDate >= startOfWeek;
+
+        summary.orders.total += orderTotal;
+        summary.orders.count += 1;
+        summary.orders.itemsCount += totalItems;
+
+        if (doc.paymentStatus === "paid") {
+            summary.orders.paid += orderTotal;
+        }
+
+        if (isThisWeek) {
+            summary.orders.thisWeek += orderTotal;
+        }
+
+        await summary.save();
+    } catch (error) {
+        console.error("Error updating summary after order save:", error);
+    }
+});
 
 export const OrderModel = mongoose.model("Order", orderSchema);
