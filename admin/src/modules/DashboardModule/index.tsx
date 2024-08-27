@@ -1,3 +1,5 @@
+import { useGetSummaryQuery, useGetOrdersSummaryQuery } from "@/store";
+import { weeklyComparison } from "@/utils/weeklyComparison";
 import DefaultLayout from "@/layouts/DefaultLayout";
 import SummaryCard from "./components/SummaryCard";
 import PreviewCard from "./components/PreviewCard";
@@ -9,29 +11,49 @@ import {
 } from "@mui/icons-material";
 
 const DashboardModule = () => {
+    const { data: summary, isLoading: summaryIsloading } = useGetSummaryQuery();
+    const { data: ordersSummary, isLoading: ordersSummaryIsLoading } =
+        useGetOrdersSummaryQuery("monthly");
+
+    if (!summary || !ordersSummary) {
+        return null;
+    }
+
     const content = [
         {
             title: "Sales",
-            value: 2.382,
-            summary: -3.65,
+            value: summary.orders.total,
+            summary: weeklyComparison(
+                summary.orders.thisWeek,
+                summary.orders.lastWeek
+            ),
             icon: <LocalShippingOutlined />,
         },
         {
             title: "Visitors",
-            value: 2.382,
-            summary: 5.25,
+            value: summary.visitors.total,
+            summary: weeklyComparison(
+                summary.visitors.thisWeek,
+                summary.visitors.lastWeek
+            ),
             icon: <PeopleOutlineOutlined />,
         },
         {
             title: "Earnings",
-            value: 2.382,
-            summary: 6.65,
+            value: summary.orders.paid,
+            summary: weeklyComparison(
+                summary.orders.thisWeek,
+                summary.orders.lastWeek
+            ),
             icon: <AttachMoneyOutlined />,
         },
         {
             title: "Orders",
-            value: 2.382,
-            summary: -2.25,
+            value: summary.orders.count,
+            summary: weeklyComparison(
+                summary.orders.thisWeek,
+                summary.orders.lastWeek
+            ),
             icon: <ShoppingCartOutlined />,
         },
     ];
@@ -40,10 +62,17 @@ const DashboardModule = () => {
         <DefaultLayout className="flex flex-col xl:flex-row xl:space-x-8">
             <div className="grid gap-x-8 xl:w-2/3 sm:grid-cols-2">
                 {content.map((item, index) => (
-                    <SummaryCard key={index} {...item} />
+                    <SummaryCard
+                        key={index}
+                        {...item}
+                        isLoading={summaryIsloading}
+                    />
                 ))}
             </div>
-            <PreviewCard />
+            <PreviewCard
+                chartData={ordersSummary}
+                isLoading={ordersSummaryIsLoading}
+            />
         </DefaultLayout>
     );
 };

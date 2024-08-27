@@ -3,7 +3,7 @@ import moment from "moment";
 import { OrderModel } from "@/models/Order";
 
 interface IncomeByPeriod {
-    period: Date;
+    period: string;
     total: number;
 }
 
@@ -69,7 +69,10 @@ export const summary = async (
         while (currentDate.isBefore(endDate)) {
             const periodKey = periodStart(currentDate.toDate()).toISOString();
             allPeriods.push({
-                period: periodStart(currentDate.toDate()),
+                period: periodStart(currentDate.toDate()).toLocaleDateString(
+                    "en-US",
+                    { month: "short", day: "2-digit" }
+                ),
                 total: incomeByPeriod[periodKey] || 0,
             });
             currentDate.add(1, periodFormat);

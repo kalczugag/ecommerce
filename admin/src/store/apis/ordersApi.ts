@@ -1,6 +1,12 @@
 import { apiSlice } from "./apiSlice";
 import type { Order } from "@/types/Order";
 
+type summaryType = "yearly" | "monthly" | "weekly";
+type orderSummary = {
+    period: string;
+    total: number;
+};
+
 export const orderApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getAllOrders: builder.query<Order[], void>({
@@ -26,7 +32,19 @@ export const orderApi = apiSlice.injectEndpoints({
             }),
             providesTags: (result, error, id) => [{ type: "Orders", id: id }],
         }),
+
+        getOrdersSummary: builder.query<orderSummary[], summaryType>({
+            query: (type) => ({
+                url: "/orders/summary",
+                method: "GET",
+                params: { type },
+            }),
+        }),
     }),
 });
 
-export const { useGetAllOrdersQuery, useGetOrderByIdQuery } = orderApi;
+export const {
+    useGetAllOrdersQuery,
+    useGetOrderByIdQuery,
+    useGetOrdersSummaryQuery,
+} = orderApi;

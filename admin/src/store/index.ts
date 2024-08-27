@@ -46,7 +46,11 @@ export {
     useEditUserMutation,
     useDeleteUserMutation,
 } from "./apis/usersApi";
-export { useGetAllOrdersQuery, useGetOrderByIdQuery } from "./apis/ordersApi";
+export {
+    useGetAllOrdersQuery,
+    useGetOrderByIdQuery,
+    useGetOrdersSummaryQuery,
+} from "./apis/ordersApi";
 export {
     useGetSummaryQuery,
     useUpdateVisitorCountMutation,
