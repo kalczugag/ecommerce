@@ -41,8 +41,8 @@ interface PreviewCardProps {
 const PreviewCard = ({ chartData, isLoading }: PreviewCardProps) => {
     return (
         <Box className="flex items-center w-full">
-            <ResponsiveContainer height={300}>
-                <Loading isLoading={isLoading}>
+            <Loading className="w-full" isLoading={isLoading}>
+                <ResponsiveContainer height={300}>
                     <AreaChart
                         width={730}
                         height={250}
@@ -81,8 +81,8 @@ const PreviewCard = ({ chartData, isLoading }: PreviewCardProps) => {
                             fill="url(#totalColor)"
                         />
                     </AreaChart>
-                </Loading>
-            </ResponsiveContainer>
+                </ResponsiveContainer>
+            </Loading>
         </Box>
     );
 };
