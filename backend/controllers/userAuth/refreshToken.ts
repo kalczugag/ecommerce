@@ -23,9 +23,10 @@ export const refreshToken = async (
     try {
         const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN!);
 
-        const user = await UserModel.findById(decoded.sub).select(
-            "+refreshToken"
-        );
+        const user = await UserModel.findById(decoded.sub)
+            .select("+refreshToken")
+            .populate("role")
+            .exec();
 
         if (!user) {
             return res.status(401).json({ error: "Invalid refresh token" });
@@ -52,6 +53,7 @@ export const refreshToken = async (
 
         return res.status(200).json({
             success: true,
+            isAdmin: user.role.name === "admin",
             ...accessToken,
         });
     } catch (err) {

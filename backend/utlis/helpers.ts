@@ -1,5 +1,6 @@
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
+import moment from "moment";
 import { User } from "@/types/User";
 
 /**
@@ -73,8 +74,19 @@ export const issueJWT = (user: User, type: "access" | "refresh") => {
  * @return {Date} The start of the week.
  */
 export const getStartOfThisWeek = () => {
-    const now = new Date();
-    const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
+    const startOfWeek = moment().startOf("week").toDate();
     startOfWeek.setHours(0, 0, 0, 0);
     return startOfWeek;
+};
+
+export const getStartOfThisMonth = (): Date => {
+    const startOfMonth = moment().startOf("month").toDate();
+    startOfMonth.setHours(0, 0, 0, 0);
+    return startOfMonth;
+};
+
+export const getStartOfThisYear = (): Date => {
+    const startOfYear = moment().startOf("year").toDate();
+    startOfYear.setHours(0, 0, 0, 0);
+    return startOfYear;
 };

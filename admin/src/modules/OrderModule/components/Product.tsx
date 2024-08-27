@@ -1,6 +1,8 @@
 import { Image } from "@/components/TableFields";
+import { Link } from "react-router-dom";
 
 interface ProductProps {
+    id: string;
     imageUrl: string;
     brand: string;
     title: string;
@@ -11,6 +13,7 @@ interface ProductProps {
 }
 
 const Product = ({
+    id,
     imageUrl,
     brand,
     title,
@@ -23,7 +26,9 @@ const Product = ({
         <div className="flex flex-row items-center space-x-4">
             <Image src={imageUrl} alt={title} size="xl" variant="square" />
             <div className="flex flex-col space-y-2">
-                <h3 className="font-bold">{title}</h3>
+                <Link to={`/products/${id}`} className="font-bold">
+                    {title}
+                </Link>
                 <span className="flex space-x-4 font-bold text-sm text-gray-500 dark:text-gray-400">
                     <p>Color: {color}</p>
                     <p>Size: {size}</p>

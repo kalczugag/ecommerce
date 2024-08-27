@@ -7,7 +7,7 @@ import LoadingBackdrop from "@/components/LoadingBackdrop";
 const RequireAuth = () => {
     const token = useSelector(selectCurrentToken);
     const location = useLocation();
-    const { isLoading } = useRefreshTokenQuery(undefined, {
+    const { data, isLoading } = useRefreshTokenQuery(undefined, {
         skip:
             !!token ||
             location.pathname === "/login" ||
@@ -17,6 +17,8 @@ const RequireAuth = () => {
     if (isLoading) {
         return <LoadingBackdrop isLoading={isLoading} />;
     }
+
+    console.log(data);
 
     return token ? (
         <NavigationLayout>

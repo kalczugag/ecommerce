@@ -44,6 +44,7 @@ const baseQueryWithReauth = async (
             api.dispatch(
                 setCredentials({
                     token: (refreshResult.data as { token: string }).token,
+                    isAdmin: state.auth.isAdmin,
                     expires,
                 })
             );

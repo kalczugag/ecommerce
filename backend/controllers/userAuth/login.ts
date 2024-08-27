@@ -4,8 +4,6 @@ import { validPassword, issueJWT } from "@/utlis/helpers";
 import { UserModel } from "@/models/User";
 
 export const login = async (req: express.Request, res: express.Response) => {
-    const cookies = req.cookies;
-
     const { email, password } = req.body;
 
     if (!email || !password) {
@@ -13,9 +11,10 @@ export const login = async (req: express.Request, res: express.Response) => {
     }
 
     try {
-        const existingUser = await UserModel.findOne({ email }).select(
-            "+hash +salt +refreshToken"
-        );
+        const existingUser = await UserModel.findOne({ email })
+            .select("+hash +salt +refreshToken")
+            .populate("role")
+            .exec();
 
         if (!existingUser) {
             return res.status(401).json({ error: "Invalid credentials" });
@@ -48,6 +47,7 @@ export const login = async (req: express.Request, res: express.Response) => {
 
         return res.status(200).json({
             success: true,
+            isAdmin: existingUser.role.name === "admin",
             ...accessToken,
         });
     } catch (err: any) {

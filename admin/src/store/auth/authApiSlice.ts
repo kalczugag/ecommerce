@@ -1,10 +1,10 @@
-import { useNavigate } from "react-router-dom";
 import { apiSlice } from "../apis/apiSlice";
 import { logOut, setCredentials } from "./authSlice";
 
 type AuthResult = {
     expires: string;
     success: boolean;
+    isAdmin: boolean;
     token: string;
 };
 
@@ -34,6 +34,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
                     dispatch(
                         setCredentials({
                             token: data.token,
+                            isAdmin: data.isAdmin,
                             expires: data.expires,
                         })
                     );
@@ -55,6 +56,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
                     dispatch(
                         setCredentials({
                             token: data.token,
+                            isAdmin: data.isAdmin,
                             expires: data.expires,
                         })
                     );
@@ -76,6 +78,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
                     dispatch(
                         setCredentials({
                             token: data.token,
+                            isAdmin: data.isAdmin,
                             expires: data.expires,
                         })
                     );

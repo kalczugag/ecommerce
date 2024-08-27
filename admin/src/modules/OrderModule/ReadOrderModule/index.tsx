@@ -31,6 +31,7 @@ const ReadOrderModule = ({ data, isLoading }: ReadOrderProps) => {
             {data?.items.map((item, index) => (
                 <Box key={index}>
                     <Product
+                        id={item.product?._id || ""}
                         imageUrl={item.product?.imageUrl || ""}
                         brand={item.product?.brand || ""}
                         title={item.product?.title || ""}

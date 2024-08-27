@@ -13,6 +13,13 @@ const orders = (router: express.Router) => {
     );
 
     router.get(
+        "/orders/summary",
+        passport.authenticate("jwt", { session: false }),
+        hasRole("admin"),
+        methods.summary
+    );
+
+    router.get(
         "/orders/:id",
         passport.authenticate("jwt", { session: false }),
         methods.readById

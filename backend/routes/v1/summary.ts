@@ -11,6 +11,8 @@ const summary = (router: express.Router) => {
         hasRole("admin"),
         methods.read
     );
+
+    router.post("/summary", methods.updateVisitorCount);
 };
 
 export default summary;

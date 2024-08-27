@@ -24,6 +24,17 @@ const SummarySchema = new mongoose.Schema<Summary>(
             thisYear: { type: Number, default: 0 },
             lastYear: { type: Number, default: 0 },
         },
+        visitors: {
+            total: { type: Number, default: 0 },
+            loggedIn: { type: Number, default: 0 },
+            anonymous: { type: Number, default: 0 },
+            thisWeek: { type: Number, default: 0 },
+            lastWeek: { type: Number, default: 0 },
+            thisMonth: { type: Number, default: 0 },
+            lastMonth: { type: Number, default: 0 },
+            thisYear: { type: Number, default: 0 },
+            lastYear: { type: Number, default: 0 },
+        },
     },
     { timestamps: true }
 );

@@ -3,11 +3,13 @@ import { RootState } from "..";
 
 interface AuthState {
     token: string | null;
+    isAdmin: boolean;
     expires: string | null;
 }
 
 const initialState: AuthState = {
     token: null,
+    isAdmin: false,
     expires: null,
 };
 
@@ -19,6 +21,7 @@ const authSlice = createSlice({
             return {
                 ...state,
                 token: action.payload.token,
+                isAdmin: action.payload.isAdmin,
                 expires: action.payload.expires,
             };
         },
@@ -27,6 +30,7 @@ const authSlice = createSlice({
             return {
                 ...state,
                 token: null,
+                isAdmin: false,
                 expires: null,
             };
         },

@@ -7,7 +7,7 @@ import { SummaryModel } from "@/models/Summary";
 
 export const updateSummaryStatistics = async () => {
     try {
-        // Get the start and end of the current week, month, and year
+        const now = new Date();
         const startOfWeek = moment().startOf("week").toDate();
         const endOfWeek = moment().endOf("week").toDate();
         const startOfMonth = moment().startOf("month").toDate();
@@ -15,18 +15,15 @@ export const updateSummaryStatistics = async () => {
         const startOfYear = moment().startOf("year").toDate();
         const endOfYear = moment().endOf("year").toDate();
 
-        // Fetch orders and users
         const orders = await OrderModel.find();
         const users = await UserModel.find();
 
-        // Initialize summary data
         const summary = await SummaryModel.findOneAndUpdate(
             {},
             { $setOnInsert: { createdAt: new Date() } },
             { upsert: true, new: true }
         );
 
-        // Calculate order statistics
         const totalEarnings = _.sumBy(orders, "total");
         const ordersCount = orders.length;
         const paidEarnings = _.sumBy(
@@ -89,7 +86,6 @@ export const updateSummaryStatistics = async () => {
             "total"
         );
 
-        // Calculate user statistics
         const totalUsers = users.length;
         const thisWeekUsers = users.filter(
             (user) => new Date(user.createdAt) >= startOfWeek
@@ -119,7 +115,38 @@ export const updateSummaryStatistics = async () => {
                 new Date(user.createdAt) < startOfYear
         ).length;
 
-        // Update the summary document
+        const thisWeekVisitors = summary.visitors.thisWeek || 0;
+        const lastWeekVisitors = summary.visitors.thisWeek || 0;
+        const thisMonthVisitors = summary.visitors.thisMonth || 0;
+        const lastMonthVisitors = summary.visitors.thisMonth || 0;
+        const thisYearVisitors = summary.visitors.thisYear || 0;
+        const lastYearVisitors = summary.visitors.thisYear || 0;
+
+        if (
+            now.getDay() === 1 &&
+            now.getHours() === 0 &&
+            now.getMinutes() === 0
+        ) {
+            summary.visitors.thisWeek = 0;
+            summary.visitors.lastWeek = thisWeekVisitors;
+
+            if (now.getDate() === 1) {
+                summary.visitors.thisMonth = 0;
+                summary.visitors.lastMonth = thisMonthVisitors;
+
+                if (now.getMonth() === 0 && now.getDate() === 1) {
+                    summary.visitors.thisYear = 0;
+                    summary.visitors.lastYear = thisYearVisitors;
+                } else {
+                    summary.visitors.thisYear = summary.visitors.thisYear || 0;
+                    summary.visitors.lastYear = thisYearVisitors;
+                }
+            } else {
+                summary.visitors.thisMonth = summary.visitors.thisMonth || 0;
+                summary.visitors.lastMonth = thisMonthVisitors;
+            }
+        }
+
         summary.orders.total = totalEarnings;
         summary.orders.count = ordersCount;
         summary.orders.paid = paidEarnings;
