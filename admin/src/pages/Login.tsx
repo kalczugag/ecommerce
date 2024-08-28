@@ -40,7 +40,13 @@ const Login = () => {
         />
     );
 
-    return <AuthModule authContent={<FormContainer />} title={"Sign In"} />;
+    return (
+        <AuthModule
+            authContent={<FormContainer />}
+            title={"Sign In"}
+            isLoading={isLoading}
+        />
+    );
 };
 
 export default Login;
