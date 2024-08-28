@@ -31,7 +31,7 @@ const orderSchema = new mongoose.Schema<Order>(
     { timestamps: true }
 );
 
-orderSchema.post("save", async function (doc) {
+orderSchema.post("save", async (doc) => {
     try {
         const orderTotal = doc.total;
         const orderDate = new Date(new Date(doc.get("createdAt")));

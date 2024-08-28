@@ -13,7 +13,7 @@ import {
 const DashboardModule = () => {
     const { data: summary, isLoading: summaryIsloading } = useGetSummaryQuery();
     const { data: ordersSummary, isLoading: ordersSummaryIsLoading } =
-        useGetOrdersSummaryQuery("monthly");
+        useGetOrdersSummaryQuery("yearly");
 
     if (!summary || !ordersSummary) {
         return null;

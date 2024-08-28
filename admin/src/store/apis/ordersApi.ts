@@ -1,7 +1,7 @@
 import { apiSlice } from "./apiSlice";
 import type { Order } from "@/types/Order";
 
-type summaryType = "yearly" | "monthly" | "weekly";
+export type summaryType = "yearly" | "monthly" | "weekly";
 type orderSummary = {
     period: string;
     total: number;

@@ -5,11 +5,10 @@ export const config = [
     { label: "Products", to: "/products", icon: <Email /> },
     { label: "Customers", to: "/customers", icon: <MoveToInbox /> },
     { label: "Orders", to: "/orders", icon: <Email /> },
-    { label: "Total Earnings", to: "/earnings", icon: <MoveToInbox /> },
-    { label: "Weekly Overview", to: "/overview?weekly", icon: <Email /> },
+    { label: "Weekly Overview", to: "/overview?type=weekly", icon: <Email /> },
     {
         label: "Monthly Overview",
-        to: "/overview?monthly",
+        to: "/overview?type=monthly",
         icon: <MoveToInbox />,
     },
     { label: "Add Product", to: "/products/add", icon: <Email /> },

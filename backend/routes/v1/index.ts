@@ -6,6 +6,7 @@ import roles from "./roles";
 import products from "./products";
 import orders from "./orders";
 import summary from "./summary";
+import categories from "./categories";
 
 const router = express.Router();
 
@@ -16,6 +17,7 @@ export default (): express.Router => {
     products(router);
     orders(router);
     summary(router);
+    categories(router);
 
     return router;
 };

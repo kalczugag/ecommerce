@@ -11,6 +11,7 @@ import CustomersList from "@/pages/Customers/list";
 import CustomersEdit from "@/pages/Customers/edit";
 import OrdersList from "@/pages/Orders/list";
 import OrderDetails from "./pages/Orders/details";
+import Overview from "@/pages/Overview";
 import Settings from "@/pages/Settings";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
@@ -40,6 +41,7 @@ const App = () => {
                         <Route index element={<OrdersList />} />
                         <Route path=":id" element={<OrderDetails />} />
                     </Route>
+                    <Route path="overview" element={<Overview />} />
                     <Route
                         path="/settings/:settingsKey"
                         element={<Settings />}
