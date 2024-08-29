@@ -59,7 +59,7 @@ const SortForm = ({ config, handleSubmit }: SortFormProps) => {
             render={({ handleSubmit, form }) => (
                 <form
                     onSubmit={handleSubmit}
-                    className="flex flex-col space-y-2 sm:space-y-0 sm:space-x-2 sm:flex-row"
+                    className="flex-1 flex flex-col space-y-2 sm:space-y-0 sm:space-x-2 sm:flex-row"
                 >
                     {config.map(({ label, items }) => {
                         return (

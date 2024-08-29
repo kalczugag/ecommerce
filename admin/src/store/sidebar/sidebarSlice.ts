@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { config } from "./config";
+import { sidebarLinksConfig as config } from "@/config/sidebarLinksConfig";
 import type { SidebarContent } from "@/types/Content";
 
 interface SidebarState {

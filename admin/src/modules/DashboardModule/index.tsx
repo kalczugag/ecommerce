@@ -9,13 +9,21 @@ import {
     AttachMoneyOutlined,
     ShoppingCartOutlined,
 } from "@mui/icons-material";
+import Loading from "@/components/Loading";
 
 const DashboardModule = () => {
-    const { data: summary, isLoading: summaryIsloading } = useGetSummaryQuery();
-    const { data: ordersSummary, isLoading: ordersSummaryIsLoading } =
-        useGetOrdersSummaryQuery("yearly");
+    const {
+        data: summary,
+        isLoading: summaryIsloading,
+        isSuccess: summaryIsSuccess,
+    } = useGetSummaryQuery();
+    const {
+        data: ordersSummary,
+        isLoading: ordersSummaryIsLoading,
+        isSuccess: ordersSummaryIsSuccess,
+    } = useGetOrdersSummaryQuery("yearly");
 
-    if (!summary || !ordersSummary) {
+    if (!summaryIsSuccess || !ordersSummaryIsSuccess) {
         return null;
     }
 

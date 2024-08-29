@@ -6,7 +6,9 @@ export const getAllCategories = async (
     res: express.Response
 ) => {
     try {
-        const categories = await CategoryModel.find();
+        const categories = await CategoryModel.find()
+            .populate("parentCategory")
+            .exec();
 
         if (!categories || categories.length === 0) {
             return res.status(404).json({ error: "No categories found" });

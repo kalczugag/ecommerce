@@ -55,3 +55,10 @@ export {
     useGetSummaryQuery,
     useUpdateVisitorCountMutation,
 } from "./apis/summary";
+export {
+    useGetAllCategoriesQuery,
+    useGetCategoryByIdQuery,
+    useGetChildrensQuery,
+    useAddCategoryMutation,
+    useDeleteCategoryMutation,
+} from "./apis/categoriesApi";

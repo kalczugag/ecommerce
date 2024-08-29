@@ -8,9 +8,11 @@ const Overview = () => {
     const [searchParams] = useSearchParams();
     const type = searchParams.get("type");
 
-    const { data, isLoading } = useGetOrdersSummaryQuery(type as summaryType);
+    const { data, isLoading, isSuccess } = useGetOrdersSummaryQuery(
+        type as summaryType
+    );
 
-    if (!data) {
+    if (!isSuccess) {
         return null;
     }
 

@@ -10,7 +10,10 @@ import ProductsEdit from "@/pages/Products/edit";
 import CustomersList from "@/pages/Customers/list";
 import CustomersEdit from "@/pages/Customers/edit";
 import OrdersList from "@/pages/Orders/list";
-import OrderDetails from "./pages/Orders/details";
+import OrderDetails from "@/pages/Orders/details";
+import CategoriesList from "@/pages/Categories/list";
+import CategoriesEdit from "@/pages/Categories/edit";
+import CategoriesAdd from "@/pages/Categories/add";
 import Overview from "@/pages/Overview";
 import Settings from "@/pages/Settings";
 import Login from "@/pages/Login";
@@ -40,6 +43,11 @@ const App = () => {
                     <Route path="/orders">
                         <Route index element={<OrdersList />} />
                         <Route path=":id" element={<OrderDetails />} />
+                    </Route>
+                    <Route path="/categories">
+                        <Route index element={<CategoriesList />} />
+                        <Route path=":id" element={<CategoriesEdit />} />
+                        <Route path="add" element={<CategoriesAdd />} />
                     </Route>
                     <Route path="overview" element={<Overview />} />
                     <Route

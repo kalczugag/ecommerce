@@ -12,10 +12,10 @@ interface SummaryCardProps {
 }
 
 const SummaryCard = ({
-    title,
-    value,
+    title = "",
+    value = 0,
     icon,
-    summary,
+    summary = 0,
     isLoading,
 }: SummaryCardProps) => {
     return (
