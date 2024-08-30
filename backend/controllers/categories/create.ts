@@ -25,7 +25,14 @@ export const createCategory = async (
             data: newCategory,
         });
     } catch (error) {
-        console.error(error);
+        if (error instanceof Error) {
+            console.error(error);
+            if (error.message.includes("duplicate key")) {
+                return res
+                    .status(409)
+                    .json({ error: "Category with this name already exists" });
+            }
+        }
         return res.status(500).json({ error: "Internal server error" });
     }
 };
