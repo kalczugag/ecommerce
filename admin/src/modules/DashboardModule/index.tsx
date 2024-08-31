@@ -9,7 +9,6 @@ import {
     AttachMoneyOutlined,
     ShoppingCartOutlined,
 } from "@mui/icons-material";
-import Loading from "@/components/Loading";
 
 const DashboardModule = () => {
     const {

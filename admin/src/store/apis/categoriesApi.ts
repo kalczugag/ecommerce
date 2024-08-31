@@ -28,6 +28,14 @@ export const categoryApi = apiSlice.injectEndpoints({
             ],
         }),
 
+        getCategoriesByLevel: builder.query<Category[], string>({
+            query: (level) => ({
+                url: "/categories/byLevel",
+                method: "GET",
+                params: { level },
+            }),
+        }),
+
         getChildrens: builder.query<Category[], string>({
             query: (id) => ({
                 url: `/categories/${id}/childrens`,
@@ -46,6 +54,18 @@ export const categoryApi = apiSlice.injectEndpoints({
             ],
         }),
 
+        editCategory: builder.mutation<Category, Category>({
+            query: (values) => ({
+                url: `/categories/${values._id}`,
+                method: "PATCH",
+                body: values,
+            }),
+            invalidatesTags: (result, error, values) => [
+                { type: "Categories", id: values._id },
+                { type: "Categories", id: "LIST" },
+            ],
+        }),
+
         deleteCategory: builder.mutation<string, string>({
             query: (id) => ({
                 url: `/categories/${id}`,
@@ -61,7 +81,9 @@ export const categoryApi = apiSlice.injectEndpoints({
 export const {
     useGetAllCategoriesQuery,
     useGetCategoryByIdQuery,
+    useGetCategoriesByLevelQuery,
     useGetChildrensQuery,
     useAddCategoryMutation,
+    useEditCategoryMutation,
     useDeleteCategoryMutation,
 } = categoryApi;

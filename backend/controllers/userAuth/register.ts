@@ -67,7 +67,7 @@ export const register = async (
         if (err instanceof Error) {
             console.error(err);
             if (err.message.includes("duplicate key")) {
-                return res.status(400).json({ error: "Email already exists" });
+                return res.status(409).json({ error: "Email already exists" });
             }
         }
         return res.status(500).json({ error: "Internal server error" });

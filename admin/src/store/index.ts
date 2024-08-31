@@ -26,39 +26,9 @@ export type AppDispatch = typeof store.dispatch;
 export * from "./sidebar/sidebarSlice";
 export * from "./table/tableSlice";
 export * from "./auth/authSlice";
-export {
-    useLoginMutation,
-    useRegisterMutation,
-    useRefreshTokenQuery,
-    useLogoutMutation,
-} from "./auth/authApiSlice";
-export {
-    useGetAllProductsQuery,
-    useGetProductByIdQuery,
-    useAddProductMutation,
-    useEditProductMutation,
-    useDeleteProductMutation,
-} from "./apis/productsApi";
-export {
-    useGetAllUsersQuery,
-    useGetUsersByRoleQuery,
-    useGetUserByIdQuery,
-    useEditUserMutation,
-    useDeleteUserMutation,
-} from "./apis/usersApi";
-export {
-    useGetAllOrdersQuery,
-    useGetOrderByIdQuery,
-    useGetOrdersSummaryQuery,
-} from "./apis/ordersApi";
-export {
-    useGetSummaryQuery,
-    useUpdateVisitorCountMutation,
-} from "./apis/summary";
-export {
-    useGetAllCategoriesQuery,
-    useGetCategoryByIdQuery,
-    useGetChildrensQuery,
-    useAddCategoryMutation,
-    useDeleteCategoryMutation,
-} from "./apis/categoriesApi";
+export * from "./auth/authApiSlice";
+export * from "./apis/productsApi";
+export * from "./apis/usersApi";
+export * from "./apis/ordersApi";
+export * from "./apis/summary";
+export * from "./apis/categoriesApi";

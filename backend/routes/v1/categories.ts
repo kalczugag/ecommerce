@@ -12,6 +12,13 @@ const categories = (router: express.Router) => {
     );
 
     router.get(
+        "/categories/byLevel",
+        passport.authenticate("jwt", { session: false }),
+        hasRole("admin"),
+        methods.readByLevel
+    );
+
+    router.get(
         "/categories/:id",
         passport.authenticate("jwt", { session: false }),
         hasRole("admin"),
@@ -30,6 +37,13 @@ const categories = (router: express.Router) => {
         passport.authenticate("jwt", { session: false }),
         hasRole("admin"),
         methods.create
+    );
+
+    router.patch(
+        "/categories/:id",
+        passport.authenticate("jwt", { session: false }),
+        hasRole("admin"),
+        methods.update
     );
 
     router.delete(

@@ -1,15 +1,11 @@
-import { ReactNode } from "react";
 import { Field } from "react-final-form";
 import { TextField } from "@mui/material";
 import { required, mustBeNumber, minValue, compose } from "@/utils/validators";
+import Row from "@/components/Row";
 
 interface CustomerFormProps {
     isLoading: boolean;
 }
-
-const Row = ({ children }: { children: ReactNode }) => {
-    return <div className="flex space-x-2">{children}</div>;
-};
 
 const ProductForm = ({ isLoading }: CustomerFormProps) => {
     return (

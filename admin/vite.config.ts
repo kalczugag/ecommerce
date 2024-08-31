@@ -14,8 +14,6 @@ export default defineConfig({
             "@mui/material",
             "@mui/icons-material",
             "@mui/system",
-            "@mui/lab",
-            "@mui/styles",
         ],
     },
     plugins: [

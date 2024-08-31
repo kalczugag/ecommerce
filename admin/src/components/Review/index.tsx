@@ -8,7 +8,12 @@ const Review = ({ values }: { values: Record<string, unknown> }) => {
     return (
         <div className="flex flex-col">
             {Object.keys(values).map((key) => {
-                if (key === "__v" || key === "_id") {
+                if (
+                    key === "__v" ||
+                    key === "_id" ||
+                    key === "createdAt" ||
+                    key === "updatedAt"
+                ) {
                     return null;
                 }
                 return (

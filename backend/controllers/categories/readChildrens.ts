@@ -17,7 +17,7 @@ export const getChildrens = async (
             parentCategory: id,
         });
 
-        if (!categoryChilrdens) {
+        if (!categoryChilrdens || categoryChilrdens.length === 0) {
             return res
                 .status(404)
                 .json({ error: "Category childrens not found" });
