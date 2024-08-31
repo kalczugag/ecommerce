@@ -1,5 +1,9 @@
 import { useParams } from "react-router-dom";
-import { useGetCategoryByIdQuery, useEditCategoryMutation } from "@/store";
+import {
+    useGetCategoryByIdQuery,
+    useEditCategoryMutation,
+    useGetChildrensQuery,
+} from "@/store";
 import { useTitle } from "@/hooks/useTitle";
 import CrudModule from "@/modules/CrudModule";
 import UpdateForm from "@/components/UpdateForm";
@@ -12,6 +16,8 @@ const CategoriesEdit = () => {
     useTitle("Categories - Edit");
 
     const { data, isError, isLoading } = useGetCategoryByIdQuery(id || "");
+    const { data: childrenData, isSuccess: childrenIsSuccess } =
+        useGetChildrensQuery(id || "");
     const [editCategory, result] = useEditCategoryMutation();
 
     if (isError || (!isLoading && !data)) return <NotFound />;
@@ -19,6 +25,9 @@ const CategoriesEdit = () => {
     const handleSubmit = (values: Category) => {
         editCategory(values);
     };
+
+    const hasChildren =
+        childrenIsSuccess && childrenData?.length > 0 ? true : false;
 
     return (
         <CrudModule
@@ -30,7 +39,9 @@ const CategoriesEdit = () => {
                     formElements={
                         <CategoryForm
                             level={data?.level}
+                            hasChildren={hasChildren}
                             isLoading={result.isLoading}
+                            isUpdateForm
                         />
                     }
                 />
