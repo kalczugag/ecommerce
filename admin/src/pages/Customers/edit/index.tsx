@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useGetUserByIdQuery, useEditUserMutation } from "@/store";
 import { useTitle } from "@/hooks/useTitle";
 import CrudModule from "@/modules/CrudModule";
@@ -9,6 +9,7 @@ import type { User } from "@/types/User";
 
 const CustomersEdit = () => {
     const { id } = useParams();
+    const navigate = useNavigate();
     useTitle("Customers - Edit");
 
     const { data, isError, isLoading } = useGetUserByIdQuery(id || "");
@@ -16,8 +17,9 @@ const CustomersEdit = () => {
 
     if (isError || (!isLoading && !data)) return <NotFound />;
 
-    const handleSubmit = (values: User) => {
-        editUser(values);
+    const handleSubmit = async (values: User) => {
+        await editUser(values);
+        navigate(-1);
     };
 
     return (

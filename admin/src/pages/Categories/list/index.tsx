@@ -11,7 +11,7 @@ const CategoriesList = () => {
     const navigate = useNavigate();
 
     const { data, isLoading } = useGetAllCategoriesQuery();
-    const [deleteCategory] = useDeleteCategoryMutation();
+    const [deleteCategory, result] = useDeleteCategoryMutation();
 
     const sortFn = (values: any) => {
         console.log(values);
@@ -21,7 +21,7 @@ const CategoriesList = () => {
         tableConfig,
         tableData: data || [],
         action: deleteCategory,
-        isLoading,
+        isLoading: isLoading || result.isLoading,
     };
 
     return (

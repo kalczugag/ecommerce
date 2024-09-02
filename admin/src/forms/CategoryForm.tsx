@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { Field, FieldInputProps } from "react-final-form";
 import { useGetCategoriesByLevelQuery } from "@/store";
+import { required } from "@/utils/validators";
 import {
     FormControl,
     InputLabel,
@@ -24,29 +25,40 @@ interface CategoryFormProps {
 const CategoryForm = ({
     isLoading,
     hasChildren,
-    level,
+    level: initialLevel,
     isUpdateForm,
 }: CategoryFormProps) => {
-    const levelToFetch =
-        level === "topLevel"
-            ? null
-            : level === "secondLevel"
-            ? "topLevel"
-            : level === "thirdLevel"
-            ? "secondLevel"
-            : null;
+    const [level, setLevel] = useState(initialLevel || null);
+    const [levelToFetch, setLevelToFetch] = useState<CategoryLevel | null>(
+        null
+    );
+    const [parentBlock, setParentBlock] = useState(false);
+
+    useEffect(() => {
+        if (!level) return;
+
+        const fetchLevel =
+            level === "topLevel"
+                ? null
+                : level === "secondLevel"
+                ? "topLevel"
+                : level === "thirdLevel"
+                ? "secondLevel"
+                : null;
+
+        setLevelToFetch(fetchLevel);
+    }, [level]);
 
     const { data, isSuccess } = useGetCategoriesByLevelQuery(
         levelToFetch || skipToken
     );
-
-    const [parentBlock, setParentBlock] = useState(false);
 
     const handleLevelChange = (
         e: SelectChangeEvent<any>,
         input: FieldInputProps<any, HTMLElement>
     ) => {
         const selectedLevel = e.target.value as CategoryLevel;
+        setLevel(selectedLevel);
 
         if (selectedLevel === "topLevel") {
             setParentBlock(true);
@@ -60,7 +72,7 @@ const CategoryForm = ({
     return (
         <div className="flex flex-col space-y-4">
             <Row>
-                <Field name="name">
+                <Field name="name" validate={required}>
                     {(props) => (
                         <TextField
                             label="Name"
@@ -82,23 +94,33 @@ const CategoryForm = ({
                     {(props) => (
                         <FormControl
                             disabled={
-                                isUpdateForm
+                                !level ||
+                                (isUpdateForm
                                     ? !isSuccess || parentBlock
-                                    : false || parentBlock
+                                    : parentBlock)
                             }
                             fullWidth
                         >
                             <InputLabel>
-                                {isUpdateForm
-                                    ? !isSuccess || parentBlock
-                                        ? "Cannot set parent"
-                                        : "Parent"
+                                {!level
+                                    ? "Set level to show parent categories"
+                                    : isUpdateForm &&
+                                      (!isSuccess || parentBlock)
+                                    ? "Cannot set parent"
                                     : "Parent"}
                             </InputLabel>
                             <Select
                                 defaultValue=""
-                                value={parentBlock ? "" : props.input.value}
-                                label="Parent"
+                                value={
+                                    parentBlock || !level
+                                        ? ""
+                                        : props.input.value
+                                }
+                                label={
+                                    !level
+                                        ? "Set level to show parent categories"
+                                        : "Parent"
+                                }
                                 onChange={props.input.onChange}
                                 error={props.meta.error && props.meta.touched}
                             >
@@ -174,9 +196,8 @@ const CategoryForm = ({
                         </Tooltip>
                     )}
                 </Field>
-                <div className="w-full text-center">
-                    <p>placeholder #1</p>
-                    <p>placeholder #1</p>
+                <div className="flex justify-center items-center w-full">
+                    <p>{!hasChildren && "This category has no children"}</p>
                 </div>
             </Row>
         </div>

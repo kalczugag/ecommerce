@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
     useGetCategoryByIdQuery,
     useEditCategoryMutation,
@@ -13,6 +13,7 @@ import type { Category } from "@/types/Category";
 
 const CategoriesEdit = () => {
     const { id } = useParams();
+    const navigate = useNavigate();
     useTitle("Categories - Edit");
 
     const { data, isError, isLoading } = useGetCategoryByIdQuery(id || "");
@@ -22,8 +23,9 @@ const CategoriesEdit = () => {
 
     if (isError || (!isLoading && !data)) return <NotFound />;
 
-    const handleSubmit = (values: Category) => {
-        editCategory(values);
+    const handleSubmit = async (values: Category) => {
+        await editCategory(values);
+        navigate(-1);
     };
 
     const hasChildren =

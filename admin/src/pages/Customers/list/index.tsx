@@ -8,7 +8,7 @@ const CustomersList = () => {
     useTitle("Customers");
 
     const { data, isLoading } = useGetUsersByRoleQuery("admin");
-    const [deleteUser] = useDeleteUserMutation();
+    const [deleteUser, result] = useDeleteUserMutation();
 
     const sortFn = (values: any) => {
         console.log(values);
@@ -18,7 +18,7 @@ const CustomersList = () => {
         tableConfig,
         tableData: data || [],
         action: deleteUser,
-        isLoading,
+        isLoading: isLoading || result.isLoading,
     };
 
     return (

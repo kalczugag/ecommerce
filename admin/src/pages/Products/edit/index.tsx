@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useGetProductByIdQuery, useEditProductMutation } from "@/store";
 import { useTitle } from "@/hooks/useTitle";
 import NotFound from "@/components/NotFound";
@@ -9,6 +9,7 @@ import ProductForm from "@/forms/ProductForm";
 
 const ProductsEdit = () => {
     const { id } = useParams();
+    const navigate = useNavigate();
     useTitle("Products - Edit");
 
     const { data, isError, isLoading } = useGetProductByIdQuery(id || "");
@@ -16,8 +17,9 @@ const ProductsEdit = () => {
 
     if (isError || (!isLoading && !data)) return <NotFound />;
 
-    const handleSubmit = (values: Product) => {
-        editProduct(values);
+    const handleSubmit = async (values: Product) => {
+        await editProduct(values);
+        navigate(-1);
     };
 
     return (

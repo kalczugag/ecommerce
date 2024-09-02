@@ -8,7 +8,7 @@ const ProductsList = () => {
     useTitle("Products");
 
     const { data, isLoading } = useGetAllProductsQuery();
-    const [deleteProduct] = useDeleteProductMutation();
+    const [deleteProduct, result] = useDeleteProductMutation();
 
     const sortFn = (values: any) => {
         console.log(values);
@@ -18,7 +18,7 @@ const ProductsList = () => {
         tableConfig,
         tableData: data || [],
         action: deleteProduct,
-        isLoading,
+        isLoading: isLoading || result.isLoading,
     };
 
     return (

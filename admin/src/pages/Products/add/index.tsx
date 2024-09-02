@@ -3,12 +3,16 @@ import CreateForm from "@/components/CreateForm";
 import CrudModule from "@/modules/CrudModule";
 import type { Product } from "@/types/Product";
 import ProductForm from "@/forms/ProductForm";
+import { useNavigate } from "react-router-dom";
 
 const ProductAdd = () => {
+    const navigate = useNavigate();
+
     const [addProduct, result] = useAddProductMutation();
 
-    const handleSubmit = (values: Product) => {
-        addProduct(values);
+    const handleSubmit = async (values: Product) => {
+        await addProduct(values);
+        navigate(-1);
     };
 
     return (
