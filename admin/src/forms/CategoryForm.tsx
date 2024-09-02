@@ -40,7 +40,7 @@ const CategoryForm = ({
         levelToFetch || skipToken
     );
 
-    const [parentBlock, setParentBlock] = useState<boolean>(false);
+    const [parentBlock, setParentBlock] = useState(false);
 
     const handleLevelChange = (
         e: SelectChangeEvent<any>,

@@ -17,7 +17,7 @@ interface RegisterFormProps {
 }
 
 const RegisterForm = ({ isLoading }: RegisterFormProps) => {
-    const [showPassword, setShowPassword] = useState<boolean>(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 

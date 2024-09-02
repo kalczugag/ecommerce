@@ -25,7 +25,7 @@ const AlertDialog = ({
     onConfirm,
     children,
 }: AlertDialogProps) => {
-    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [isOpen, setIsOpen] = useState(false);
 
     const handleOpen = () => setIsOpen(true);
 

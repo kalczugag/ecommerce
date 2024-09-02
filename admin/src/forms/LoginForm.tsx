@@ -17,7 +17,7 @@ interface LoginFormProps {
 }
 
 const LoginForm = ({ isLoading }: LoginFormProps) => {
-    const [showPassword, setShowPassword] = useState<boolean>(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 

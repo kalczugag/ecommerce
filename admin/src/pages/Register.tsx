@@ -40,7 +40,13 @@ const Register = () => {
         />
     );
 
-    return <AuthModule authContent={<FormContainer />} title="Sign Up" />;
+    return (
+        <AuthModule
+            authContent={<FormContainer />}
+            title="Sign Up"
+            isLoading={isLoading}
+        />
+    );
 };
 
 export default Register;
