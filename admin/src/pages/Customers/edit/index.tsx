@@ -28,7 +28,7 @@ const CustomersEdit = () => {
                 <UpdateForm
                     initialValues={data}
                     handleSubmit={handleSubmit}
-                    isLoading={isLoading}
+                    isLoading={isLoading || result.isLoading}
                     formElements={<CustomerForm isLoading={result.isLoading} />}
                 />
             }

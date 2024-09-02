@@ -28,7 +28,7 @@ const ProductsEdit = () => {
                 <UpdateForm
                     initialValues={data}
                     handleSubmit={handleSubmit}
-                    isLoading={isLoading}
+                    isLoading={isLoading || result.isLoading}
                     formElements={<ProductForm isLoading={result.isLoading} />}
                 />
             }

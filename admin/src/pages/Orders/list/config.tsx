@@ -20,7 +20,7 @@ export const tableConfig = [
     {
         label: "Number of items",
         render: (row: RowProps) =>
-            row.items.reduce((a, b) => a + b.quantity, 0),
+            row.items.reduce((a, b) => a + b.quantity, 0).toString(),
     },
     {
         label: "Payment Method",
