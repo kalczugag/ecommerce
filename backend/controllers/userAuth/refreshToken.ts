@@ -1,7 +1,7 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import ms from "ms";
-import { issueJWT } from "@/utlis/helpers";
+import { issueJWT } from "@/utils/helpers";
 import { UserModel } from "@/models/User";
 
 export const refreshToken = async (

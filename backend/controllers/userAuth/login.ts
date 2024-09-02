@@ -1,6 +1,6 @@
 import express from "express";
 import ms from "ms";
-import { validPassword, issueJWT } from "@/utlis/helpers";
+import { validPassword, issueJWT } from "@/utils/helpers";
 import { UserModel } from "@/models/User";
 
 export const login = async (req: express.Request, res: express.Response) => {

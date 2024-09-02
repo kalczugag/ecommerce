@@ -4,7 +4,7 @@ import {
     getStartOfThisWeek,
     getStartOfThisMonth,
     getStartOfThisYear,
-} from "@/utlis/helpers";
+} from "@/utils/helpers";
 
 export const updateVisitorCount = async (
     req: express.Request<{}, {}, { isLoggedIn: boolean }>,

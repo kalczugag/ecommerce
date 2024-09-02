@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import _ from "lodash";
 import { SummaryModel } from "./Summary";
-import { getStartOfThisWeek } from "@/utlis/helpers";
+import { getStartOfThisWeek } from "@/utils/helpers";
 import type { Order, Item } from "@/types/Order";
 
 const itemSchema = new mongoose.Schema<Item>(

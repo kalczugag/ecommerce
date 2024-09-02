@@ -1,6 +1,6 @@
 import express from "express";
 import ms from "ms";
-import { genPassword, issueJWT } from "@/utlis/helpers";
+import { genPassword, issueJWT } from "@/utils/helpers";
 import schema from "./schemaValidate";
 import { UserModel } from "@/models/User";
 import { RoleModel } from "@/models/Role";
