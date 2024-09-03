@@ -17,3 +17,8 @@ export interface Product {
     thirdLevelCategory: string;
     description?: string;
 }
+
+export interface PaginatedProducts {
+    page: number;
+    pageSize: number;
+}

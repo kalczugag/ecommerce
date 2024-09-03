@@ -3,20 +3,32 @@ import type { Category } from "@/types/Category";
 
 export const categoryApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        getAllCategories: builder.query<Category[], void>({
-            query: () => ({
-                url: "/categories",
-                method: "GET",
-                keepUnusedDataFor: 300,
-            }),
-            providesTags: (result) =>
-                result
-                    ? result.map((category) => ({
-                          type: "Categories",
-                          id: category._id,
-                      }))
-                    : [{ type: "Categories", id: "LIST" }],
-        }),
+        getAllCategories: builder.query<ApiResponse<Category>, Paginate | void>(
+            {
+                query: (params = {}) => {
+                    const queryParams: Record<string, string> = {};
+                    if (params?.page !== undefined) {
+                        queryParams.page = params.page.toString();
+                    }
+                    if (params?.pageSize !== undefined) {
+                        queryParams.pageSize = params.pageSize.toString();
+                    }
+                    return {
+                        url: "/categories",
+                        method: "GET",
+                        params: queryParams,
+                        keepUnusedDataFor: 300,
+                    };
+                },
+                providesTags: (result) =>
+                    result
+                        ? result.data.map((category) => ({
+                              type: "Categories",
+                              id: category._id,
+                          }))
+                        : [{ type: "Categories", id: "LIST" }],
+            }
+        ),
 
         getCategoryById: builder.query<Category, string>({
             query: (id) => ({

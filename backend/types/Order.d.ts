@@ -25,3 +25,8 @@ export interface Order {
     createdAt: Date;
     updatedAt: Date;
 }
+
+export interface PaginatedOrders {
+    page: number;
+    pageSize: number;
+}

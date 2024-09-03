@@ -10,10 +10,7 @@ const CategoriesAdd = () => {
     const [addCategory, result] = useAddCategoryMutation();
 
     const handleSubmit = async (values: Category) => {
-        await addCategory({
-            ...values,
-            parentCategory: values.parentCategory?._id,
-        });
+        await addCategory(values);
         navigate(-1);
     };
 

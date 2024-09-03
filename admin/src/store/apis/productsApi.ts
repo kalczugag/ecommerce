@@ -3,14 +3,25 @@ import type { Product } from "@/types/Product";
 
 export const productApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        getAllProducts: builder.query<Product[], void>({
-            query: () => ({
-                url: "/products",
-                method: "GET",
-            }),
+        getAllProducts: builder.query<ApiResponse<Product>, Paginate | void>({
+            query: (params = {}) => {
+                const queryParams: Record<string, string> = {};
+                if (params?.page !== undefined) {
+                    queryParams.page = params.page.toString();
+                }
+                if (params?.pageSize !== undefined) {
+                    queryParams.pageSize = params.pageSize.toString();
+                }
+                return {
+                    url: "/products",
+                    method: "GET",
+                    params: queryParams,
+                    keepUnusedDataFor: 300,
+                };
+            },
             providesTags: (result) =>
                 result
-                    ? result.map((product) => ({
+                    ? result.data.map((product) => ({
                           type: "Products",
                           id: product._id,
                       }))

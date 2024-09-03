@@ -12,13 +12,31 @@ export const getCategoryByLevel = async (
     }
 
     try {
-        const categories = await CategoryModel.find({ level: level });
+        const categories = await CategoryModel.find({ level: level })
+            .populate("parentCategory", "name")
+            .lean()
+            .exec();
 
         if (!categories) {
             return res.status(404).json({ error: "Categories not found" });
         }
 
-        return res.status(200).json(categories);
+        let labelledCategories;
+        if (level === "secondLevel") {
+            labelledCategories = categories.map((category) => {
+                if (
+                    category?.parentCategory &&
+                    typeof category.parentCategory === "object"
+                ) {
+                    return {
+                        ...category,
+                        name: `${category.parentCategory.name} - ${category.name}`,
+                    };
+                }
+            });
+        }
+
+        return res.status(200).json(labelledCategories || categories);
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: "Internal server error" });

@@ -9,15 +9,25 @@ type orderSummary = {
 
 export const orderApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        getAllOrders: builder.query<Order[], void>({
-            query: () => ({
-                url: "/orders",
-                method: "GET",
-                keepUnusedDataFor: 300,
-            }),
+        getAllOrders: builder.query<ApiResponse<Order>, Paginate | void>({
+            query: (params = {}) => {
+                const queryParams: Record<string, string> = {};
+                if (params?.page !== undefined) {
+                    queryParams.page = params.page.toString();
+                }
+                if (params?.pageSize !== undefined) {
+                    queryParams.pageSize = params.pageSize.toString();
+                }
+                return {
+                    url: "/orders",
+                    method: "GET",
+                    params: queryParams,
+                    keepUnusedDataFor: 300,
+                };
+            },
             providesTags: (result) =>
                 result
-                    ? result.map((order) => ({
+                    ? result.data.map((order) => ({
                           type: "Orders",
                           id: order._id,
                       }))

@@ -11,6 +11,7 @@ interface CrudModuleProps {
         tableConfig: TableColumnProps[];
         tableData: any[];
         action?: (arg: string) => void;
+        total?: number;
         isLoading: boolean;
     };
     actionForm: JSX.Element;
@@ -32,6 +33,7 @@ const CrudModule = ({ config, actionForm }: CrudModuleProps) => {
             {hasTableConfig && (
                 <Table
                     headerOptions={config.tableConfig}
+                    totalItems={config.total}
                     rowData={enhancedTableData!}
                     isLoading={config.isLoading}
                 />

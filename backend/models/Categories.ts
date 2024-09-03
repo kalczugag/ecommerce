@@ -6,7 +6,6 @@ const categorySchema = new mongoose.Schema<Category>(
         name: {
             type: String,
             required: true,
-            unique: true,
         },
         description: {
             type: String,
@@ -48,5 +47,7 @@ categorySchema.pre("save", async function (next) {
         next(error);
     }
 });
+
+categorySchema.index({ name: 1, parentCategory: 1 }, { unique: true });
 
 export const CategoryModel = mongoose.model("Category", categorySchema);

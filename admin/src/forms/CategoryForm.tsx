@@ -90,7 +90,7 @@ const CategoryForm = ({
                         />
                     )}
                 </Field>
-                <Field name="parentCategory._id" type="select">
+                <Field name="parentCategory" type="select">
                     {(props) => (
                         <FormControl
                             disabled={

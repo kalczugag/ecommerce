@@ -1,35 +1,55 @@
 import { apiSlice } from "./apiSlice";
 import type { User } from "@/types/User";
 
+interface fetchArgs extends Paginate {
+    roleName: string;
+}
+
 export const userApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        getAllUsers: builder.query<User[], void>({
-            query: () => ({
-                url: "/users",
-                method: "GET",
-                keepUnusedDataFor: 300,
-            }),
+        getAllUsers: builder.query<ApiResponse<User>, Paginate | void>({
+            query: (params = {}) => {
+                const queryParams: Record<string, string> = {};
+                if (params?.page !== undefined) {
+                    queryParams.page = params.page.toString();
+                }
+                if (params?.pageSize !== undefined) {
+                    queryParams.pageSize = params.pageSize.toString();
+                }
+                return {
+                    url: "/users",
+                    method: "GET",
+                    params: queryParams,
+                    keepUnusedDataFor: 300,
+                };
+            },
             providesTags: (result) =>
                 result
-                    ? result.map((user) => ({
+                    ? result.data.map((user) => ({
                           type: "Users",
                           id: user._id,
                       }))
                     : [{ type: "Users", id: "LIST" }],
         }),
 
-        getUsersByRole: builder.query<User[], string>({
-            query: (roleName) => ({
-                url: "/users/byRole",
-                method: "GET",
-                keepUnusedDataFor: 300,
-                params: {
-                    roleName,
-                },
-            }),
+        getUsersByRole: builder.query<ApiResponse<User>, fetchArgs>({
+            query: ({ roleName, page, pageSize }) => {
+                const queryParams: Record<string, string> = {};
+                if (page !== undefined) {
+                    queryParams.page = page.toString();
+                }
+                if (pageSize !== undefined) {
+                    queryParams.pageSize = pageSize.toString();
+                }
+                return {
+                    url: "/users/byRole",
+                    method: "GET",
+                    params: { ...queryParams, roleName },
+                };
+            },
             providesTags: (result) =>
                 result
-                    ? result.map((user) => ({
+                    ? result.data.map((user) => ({
                           type: "Users",
                           id: user._id,
                       }))

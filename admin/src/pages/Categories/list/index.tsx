@@ -2,15 +2,17 @@ import { useNavigate } from "react-router-dom";
 import { useGetAllCategoriesQuery, useDeleteCategoryMutation } from "@/store";
 import { sortConfig, tableConfig } from "./config";
 import { useTitle } from "@/hooks/useTitle";
+import { usePagination } from "@/hooks/usePagination";
 import CrudModule from "@/modules/CrudModule";
 import SortForm from "@/forms/SortForm";
 import { Button } from "@mui/material";
 
 const CategoriesList = () => {
-    useTitle("Categories");
+    const pagination = usePagination();
     const navigate = useNavigate();
+    useTitle("Categories");
 
-    const { data, isLoading } = useGetAllCategoriesQuery();
+    const { data, isFetching } = useGetAllCategoriesQuery(pagination);
     const [deleteCategory, result] = useDeleteCategoryMutation();
 
     const sortFn = (values: any) => {
@@ -19,9 +21,10 @@ const CategoriesList = () => {
 
     const config = {
         tableConfig,
-        tableData: data || [],
+        tableData: data?.data || [],
+        total: data?.count || 0,
         action: deleteCategory,
-        isLoading: isLoading || result.isLoading,
+        isLoading: isFetching || result.isLoading,
     };
 
     return (

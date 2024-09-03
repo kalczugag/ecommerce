@@ -25,3 +25,9 @@ export interface User {
     createdAt: Date;
     updatedAt: Date;
 }
+
+export interface PaginatedUsers {
+    roleName?: string;
+    page: number;
+    pageSize: number;
+}

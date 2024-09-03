@@ -23,8 +23,10 @@ const tableSlice = createSlice({
                 state.pageSize = action.payload.pageSize ?? state.pageSize;
             }
         },
-        reset(state) {
-            state = initialState;
+        reset() {
+            return {
+                ...initialState,
+            };
         },
     },
 });
