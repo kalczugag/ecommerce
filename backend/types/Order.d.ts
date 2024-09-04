@@ -1,4 +1,5 @@
 import { User } from "./User";
+import { ParsedQs } from "qs";
 
 export interface Item {
     product?: string;
@@ -26,7 +27,7 @@ export interface Order {
     updatedAt: Date;
 }
 
-export interface PaginatedOrders {
+export interface PaginatedOrders extends ParsedQs {
     page: number;
     pageSize: number;
 }

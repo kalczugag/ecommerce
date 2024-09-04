@@ -1,13 +1,21 @@
 import { useGetUsersByRoleQuery, useDeleteUserMutation } from "@/store";
 import { sortConfig, tableConfig } from "./config";
 import { useTitle } from "@/hooks/useTitle";
+import { usePagination } from "@/hooks/usePagination";
 import CrudModule from "@/modules/CrudModule";
 import SortForm from "@/forms/SortForm";
 
 const CustomersList = () => {
+    const { page, pageSize } = usePagination();
     useTitle("Customers");
 
-    const { data, isLoading } = useGetUsersByRoleQuery("admin");
+    const args = {
+        roleName: "admin",
+        page,
+        pageSize,
+    };
+
+    const { data, isLoading } = useGetUsersByRoleQuery(args);
     const [deleteUser, result] = useDeleteUserMutation();
 
     const sortFn = (values: any) => {
@@ -16,7 +24,8 @@ const CustomersList = () => {
 
     const config = {
         tableConfig,
-        tableData: data || [],
+        tableData: data?.data || [],
+        total: data?.count || 0,
         action: deleteUser,
         isLoading: isLoading || result.isLoading,
     };

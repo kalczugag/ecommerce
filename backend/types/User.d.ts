@@ -1,4 +1,5 @@
 import { Role } from "./Role";
+import { ParsedQs } from "qs";
 
 export interface User {
     _id?: string;
@@ -26,7 +27,7 @@ export interface User {
     updatedAt: Date;
 }
 
-export interface PaginatedUsers {
+export interface PaginatedUsers extends ParsedQs {
     roleName?: string;
     page: number;
     pageSize: number;

@@ -1,3 +1,5 @@
+import { ParsedQs } from "qs";
+
 export interface Product {
     _id?: string;
     imageUrl: string;
@@ -18,7 +20,7 @@ export interface Product {
     description?: string;
 }
 
-export interface PaginatedProducts {
+export interface PaginatedProducts extends ParsedQs {
     page: number;
     pageSize: number;
 }

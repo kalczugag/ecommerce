@@ -1,3 +1,5 @@
+import { ParsedQs } from "qs";
+
 export interface Category {
     name: string;
     description?: string;
@@ -5,7 +7,7 @@ export interface Category {
     level: "topLevel" | "secondLevel" | "thirdLevel";
 }
 
-export interface PaginatedCategories {
+export interface PaginatedCategories extends ParsedQs {
     level?: string;
     page: number;
     pageSize: number;
