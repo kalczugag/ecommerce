@@ -1,17 +1,17 @@
 import { Link } from "react-router-dom";
-import type { Product } from "../../types/product";
+import type { Product } from "@/types/Product";
 
 const ProductCard = (data: Product) => {
     const price = +data.price.toFixed(2);
     let discountedPrice;
 
-    if (data.discountPersent) {
+    if (data.discountPercent) {
         if (data.discountedPrice) {
             discountedPrice = +data.discountedPrice.toFixed(2);
         } else {
             discountedPrice = +(
                 price -
-                (price * data.discountPersent) / 100
+                (price * data.discountPercent) / 100
             ).toFixed(2);
         }
     }
@@ -43,7 +43,7 @@ const ProductCard = (data: Product) => {
                                 ${price}
                             </span>
                             <span className="text-green-600">
-                                {data.discountPersent}% off
+                                {data.discountPercent}% off
                             </span>
                         </>
                     ) : (

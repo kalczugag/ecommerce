@@ -1,5 +1,5 @@
 import ProductCard from "../ProductCard";
-import type { Product } from "../../types/product";
+import type { Product } from "@/types/Product";
 
 interface ProductsListProps {
     data: Product[];

@@ -6,7 +6,7 @@ const SortBar = () => {
             <h1 className="text-2xl font-bold">Product</h1>
             <div>
                 <button className="flex items-center">
-                    Sort <ExpandMore />
+                    <span>Sort</span> <ExpandMore />
                 </button>
             </div>
         </div>

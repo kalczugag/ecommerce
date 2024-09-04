@@ -5,16 +5,8 @@ import methods from "@/controllers/products";
 import { hasRole } from "@/middlewares";
 
 const products = (router: express.Router) => {
-    router.get(
-        "/products",
-        passport.authenticate("jwt", { session: false }),
-        methods.read
-    );
-    router.get(
-        "/products/:id",
-        passport.authenticate("jwt", { session: false }),
-        methods.readById
-    );
+    router.get("/products", methods.read);
+    router.get("/products/:id", methods.readById);
     router.post(
         "/products",
         passport.authenticate("jwt", { session: false }),

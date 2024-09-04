@@ -1,6 +1,6 @@
 import { Container } from "@mui/material";
 import { Link } from "react-router-dom";
-import { categories, subcategories } from "../../testData/data";
+import { categories, subcategories } from "@/testData/data";
 
 const Categories = ({ page }: { page: string }) => {
     return (

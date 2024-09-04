@@ -15,7 +15,7 @@ import AccountTools from "./AccountTools";
 const pages = ["Women", "Men", "Company", "Stores"];
 
 interface HeaderProps {
-    deliveryBar?: boolean;
+    deliveryBar?: string;
 }
 
 const Header = ({ deliveryBar }: HeaderProps) => {
@@ -62,7 +62,7 @@ const Header = ({ deliveryBar }: HeaderProps) => {
                         component="div"
                         sx={{ flexGrow: 1 }}
                     >
-                        Get free delivery on orders over $100
+                        {deliveryBar}
                     </Typography>
                 </Container>
             )}

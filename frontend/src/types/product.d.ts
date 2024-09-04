@@ -1,18 +1,19 @@
 export interface Product {
+    _id?: string;
     imageUrl: string;
     brand: string;
     title: string;
     color: string;
     discountedPrice?: number;
     price: number;
-    discountPersent?: number;
+    discountPercent?: number;
     size: {
         name: string;
         quantity: number;
     }[];
     quantity: number;
-    topLavelCategory: string;
-    secondLavelCategory: string;
-    thirdLavelCategory: string;
+    topLevelCategory: string;
+    secondLevelCategory: string;
+    thirdLevelCategory: string;
     description?: string;
 }

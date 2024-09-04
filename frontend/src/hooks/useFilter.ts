@@ -1,9 +1,14 @@
 import { useMemo, useState } from "react";
-import _ from "lodash";
-import type { Filters } from "../types/filters";
-import type { Product } from "../types/product";
+import _, { filter } from "lodash";
+import type { Filters } from "@/types/Filters";
+import type { Product } from "@/types/Product";
 
-export const useFilter = (data: Product[], maxPrice: number) => {
+export interface FilterProps {
+    handleSubmit: (values: Filters) => void;
+    filteredData: Product[];
+}
+
+export const useFilter = (data: Product[], maxPrice: number): FilterProps => {
     const [filters, setFilters] = useState<Filters>({
         color: "",
         size: "",
@@ -13,25 +18,28 @@ export const useFilter = (data: Product[], maxPrice: number) => {
     });
 
     const handleFilterSubmit = (values: Filters) => {
-        console.log(values);
         setFilters(values);
     };
 
     const filterProducts = (products: Product[], filters: Filters) => {
         return products.filter((product) => {
             const isColorMatch =
-                !filters.color || product.color === filters.color;
+                !filters.color ||
+                product.color.toLowerCase() === filters.color.toLowerCase();
+
             const isSizeMatch =
                 !filters.size ||
                 product.size.some((size) => size.name === filters.size);
+
             const isPriceMatch =
                 !filters.priceRange ||
                 (product.price >= filters.priceRange[0] &&
                     product.price <= filters.priceRange[1]);
+
             const isDiscountMatch =
                 !filters.discountRange ||
-                (product.discountPersent! >= filters.discountRange[0] &&
-                    product.discountPersent! <= filters.discountRange[1]);
+                ((product.discountPercent ?? 0) >= filters.discountRange[0] &&
+                    (product.discountPercent ?? 0) <= filters.discountRange[1]);
 
             return (
                 isColorMatch && isSizeMatch && isPriceMatch && isDiscountMatch
@@ -47,7 +55,16 @@ export const useFilter = (data: Product[], maxPrice: number) => {
     return { handleSubmit: handleFilterSubmit, filteredData };
 };
 
-export const useFilterProps = (data: Product[]) => {
+export interface SimplifiedDataProps {
+    colorsCount: {
+        color: string;
+        count: number;
+    }[];
+    availableSizes: string[];
+    maxPrice: number;
+}
+
+export const useFilterProps = (data: Product[]): SimplifiedDataProps => {
     const colorCounts = _.countBy(data.map((item) => item.color));
 
     const uniqueColorsCount = Object.keys(colorCounts).map((color) => ({
