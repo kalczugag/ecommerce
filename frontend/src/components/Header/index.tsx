@@ -11,8 +11,7 @@ import {
 import { Adb } from "@mui/icons-material";
 import Categories from "./Categories";
 import AccountTools from "./AccountTools";
-
-const pages = ["Women", "Men", "Company", "Stores"];
+import { useGetGroupedCategoriesQuery } from "@/store";
 
 interface HeaderProps {
     deliveryBar?: string;
@@ -20,6 +19,8 @@ interface HeaderProps {
 
 const Header = ({ deliveryBar }: HeaderProps) => {
     const navigate = useNavigate();
+
+    const { data } = useGetGroupedCategoriesQuery({ sorted: true });
 
     const [openCategories, setOpenCategories] = useState<{
         isOpen: boolean;
@@ -94,20 +95,28 @@ const Header = ({ deliveryBar }: HeaderProps) => {
                                 display: { xs: "none", md: "flex" },
                             }}
                         >
-                            {pages.map((page) => (
-                                <Button
-                                    key={page}
-                                    onClick={() => navigate(page.toLowerCase())}
-                                    onMouseOver={() => handleMouseOver(page)}
-                                    sx={{
-                                        my: 2,
-                                        color: "black",
-                                        display: "block",
-                                    }}
-                                >
-                                    {page}
-                                </Button>
-                            ))}
+                            {data?.data
+                                ? data?.data.topLevelCategories.map(
+                                      ({ name }) => (
+                                          <Button
+                                              key={name}
+                                              onClick={() =>
+                                                  navigate(name.toLowerCase())
+                                              }
+                                              onMouseOver={() =>
+                                                  handleMouseOver(name)
+                                              }
+                                              sx={{
+                                                  my: 2,
+                                                  color: "black",
+                                                  display: "block",
+                                              }}
+                                          >
+                                              {name}
+                                          </Button>
+                                      )
+                                  )
+                                : null}
                         </Box>
                         <AccountTools />
                     </Toolbar>
@@ -118,7 +127,7 @@ const Header = ({ deliveryBar }: HeaderProps) => {
                     onMouseEnter={handleCategoriesMouseEnter}
                     onMouseLeave={handleMouseLeave}
                 >
-                    <Categories page={openCategories.page} />
+                    <Categories page={openCategories.page} data={data?.data} />
                 </Box>
             )}
         </>

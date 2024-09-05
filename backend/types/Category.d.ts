@@ -7,8 +7,15 @@ export interface Category {
     level: "topLevel" | "secondLevel" | "thirdLevel";
 }
 
+export interface SortedCategories {
+    topLevelCategories: Category[];
+    secondLevelCategories: Category[];
+    thirdLevelCategories: Category[];
+}
+
 export interface PaginatedCategories extends ParsedQs {
-    level?: string;
+    category?: string;
+    sorted?: boolean;
     page: number;
     pageSize: number;
 }

@@ -1,8 +1,25 @@
 import { Container } from "@mui/material";
 import { Link } from "react-router-dom";
-import { categories, subcategories } from "./config";
+import { GroupedCategories } from "@/types/Category";
 
-const Categories = ({ page }: { page: string }) => {
+interface CategoriesProps {
+    data?: GroupedCategories;
+    page: string;
+}
+
+const Categories = ({ data, page }: CategoriesProps) => {
+    if (!data) {
+        return null;
+    }
+
+    const topLevelCategory = data.topLevelCategories.find(
+        (category) => category.name.toLowerCase() === page.toLowerCase()
+    );
+
+    if (!topLevelCategory) {
+        return null;
+    }
+
     return (
         <Container
             maxWidth={false}
@@ -21,34 +38,44 @@ const Categories = ({ page }: { page: string }) => {
                     display: "flex",
                 }}
             >
-                {categories.map((category) => (
-                    <ul key={category._id} className="mr-12 space-y-2">
-                        <h3 className="font-bold">{category.label}</h3>
-                        {subcategories.map((subcategory) => {
-                            if (
-                                page.toLowerCase() ===
-                                    subcategory.gender.toLowerCase() &&
-                                category._id === subcategory.categoryId
-                            ) {
-                                return (
-                                    <li key={subcategory._id}>
+                {data.secondLevelCategories
+                    .filter(
+                        (secondLevelCategory) =>
+                            secondLevelCategory.parentCategory._id ===
+                            topLevelCategory._id
+                    )
+                    .map((secondLevelCategory) => (
+                        <ul
+                            key={secondLevelCategory._id}
+                            className="mr-12 space-y-2"
+                        >
+                            <h3 className="font-bold">
+                                {secondLevelCategory.name}
+                            </h3>
+
+                            {data.thirdLevelCategories
+                                .filter(
+                                    (thirdLevelCategory) =>
+                                        thirdLevelCategory.parentCategory
+                                            ._id === secondLevelCategory._id
+                                )
+                                .map((thirdLevelCategory) => (
+                                    <li key={thirdLevelCategory._id}>
                                         <Link
                                             to={
                                                 page.toLowerCase() +
                                                 "/" +
-                                                subcategory.label
+                                                thirdLevelCategory.name
                                                     .toLowerCase()
                                                     .replace(/\s+/g, "-")
                                             }
                                         >
-                                            {subcategory.label}
+                                            {thirdLevelCategory.name}
                                         </Link>
                                     </li>
-                                );
-                            }
-                        })}
-                    </ul>
-                ))}
+                                ))}
+                        </ul>
+                    ))}
             </Container>
         </Container>
     );

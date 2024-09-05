@@ -5,11 +5,7 @@ import methods from "@/controllers/categories";
 import { hasRole } from "@/middlewares";
 
 const categories = (router: express.Router) => {
-    router.get(
-        "/categories",
-        passport.authenticate("jwt", { session: false }),
-        methods.read
-    );
+    router.get("/categories", methods.read);
 
     router.get(
         "/categories/byLevel",

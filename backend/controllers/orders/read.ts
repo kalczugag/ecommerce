@@ -6,7 +6,7 @@ export const getAllOrders = async (
     req: express.Request<{}, {}, {}, PaginatedOrders>,
     res: express.Response
 ) => {
-    const { page = 0, pageSize = 0 } = req.query;
+    const { page, pageSize } = req.query;
 
     try {
         const totalDocuments = await OrderModel.countDocuments();

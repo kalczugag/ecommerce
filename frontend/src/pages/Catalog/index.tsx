@@ -5,7 +5,7 @@ import CatalogModule from "@/modules/CatalogModule";
 
 const ROWS_PER_PAGE = 8;
 
-const Products = () => {
+const Catalog = () => {
     const [handlePageChange, page] = usePagination();
 
     const { data, isLoading } = useGetAllProductsQuery({
@@ -32,4 +32,4 @@ const Products = () => {
     return <CatalogModule config={config} handleSubmit={handleSubmit} />;
 };
 
-export default Products;
+export default Catalog;

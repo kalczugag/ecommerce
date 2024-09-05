@@ -7,7 +7,7 @@ export const getUsersByRole = async (
     req: express.Request<{}, {}, {}, PaginatedUsers>,
     res: express.Response
 ) => {
-    const { roleName, page = 0, pageSize = 5 } = req.query;
+    const { roleName, page, pageSize } = req.query;
 
     if (!roleName) {
         return res.status(400).json({ error: "Role name is required" });

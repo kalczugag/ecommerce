@@ -6,7 +6,7 @@ export const getAllProducts = async (
     req: express.Request<{}, {}, {}, PaginatedProducts>,
     res: express.Response
 ) => {
-    const { page = 0, pageSize = 5 } = req.query;
+    const { page, pageSize } = req.query;
 
     try {
         const totalDocuments = await ProductModel.countDocuments();
