@@ -31,7 +31,7 @@ const CatalogModule = ({ config, handleSubmit }: CatalogModuleProps) => {
         handlePageChange,
     } = config;
 
-    const count = Math.ceil(config.filteredData.length / pageSize);
+    const count = Math.ceil(config.total / pageSize);
 
     return (
         <Loading isLoading={isLoading}>
@@ -46,11 +46,15 @@ const CatalogModule = ({ config, handleSubmit }: CatalogModuleProps) => {
                 }
             >
                 <Sidebar data={simplifiedData} onSubmit={handleSubmit} />
-                <ProductsList
-                    data={filteredData}
-                    page={page}
-                    rowsPerPage={pageSize}
-                />
+                {filteredData.length > 0 ? (
+                    <ProductsList
+                        data={filteredData}
+                        page={page}
+                        rowsPerPage={pageSize}
+                    />
+                ) : (
+                    <div>No products available for this category.</div>
+                )}
             </DefaultLayout>
         </Loading>
     );

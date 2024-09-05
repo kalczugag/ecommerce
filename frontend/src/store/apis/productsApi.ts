@@ -15,6 +15,9 @@ export const productApi = apiSlice.injectEndpoints({
                 if (params?.pageSize !== undefined) {
                     queryParams.pageSize = params.pageSize.toString();
                 }
+                if (params?.category !== undefined) {
+                    queryParams.category = params.category;
+                }
                 return {
                     url: "/products",
                     method: "GET",

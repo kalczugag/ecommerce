@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import _, { filter } from "lodash";
+import { useEffect, useMemo, useState } from "react";
+import _ from "lodash";
 import type { Filters } from "@/types/Filters";
 import type { Product } from "@/types/Product";
 
@@ -22,6 +22,8 @@ export const useFilter = (data: Product[], maxPrice: number): FilterProps => {
     };
 
     const filterProducts = (products: Product[], filters: Filters) => {
+        if (products.length === 0) return [];
+
         return products.filter((product) => {
             const isColorMatch =
                 !filters.color ||

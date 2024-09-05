@@ -49,9 +49,16 @@ const Categories = ({ data, page }: CategoriesProps) => {
                             key={secondLevelCategory._id}
                             className="mr-12 space-y-2"
                         >
-                            <h3 className="font-bold">
+                            <Link
+                                to={
+                                    page.toLowerCase() +
+                                    "/" +
+                                    secondLevelCategory.name.toLowerCase()
+                                }
+                                className="font-bold"
+                            >
                                 {secondLevelCategory.name}
-                            </h3>
+                            </Link>
 
                             {data.thirdLevelCategories
                                 .filter(
@@ -64,6 +71,8 @@ const Categories = ({ data, page }: CategoriesProps) => {
                                         <Link
                                             to={
                                                 page.toLowerCase() +
+                                                "/" +
+                                                secondLevelCategory.name.toLowerCase() +
                                                 "/" +
                                                 thirdLevelCategory.name
                                                     .toLowerCase()

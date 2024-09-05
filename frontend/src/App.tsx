@@ -9,7 +9,10 @@ const App = () => {
         <Layout>
             <Routes>
                 <Route index element={<Dashboard />} />
-                <Route path="/:page/:category" element={<Catalog />} />
+                <Route
+                    path="/:topLevel/:secondLevel/:thirdLevel"
+                    element={<Catalog />}
+                />
                 <Route path="/product/:id" element={<ProductDetails />} />
             </Routes>
         </Layout>

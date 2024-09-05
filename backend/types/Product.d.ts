@@ -21,6 +21,7 @@ export interface Product {
 }
 
 export interface PaginatedProducts extends ParsedQs {
+    category?: string;
     page: number;
     pageSize: number;
 }
