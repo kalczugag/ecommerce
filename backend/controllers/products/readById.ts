@@ -13,7 +13,9 @@ export const getProductById = async (
     }
 
     try {
-        const product = await ProductModel.findById(id);
+        const product = await ProductModel.findById(id)
+            .populate("topLevelCategory secondLevelCategory thirdLevelCategory")
+            .exec();
 
         if (!product) {
             return res.status(404).json({ error: "Product not found" });

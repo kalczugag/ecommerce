@@ -10,7 +10,7 @@ const App = () => {
             <Routes>
                 <Route index element={<Dashboard />} />
                 <Route
-                    path="/:topLevel/:secondLevel/:thirdLevel"
+                    path="/:topLevel/:secondLevel?/:thirdLevel?"
                     element={<Catalog />}
                 />
                 <Route path="/product/:id" element={<ProductDetails />} />

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { CategoryModel } from "./Categories";
 import type { Product } from "@/types/Product";
 
 const productSchema = new mongoose.Schema<Product>({
@@ -16,10 +17,56 @@ const productSchema = new mongoose.Schema<Product>({
         },
     ],
     quantity: { type: Number, required: true },
-    topLevelCategory: { type: String, required: true },
-    secondLevelCategory: { type: String, required: true },
-    thirdLevelCategory: { type: String, required: true },
+    topLevelCategory: {
+        type: mongoose.Schema.ObjectId,
+        ref: "Category",
+        required: true,
+    },
+    secondLevelCategory: {
+        type: mongoose.Schema.ObjectId,
+        ref: "Category",
+        required: true,
+    },
+    thirdLevelCategory: {
+        type: mongoose.Schema.ObjectId,
+        ref: "Category",
+        required: true,
+    },
     description: { type: String },
 });
 
 export const ProductModel = mongoose.model("Product", productSchema);
+
+productSchema.pre("validate", async function (next) {
+    const product = this;
+
+    const secondLevelCategory = await CategoryModel.findById(
+        product.secondLevelCategory
+    );
+    if (
+        !secondLevelCategory ||
+        secondLevelCategory.parentCategory !== product.topLevelCategory
+    ) {
+        return next(
+            new Error(
+                "Second level category must belong to the top level category"
+            )
+        );
+    }
+
+    const thirdLevelCategory = await CategoryModel.findById(
+        product.thirdLevelCategory
+    );
+    if (
+        !thirdLevelCategory ||
+        thirdLevelCategory.parentCategory !== product.secondLevelCategory
+    ) {
+        return next(
+            new Error(
+                "Third level category must belong to the second level category"
+            )
+        );
+    }
+
+    next();
+});

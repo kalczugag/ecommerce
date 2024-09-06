@@ -1,4 +1,5 @@
 import { ParsedQs } from "qs";
+import { Category } from "./Category";
 
 export interface Product {
     _id?: string;
@@ -14,9 +15,9 @@ export interface Product {
         quantity: number;
     }[];
     quantity: number;
-    topLevelCategory: string;
-    secondLevelCategory: string;
-    thirdLevelCategory: string;
+    topLevelCategory: string | Category;
+    secondLevelCategory: string | Category;
+    thirdLevelCategory: string | Category;
     description?: string;
 }
 

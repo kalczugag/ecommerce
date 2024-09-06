@@ -1,3 +1,5 @@
+import { Category } from "./Category";
+
 export interface Product {
     _id?: string;
     imageUrl: string;
@@ -12,8 +14,8 @@ export interface Product {
         quantity: number;
     }[];
     quantity: number;
-    topLevelCategory: string;
-    secondLevelCategory: string;
-    thirdLevelCategory: string;
+    topLevelCategory: Category;
+    secondLevelCategory: Category;
+    thirdLevelCategory: Category;
     description?: string;
 }

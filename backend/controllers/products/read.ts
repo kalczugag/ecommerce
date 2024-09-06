@@ -35,6 +35,7 @@ export const getAllProducts = async (
         const products = await ProductModel.find(query)
             .skip(page * pageSize)
             .limit(pageSize)
+            .populate("topLevelCategory secondLevelCategory thirdLevelCategory")
             .exec();
 
         if (!products || products.length === 0) {
