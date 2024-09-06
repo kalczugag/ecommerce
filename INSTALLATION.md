@@ -98,4 +98,4 @@ After installing the admin dependencies, run the following command in the same t
 npm run dev
 ```
 
-This command will start the admin panel server, and you'll be able to access the website on localhost:3000 in your web browser.
+This command will start the admin panel server, and you'll be able to access the website on localhost:5165 in your web browser.
