@@ -4,6 +4,7 @@ import { usePagination } from "@/hooks/usePagination";
 import { sortConfig, tableConfig } from "./config";
 import CrudModule from "@/modules/CrudModule";
 import SortForm from "@/forms/SortForm";
+import { useEffect } from "react";
 
 const ProductsList = () => {
     const pagination = usePagination();
@@ -15,6 +16,10 @@ const ProductsList = () => {
     const sortFn = (values: any) => {
         console.log(values);
     };
+
+    useEffect(() => {
+        console.log(data);
+    }, [data]);
 
     const config = {
         tableConfig,

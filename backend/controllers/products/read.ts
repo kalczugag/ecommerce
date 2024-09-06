@@ -70,6 +70,8 @@ export const getAllProducts = async (
 
         return res.status(200).json({ data: products, count: totalDocuments });
     } catch (error) {
-        return res.status(500).json({ error: "Internal server error" });
+        return res
+            .status(500)
+            .json({ data: [], error: "Internal server error" });
     }
 };

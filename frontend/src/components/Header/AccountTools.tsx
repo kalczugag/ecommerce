@@ -1,14 +1,11 @@
 import { useState } from "react";
+import { Box, Tooltip, IconButton, Menu, Avatar } from "@mui/material";
 import {
-    Box,
-    Tooltip,
-    IconButton,
-    Menu,
-    Avatar,
-    MenuItem,
-    Typography,
-} from "@mui/material";
-import { Search, LocalMallOutlined } from "@mui/icons-material";
+    Search,
+    LocalMallOutlined,
+    PersonOutlineOutlined,
+} from "@mui/icons-material";
+import AvatarSettings from "./AvatarSettings";
 
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
@@ -27,11 +24,7 @@ const AccountTools = () => {
         <Box sx={{ flexGrow: 0 }} className="space-x-2">
             <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar
-                        sx={{ bgcolor: "#5146E7" }}
-                        alt="Remy Sharp"
-                        src="/static/images/avatar/2.jpg"
-                    />
+                    <PersonOutlineOutlined sx={{ fontSize: "24px" }} />
                 </IconButton>
             </Tooltip>
             <Menu
@@ -51,9 +44,10 @@ const AccountTools = () => {
                 onClose={handleCloseUserMenu}
             >
                 {settings.map((setting) => (
-                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                        <Typography textAlign="center">{setting}</Typography>
-                    </MenuItem>
+                    <AvatarSettings
+                        label={setting}
+                        handleCloseMenu={handleCloseUserMenu}
+                    />
                 ))}
             </Menu>
             <IconButton>

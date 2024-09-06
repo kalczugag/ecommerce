@@ -39,6 +39,8 @@ export const getUsersByRole = async (
             .json({ data: filteredUsers, count: totalDocuments });
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res
+            .status(500)
+            .json({ data: [], error: "Internal server error" });
     }
 };

@@ -23,6 +23,8 @@ export const getAllUsers = async (
         return res.status(200).json({ data: users, count: totalDocuments });
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res
+            .status(500)
+            .json({ data: [], error: "Internal server error" });
     }
 };
