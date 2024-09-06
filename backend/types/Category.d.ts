@@ -1,6 +1,7 @@
 import { ParsedQs } from "qs";
 
 export interface Category {
+    _id?: string;
     name: string;
     description?: string;
     parentCategory?: string | Category;
