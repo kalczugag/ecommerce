@@ -7,10 +7,10 @@ import {
 } from "@/utils/helpers";
 
 export const updateVisitorCount = async (
-    req: express.Request<{}, {}, { isLoggedIn: boolean }>,
+    req: express.Request<{}, {}, { isLoggedIn?: boolean }>,
     res: express.Response
 ) => {
-    const { isLoggedIn } = req.body;
+    const { isLoggedIn = false } = req.body;
 
     const now = new Date();
     const startOfWeek = getStartOfThisWeek();

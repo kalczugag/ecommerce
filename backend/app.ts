@@ -3,7 +3,6 @@ import express from "express";
 import { summaryCronJob } from "./config/cronJob";
 
 import cors from "cors";
-import path from "path";
 
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
@@ -26,16 +25,16 @@ app.post("/trigger-summary-cron", (req, res) => {
     res.status(200).send("Summary cron job triggered");
 });
 
-if (process.env.NODE_ENV === "production") {
-    const clientBuildPath = path.join(__dirname, "../../frontend/build");
+// if (process.env.NODE_ENV === "production") {
+//     const clientBuildPath = path.join(__dirname, "../../frontend/build");
 
-    app.use(
-        express.static(clientBuildPath, { maxAge: 30 * 24 * 60 * 60 * 1000 })
-    );
+//     app.use(
+//         express.static(clientBuildPath, { maxAge: 30 * 24 * 60 * 60 * 1000 })
+//     );
 
-    app.get("*", (req, res) => {
-        res.sendFile(path.join(clientBuildPath, "index.html"));
-    });
-}
+//     app.get("*", (req, res) => {
+//         res.sendFile(path.join(clientBuildPath, "index.html"));
+//     });
+// }
 
 export default app;
