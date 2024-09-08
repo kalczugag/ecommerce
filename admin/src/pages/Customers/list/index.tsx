@@ -15,7 +15,7 @@ const CustomersList = () => {
         pageSize,
     };
 
-    const { data, isLoading } = useGetUsersByRoleQuery(args);
+    const { data, isFetching } = useGetUsersByRoleQuery(args);
     const [deleteUser, result] = useDeleteUserMutation();
 
     const sortFn = (values: any) => {
@@ -27,7 +27,7 @@ const CustomersList = () => {
         tableData: data?.data || [],
         total: data?.count || 0,
         action: deleteUser,
-        isLoading: isLoading || result.isLoading,
+        isLoading: isFetching || result.isLoading,
     };
 
     return (

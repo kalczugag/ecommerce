@@ -1,5 +1,9 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useGetProductByIdQuery, useEditProductMutation } from "@/store";
+import {
+    useGetProductByIdQuery,
+    useEditProductMutation,
+    useGetGroupedCategoriesQuery,
+} from "@/store";
 import { useTitle } from "@/hooks/useTitle";
 import NotFound from "@/components/NotFound";
 import type { Product } from "@/types/Product";
@@ -12,10 +16,19 @@ const ProductsEdit = () => {
     const navigate = useNavigate();
     useTitle("Products - Edit");
 
-    const { data, isError, isLoading } = useGetProductByIdQuery(id || "");
+    const { data: categoriesData, isLoading: categoriesLoading } =
+        useGetGroupedCategoriesQuery({
+            sorted: true,
+            named: true,
+        });
+    const {
+        data: productsData,
+        isError,
+        isLoading: productsLoading,
+    } = useGetProductByIdQuery(id || "");
     const [editProduct, result] = useEditProductMutation();
 
-    if (isError || (!isLoading && !data)) return <NotFound />;
+    if (isError || (!productsLoading && !productsData)) return <NotFound />;
 
     const handleSubmit = async (values: Product) => {
         await editProduct(values);
@@ -26,10 +39,18 @@ const ProductsEdit = () => {
         <CrudModule
             actionForm={
                 <UpdateForm
-                    initialValues={data}
+                    initialValues={productsData}
                     handleSubmit={handleSubmit}
-                    isLoading={isLoading || result.isLoading}
-                    formElements={<ProductForm isLoading={result.isLoading} />}
+                    isLoading={
+                        productsLoading || categoriesLoading || result.isLoading
+                    }
+                    formElements={
+                        <ProductForm
+                            data={categoriesData?.data}
+                            isLoading={result.isLoading}
+                            isUpdateForm
+                        />
+                    }
                 />
             }
         />

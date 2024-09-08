@@ -1,4 +1,4 @@
-import { useAddProductMutation, useGetAllCategoriesQuery } from "@/store";
+import { useAddProductMutation, useGetGroupedCategoriesQuery } from "@/store";
 import CreateForm from "@/components/CreateForm";
 import CrudModule from "@/modules/CrudModule";
 import type { Product } from "@/types/Product";
@@ -8,12 +8,31 @@ import { useNavigate } from "react-router-dom";
 const ProductAdd = () => {
     const navigate = useNavigate();
 
-    const { data, isLoading } = useGetAllCategoriesQuery({});
+    const { data, isLoading } = useGetGroupedCategoriesQuery({
+        sorted: true,
+        named: true,
+    });
     const [addProduct, result] = useAddProductMutation();
 
     const handleSubmit = async (values: Product) => {
-        await addProduct(values);
-        navigate(-1);
+        await addProduct({
+            ...values,
+            size: [
+                {
+                    name: "S",
+                    quantity: 20,
+                },
+                {
+                    name: "M",
+                    quantity: 30,
+                },
+                {
+                    name: "L",
+                    quantity: 50,
+                },
+            ],
+        });
+        navigate("/products");
     };
 
     return (
@@ -22,7 +41,12 @@ const ProductAdd = () => {
                 <CreateForm
                     handleSubmit={handleSubmit}
                     isLoading={result.isLoading}
-                    formElements={<ProductForm isLoading={result.isLoading} />}
+                    formElements={
+                        <ProductForm
+                            data={data?.data}
+                            isLoading={result.isLoading || isLoading}
+                        />
+                    }
                 />
             }
         />

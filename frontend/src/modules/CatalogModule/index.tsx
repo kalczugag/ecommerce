@@ -51,11 +51,7 @@ const CatalogModule = ({ config, handleSubmit }: CatalogModuleProps) => {
                     onSubmit={handleSubmit}
                 />
                 {filteredData.length > 0 ? (
-                    <ProductsList
-                        data={filteredData}
-                        page={page}
-                        rowsPerPage={pageSize}
-                    />
+                    <ProductsList data={filteredData} />
                 ) : (
                     <div>No products available for this category.</div>
                 )}

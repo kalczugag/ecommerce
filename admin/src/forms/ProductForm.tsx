@@ -8,12 +8,15 @@ import {
 } from "@mui/material";
 import { required, mustBeNumber, minValue, compose } from "@/utils/validators";
 import Row from "@/components/Row";
+import { GroupedCategories } from "@/types/Category";
 
 interface CustomerFormProps {
+    data?: GroupedCategories;
+    isUpdateForm?: boolean;
     isLoading: boolean;
 }
 
-const ProductForm = ({ isLoading }: CustomerFormProps) => {
+const ProductForm = ({ data, isLoading, isUpdateForm }: CustomerFormProps) => {
     return (
         <div className="space-y-4">
             <Field name="imageUrl" validate={required}>
@@ -94,6 +97,7 @@ const ProductForm = ({ isLoading }: CustomerFormProps) => {
                 <Field
                     name="quantity"
                     type="number"
+                    defaultValue={150}
                     validate={compose(required, mustBeNumber, minValue(0))}
                 >
                     {(props) => (
@@ -137,11 +141,7 @@ const ProductForm = ({ isLoading }: CustomerFormProps) => {
                         />
                     )}
                 </Field>
-                <Field
-                    name="discountedPrice"
-                    type="number"
-                    validate={compose(mustBeNumber, minValue(0))}
-                >
+                <Field name="discountedPrice" type="number">
                     {(props) => (
                         <TextField
                             label="Discounted Price"
@@ -159,11 +159,7 @@ const ProductForm = ({ isLoading }: CustomerFormProps) => {
                         />
                     )}
                 </Field>
-                <Field
-                    name="discountPercent"
-                    type="number"
-                    validate={compose(mustBeNumber, minValue(0))}
-                >
+                <Field name="discountPercent" type="number">
                     {(props) => (
                         <TextField
                             label="Discount Percentage"
@@ -202,7 +198,15 @@ const ProductForm = ({ isLoading }: CustomerFormProps) => {
                 )}
             </Field>
             <Row label="Categories">
-                <Field name="topLevelCategory" type="select">
+                <Field
+                    name={
+                        isUpdateForm
+                            ? "topLevelCategory._id"
+                            : "topLevelCategory"
+                    }
+                    type="select"
+                    validate={required}
+                >
                     {(props) => (
                         <FormControl fullWidth>
                             <InputLabel>Top Level</InputLabel>
@@ -213,11 +217,25 @@ const ProductForm = ({ isLoading }: CustomerFormProps) => {
                                 error={props.meta.error && props.meta.touched}
                             >
                                 <MenuItem value="">None</MenuItem>
+                                {data?.topLevelCategories &&
+                                    data?.topLevelCategories.map((cat) => (
+                                        <MenuItem key={cat._id} value={cat._id}>
+                                            {cat.name}
+                                        </MenuItem>
+                                    ))}
                             </Select>
                         </FormControl>
                     )}
                 </Field>
-                <Field name="secondLevelCategory" type="select">
+                <Field
+                    name={
+                        isUpdateForm
+                            ? "secondLevelCategory._id"
+                            : "secondLevelCategory"
+                    }
+                    type="select"
+                    validate={required}
+                >
                     {(props) => (
                         <FormControl fullWidth>
                             <InputLabel>Second Level</InputLabel>
@@ -228,11 +246,25 @@ const ProductForm = ({ isLoading }: CustomerFormProps) => {
                                 error={props.meta.error && props.meta.touched}
                             >
                                 <MenuItem value="">None</MenuItem>
+                                {data?.secondLevelCategories &&
+                                    data?.secondLevelCategories.map((cat) => (
+                                        <MenuItem key={cat._id} value={cat._id}>
+                                            {cat.name}
+                                        </MenuItem>
+                                    ))}
                             </Select>
                         </FormControl>
                     )}
                 </Field>
-                <Field name="thirdLevelCategory" type="select">
+                <Field
+                    name={
+                        isUpdateForm
+                            ? "thirdLevelCategory._id"
+                            : "thirdLevelCategory"
+                    }
+                    type="select"
+                    validate={required}
+                >
                     {(props) => (
                         <FormControl fullWidth>
                             <InputLabel>Third Level</InputLabel>
@@ -243,6 +275,12 @@ const ProductForm = ({ isLoading }: CustomerFormProps) => {
                                 error={props.meta.error && props.meta.touched}
                             >
                                 <MenuItem value="">None</MenuItem>
+                                {data?.thirdLevelCategories &&
+                                    data?.thirdLevelCategories.map((cat) => (
+                                        <MenuItem key={cat._id} value={cat._id}>
+                                            {cat.name}
+                                        </MenuItem>
+                                    ))}
                             </Select>
                         </FormControl>
                     )}

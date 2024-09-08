@@ -1,5 +1,5 @@
 import { apiSlice } from "./apiSlice";
-import type { Category } from "@/types/Category";
+import type { Category, GroupedCategories } from "@/types/Category";
 
 export const categoryApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
@@ -15,6 +15,9 @@ export const categoryApi = apiSlice.injectEndpoints({
                 if (params?.pageSize !== undefined) {
                     queryParams.pageSize = params.pageSize.toString();
                 }
+                if (params?.named !== undefined) {
+                    queryParams.named = params.named.toString();
+                }
                 return {
                     url: "/categories",
                     method: "GET",
@@ -29,6 +32,33 @@ export const categoryApi = apiSlice.injectEndpoints({
                           id: category._id,
                       }))
                     : [{ type: "Categories", id: "LIST" }],
+        }),
+
+        getGroupedCategories: builder.query<
+            ApiResponseObject<GroupedCategories>,
+            Paginate | void
+        >({
+            query: (params = {}) => {
+                const queryParams: Record<string, string> = {};
+                if (params?.page !== undefined) {
+                    queryParams.page = params.page.toString();
+                }
+                if (params?.pageSize !== undefined) {
+                    queryParams.pageSize = params.pageSize.toString();
+                }
+                if (params?.sorted !== undefined) {
+                    queryParams.sorted = params.sorted.toString();
+                }
+                if (params?.named !== undefined) {
+                    queryParams.named = params.named.toString();
+                }
+                return {
+                    url: "/categories",
+                    method: "GET",
+                    params: queryParams,
+                    keepUnusedDataFor: 300,
+                };
+            },
         }),
 
         getCategoryById: builder.query<Category, string>({
@@ -93,6 +123,7 @@ export const categoryApi = apiSlice.injectEndpoints({
 
 export const {
     useGetAllCategoriesQuery,
+    useGetGroupedCategoriesQuery,
     useGetCategoryByIdQuery,
     useGetCategoriesByLevelQuery,
     useGetChildrensQuery,

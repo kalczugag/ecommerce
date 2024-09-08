@@ -9,7 +9,7 @@ const OrdersList = () => {
     const pagination = usePagination();
     useTitle("Orders");
 
-    const { data, isLoading } = useGetAllOrdersQuery(pagination);
+    const { data, isFetching } = useGetAllOrdersQuery(pagination);
 
     const sortFn = (values: any) => {
         console.log(values);
@@ -19,7 +19,7 @@ const OrdersList = () => {
         tableConfig,
         tableData: data?.data || [],
         total: data?.count || 0,
-        isLoading,
+        isLoading: isFetching,
     };
 
     return (

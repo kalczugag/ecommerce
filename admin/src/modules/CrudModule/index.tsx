@@ -20,8 +20,6 @@ interface CrudModuleProps {
 const CrudModule = ({ config, actionForm }: CrudModuleProps) => {
     const hasTableConfig = config && config.tableConfig && config.tableData;
 
-    console.log(config?.tableData);
-
     const enhancedTableData =
         config?.tableData && config?.action
             ? config.tableData.map((row) => ({

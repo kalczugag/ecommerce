@@ -15,6 +15,7 @@ interface ApiResponseObject<T> {
 interface Paginate {
     category?: string;
     sorted?: boolean;
+    named?: boolean;
     page?: number;
     pageSize?: number;
 }

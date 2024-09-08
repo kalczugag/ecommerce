@@ -43,8 +43,9 @@ const AccountTools = () => {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
             >
-                {settings.map((setting) => (
+                {settings.map((setting, index) => (
                     <AvatarSettings
+                        key={setting + "_" + index}
                         label={setting}
                         handleCloseMenu={handleCloseUserMenu}
                     />
