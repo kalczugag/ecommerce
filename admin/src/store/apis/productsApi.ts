@@ -3,7 +3,10 @@ import type { Product } from "@/types/Product";
 
 export const productApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        getAllProducts: builder.query<ApiResponse<Product>, Paginate | void>({
+        getAllProducts: builder.query<
+            ApiResponseArray<Product>,
+            Paginate | void
+        >({
             query: (params = {}) => {
                 const queryParams: Record<string, string> = {};
                 if (params?.page !== undefined) {

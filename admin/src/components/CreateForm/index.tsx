@@ -8,6 +8,7 @@ import Review from "../Review";
 
 interface CreateFormProps {
     formElements: ReactNode;
+    initialValues?: any;
     isLoading: boolean;
     handleSubmit: (values: any) => void;
 }
@@ -15,6 +16,7 @@ interface CreateFormProps {
 const CreateForm = ({
     handleSubmit,
     formElements,
+    initialValues,
     isLoading,
 }: CreateFormProps) => {
     const navigate = useNavigate();
@@ -23,6 +25,7 @@ const CreateForm = ({
         <Loading isLoading={isLoading}>
             <Form
                 onSubmit={handleSubmit}
+                initialValues={initialValues}
                 render={({ handleSubmit, values }) => (
                     <form onSubmit={handleSubmit}>
                         {formElements}

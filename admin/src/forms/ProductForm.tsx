@@ -1,5 +1,11 @@
 import { Field } from "react-final-form";
-import { TextField } from "@mui/material";
+import {
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
+    TextField,
+} from "@mui/material";
 import { required, mustBeNumber, minValue, compose } from "@/utils/validators";
 import Row from "@/components/Row";
 
@@ -195,6 +201,53 @@ const ProductForm = ({ isLoading }: CustomerFormProps) => {
                     />
                 )}
             </Field>
+            <Row label="Categories">
+                <Field name="topLevelCategory" type="select">
+                    {(props) => (
+                        <FormControl fullWidth>
+                            <InputLabel>Top Level</InputLabel>
+                            <Select
+                                value={props.input.value}
+                                label="Top Level"
+                                onChange={props.input.onChange}
+                                error={props.meta.error && props.meta.touched}
+                            >
+                                <MenuItem value="">None</MenuItem>
+                            </Select>
+                        </FormControl>
+                    )}
+                </Field>
+                <Field name="secondLevelCategory" type="select">
+                    {(props) => (
+                        <FormControl fullWidth>
+                            <InputLabel>Second Level</InputLabel>
+                            <Select
+                                value={props.input.value}
+                                label="Second Level"
+                                onChange={props.input.onChange}
+                                error={props.meta.error && props.meta.touched}
+                            >
+                                <MenuItem value="">None</MenuItem>
+                            </Select>
+                        </FormControl>
+                    )}
+                </Field>
+                <Field name="thirdLevelCategory" type="select">
+                    {(props) => (
+                        <FormControl fullWidth>
+                            <InputLabel>Third Level</InputLabel>
+                            <Select
+                                value={props.input.value}
+                                label="Third Level"
+                                onChange={props.input.onChange}
+                                error={props.meta.error && props.meta.touched}
+                            >
+                                <MenuItem value="">None</MenuItem>
+                            </Select>
+                        </FormControl>
+                    )}
+                </Field>
+            </Row>
         </div>
     );
 };

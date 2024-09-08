@@ -7,7 +7,7 @@ interface fetchArgs extends Paginate {
 
 export const userApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        getAllUsers: builder.query<ApiResponse<User>, Paginate | void>({
+        getAllUsers: builder.query<ApiResponseArray<User>, Paginate | void>({
             query: (params = {}) => {
                 const queryParams: Record<string, string> = {};
                 if (params?.page !== undefined) {
@@ -32,7 +32,7 @@ export const userApi = apiSlice.injectEndpoints({
                     : [{ type: "Users", id: "LIST" }],
         }),
 
-        getUsersByRole: builder.query<ApiResponse<User>, fetchArgs>({
+        getUsersByRole: builder.query<ApiResponseArray<User>, fetchArgs>({
             query: ({ roleName, page, pageSize }) => {
                 const queryParams: Record<string, string> = {};
                 if (page !== undefined) {

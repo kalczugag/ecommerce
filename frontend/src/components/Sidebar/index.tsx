@@ -35,10 +35,11 @@ interface SidebarProps {
         availableSizes: string[];
         maxPrice: number;
     };
+    disabled?: boolean;
     onSubmit: (values: any) => void;
 }
 
-const Sidebar = ({ data, onSubmit }: SidebarProps) => {
+const Sidebar = ({ data, disabled, onSubmit }: SidebarProps) => {
     return (
         <Form
             onSubmit={onSubmit}
@@ -78,6 +79,7 @@ const Sidebar = ({ data, onSubmit }: SidebarProps) => {
                                                         )
                                                     }
                                                     label={`${color.color} (${color.count})`}
+                                                    disabled={disabled}
                                                 />
                                             )
                                         )}
@@ -115,6 +117,7 @@ const Sidebar = ({ data, onSubmit }: SidebarProps) => {
                                                         input.onChange(size)
                                                     }
                                                     label={size}
+                                                    disabled={disabled}
                                                 />
                                             )
                                         )}
@@ -149,6 +152,7 @@ const Sidebar = ({ data, onSubmit }: SidebarProps) => {
                                             max={data?.maxPrice}
                                             valueLabelDisplay="auto"
                                             getAriaValueText={valuetext}
+                                            disabled={disabled}
                                             disableSwap
                                         />
                                     </AccordionDetails>
@@ -180,6 +184,7 @@ const Sidebar = ({ data, onSubmit }: SidebarProps) => {
                                             max={100}
                                             valueLabelDisplay="auto"
                                             getAriaValueText={valuetext}
+                                            disabled={disabled}
                                             disableSwap
                                         />
                                     </AccordionDetails>

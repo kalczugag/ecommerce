@@ -1,4 +1,4 @@
-import { useAddProductMutation } from "@/store";
+import { useAddProductMutation, useGetAllCategoriesQuery } from "@/store";
 import CreateForm from "@/components/CreateForm";
 import CrudModule from "@/modules/CrudModule";
 import type { Product } from "@/types/Product";
@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 const ProductAdd = () => {
     const navigate = useNavigate();
 
+    const { data, isLoading } = useGetAllCategoriesQuery({});
     const [addProduct, result] = useAddProductMutation();
 
     const handleSubmit = async (values: Product) => {

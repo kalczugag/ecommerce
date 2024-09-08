@@ -49,24 +49,26 @@ const CustomerForm = ({ isLoading }: CustomerFormProps) => {
             </Row>
             {/* <Field name="role"></Field>
             <Field name="birthday"></Field> */}
-            <Field name="address.street">
-                {(props) => (
-                    <TextField
-                        label="Street"
-                        name={props.input.name}
-                        value={props.input.value}
-                        onChange={props.input.onChange}
-                        error={props.meta.error && props.meta.touched}
-                        helperText={
-                            props.meta.error && props.meta.touched
-                                ? props.meta.error
-                                : null
-                        }
-                        disabled={isLoading}
-                        fullWidth
-                    />
-                )}
-            </Field>
+            <Row label="Address">
+                <Field name="address.street">
+                    {(props) => (
+                        <TextField
+                            label="Street"
+                            name={props.input.name}
+                            value={props.input.value}
+                            onChange={props.input.onChange}
+                            error={props.meta.error && props.meta.touched}
+                            helperText={
+                                props.meta.error && props.meta.touched
+                                    ? props.meta.error
+                                    : null
+                            }
+                            disabled={isLoading}
+                            fullWidth
+                        />
+                    )}
+                </Field>
+            </Row>
             <Row>
                 <Field name="address.city">
                     {(props) => (
@@ -141,7 +143,7 @@ const CustomerForm = ({ isLoading }: CustomerFormProps) => {
                     />
                 )}
             </Field>
-            <Row>
+            <Row label="Contact">
                 <Field name="phone">
                     {(props) => (
                         <TextField

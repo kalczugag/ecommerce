@@ -9,7 +9,7 @@ type orderSummary = {
 
 export const orderApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        getAllOrders: builder.query<ApiResponse<Order>, Paginate | void>({
+        getAllOrders: builder.query<ApiResponseArray<Order>, Paginate | void>({
             query: (params = {}) => {
                 const queryParams: Record<string, string> = {};
                 if (params?.page !== undefined) {

@@ -45,7 +45,11 @@ const CatalogModule = ({ config, handleSubmit }: CatalogModuleProps) => {
                     />
                 }
             >
-                <Sidebar data={simplifiedData} onSubmit={handleSubmit} />
+                <Sidebar
+                    data={simplifiedData}
+                    disabled={!filteredData.length}
+                    onSubmit={handleSubmit}
+                />
                 {filteredData.length > 0 ? (
                     <ProductsList
                         data={filteredData}
