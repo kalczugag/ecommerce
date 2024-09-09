@@ -2,12 +2,13 @@ import express from "express";
 import { ProductModel } from "@/models/Product";
 import { CategoryModel } from "@/models/Categories";
 import { PaginatedProducts } from "@/types/Product";
+import { Category } from "@/types/Category";
 
 export const getAllProducts = async (
     req: express.Request<{}, {}, {}, PaginatedProducts>,
     res: express.Response
 ) => {
-    const { category, page = 0, pageSize = 5 } = req.query;
+    const { category, page, pageSize } = req.query;
 
     const query: Record<string, unknown> = {};
 
@@ -23,11 +24,25 @@ export const getAllProducts = async (
                         (name) => new RegExp(`^${name}$`, "i")
                     ),
                 },
-            }).exec();
+            })
+                .populate("parentCategory", "name _id")
+                .exec();
+
+            if (!categories || categories.length === 0) {
+                return res.status(404).json({ error: "Category not found" });
+            }
 
             const categoryMap = categories.reduce(
                 (acc: Record<string, string>, cat) => {
-                    acc[cat.name.toLowerCase()] = cat._id;
+                    const parentName = (
+                        cat.parentCategory as Category
+                    )?.name.toLowerCase();
+                    const currentName = cat.name.toLowerCase();
+
+                    console.log(parentName, currentName);
+                    if (parentName || parentName !== currentName) {
+                        acc[currentName] = cat._id;
+                    }
                     return acc;
                 },
                 {}

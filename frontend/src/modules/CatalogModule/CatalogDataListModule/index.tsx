@@ -1,35 +1,33 @@
-import { SimplifiedDataProps, FilterProps } from "@/hooks/useFilter";
+import { useFilterProps, useFilter } from "@/hooks/useFilter";
 import DefaultLayout from "@/layouts/DefaultLayout";
 import { Pagination } from "@mui/material";
 import Sidebar from "@/components/Sidebar";
-import ProductsList from "./components/ProductsList";
+import ProductsList from "../components/ProductsList";
 import Loading from "@/components/Loading";
+import { Product } from "@/types/Product";
 
-interface CatalogModuleProps {
+interface CatalogDataListModuleProps {
     config: {
+        data: Product[];
         pageSize: number;
         page: number;
         total: number;
         isLoading: boolean;
-        filteredData: FilterProps["filteredData"];
-        simplifiedData: SimplifiedDataProps;
         handlePageChange: (
             event: React.ChangeEvent<unknown>,
             value: number
         ) => void;
     };
-    handleSubmit: FilterProps["handleSubmit"];
 }
 
-const CatalogModule = ({ config, handleSubmit }: CatalogModuleProps) => {
-    const {
-        pageSize,
-        page,
-        isLoading,
-        filteredData,
-        simplifiedData,
-        handlePageChange,
-    } = config;
+const CatalogDataListModule = ({ config }: CatalogDataListModuleProps) => {
+    const { data, pageSize, page, isLoading, handlePageChange } = config;
+
+    const simplifiedData = useFilterProps(data || []);
+    const { handleSubmit, filteredData } = useFilter(
+        data || [],
+        simplifiedData.maxPrice
+    );
 
     const count = Math.ceil(config.total / pageSize);
 
@@ -60,4 +58,4 @@ const CatalogModule = ({ config, handleSubmit }: CatalogModuleProps) => {
     );
 };
 
-export default CatalogModule;
+export default CatalogDataListModule;
