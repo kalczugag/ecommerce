@@ -8,7 +8,7 @@ export const getAllProducts = async (
     req: express.Request<{}, {}, {}, PaginatedProducts>,
     res: express.Response
 ) => {
-    const { category, page, pageSize } = req.query;
+    const { category, page = 0, pageSize = 8 } = req.query;
 
     const query: Record<string, unknown> = {};
 
@@ -33,16 +33,27 @@ export const getAllProducts = async (
             }
 
             const categoryMap = categories.reduce(
-                (acc: Record<string, string>, cat) => {
-                    const parentName = (
+                (
+                    acc: Record<
+                        string,
+                        { id: string; parentId: string | undefined }[]
+                    >,
+                    cat
+                ) => {
+                    const parentCategoryId = (
                         cat.parentCategory as Category
-                    )?.name.toLowerCase();
-                    const currentName = cat.name.toLowerCase();
+                    )?._id?.toString();
+                    const currentCategoryId = cat._id.toString();
+                    const currentCategoryName = cat.name.toLowerCase();
 
-                    console.log(parentName, currentName);
-                    if (parentName || parentName !== currentName) {
-                        acc[currentName] = cat._id;
+                    if (!acc[currentCategoryName]) {
+                        acc[currentCategoryName] = [];
                     }
+                    acc[currentCategoryName].push({
+                        id: currentCategoryId,
+                        parentId: parentCategoryId,
+                    });
+
                     return acc;
                 },
                 {}
@@ -51,19 +62,23 @@ export const getAllProducts = async (
             if (categoryNames.length > 0) {
                 const topLevelCategoryId = categoryMap[categoryNames[0]];
                 if (topLevelCategoryId)
-                    query.topLevelCategory = topLevelCategoryId;
+                    query.topLevelCategory = topLevelCategoryId[0].id;
             }
 
+            //make double check conditional
             if (categoryNames.length > 1) {
+                const topLevelCategoryId = categoryMap[categoryNames[0]];
                 const secondLevelCategoryId = categoryMap[categoryNames[1]];
                 if (secondLevelCategoryId)
-                    query.secondLevelCategory = secondLevelCategoryId;
+                    query.secondLevelCategory = secondLevelCategoryId.filter(
+                        (cat) => cat.parentId === topLevelCategoryId[0].id
+                    )[0].id;
             }
 
             if (categoryNames.length > 2) {
                 const thirdLevelCategoryId = categoryMap[categoryNames[2]];
                 if (thirdLevelCategoryId)
-                    query.thirdLevelCategory = thirdLevelCategoryId;
+                    query.thirdLevelCategory = thirdLevelCategoryId[0].id;
             }
         } catch (error) {
             return res.status(500).json({ error: "Internal server error" });
