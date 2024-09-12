@@ -13,7 +13,6 @@ const DashboardModule = () => {
                     test
                 </Typography>
             }
-            isDashboard
         >
             <div className="text-xl text-center shadow-md border-y p-10">
                 here will be a slider

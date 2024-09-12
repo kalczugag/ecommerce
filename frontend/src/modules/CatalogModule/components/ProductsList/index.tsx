@@ -11,7 +11,7 @@ const ProductsList = ({ data }: ProductsListProps) => {
             {data.map((product, index) => (
                 <ProductCard
                     key={product.title + "_" + index.toString()}
-                    {...product}
+                    data={product}
                 />
             ))}
         </div>

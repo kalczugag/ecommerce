@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import type { Product } from "@/types/Product";
 
-const ProductCard = ({ data }: { data: Product }) => {
+const DetailsProductCard = ({ data }: { data: Product }) => {
     const price = +data.price.toFixed(2);
     let discountedPrice;
 
@@ -17,13 +17,13 @@ const ProductCard = ({ data }: { data: Product }) => {
     }
 
     return (
-        <Link to={`/product/${data._id}`} className="flex flex-col">
+        <Link to={`/product/${data._id}`} className="flex flex-row space-x-10">
             <div>
                 <img
                     src={data.imageUrl[0]}
                     alt={data.title}
                     loading="lazy"
-                    className="max-h-[450px]"
+                    className="max-h-[850px]"
                 />
             </div>
             <div className="flex flex-col py-4 w-full">
@@ -52,4 +52,4 @@ const ProductCard = ({ data }: { data: Product }) => {
     );
 };
 
-export default ProductCard;
+export default DetailsProductCard;

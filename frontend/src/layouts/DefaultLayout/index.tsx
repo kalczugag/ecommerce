@@ -1,19 +1,20 @@
+import { HTMLAttributes, ReactNode } from "react";
 import { Container, Box } from "@mui/material";
-import { ReactNode } from "react";
 import SortBar from "@/components/SortBar";
 
-interface DefaultPageProps {
+interface DefaultPageProps extends HTMLAttributes<HTMLDivElement> {
     children: ReactNode;
     pagination?: JSX.Element;
     featuredElement?: JSX.Element;
-    isDashboard?: boolean;
+    isCatalog?: boolean;
 }
 
 const DefaultLayout = ({
     children,
     pagination,
     featuredElement,
-    isDashboard,
+    isCatalog = false,
+    ...rest
 }: DefaultPageProps) => {
     return (
         <>
@@ -37,8 +38,10 @@ const DefaultLayout = ({
                     flexDirection: "column",
                     marginY: "40px",
                 }}
+                className={rest.className}
+                {...rest}
             >
-                {!isDashboard && <SortBar />}
+                {isCatalog && <SortBar />}
                 {pagination ? (
                     <div className="flex flex-col">
                         <div className="flex flex-row">{children}</div>

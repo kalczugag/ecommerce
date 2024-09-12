@@ -42,6 +42,7 @@ const CatalogDataListModule = ({ config }: CatalogDataListModuleProps) => {
                         sx={{ marginTop: "60px", alignSelf: "center" }}
                     />
                 }
+                isCatalog
             >
                 <Sidebar
                     data={simplifiedData}
