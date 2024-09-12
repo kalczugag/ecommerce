@@ -18,7 +18,10 @@ const Review = ({ values }: { values: Record<string, unknown> }) => {
                 }
                 return (
                     <div key={key} className="py-1">
-                        <strong>{key}:</strong> {String(values[key])}
+                        <strong>{key}:</strong>{" "}
+                        {String(values[key]).length > 50
+                            ? String(values[key]).slice(0, 50) + "..."
+                            : String(values[key])}
                     </div>
                 );
             })}

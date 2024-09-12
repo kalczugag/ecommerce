@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useTheme, styled } from "@mui/material/styles";
 import {
     Box,
@@ -21,9 +20,8 @@ import {
     LastPage,
 } from "@mui/icons-material";
 import Loading from "../Loading";
-import { setPagination, reset } from "@/store";
-import { useAppDispatch, useAppSelector } from "@/hooks/useStore";
 import type { TableColumnProps } from "@/modules/CrudModule";
+import usePagination from "@/hooks/usePagination";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     wordBreak: "normal",
@@ -129,30 +127,24 @@ const CustomPaginationActionsTable = ({
     totalItems = rowData.length,
     isLoading,
 }: CustomPaginationActionsTableProps) => {
-    const dispatch = useAppDispatch();
-    const { page, pageSize } = useAppSelector((state) => state.table);
+    const [pagination, setPagination] = usePagination();
+    const { page, pageSize } = pagination;
 
     const handleChangePage = (
         event: React.MouseEvent<HTMLButtonElement> | null,
         newPage: number
     ) => {
-        dispatch(setPagination({ page: newPage }));
+        setPagination({ page: newPage });
     };
 
     const handleChangeRowsPerPage = (
         event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
     ) => {
-        dispatch(
-            setPagination({
-                page: 0,
-                pageSize: parseInt(event.target.value, 10),
-            })
-        );
+        setPagination({
+            page: 0,
+            pageSize: parseInt(event.target.value, 10),
+        });
     };
-
-    useEffect(() => {
-        dispatch(reset());
-    }, []);
 
     return (
         <Loading isLoading={isLoading}>
@@ -227,7 +219,7 @@ const CustomPaginationActionsTable = ({
                                 colSpan={headerOptions.length + 1}
                                 count={totalItems}
                                 rowsPerPage={pageSize}
-                                page={page}
+                                page={!totalItems || totalItems <= 0 ? 0 : page}
                                 slotProps={{
                                     select: {
                                         inputProps: {

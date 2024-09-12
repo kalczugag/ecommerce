@@ -1,18 +1,17 @@
 import { useGetUsersByRoleQuery, useDeleteUserMutation } from "@/store";
 import { sortConfig, tableConfig } from "./config";
 import { useTitle } from "@/hooks/useTitle";
-import { usePagination } from "@/hooks/usePagination";
+import usePagination from "@/hooks/usePagination";
 import CrudModule from "@/modules/CrudModule";
 import SortForm from "@/forms/SortForm";
 
 const CustomersList = () => {
-    const { page, pageSize } = usePagination();
+    const [pagination] = usePagination();
     useTitle("Customers");
 
     const args = {
         roleName: "admin",
-        page,
-        pageSize,
+        ...pagination,
     };
 
     const { data, isFetching } = useGetUsersByRoleQuery(args);

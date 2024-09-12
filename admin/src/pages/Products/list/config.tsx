@@ -35,7 +35,7 @@ export const sortConfig = [
 export const tableConfig = [
     {
         label: "Image",
-        render: (row: RowProps) => <Image src={row.imageUrl} alt="Image" />,
+        render: (row: RowProps) => <Image src={row.imageUrl[0]} alt="Image" />,
     },
     {
         label: "Title",

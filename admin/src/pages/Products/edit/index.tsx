@@ -31,15 +31,23 @@ const ProductsEdit = () => {
     if (isError || (!productsLoading && !productsData)) return <NotFound />;
 
     const handleSubmit = async (values: Product) => {
-        await editProduct(values);
+        await editProduct({
+            ...values,
+            imageUrl: (values.imageUrl as string)?.trim().split(",\n"),
+        });
         navigate(-1);
+    };
+
+    const updatedInitialValues = {
+        ...productsData,
+        imageUrl: (productsData?.imageUrl as string[])?.join(",\n"),
     };
 
     return (
         <CrudModule
             actionForm={
                 <UpdateForm
-                    initialValues={productsData}
+                    initialValues={updatedInitialValues}
                     handleSubmit={handleSubmit}
                     isLoading={
                         productsLoading || categoriesLoading || result.isLoading

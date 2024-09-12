@@ -17,6 +17,7 @@ const ProductAdd = () => {
     const handleSubmit = async (values: Product) => {
         await addProduct({
             ...values,
+            imageUrl: (values.imageUrl as string)?.trim().split(","),
             size: [
                 {
                     name: "S",

@@ -2,14 +2,12 @@ import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import sidebarReducer from "./sidebar/sidebarSlice";
 import authReducer from "./auth/authSlice";
-import tableReducer from "./table/tableSlice";
 import { apiSlice } from "./apis/apiSlice";
 
 export const store = configureStore({
     reducer: {
         auth: authReducer,
         sidebar: sidebarReducer,
-        table: tableReducer,
         [apiSlice.reducerPath]: apiSlice.reducer,
     },
     middleware: (getDefaultMiddleware) =>
@@ -24,7 +22,6 @@ export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
 export * from "./sidebar/sidebarSlice";
-export * from "./table/tableSlice";
 export * from "./auth/authSlice";
 export * from "./auth/authApiSlice";
 export * from "./apis/productsApi";

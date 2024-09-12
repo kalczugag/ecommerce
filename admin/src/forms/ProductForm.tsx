@@ -22,7 +22,7 @@ const ProductForm = ({ data, isLoading, isUpdateForm }: CustomerFormProps) => {
             <Field name="imageUrl" validate={required}>
                 {(props) => (
                     <TextField
-                        label="Image URL"
+                        label="Image URL's (Comma separated)"
                         name={props.input.name}
                         value={props.input.value}
                         onChange={props.input.onChange}
@@ -33,6 +33,7 @@ const ProductForm = ({ data, isLoading, isUpdateForm }: CustomerFormProps) => {
                                 : null
                         }
                         disabled={isLoading}
+                        multiline
                         fullWidth
                     />
                 )}

@@ -1,12 +1,12 @@
 import { useGetAllProductsQuery, useDeleteProductMutation } from "@/store";
 import { useTitle } from "@/hooks/useTitle";
-import { usePagination } from "@/hooks/usePagination";
+import usePagination from "@/hooks/usePagination";
 import { sortConfig, tableConfig } from "./config";
 import CrudModule from "@/modules/CrudModule";
 import SortForm from "@/forms/SortForm";
 
 const ProductsList = () => {
-    const pagination = usePagination();
+    const [pagination] = usePagination();
     useTitle("Products");
 
     const { data, isFetching } = useGetAllProductsQuery(pagination);

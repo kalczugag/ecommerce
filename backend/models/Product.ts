@@ -3,7 +3,7 @@ import { CategoryModel } from "./Categories";
 import type { Product } from "@/types/Product";
 
 const productSchema = new mongoose.Schema<Product>({
-    imageUrl: { type: String, required: true },
+    imageUrl: { type: [String], required: true },
     brand: { type: String, required: true },
     title: { type: String, required: true },
     color: { type: String, required: true },

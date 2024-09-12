@@ -2,13 +2,13 @@ import { useNavigate } from "react-router-dom";
 import { useGetAllCategoriesQuery, useDeleteCategoryMutation } from "@/store";
 import { sortConfig, tableConfig } from "./config";
 import { useTitle } from "@/hooks/useTitle";
-import { usePagination } from "@/hooks/usePagination";
+import usePagination from "@/hooks/usePagination";
 import CrudModule from "@/modules/CrudModule";
 import SortForm from "@/forms/SortForm";
 import { Button } from "@mui/material";
 
 const CategoriesList = () => {
-    const pagination = usePagination();
+    const [pagination] = usePagination();
     const navigate = useNavigate();
     useTitle("Categories");
 
