@@ -1,16 +1,23 @@
 import { useState } from "react";
-import { Box, Tooltip, IconButton, Menu, Avatar } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { useLogoutMutation } from "@/store";
+import useAuth from "@/hooks/useAuth";
+import { Box, Tooltip, IconButton, Menu } from "@mui/material";
 import {
     Search,
     LocalMallOutlined,
     PersonOutlineOutlined,
 } from "@mui/icons-material";
-import AvatarSettings from "./AvatarSettings";
+import { AvatarMenuItem, AvatarAuth } from "./AvatarSettings";
 
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const settings = ["Account", "Orders", "Return"];
 
 const AccountTools = () => {
+    const navigate = useNavigate();
+    const { token } = useAuth();
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+
+    const [logout] = useLogoutMutation();
 
     const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElUser(event.currentTarget);
@@ -18,6 +25,12 @@ const AccountTools = () => {
 
     const handleCloseUserMenu = () => {
         setAnchorElUser(null);
+    };
+
+    const handleLogout = async () => {
+        handleCloseUserMenu();
+        await logout();
+        navigate("/login");
     };
 
     return (
@@ -43,13 +56,21 @@ const AccountTools = () => {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
             >
+                <AvatarAuth isAuth={Boolean(token)} />
                 {settings.map((setting, index) => (
-                    <AvatarSettings
+                    <AvatarMenuItem
                         key={setting + "_" + index}
                         label={setting}
-                        handleCloseMenu={handleCloseUserMenu}
+                        action={handleCloseUserMenu}
                     />
                 ))}
+                {!token && (
+                    <AvatarMenuItem
+                        key="logout"
+                        label="Logout"
+                        action={handleLogout}
+                    />
+                )}
             </Menu>
             <IconButton>
                 <Search />

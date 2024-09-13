@@ -89,12 +89,7 @@ const Header = ({ deliveryBar }: HeaderProps) => {
                                 </Link>
                             </div>
                         </div>
-                        <Box
-                            sx={{
-                                flexGrow: 1,
-                                display: { xs: "none", md: "flex" },
-                            }}
-                        >
+                        <Box className="hidden flex-grow md:flex">
                             {data?.data
                                 ? data?.data.topLevelCategories.map(
                                       ({ name }) => (

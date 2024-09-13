@@ -44,7 +44,9 @@ const DefaultLayout = ({
                 {isCatalog && <SortBar />}
                 {pagination ? (
                     <div className="flex flex-col">
-                        <div className="flex flex-row">{children}</div>
+                        <div className="flex flex-row justify-center md:justify-normal">
+                            {children}
+                        </div>
                         {pagination}
                     </div>
                 ) : (

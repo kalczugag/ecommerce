@@ -1,6 +1,7 @@
-import { useUpdateVisitorCountMutation } from "@/store/apis/summaryApi";
 import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
+import { useUpdateVisitorCountMutation } from "@/store/apis/summaryApi";
+import Layout from "@/layouts/Layout";
 
 const PrivateOutlet = () => {
     const [updateView] = useUpdateVisitorCountMutation();
@@ -10,9 +11,9 @@ const PrivateOutlet = () => {
     }, []);
 
     return (
-        <>
+        <Layout>
             <Outlet />
-        </>
+        </Layout>
     );
 };
 
