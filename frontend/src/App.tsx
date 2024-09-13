@@ -1,8 +1,8 @@
 import { Route, Routes } from "react-router-dom";
 import Layout from "@/layouts/Layout";
 import Dashboard from "@/pages/Dashboard";
-import Catalog from "@/pages/Catalog";
-import ProductDetails from "@/pages/ProductDetails";
+import Catalog from "@/pages/Products/list";
+import ProductDetails from "@/pages/Products/details";
 import PrivateOutlet from "@/pages/PrivateOutlet";
 
 const App = () => {

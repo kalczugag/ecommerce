@@ -6,7 +6,7 @@ import ProductsList from "../components/ProductsList";
 import Loading from "@/components/Loading";
 import { Product } from "@/types/Product";
 
-interface CatalogDataListModuleProps {
+interface ProductsDataListModuleProps {
     config: {
         data: Product[];
         pageSize: number;
@@ -20,7 +20,7 @@ interface CatalogDataListModuleProps {
     };
 }
 
-const CatalogDataListModule = ({ config }: CatalogDataListModuleProps) => {
+const ProductsDataListModule = ({ config }: ProductsDataListModuleProps) => {
     const { data, pageSize, page, isLoading, handlePageChange } = config;
 
     const simplifiedData = useFilterProps(data || []);
@@ -59,4 +59,4 @@ const CatalogDataListModule = ({ config }: CatalogDataListModuleProps) => {
     );
 };
 
-export default CatalogDataListModule;
+export default ProductsDataListModule;

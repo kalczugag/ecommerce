@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useGetAllProductsQuery } from "@/store";
 import usePagination from "@/hooks/usePagination";
-import CatalogDataListModule from "@/modules/CatalogModule/CatalogDataListModule";
+import ProductsDataListModule from "@/modules/ProductsModule/ProductsDataListModule";
 
 const ROWS_PER_PAGE = 8;
 
@@ -28,7 +28,7 @@ const Catalog = () => {
         handlePageChange,
     };
 
-    return <CatalogDataListModule config={config} />;
+    return <ProductsDataListModule config={config} />;
 };
 
 export default Catalog;

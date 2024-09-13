@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useGetProductByIdQuery } from "@/store";
-import ReadCatalogModule from "@/modules/CatalogModule/ReadCatalogModule";
+import ReadProductModule from "@/modules/ProductsModule/ReadProductModule";
 import NotFound from "@/components/NotFound";
 
 const ProductDetails = () => {
@@ -13,7 +13,7 @@ const ProductDetails = () => {
         isLoading,
     };
 
-    return <ReadCatalogModule config={config} data={data} />;
+    return <ReadProductModule config={config} data={data} />;
 };
 
 export default ProductDetails;

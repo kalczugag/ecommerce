@@ -3,14 +3,14 @@ import DetailsProductCard from "../components/DetailsProductCard";
 import Loading from "@/components/Loading";
 import type { Product } from "@/types/Product";
 
-interface ReadCatalogModuleProps {
+interface ReadProductModuleProps {
     config: {
         isLoading: boolean;
     };
     data?: Product;
 }
 
-const ReadCatalogModule = ({ config, data }: ReadCatalogModuleProps) => {
+const ReadProductModule = ({ config, data }: ReadProductModuleProps) => {
     const { isLoading } = config;
 
     return (
@@ -22,4 +22,4 @@ const ReadCatalogModule = ({ config, data }: ReadCatalogModuleProps) => {
     );
 };
 
-export default ReadCatalogModule;
+export default ReadProductModule;
