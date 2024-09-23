@@ -22,7 +22,6 @@ export const productApi = apiSlice.injectEndpoints({
                     url: "/products",
                     method: "GET",
                     params: queryParams,
-                    keepUnusedDataFor: 300,
                 };
             },
             providesTags: (result) =>
@@ -32,6 +31,13 @@ export const productApi = apiSlice.injectEndpoints({
                           id: product._id,
                       }))
                     : [{ type: "Products", id: "LIST" }],
+        }),
+
+        getRandomProduct: builder.query<Product, void>({
+            query: () => ({
+                url: "/products?random=true",
+                method: "GET",
+            }),
         }),
 
         getProductById: builder.query<Product, string>({
@@ -44,4 +50,8 @@ export const productApi = apiSlice.injectEndpoints({
     }),
 });
 
-export const { useGetAllProductsQuery, useGetProductByIdQuery } = productApi;
+export const {
+    useGetAllProductsQuery,
+    useGetProductByIdQuery,
+    useGetRandomProductQuery,
+} = productApi;

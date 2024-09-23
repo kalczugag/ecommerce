@@ -26,6 +26,10 @@ const DefaultLayout = ({
                         bgcolor: "#80203D",
                         color: "white",
                         marginY: "40px",
+                        padding: "20px",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
                     }}
                 >
                     {featuredElement}

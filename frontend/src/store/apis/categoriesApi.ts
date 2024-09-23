@@ -16,7 +16,6 @@ export const categoryApi = apiSlice.injectEndpoints({
                     url: "/categories",
                     method: "GET",
                     params: queryParams,
-                    keepUnusedDataFor: 300,
                 };
             },
         }),

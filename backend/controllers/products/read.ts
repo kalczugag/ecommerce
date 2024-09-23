@@ -4,11 +4,15 @@ import { CategoryModel } from "@/models/Categories";
 import { PaginatedProducts } from "@/types/Product";
 import { Category } from "@/types/Category";
 
+// Returns an array of products paginated by page and pageSize query parameters.
+// If query parameter 'random' is present, returns a single random product.
+// If query parameter 'category' is present, filters products by category name.
+
 export const getAllProducts = async (
     req: express.Request<{}, {}, {}, PaginatedProducts>,
     res: express.Response
 ) => {
-    const { category, page = 0, pageSize = 8 } = req.query;
+    const { random, category, page = 0, pageSize = 8 } = req.query;
 
     const query: Record<string, unknown> = {};
 
@@ -86,6 +90,18 @@ export const getAllProducts = async (
     }
 
     try {
+        if (random) {
+            const randomProduct = await ProductModel.aggregate()
+                .sample(1)
+                .exec();
+
+            if (!randomProduct) {
+                return res.status(404).json({ error: "No products found" });
+            }
+
+            return res.status(200).json(randomProduct[0]);
+        }
+
         const totalDocuments = await ProductModel.countDocuments(query);
 
         const products = await ProductModel.find(query)

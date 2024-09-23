@@ -13,7 +13,6 @@ import { AvatarMenuItem, AvatarAuth } from "./AvatarSettings";
 const settings = ["Account", "Orders", "Return"];
 
 const AccountTools = () => {
-    const navigate = useNavigate();
     const { token } = useAuth();
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
@@ -30,7 +29,7 @@ const AccountTools = () => {
     const handleLogout = async () => {
         handleCloseUserMenu();
         await logout();
-        navigate("/login");
+        alert("Logged out");
     };
 
     return (
@@ -64,7 +63,7 @@ const AccountTools = () => {
                         action={handleCloseUserMenu}
                     />
                 ))}
-                {!token && (
+                {token && (
                     <AvatarMenuItem
                         key="logout"
                         label="Logout"

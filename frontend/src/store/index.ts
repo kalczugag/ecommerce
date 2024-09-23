@@ -23,3 +23,4 @@ export * from "./auth/authSlice";
 export * from "./auth/authApiSlice";
 export * from "./apis/productsApi";
 export * from "./apis/categoriesApi";
+export * from "./apis/summaryApi";
