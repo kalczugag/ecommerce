@@ -1,49 +1,22 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import {
-    Box,
-    AppBar,
-    Toolbar,
-    Typography,
-    Button,
-    Container,
-} from "@mui/material";
+import { Link } from "react-router-dom";
+import { AppBar, Toolbar, Typography, Container } from "@mui/material";
 import { Adb } from "@mui/icons-material";
-import Categories from "./Categories";
 import AccountTools from "./AccountTools";
 import { useGetGroupedCategoriesQuery } from "@/store";
+import { CategoryContainer, CategoryList } from "./Categories";
 
 interface HeaderProps {
     deliveryBar?: string;
 }
 
 const Header = ({ deliveryBar }: HeaderProps) => {
-    const navigate = useNavigate();
+    const [openCategories, setOpenCategories] = useState({
+        isOpen: false,
+        page: "",
+    });
 
     const { data } = useGetGroupedCategoriesQuery({ sorted: true });
-
-    const [openCategories, setOpenCategories] = useState<{
-        isOpen: boolean;
-        page: string;
-    }>({ isOpen: false, page: "" });
-
-    const handleMouseOver = (page: string) => {
-        setOpenCategories({ isOpen: true, page });
-    };
-
-    const handleMouseLeave = () => {
-        setOpenCategories((prevState) => ({
-            ...prevState,
-            isOpen: false,
-        }));
-    };
-
-    const handleCategoriesMouseEnter = () => {
-        setOpenCategories((prevState) => ({
-            ...prevState,
-            isOpen: true,
-        }));
-    };
 
     return (
         <>
@@ -89,42 +62,23 @@ const Header = ({ deliveryBar }: HeaderProps) => {
                                 </Link>
                             </div>
                         </div>
-                        <Box className="hidden flex-grow md:flex">
-                            {data?.data
-                                ? data?.data.topLevelCategories.map(
-                                      ({ name }) => (
-                                          <Button
-                                              key={name}
-                                              onClick={() =>
-                                                  navigate(name.toLowerCase())
-                                              }
-                                              onMouseOver={() =>
-                                                  handleMouseOver(name)
-                                              }
-                                              sx={{
-                                                  my: 2,
-                                                  color: "black",
-                                                  display: "block",
-                                              }}
-                                          >
-                                              {name}
-                                          </Button>
-                                      )
-                                  )
-                                : null}
-                        </Box>
+                        {data?.data && (
+                            <CategoryContainer
+                                data={data.data}
+                                setOpen={setOpenCategories}
+                                openCategories={openCategories}
+                            />
+                        )}
                         <AccountTools />
                     </Toolbar>
                 </Container>
             </AppBar>
-            {openCategories.isOpen && (
-                <Box
-                    onMouseEnter={handleCategoriesMouseEnter}
-                    onMouseLeave={handleMouseLeave}
-                >
-                    <Categories page={openCategories.page} data={data?.data} />
-                </Box>
-            )}
+            <CategoryList
+                data={data?.data}
+                page={openCategories.page}
+                isOpen={openCategories.isOpen}
+                setOpen={setOpenCategories}
+            />
         </>
     );
 };
