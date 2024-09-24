@@ -3,9 +3,10 @@ import Loading from "@/components/Loading";
 import { Info } from "@mui/icons-material";
 import { Tooltip } from "@mui/material";
 
-interface SummaryCardProps {
+export interface SummaryCardProps {
     title: string;
     value: number;
+    prefix?: string;
     summary: number;
     icon: JSX.Element;
     isLoading: boolean;
@@ -14,6 +15,7 @@ interface SummaryCardProps {
 const SummaryCard = ({
     title = "",
     value = 0,
+    prefix,
     icon,
     summary = 0,
     isLoading,
@@ -30,7 +32,10 @@ const SummaryCard = ({
                     </span>
                 </div>
                 <div>
-                    <h3 className="text-xl">{value}</h3>
+                    <h3 className="text-xl">
+                        {prefix}
+                        {value}
+                    </h3>
                 </div>
                 <div>
                     <p className="text-sm text-gray-500 dark:text-gray-400">

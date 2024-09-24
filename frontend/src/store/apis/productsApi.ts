@@ -33,7 +33,7 @@ export const productApi = apiSlice.injectEndpoints({
                     : [{ type: "Products", id: "LIST" }],
         }),
 
-        getRandomProduct: builder.query<Product, void>({
+        getRandomProduct: builder.query<Product[], void>({
             query: () => ({
                 url: "/products?random=true",
                 method: "GET",

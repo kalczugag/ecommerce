@@ -91,15 +91,15 @@ export const getAllProducts = async (
 
     try {
         if (random) {
-            const randomProduct = await ProductModel.aggregate()
-                .sample(1)
+            const randomProducts = await ProductModel.aggregate()
+                .sample(5)
                 .exec();
 
-            if (!randomProduct) {
+            if (!randomProducts) {
                 return res.status(404).json({ error: "No products found" });
             }
 
-            return res.status(200).json(randomProduct[0]);
+            return res.status(200).json(randomProducts);
         }
 
         const totalDocuments = await ProductModel.countDocuments(query);

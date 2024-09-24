@@ -30,6 +30,7 @@ const DashboardModule = () => {
         {
             title: "Sales",
             value: summary.orders.total,
+            prefix: "$",
             summary: weeklyComparison(
                 summary.orders.thisWeek,
                 summary.orders.lastWeek

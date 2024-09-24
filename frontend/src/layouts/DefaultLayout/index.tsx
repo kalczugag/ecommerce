@@ -5,7 +5,7 @@ import SortBar from "@/components/SortBar";
 interface DefaultPageProps extends HTMLAttributes<HTMLDivElement> {
     children: ReactNode;
     pagination?: JSX.Element;
-    featuredElement?: JSX.Element;
+    featuredElement: JSX.Element;
     isCatalog?: boolean;
 }
 
@@ -27,9 +27,6 @@ const DefaultLayout = ({
                         color: "white",
                         marginY: "40px",
                         padding: "20px",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
                     }}
                 >
                     {featuredElement}
