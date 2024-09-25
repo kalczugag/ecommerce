@@ -1,15 +1,17 @@
 import { useParams } from "react-router-dom";
-import { useGetProductByIdQuery } from "@/store";
+import { useGetProductByIdQuery, useGetReviewsByProductIdQuery } from "@/store";
 import ReadProductModule from "@/modules/ProductsModule/ReadProductModule";
 import NotFound from "@/components/NotFound";
 
 const ProductDetails = () => {
     const { id } = useParams();
     const { data, isLoading, isError } = useGetProductByIdQuery(id || "");
+    const { data: rating } = useGetReviewsByProductIdQuery(id || "");
 
     if (isError || (!isLoading && !data)) return <NotFound />;
 
     const config = {
+        rating: { count: rating?.count || 0, value: rating?.value || 0 },
         isLoading,
     };
 

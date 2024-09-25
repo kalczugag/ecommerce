@@ -1,7 +1,13 @@
-import { Link } from "react-router-dom";
+import { Button, Rating } from "@mui/material";
 import type { Product } from "@/types/Product";
+import { ShortReviewsCount } from "@/types/Review";
 
-const DetailsProductCard = ({ data }: { data: Product }) => {
+interface DetailsProductCardProps {
+    data: Product;
+    rating: ShortReviewsCount;
+}
+
+const DetailsProductCard = ({ data, rating }: DetailsProductCardProps) => {
     const price = +data.price.toFixed(2);
     let discountedPrice;
 
@@ -17,7 +23,7 @@ const DetailsProductCard = ({ data }: { data: Product }) => {
     }
 
     return (
-        <Link to={`/product/${data._id}`} className="flex flex-row space-x-10">
+        <div className="flex flex-col space-x-0 md:flex-row md:space-x-10">
             <div>
                 <img
                     src={data.imageUrl[0]}
@@ -26,13 +32,15 @@ const DetailsProductCard = ({ data }: { data: Product }) => {
                     className="max-h-[850px]"
                 />
             </div>
-            <div className="flex flex-col py-4 w-full">
-                <h3 className="text-gray-600 font-bold">{data.title}</h3>
-                <p className="text-sm">
-                    {data.description && data.description?.slice(0, 50) + "..."}
-                </p>
-                <div className="text-sm text-gray-600">{data.color}</div>
-                <p className="font-semibold space-x-2">
+            <div className="flex flex-col py-4 space-y-6 w-full">
+                <div className="space-y-1 w-full">
+                    <h3 className="text-2xl font-bold underline">
+                        {data.brand}
+                    </h3>
+                    <p className="text-2xl text-gray-700">{data.title}</p>
+                    <span className="text-gray-600">{data.color}</span>
+                </div>
+                <p className="text-xl font-semibold space-x-2">
                     {discountedPrice ? (
                         <>
                             <span>${discountedPrice}</span>
@@ -47,8 +55,46 @@ const DetailsProductCard = ({ data }: { data: Product }) => {
                         "$" + price
                     )}
                 </p>
+                <div>
+                    <div className="flex flex-row items-center space-x-2">
+                        <Rating
+                            name="half-rating"
+                            defaultValue={rating.value}
+                            precision={0.5}
+                            readOnly
+                        />
+                        <span className="text-sm text-gray-500">
+                            {rating.value * 5} Ratings
+                        </span>
+                        <span className="text-sm font-bold text-gray-600">
+                            {rating.count} reviews
+                        </span>
+                    </div>
+                </div>
+                <div className="space-y-2">
+                    <p className="font-bold text-sm">Size</p>
+                    <div className="grid grid-cols-3 w-40 gap-4">
+                        {data.size.map((size, index) => (
+                            <button
+                                key={index}
+                                className="flex items-center justify-center p-4 border rounded transition-all hover:shadow"
+                            >
+                                {size.name}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+                <div>
+                    <Button
+                        onClick={() => alert("Added to cart")}
+                        variant="contained"
+                    >
+                        Add to cart
+                    </Button>
+                </div>
+                <div className="w-96 text-gray-700">{data.description}</div>
             </div>
-        </Link>
+        </div>
     );
 };
 

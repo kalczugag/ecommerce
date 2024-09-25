@@ -7,6 +7,7 @@ import products from "./products";
 import orders from "./orders";
 import summary from "./summary";
 import categories from "./categories";
+import reviews from "./reviews";
 
 const router = express.Router();
 
@@ -18,6 +19,7 @@ export default (): express.Router => {
     orders(router);
     summary(router);
     categories(router);
+    reviews(router);
 
     return router;
 };
