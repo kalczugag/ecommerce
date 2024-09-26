@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { SummaryModel } from "./Summary";
+import { CartModel } from "./Cart";
 import { getStartOfThisWeek } from "@/utils/helpers";
 import type { User } from "@/types/User";
 
@@ -25,6 +26,7 @@ const refreshTokenSchema = new mongoose.Schema(
 
 const userSchema = new mongoose.Schema<User>(
     {
+        _cart: { type: mongoose.Schema.Types.ObjectId, ref: "Cart" },
         firstName: { type: String, required: true },
         lastName: { type: String, required: true },
         role: {
@@ -47,9 +49,24 @@ const userSchema = new mongoose.Schema<User>(
     { timestamps: true }
 );
 
-userSchema.post("save", async (doc) => {
+userSchema.post("save", async function (doc) {
     try {
-        const userDate = new Date(new Date(doc.get("createdAt")));
+        if (!doc._cart) {
+            const newCart = await CartModel.create({
+                _user: doc._id,
+                _products: [],
+                subTotal: 0,
+                discount: 0,
+                deliveryCost: 0,
+                total: 0,
+            });
+            console.log("cart created");
+
+            doc._cart = newCart._id;
+            await doc.save();
+        }
+
+        const userDate = new Date(doc.createdAt);
         const startOfWeek = getStartOfThisWeek();
 
         const summary = await SummaryModel.findOneAndUpdate(
@@ -67,7 +84,10 @@ userSchema.post("save", async (doc) => {
 
         await summary.save();
     } catch (error) {
-        console.error("Error updating summary after user save:", error);
+        console.error(
+            "Error creating cart or updating summary after user save:",
+            error
+        );
     }
 });
 

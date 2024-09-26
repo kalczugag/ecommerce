@@ -26,15 +26,6 @@ app.post("/trigger-summary-cron", (req, res) => {
     res.status(200).send("Summary cron job triggered");
 });
 
-app.post("/update-prod", async (req, res) => {
-    await ProductModel.updateMany(
-        { imageUrl: { $type: "string" } }, // Find products where imageUrl is a string
-        { $set: { imageUrl: ["$imageUrl"] } } // Set imageUrl to an array containing the string
-    );
-
-    res.status(200).json({ msg: "success" });
-});
-
 // if (process.env.NODE_ENV === "production") {
 //     const clientBuildPath = path.join(__dirname, "../../frontend/build");
 

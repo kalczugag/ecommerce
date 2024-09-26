@@ -1,10 +1,11 @@
 import { Route, Routes } from "react-router-dom";
+import PrivateOutlet from "@/pages/PrivateOutlet";
 import Dashboard from "@/pages/Dashboard";
 import Catalog from "@/pages/Products/list";
 import ProductDetails from "@/pages/Products/details";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
-import PrivateOutlet from "@/pages/PrivateOutlet";
+import Cart from "@/pages/Cart";
 
 const App = () => {
     return (
@@ -18,6 +19,7 @@ const App = () => {
                     element={<Catalog />}
                 />
                 <Route path="/product/:id" element={<ProductDetails />} />
+                <Route path="/cart" element={<Cart />} />
             </Route>
         </Routes>
     );

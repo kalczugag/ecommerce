@@ -1,8 +1,10 @@
-import { Role } from "./Role";
+import type { Cart } from "./Cart";
+import type { Role } from "./Role";
 import { ParsedQs } from "qs";
 
 export interface User {
     _id?: string;
+    _cart: string | Cart;
     firstName: string;
     lastName: string;
     role: Role;

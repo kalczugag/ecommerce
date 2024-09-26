@@ -12,7 +12,7 @@ export interface Item {
 export interface Order {
     _id?: string;
     _user: User;
-    items: itemSchema[];
+    items: Item[];
     status?:
         | "placed"
         | "confirmed"
@@ -23,6 +23,8 @@ export interface Order {
     total: number;
     paymentMethod: string;
     paymentStatus?: string;
+    deliveryMethod: string;
+    deliveryCost: number;
     createdAt: Date;
     updatedAt: Date;
 }

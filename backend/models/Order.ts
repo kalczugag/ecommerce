@@ -4,7 +4,7 @@ import { SummaryModel } from "./Summary";
 import { getStartOfThisWeek } from "@/utils/helpers";
 import type { Order, Item } from "@/types/Order";
 
-const itemSchema = new mongoose.Schema<Item>(
+export const itemSchema = new mongoose.Schema<Item>(
     {
         product: {
             type: mongoose.Schema.ObjectId,
@@ -27,6 +27,8 @@ const orderSchema = new mongoose.Schema<Order>(
         total: { type: Number, required: true },
         paymentMethod: { type: String, required: true },
         paymentStatus: { type: String, required: false, default: "pending" },
+        deliveryMethod: { type: String, required: true },
+        deliveryCost: { type: Number, required: true },
     },
     { timestamps: true }
 );

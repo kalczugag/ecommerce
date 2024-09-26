@@ -13,6 +13,7 @@ import { AvatarMenuItem, AvatarAuth } from "./AvatarSettings";
 const settings = ["Account", "Orders", "Return"];
 
 const AccountTools = () => {
+    const navigate = useNavigate();
     const { token } = useAuth();
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
@@ -74,7 +75,7 @@ const AccountTools = () => {
             <IconButton>
                 <Search />
             </IconButton>
-            <IconButton>
+            <IconButton onClick={() => navigate("/cart")}>
                 <LocalMallOutlined sx={{ position: "relative" }} />
                 {!true && (
                     <div className="absolute -right-2 top-0 flex justify-center items-center  rounded-full w-5 h-5 text-xs text-white bg-red-500">
