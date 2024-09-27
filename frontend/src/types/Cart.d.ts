@@ -2,7 +2,7 @@ import type { Product } from "./Product";
 import type { User } from "./User";
 
 export interface Item {
-    product?: string;
+    product?: Product;
     color: string;
     size: string;
     unitPrice: number;
