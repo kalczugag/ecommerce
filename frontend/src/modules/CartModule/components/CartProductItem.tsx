@@ -1,12 +1,22 @@
-import type { Item } from "@/types/Cart";
 import { Button, IconButton } from "@mui/material";
+import { RemoveCircleOutline, AddCircleOutline } from "@mui/icons-material";
+import type { Item } from "@/types/Cart";
+import type { Sizes } from "@/modules/ProductsModule/ReadProductModule";
 
 interface CartProductItemProps {
     data: Item;
+    isLoading: boolean;
+    onQuantityChange: (productId: string, quantity: number) => void;
+    onDelete: (productId: string, size: Sizes, color: string) => void;
 }
 
-const CartProductItem = ({ data }: CartProductItemProps) => {
-    const { product, size, quantity } = data;
+const CartProductItem = ({
+    data,
+    isLoading,
+    onQuantityChange,
+    onDelete,
+}: CartProductItemProps) => {
+    const { product, size, quantity: itemQuantity } = data;
 
     let discountedPrice = 0;
     let price = 0;
@@ -14,21 +24,17 @@ const CartProductItem = ({ data }: CartProductItemProps) => {
         price = +product.price.toFixed(2);
 
         if (product.discountPercent) {
-            if (product.discountedPrice) {
-                discountedPrice = +(product.discountedPrice * quantity).toFixed(
-                    2
-                );
-            } else {
-                discountedPrice = +(
-                    (price - (price * product.discountPercent) / 100) *
-                    quantity
-                ).toFixed(2);
-            }
+            discountedPrice = +(
+                (price - (price * product.discountPercent) / 100) *
+                itemQuantity
+            ).toFixed(2);
+        } else {
+            discountedPrice = +price * itemQuantity;
         }
     }
 
     return (
-        <div className="flex-1 flex flex-col space-y-4 p-6 shadow h-full border rounded">
+        <div className="flex flex-col space-y-4 p-6 w-full shadow border rounded">
             <div className="flex space-x-2">
                 <img
                     src={product?.imageUrl[0]}
@@ -48,24 +54,47 @@ const CartProductItem = ({ data }: CartProductItemProps) => {
                             <>
                                 <span>${discountedPrice}</span>
                                 <span className="text-gray-500 line-through">
-                                    ${price}
+                                    ${price * itemQuantity}
                                 </span>
                                 <span className="text-green-600">
                                     {product?.discountPercent}% off
                                 </span>
                             </>
                         ) : (
-                            "$" + price
+                            "$" + price * itemQuantity
                         )}
                     </p>
                 </div>
             </div>
-            <div className="flex items-center">
-                {/* change to icons */}
-                <IconButton>-</IconButton>
-                <span>{quantity}</span>
-                <IconButton>+</IconButton>
-                <Button variant="contained">Remove</Button>
+            <div className="flex space-x-8">
+                <div className="flex items-center space-x-1">
+                    <IconButton
+                        onClick={() =>
+                            onQuantityChange(product!._id!, itemQuantity - 1)
+                        }
+                        disabled={isLoading || itemQuantity === 1}
+                    >
+                        <RemoveCircleOutline />
+                    </IconButton>
+                    <span>{itemQuantity}</span>
+                    <IconButton
+                        onClick={() =>
+                            onQuantityChange(product!._id!, itemQuantity + 1)
+                        }
+                        disabled={isLoading}
+                    >
+                        <AddCircleOutline />
+                    </IconButton>
+                </div>
+                <Button
+                    variant="contained"
+                    onClick={() =>
+                        onDelete(product!._id!, data.size, data.color)
+                    }
+                    disabled={isLoading}
+                >
+                    Remove
+                </Button>
             </div>
         </div>
     );

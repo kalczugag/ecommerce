@@ -5,12 +5,14 @@ interface AuthState {
     token: string | null;
     isAdmin: boolean;
     expires: string | null;
+    cartId: string | null;
 }
 
 const initialState: AuthState = {
     token: null,
     isAdmin: false,
     expires: null,
+    cartId: null,
 };
 
 const authSlice = createSlice({
@@ -23,6 +25,7 @@ const authSlice = createSlice({
                 token: action.payload.token,
                 isAdmin: action.payload.isAdmin,
                 expires: action.payload.expires,
+                cartId: action.payload.cartId,
             };
         },
 
@@ -32,6 +35,7 @@ const authSlice = createSlice({
                 token: null,
                 isAdmin: false,
                 expires: null,
+                cartId: null,
             };
         },
     },

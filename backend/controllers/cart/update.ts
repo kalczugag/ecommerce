@@ -4,7 +4,7 @@ import { CartModel } from "@/models/Cart";
 import type { Item } from "@/types/Order";
 
 interface BodyProps {
-    action: "add" | "delete";
+    action: "add" | "delete" | "changeQuantity";
     productId: string;
     color: string;
     size: string;
@@ -31,10 +31,8 @@ export const updateCart = async (
             return res.status(404).json({ error: "Cart not found" });
         }
 
-        const products = cart._products as Item[];
-
         if (action === "add") {
-            const itemExists = products.find(
+            const itemExists = cart._products.find(
                 (item) =>
                     item.product?.toString() === productId &&
                     item.color === color &&
@@ -44,23 +42,23 @@ export const updateCart = async (
             if (itemExists) {
                 itemExists.quantity += quantity;
             } else {
-                products.push({
+                cart._products.push({
                     product: productId,
                     color,
                     size,
                     unitPrice,
                     quantity,
-                } as Item);
+                });
             }
-            await cart.save();
 
+            await cart.save();
             return res
                 .status(200)
                 .json({ msg: "Product added to cart", data: cart });
         }
 
         if (action === "delete") {
-            cart._products = products.filter(
+            cart._products = cart._products.filter(
                 (item) =>
                     !(
                         item.product?.toString() === productId &&
@@ -68,11 +66,28 @@ export const updateCart = async (
                         item.size === size
                     )
             );
-            await cart.save();
 
+            await cart.save();
             return res
                 .status(200)
                 .json({ msg: "Product removed from cart", data: cart });
+        }
+
+        if (action === "changeQuantity") {
+            const item = cart._products.find(
+                (item) => item.product?.toString() === productId
+            );
+
+            if (item) {
+                item.quantity = quantity;
+                await cart.save();
+
+                return res
+                    .status(200)
+                    .json({ msg: "Product quantity updated", data: cart });
+            }
+
+            return res.status(404).json({ error: "Product not found in cart" });
         }
 
         return res.status(400).json({ error: "Invalid action" });

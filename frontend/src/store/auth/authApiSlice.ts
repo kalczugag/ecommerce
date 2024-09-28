@@ -6,6 +6,7 @@ type AuthResult = {
     success: boolean;
     isAdmin: boolean;
     token: string;
+    cartId: string;
 };
 
 export type LoginInput = {
@@ -36,6 +37,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
                             token: data.token,
                             isAdmin: data.isAdmin,
                             expires: data.expires,
+                            cartId: data.cartId,
                         })
                     );
                 } catch (err) {
@@ -58,6 +60,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
                             token: data.token,
                             isAdmin: data.isAdmin,
                             expires: data.expires,
+                            cartId: data.cartId,
                         })
                     );
                 } catch (err) {
@@ -80,6 +83,7 @@ export const authApiSlice = apiSlice.injectEndpoints({
                             token: data.token,
                             isAdmin: data.isAdmin,
                             expires: data.expires,
+                            cartId: data.cartId,
                         })
                     );
                 } catch (err) {

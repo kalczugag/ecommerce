@@ -3,6 +3,7 @@ import type { Cart } from "@/types/Cart";
 
 interface CheckoutSummaryProps {
     data: Cart;
+    isLoading: boolean;
 }
 
 interface BoxProps {
@@ -23,21 +24,20 @@ const Box = ({ title, value, bold, color = "standard" }: BoxProps) => {
     );
 };
 
-const CheckoutSummary = ({ data }: CheckoutSummaryProps) => {
-    const countLabel = `${data._products.length} ${
-        data._products.length > 1 ? "items" : "item"
-    }`;
-    const deliveryLabel =
+const CheckoutSummary = ({ data, isLoading }: CheckoutSummaryProps) => {
+    const itemsCount = data._products.length;
+    const itemsLabel = `${itemsCount} ${itemsCount > 1 ? "items" : "item"}`;
+    const deliveryCost =
         data.deliveryCost > 0 ? `$${data.deliveryCost}` : "Free";
-    const total = data.subTotal - data.discount + data.deliveryCost;
+    const totalAmount = data.subTotal - data.discount + data.deliveryCost;
 
     return (
-        <div className="flex flex-col w-96 space-y-6 p-6 shadow border rounded">
+        <div className="flex flex-col space-y-6 p-6 shadow border rounded w-full md:w-[550px]">
             <h3 className="font-bold text-gray-600">PRICE DETAILS</h3>
             <Divider />
             <div className="flex flex-col space-y-2">
                 <Box
-                    title={`Price (${countLabel})`}
+                    title={`Price (${itemsLabel})`}
                     value={`$${data.subTotal}`}
                 />
                 <Box
@@ -47,13 +47,13 @@ const CheckoutSummary = ({ data }: CheckoutSummaryProps) => {
                 />
                 <Box
                     title="Delivery Charges"
-                    value={deliveryLabel}
+                    value={deliveryCost}
                     color="green"
                 />
-                <Box title="Total Amount" value={`$${total}`} bold />
+                <Box title="Total Amount" value={`$${totalAmount}`} bold />
             </div>
             <Divider />
-            <Button variant="contained" fullWidth>
+            <Button variant="contained" disabled={isLoading} fullWidth>
                 CHECK OUT
             </Button>
         </div>

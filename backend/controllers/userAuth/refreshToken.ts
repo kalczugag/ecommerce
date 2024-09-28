@@ -54,6 +54,7 @@ export const refreshToken = async (
         return res.status(200).json({
             success: true,
             isAdmin: user.role.name === "admin",
+            cartId: user._cart,
             ...accessToken,
         });
     } catch (err) {

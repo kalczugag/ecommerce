@@ -1,3 +1,5 @@
+import type { Sizes } from "@/modules/ProductsModule/ReadProductModule";
+
 export interface Product {
     _id?: string;
     imageUrl: string[];
@@ -8,7 +10,7 @@ export interface Product {
     price: number;
     discountPercent?: number;
     size: {
-        name: string;
+        name: Sizes;
         quantity: number;
     }[];
     quantity: number;

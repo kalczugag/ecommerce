@@ -2,13 +2,13 @@ import { apiSlice } from "./apiSlice";
 import type { Cart } from "@/types/Cart";
 
 interface BodyProps {
-    action: "add" | "delete";
+    action: "add" | "delete" | "changeQuantity";
     productId: string;
-    color: string;
-    size: string;
-    unitPrice: number;
-    quantity: number;
-    _id: string;
+    color?: string;
+    size?: string;
+    unitPrice?: number;
+    quantity?: number;
+    _id?: string;
 }
 
 export const cartApi = apiSlice.injectEndpoints({

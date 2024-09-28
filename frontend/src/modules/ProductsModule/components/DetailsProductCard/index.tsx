@@ -1,13 +1,24 @@
+import { useState } from "react";
 import { Button, Rating } from "@mui/material";
+import type { Sizes } from "../../ReadProductModule";
+import type { ShortReviewsCount } from "@/types/Review";
 import type { Product } from "@/types/Product";
-import { ShortReviewsCount } from "@/types/Review";
 
 interface DetailsProductCardProps {
     data: Product;
+    isLoading: boolean;
     rating: ShortReviewsCount;
+    onAddToCart: (size: Sizes) => void;
 }
 
-const DetailsProductCard = ({ data, rating }: DetailsProductCardProps) => {
+const DetailsProductCard = ({
+    data,
+    isLoading,
+    rating,
+    onAddToCart,
+}: DetailsProductCardProps) => {
+    const [currSize, setCurrSize] = useState<Sizes>("M");
+
     const price = +data.price.toFixed(2);
     let discountedPrice;
 
@@ -77,7 +88,11 @@ const DetailsProductCard = ({ data, rating }: DetailsProductCardProps) => {
                         {data.size.map((size, index) => (
                             <button
                                 key={index}
-                                className="flex items-center justify-center p-4 border rounded transition-all hover:shadow"
+                                onClick={() => setCurrSize(size.name)}
+                                className={`flex items-center justify-center p-4 border rounded transition-all hover:shadow ${
+                                    currSize === size.name &&
+                                    "bg-gray-100 font-bold"
+                                }`}
                             >
                                 {size.name}
                             </button>
@@ -86,7 +101,8 @@ const DetailsProductCard = ({ data, rating }: DetailsProductCardProps) => {
                 </div>
                 <div>
                     <Button
-                        onClick={() => alert("Added to cart")}
+                        onClick={() => onAddToCart(currSize)}
+                        disabled={isLoading}
                         variant="contained"
                     >
                         Add to cart

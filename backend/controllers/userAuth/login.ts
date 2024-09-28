@@ -48,6 +48,7 @@ export const login = async (req: express.Request, res: express.Response) => {
         return res.status(200).json({
             success: true,
             isAdmin: existingUser.role.name === "admin",
+            cartId: existingUser._cart,
             ...accessToken,
         });
     } catch (err: any) {
