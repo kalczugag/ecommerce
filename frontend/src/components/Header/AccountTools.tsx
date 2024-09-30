@@ -1,20 +1,18 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useLogoutMutation } from "@/store";
+import { useGetUsersCartQuery, useLogoutMutation } from "@/store";
 import useAuth from "@/hooks/useAuth";
 import { Box, Tooltip, IconButton, Menu } from "@mui/material";
-import {
-    Search,
-    LocalMallOutlined,
-    PersonOutlineOutlined,
-} from "@mui/icons-material";
+import { Search, PersonOutlineOutlined } from "@mui/icons-material";
 import { AvatarMenuItem, AvatarAuth } from "./AvatarSettings";
+import CartIcon from "./CartIcon";
 
 const settings = ["Account", "Orders", "Return"];
 
 const AccountTools = () => {
-    const navigate = useNavigate();
     const { token } = useAuth();
+    const { data } = useGetUsersCartQuery(undefined, {
+        skip: !token,
+    });
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
     const [logout] = useLogoutMutation();
@@ -75,14 +73,7 @@ const AccountTools = () => {
             <IconButton>
                 <Search />
             </IconButton>
-            <IconButton onClick={() => navigate("/cart")}>
-                <LocalMallOutlined sx={{ position: "relative" }} />
-                {!true && (
-                    <div className="absolute -right-2 top-0 flex justify-center items-center  rounded-full w-5 h-5 text-xs text-white bg-red-500">
-                        1
-                    </div>
-                )}
-            </IconButton>
+            <CartIcon data={data} />
         </Box>
     );
 };

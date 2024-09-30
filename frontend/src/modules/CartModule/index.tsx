@@ -15,12 +15,19 @@ interface CartModuleProps {
 const CartModule = ({ data, isLoading }: CartModuleProps) => {
     const [editCart, { isLoading: editLoading }] = useEditUsersCartMutation();
 
-    const handleQuantityChange = (productId: string, quantity: number) => {
+    const handleQuantityChange = (
+        productId: string,
+        quantity: number,
+        size: Sizes,
+        color: string
+    ) => {
         editCart({
             _id: data?._id,
             action: "changeQuantity",
             productId,
             quantity,
+            size,
+            color,
         });
     };
 

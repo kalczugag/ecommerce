@@ -6,7 +6,12 @@ import type { Sizes } from "@/modules/ProductsModule/ReadProductModule";
 interface CartProductItemProps {
     data: Item;
     isLoading: boolean;
-    onQuantityChange: (productId: string, quantity: number) => void;
+    onQuantityChange: (
+        productId: string,
+        quantity: number,
+        size: Sizes,
+        color: string
+    ) => void;
     onDelete: (productId: string, size: Sizes, color: string) => void;
 }
 
@@ -70,7 +75,12 @@ const CartProductItem = ({
                 <div className="flex items-center space-x-1">
                     <IconButton
                         onClick={() =>
-                            onQuantityChange(product!._id!, itemQuantity - 1)
+                            onQuantityChange(
+                                product!._id!,
+                                itemQuantity - 1,
+                                data.size,
+                                data.color
+                            )
                         }
                         disabled={isLoading || itemQuantity === 1}
                     >
@@ -79,7 +89,12 @@ const CartProductItem = ({
                     <span>{itemQuantity}</span>
                     <IconButton
                         onClick={() =>
-                            onQuantityChange(product!._id!, itemQuantity + 1)
+                            onQuantityChange(
+                                product!._id!,
+                                itemQuantity + 1,
+                                data.size,
+                                data.color
+                            )
                         }
                         disabled={isLoading}
                     >

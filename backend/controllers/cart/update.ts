@@ -75,7 +75,10 @@ export const updateCart = async (
 
         if (action === "changeQuantity") {
             const item = cart._products.find(
-                (item) => item.product?.toString() === productId
+                (item) =>
+                    item.product?.toString() === productId &&
+                    item.color === color &&
+                    item.size === size
             );
 
             if (item) {
