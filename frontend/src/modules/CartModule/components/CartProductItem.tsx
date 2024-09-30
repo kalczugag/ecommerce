@@ -33,8 +33,6 @@ const CartProductItem = ({
                 (price - (price * product.discountPercent) / 100) *
                 itemQuantity
             ).toFixed(2);
-        } else {
-            discountedPrice = +price * itemQuantity;
         }
     }
 

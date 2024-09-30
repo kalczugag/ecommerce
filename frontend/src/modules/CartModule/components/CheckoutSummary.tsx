@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+import useAuth from "@/hooks/useAuth";
 import { Button, Divider } from "@mui/material";
 import type { Cart } from "@/types/Cart";
 
@@ -25,11 +27,21 @@ const Box = ({ title, value, bold, color = "standard" }: BoxProps) => {
 };
 
 const CheckoutSummary = ({ data, isLoading }: CheckoutSummaryProps) => {
+    const navigate = useNavigate();
+    const { token } = useAuth();
+
     const itemsCount = data._products.length;
     const itemsLabel = `${itemsCount} ${itemsCount > 1 ? "items" : "item"}`;
-    const deliveryCost =
-        data.deliveryCost > 0 ? `$${data.deliveryCost}` : "Free";
+    const deliveryCost = data.total < 100 ? `$${data.deliveryCost}` : "Free";
     const totalAmount = data.subTotal - data.discount + data.deliveryCost;
+
+    const handleCheckout = () => {
+        if (!token) {
+            navigate("/login");
+        }
+
+        navigate("/checkout");
+    };
 
     return (
         <div className="flex flex-col space-y-6 p-6 shadow border rounded w-full md:w-[550px]">
@@ -53,7 +65,12 @@ const CheckoutSummary = ({ data, isLoading }: CheckoutSummaryProps) => {
                 <Box title="Total Amount" value={`$${totalAmount}`} bold />
             </div>
             <Divider />
-            <Button variant="contained" disabled={isLoading} fullWidth>
+            <Button
+                variant="contained"
+                onClick={handleCheckout}
+                disabled={isLoading}
+                fullWidth
+            >
                 CHECK OUT
             </Button>
         </div>
