@@ -11,6 +11,7 @@ import {
     OutlinedInput,
     TextField,
 } from "@mui/material";
+import Row from "@/components/Row";
 
 interface RegisterFormProps {
     isLoading?: boolean;
@@ -29,7 +30,7 @@ const RegisterForm = ({ isLoading }: RegisterFormProps) => {
 
     return (
         <div className="space-y-4">
-            <div className="flex space-x-2">
+            <Row>
                 <Field name="firstName" validate={required}>
                     {(props) => (
                         <TextField
@@ -64,7 +65,7 @@ const RegisterForm = ({ isLoading }: RegisterFormProps) => {
                         />
                     )}
                 </Field>
-            </div>
+            </Row>
             <Field name="email" validate={compose(required, validateEmail)}>
                 {(props) => (
                     <TextField

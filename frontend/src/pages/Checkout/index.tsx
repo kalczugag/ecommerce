@@ -1,5 +1,7 @@
+import CheckoutModule from "@/modules/CheckoutModule";
+
 const Checkout = () => {
-    return <div>checkout</div>;
+    return <CheckoutModule />;
 };
 
 export default Checkout;

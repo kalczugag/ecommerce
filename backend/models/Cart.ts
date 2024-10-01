@@ -38,6 +38,12 @@ cartSchema.pre("save", async function (next) {
 
     cart.total = cart.subTotal - cart.discount + cart.deliveryCost;
 
+    if (cart.total < 100) {
+        cart.deliveryCost = 5;
+    } else {
+        cart.deliveryCost = 0;
+    }
+
     next();
 });
 
