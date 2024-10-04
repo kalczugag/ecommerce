@@ -45,6 +45,7 @@ const baseQueryWithReauth = async (
                 setCredentials({
                     token: (refreshResult.data as { token: string }).token,
                     isAdmin: state.auth.isAdmin,
+                    cartId: state.auth.cartId,
                     expires,
                 })
             );

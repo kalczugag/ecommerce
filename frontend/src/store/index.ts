@@ -26,3 +26,4 @@ export * from "./apis/categoriesApi";
 export * from "./apis/summaryApi";
 export * from "./apis/reviewsApi";
 export * from "./apis/cartApi";
+export * from "./apis/userApi";

@@ -1,11 +1,16 @@
 import { Form } from "react-final-form";
 import DeliveryForm from "@/forms/DeliveryForm";
+import { useGetCurrentUserQuery } from "@/store";
 
 interface DeliveryAddressProps {
-    onValidate: (submit: () => Promise<any>) => void;
+    onValidate?: (submit: () => Promise<any>) => void;
 }
 
 const DeliveryAddress = ({ onValidate }: DeliveryAddressProps) => {
+    const { data } = useGetCurrentUserQuery();
+
+    console.log(data);
+
     const handleSubmit = (values: any) => {
         console.log(values);
     };
@@ -16,8 +21,8 @@ const DeliveryAddress = ({ onValidate }: DeliveryAddressProps) => {
             <Form
                 onSubmit={async (values) => {
                     const errors: any = {};
-                    if (!values.firstName)
-                        errors.firstName = "First Name is required";
+                    if (!values.firstName) ``;
+                    errors.firstName = "First Name is required";
                     if (!values.lastName)
                         errors.lastName = "Last Name is required";
                     if (!values.address?.street)
@@ -34,8 +39,9 @@ const DeliveryAddress = ({ onValidate }: DeliveryAddressProps) => {
                         ? errors
                         : handleSubmit;
                 }}
+                initialValues={data}
                 render={({ handleSubmit, form }) => {
-                    onValidate(async () => form.submit());
+                    // onValidate(async () => form.submit());
                     return (
                         <form onSubmit={handleSubmit} className="space-y-8">
                             <DeliveryForm isLoading={false} />

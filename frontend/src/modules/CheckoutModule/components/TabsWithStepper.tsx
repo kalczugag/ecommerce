@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { ReactNode, useRef, useState } from "react";
 import {
     Box,
     Button,
@@ -12,7 +12,7 @@ import OrderSummary from "./OrderSummary";
 import Payment from "./Payment";
 
 interface TabPanelProps {
-    children?: React.ReactNode;
+    children?: ReactNode;
     index: number;
     value: number;
 }
@@ -33,15 +33,26 @@ function CustomTabPanel(props: TabPanelProps) {
     );
 }
 
-const steps = [
+type StepContent = (onValidate: any) => JSX.Element | null;
+
+interface Step {
+    label: string;
+    requiresSubmit: boolean;
+    content: JSX.Element;
+}
+
+const steps: Step[] = [
     {
         label: "Delivery Address",
-        content: (onValidate: any) => (
-            <DeliveryAddress onValidate={onValidate} />
-        ),
+        requiresSubmit: true,
+        content: <DeliveryAddress />,
     },
-    { label: "Order Summary", content: <OrderSummary /> },
-    { label: "Payment", content: <Payment /> },
+    {
+        label: "Order Summary",
+        requiresSubmit: false,
+        content: <OrderSummary />,
+    },
+    { label: "Payment", requiresSubmit: false, content: <Payment /> },
 ];
 
 const TabsWithStepper = () => {
@@ -56,27 +67,20 @@ const TabsWithStepper = () => {
     const isLastStep = () => activeStep === totalSteps() - 1;
     const allStepsCompleted = () => completedSteps() === totalSteps();
 
-    const handleNext = async () => {
-        const result = await submitHandlers.current[activeStep]?.();
-        if (result !== undefined && !result.error) {
-            const newActiveStep =
-                isLastStep() && !allStepsCompleted()
-                    ? steps.findIndex((_, i) => !(i in completed))
-                    : activeStep + 1;
-            setActiveStep(newActiveStep);
-        }
+    const handleNext = () => {
+        const newActiveStep =
+            isLastStep() && !allStepsCompleted()
+                ? steps.findIndex((_, i) => !(i in completed))
+                : activeStep + 1;
+        setActiveStep(newActiveStep);
     };
 
     const handleBack = () =>
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
 
-    const handleComplete = async () => {
-        const result = await submitHandlers.current[activeStep]?.();
-        console.log(result);
-        if (result !== undefined && !result.error) {
-            setCompleted({ ...completed, [activeStep]: true });
-            handleNext();
-        }
+    const handleComplete = () => {
+        setCompleted({ ...completed, [activeStep]: true });
+        handleNext();
     };
 
     const handleReset = () => {
@@ -112,19 +116,13 @@ const TabsWithStepper = () => {
                     </>
                 ) : (
                     <>
-                        {steps.map(({ content }, index) => (
+                        {steps.map(({ content, requiresSubmit }, index) => (
                             <CustomTabPanel
                                 key={index}
                                 value={activeStep}
                                 index={index}
                             >
-                                {typeof content === "function"
-                                    ? content(
-                                          (submit: any) =>
-                                              (submitHandlers.current[index] =
-                                                  submit)
-                                      )
-                                    : content}
+                                {content}
                             </CustomTabPanel>
                         ))}
                         <Box
@@ -134,14 +132,6 @@ const TabsWithStepper = () => {
                                 pt: 2,
                             }}
                         >
-                            <Button
-                                color="inherit"
-                                disabled={activeStep === 0}
-                                onClick={handleBack}
-                                sx={{ mr: 1 }}
-                            >
-                                Back
-                            </Button>
                             <Box sx={{ flex: "1 1 auto" }} />
                             {activeStep !== steps.length &&
                                 (completed[activeStep] ? (
