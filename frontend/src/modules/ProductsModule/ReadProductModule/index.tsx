@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useEditUsersCartMutation } from "@/store";
 import useAuth from "@/hooks/useAuth";
 import DefaultLayout from "@/layouts/DefaultLayout";
@@ -6,7 +5,6 @@ import DetailsProductCard from "../components/DetailsProductCard";
 import Loading from "@/components/Loading";
 import type { Product } from "@/types/Product";
 import type { ShortReviewsCount } from "@/types/Review";
-import { EditCalendarTwoTone } from "@mui/icons-material";
 
 export type Sizes = "S" | "M" | "L";
 

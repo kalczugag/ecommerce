@@ -108,7 +108,7 @@ const DetailsProductCard = ({
                         Add to cart
                     </Button>
                 </div>
-                <div className="w-96 text-gray-700">{data.description}</div>
+                <div className="text-gray-700 md:w-96">{data.description}</div>
             </div>
         </div>
     );

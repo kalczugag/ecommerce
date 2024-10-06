@@ -1,50 +1,40 @@
 import { Form } from "react-final-form";
 import DeliveryForm from "@/forms/DeliveryForm";
 import { useGetCurrentUserQuery } from "@/store";
+import AdditionalInfoForm from "@/forms/AdditionalInfoForm";
 
 interface DeliveryAddressProps {
-    onValidate?: (submit: () => Promise<any>) => void;
+    isLoading?: boolean;
 }
 
-const DeliveryAddress = ({ onValidate }: DeliveryAddressProps) => {
+const DeliveryAddress = ({ isLoading = false }: DeliveryAddressProps) => {
     const { data } = useGetCurrentUserQuery();
-
-    console.log(data);
 
     const handleSubmit = (values: any) => {
         console.log(values);
     };
 
     return (
-        <div className="grid grid-cols-2">
-            <div>additional info</div>
+        <div className="grid grid-flow-row gap-8 pt-6 md:grid-cols-2">
             <Form
-                onSubmit={async (values) => {
-                    const errors: any = {};
-                    if (!values.firstName) ``;
-                    errors.firstName = "First Name is required";
-                    if (!values.lastName)
-                        errors.lastName = "Last Name is required";
-                    if (!values.address?.street)
-                        errors.street = "Street is required";
-                    if (!values.address?.city) errors.city = "City is required";
-                    if (!values.address?.state)
-                        errors.state = "State is required";
-                    if (!values.address?.postalCode)
-                        errors.postalCode = "Postal Code is required";
-                    if (!values.address?.country)
-                        errors.country = "Country is required";
-
-                    return Object.keys(errors).length > 0
-                        ? errors
-                        : handleSubmit;
-                }}
+                onSubmit={handleSubmit}
                 initialValues={data}
-                render={({ handleSubmit, form }) => {
+                render={({ handleSubmit }) => {
+                    return (
+                        <form onSubmit={handleSubmit} className="space-y-8">
+                            <AdditionalInfoForm isLoading={isLoading} />
+                        </form>
+                    );
+                }}
+            />
+            <Form
+                onSubmit={handleSubmit}
+                initialValues={data}
+                render={({ handleSubmit }) => {
                     // onValidate(async () => form.submit());
                     return (
                         <form onSubmit={handleSubmit} className="space-y-8">
-                            <DeliveryForm isLoading={false} />
+                            <DeliveryForm isLoading={isLoading} />
                         </form>
                     );
                 }}

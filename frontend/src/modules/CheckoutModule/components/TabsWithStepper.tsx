@@ -10,6 +10,7 @@ import {
 import DeliveryAddress from "./DeliveryAddress";
 import OrderSummary from "./OrderSummary";
 import Payment from "./Payment";
+import useStep from "../hooks/useStep";
 
 interface TabPanelProps {
     children?: ReactNode;
@@ -33,8 +34,6 @@ function CustomTabPanel(props: TabPanelProps) {
     );
 }
 
-type StepContent = (onValidate: any) => JSX.Element | null;
-
 interface Step {
     label: string;
     requiresSubmit: boolean;
@@ -56,11 +55,10 @@ const steps: Step[] = [
 ];
 
 const TabsWithStepper = () => {
-    const [activeStep, setActiveStep] = useState(0);
+    const [setActiveStep, activeStep] = useStep();
     const [completed, setCompleted] = useState<{
         [k: number]: boolean;
     }>({});
-    const submitHandlers = useRef<(() => Promise<any>)[]>([]);
 
     const totalSteps = () => steps.length;
     const completedSteps = () => Object.keys(completed).length;

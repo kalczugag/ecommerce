@@ -6,6 +6,7 @@ import type { Cart } from "@/types/Cart";
 interface CheckoutSummaryProps {
     data: Cart;
     isLoading: boolean;
+    isSummary: boolean;
 }
 
 interface BoxProps {
@@ -26,7 +27,11 @@ const Box = ({ title, value, bold, color = "standard" }: BoxProps) => {
     );
 };
 
-const CheckoutSummary = ({ data, isLoading }: CheckoutSummaryProps) => {
+const CheckoutSummary = ({
+    data,
+    isLoading,
+    isSummary,
+}: CheckoutSummaryProps) => {
     const navigate = useNavigate();
     const { token } = useAuth();
 
@@ -71,7 +76,7 @@ const CheckoutSummary = ({ data, isLoading }: CheckoutSummaryProps) => {
                 disabled={isLoading}
                 fullWidth
             >
-                CHECK OUT
+                {isSummary ? "PAYMENT" : "CHECK OUT"}
             </Button>
         </div>
     );
