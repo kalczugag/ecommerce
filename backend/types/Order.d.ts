@@ -20,6 +20,9 @@ export interface Order {
         | "in_delivery"
         | "delivered"
         | "cancelled";
+    subTotal: number;
+    discount: number;
+    deliveryCost: number;
     total: number;
     paymentMethod: "cash" | "stripe" | "paypal";
     paymentStatus?:

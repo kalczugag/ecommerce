@@ -20,6 +20,8 @@ const schema = Joi.object({
         "cancelled"
     ),
     total: Joi.number().positive().required(),
+    subtotal: Joi.number().positive().required(),
+    discount: Joi.number().positive(),
     paymentMethod: Joi.string().valid("cash", "stripe", "paypal"),
     paymentStatus: Joi.string().valid(
         "unpaid",
@@ -30,8 +32,8 @@ const schema = Joi.object({
         "canceled"
     ),
     deliveryMethod: Joi.string().valid("pickup", "delivery"),
-    deliveryCost: Joi.number().positive().required(),
-    additionalInfo: Joi.string().min(10).optional(),
+    deliveryCost: Joi.number().min(0).required(),
+    additionalInfo: Joi.string().optional(),
 });
 
 export default schema;

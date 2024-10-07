@@ -31,6 +31,12 @@ const orders = (router: express.Router) => {
         hasAddress,
         methods.create
     );
+
+    router.patch(
+        "/orders/:id",
+        passport.authenticate("jwt", { session: false }),
+        methods.update
+    );
 };
 
 export default orders;

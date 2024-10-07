@@ -24,11 +24,14 @@ const orderSchema = new mongoose.Schema<Order>(
         _user: { type: mongoose.Schema.ObjectId, ref: "User", required: true },
         items: { type: [itemSchema], required: true },
         status: { type: String, required: false, default: "placed" },
-        total: { type: Number, required: true },
-        paymentMethod: { type: String, required: true },
-        paymentStatus: { type: String, required: false, default: "pending" },
-        deliveryMethod: { type: String, required: true },
+        subTotal: { type: Number, default: 0, required: true },
+        discount: { type: Number, default: 0 },
+        total: { type: Number, default: 0, required: true },
+        paymentMethod: { type: String, required: false },
+        paymentStatus: { type: String, required: false, default: "unpaid" },
+        deliveryMethod: { type: String, required: false },
         deliveryCost: { type: Number, required: true },
+        additionalInfo: { type: String, required: false },
     },
     { timestamps: true }
 );
