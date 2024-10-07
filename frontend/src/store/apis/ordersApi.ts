@@ -1,17 +1,16 @@
 import { apiSlice } from "./apiSlice";
 import type { Order } from "@/types/Order";
-import type { User } from "@/types/User";
 
 export const ordersApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        getOrderById: builder.query<User, string>({
+        getOrderById: builder.query<Order, string>({
             query: (id) => ({
                 url: `/orders/${id}`,
                 method: "GET",
             }),
         }),
 
-        addOrder: builder.mutation<Order, Order>({
+        addOrder: builder.mutation<ApiResponseObject<Order>, Order>({
             query: (values) => ({
                 url: "/orders",
                 method: "POST",

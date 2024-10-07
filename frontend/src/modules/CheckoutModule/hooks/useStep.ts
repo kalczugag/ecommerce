@@ -10,8 +10,11 @@ const useStep = (): [(value: React.SetStateAction<number>) => void, number] => {
     const [step, setStep] = useState<number>(initialStep);
 
     useEffect(() => {
-        navigate(`?step=${step}`);
-    }, [step, navigate]);
+        const updatedParams = new URLSearchParams(location.search);
+        updatedParams.set("step", step.toString());
+
+        navigate(`?${updatedParams.toString()}`);
+    }, [step, navigate, location.search]);
 
     const handleStepChange = (value: React.SetStateAction<number>) => {
         setStep(value);

@@ -1,12 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import useAuth from "@/hooks/useAuth";
 import { Button, Divider } from "@mui/material";
-import type { Cart } from "@/types/Cart";
+import { useAddOrderMutation } from "@/store";
+import type { Cart, Item } from "@/types/Cart";
 
 interface CheckoutSummaryProps {
     data: Cart;
     isLoading: boolean;
-    isSummary: boolean;
+    isSummary?: boolean;
 }
 
 interface BoxProps {
@@ -35,17 +36,44 @@ const CheckoutSummary = ({
     const navigate = useNavigate();
     const { token } = useAuth();
 
+    const [addOrder] = useAddOrderMutation();
+
     const itemsCount = data._products.length;
     const itemsLabel = `${itemsCount} ${itemsCount > 1 ? "items" : "item"}`;
     const deliveryCost = data.total < 100 ? `$${data.deliveryCost}` : "Free";
     const totalAmount = data.subTotal - data.discount + data.deliveryCost;
 
-    const handleCheckout = () => {
+    const handleCheckout = async () => {
         if (!token) {
             navigate("/login");
         }
 
-        navigate("/checkout");
+        const productsWithIds = data._products.map((product) => ({
+            ...product,
+            product: product.product?._id || "",
+        }));
+
+        const orderPayload = {
+            items: productsWithIds,
+            deliveryCost: data.deliveryCost,
+            subTotal: data.subTotal,
+            discount: data.discount,
+            total: data.total,
+        };
+
+        try {
+            const result = await addOrder(orderPayload);
+            const orderId = result.data?.data._id;
+
+            if (orderId) {
+                const queryParams = new URLSearchParams(location.search);
+                const step = queryParams.get("step") || "0";
+
+                navigate(`/checkout?id=${orderId}&step=${step}`);
+            }
+        } catch (error) {
+            console.error("Error while adding order:", error);
+        }
     };
 
     return (

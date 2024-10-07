@@ -20,7 +20,7 @@ const schema = Joi.object({
         "cancelled"
     ),
     total: Joi.number().positive().required(),
-    subtotal: Joi.number().positive().required(),
+    subTotal: Joi.number().positive().required(),
     discount: Joi.number().positive(),
     paymentMethod: Joi.string().valid("cash", "stripe", "paypal"),
     paymentStatus: Joi.string().valid(

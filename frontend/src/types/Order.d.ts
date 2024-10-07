@@ -1,16 +1,16 @@
-import { User } from "./User";
+import type { User } from "./User";
 
-export interface Item {
-    product?: string;
+interface Item {
+    product?: string | Product;
     color: string;
-    size: string;
+    size: Sizes;
     unitPrice: number;
     quantity: number;
 }
 
 export interface Order {
     _id?: string;
-    _user: User;
+    _user?: User;
     items: Item[];
     status?:
         | "placed"
@@ -19,8 +19,11 @@ export interface Order {
         | "in_delivery"
         | "delivered"
         | "cancelled";
+    subTotal: number;
+    discount: number;
+    deliveryCost: number;
     total: number;
-    paymentMethod: "cash" | "stripe" | "paypal";
+    paymentMethod?: "cash" | "stripe" | "paypal";
     paymentStatus?:
         | "unpaid"
         | "paid"
@@ -28,9 +31,9 @@ export interface Order {
         | "refunded"
         | "completed"
         | "canceled";
-    deliveryMethod: "pickup" | "delivery";
+    deliveryMethod?: "pickup" | "delivery";
     deliveryCost: number;
     additionalInfo?: string;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt?: Date;
+    updatedAt?: Date;
 }

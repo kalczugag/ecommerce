@@ -19,11 +19,7 @@ const orders = (router: express.Router) => {
         methods.summary
     );
 
-    router.get(
-        "/orders/:id",
-        passport.authenticate("jwt", { session: false }),
-        methods.readById
-    );
+    router.get("/orders/:id", methods.readById);
 
     router.post(
         "/orders",

@@ -3,6 +3,7 @@ import PrivateOutlet from "@/pages/PrivateOutlet";
 import Dashboard from "@/pages/Dashboard";
 import Catalog from "@/pages/Products/list";
 import ProductDetails from "@/pages/Products/details";
+import OrderDetails from "@/pages/Orders/details";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Cart from "@/pages/Cart";
@@ -20,6 +21,7 @@ const App = () => {
                     element={<Catalog />}
                 />
                 <Route path="/product/:id" element={<ProductDetails />} />
+                <Route path="/orders/:id" element={<OrderDetails />} />
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/checkout" element={<Checkout />} />
             </Route>
