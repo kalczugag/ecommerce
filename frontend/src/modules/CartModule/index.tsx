@@ -1,4 +1,6 @@
-import { useEditUsersCartMutation } from "@/store";
+import { useNavigate } from "react-router-dom";
+import { useAddOrderMutation, useEditUsersCartMutation } from "@/store";
+import useAuth from "@/hooks/useAuth";
 import DefaultLayout from "@/layouts/DefaultLayout";
 import Loading from "@/components/Loading";
 import CheckoutSummary from "./components/CheckoutSummary";
@@ -13,7 +15,11 @@ interface CartModuleProps {
 }
 
 const CartModule = ({ data, isLoading }: CartModuleProps) => {
+    const navigate = useNavigate();
+    const { token } = useAuth();
+
     const [editCart, { isLoading: editLoading }] = useEditUsersCartMutation();
+    const [addOrder, { isLoading: addLoading }] = useAddOrderMutation();
 
     const handleQuantityChange = (
         productId: string,
@@ -35,6 +41,39 @@ const CartModule = ({ data, isLoading }: CartModuleProps) => {
         editCart({ _id: data?._id, action: "delete", productId, size, color });
     };
 
+    const handleCheckout = async () => {
+        if (!token) {
+            navigate("/login");
+        }
+
+        const productsWithIds = data!._products.map((product) => ({
+            ...product,
+            product: product.product?._id || "",
+        }));
+
+        const orderPayload = {
+            items: productsWithIds,
+            deliveryCost: data!.deliveryCost,
+            subTotal: data!.subTotal,
+            discount: data!.discount,
+            total: data!.total,
+        };
+
+        try {
+            const result = await addOrder(orderPayload);
+            const orderId = result.data?.data._id;
+
+            if (orderId) {
+                const queryParams = new URLSearchParams(location.search);
+                const step = queryParams.get("step") || "0";
+
+                navigate(`/checkout?id=${orderId}&step=${step}`);
+            }
+        } catch (error) {
+            console.error("Error while adding order:", error);
+        }
+    };
+
     return (
         <Loading isLoading={isLoading || editLoading}>
             <DefaultLayout>
@@ -53,7 +92,8 @@ const CartModule = ({ data, isLoading }: CartModuleProps) => {
                         </div>
                         <CheckoutSummary
                             data={data}
-                            isLoading={isLoading || editLoading}
+                            isLoading={isLoading || editLoading || addLoading}
+                            handleCheckout={handleCheckout}
                         />
                     </div>
                 ) : (

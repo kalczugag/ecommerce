@@ -37,3 +37,10 @@ export interface Order {
     createdAt?: Date;
     updatedAt?: Date;
 }
+
+export interface Step {
+    label: string;
+    content: JSX.Element;
+    onNext?: () => void;
+    onComplete?: () => void;
+}

@@ -1,4 +1,4 @@
-import { ReactNode, useRef, useState } from "react";
+import { ReactNode, useState } from "react";
 import {
     Box,
     Button,
@@ -7,10 +7,9 @@ import {
     Typography,
     StepLabel,
 } from "@mui/material";
-import DeliveryAddress from "./DeliveryAddress";
-import OrderSummary from "./OrderSummary";
-import Payment from "./Payment";
+import { NavigateNext } from "@mui/icons-material";
 import useStep from "../hooks/useStep";
+import type { Step as StepProps } from "@/types/Order";
 
 interface TabPanelProps {
     children?: ReactNode;
@@ -18,7 +17,7 @@ interface TabPanelProps {
     value: number;
 }
 
-function CustomTabPanel(props: TabPanelProps) {
+const CustomTabPanel = (props: TabPanelProps) => {
     const { children, value, index, ...other } = props;
 
     return (
@@ -29,32 +28,12 @@ function CustomTabPanel(props: TabPanelProps) {
             aria-labelledby={`simple-tab-${index}`}
             {...other}
         >
-            {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+            {value === index && <Box sx={{ paddingY: 3 }}>{children}</Box>}
         </div>
     );
-}
+};
 
-interface Step {
-    label: string;
-    requiresSubmit: boolean;
-    content: JSX.Element;
-}
-
-const steps: Step[] = [
-    {
-        label: "Delivery Address",
-        requiresSubmit: true,
-        content: <DeliveryAddress />,
-    },
-    {
-        label: "Order Summary",
-        requiresSubmit: false,
-        content: <OrderSummary />,
-    },
-    { label: "Payment", requiresSubmit: false, content: <Payment /> },
-];
-
-const TabsWithStepper = () => {
+const TabsWithStepper = ({ steps }: { steps: StepProps[] }) => {
     const [setActiveStep, activeStep] = useStep();
     const [completed, setCompleted] = useState<{
         [k: number]: boolean;
@@ -96,59 +75,42 @@ const TabsWithStepper = () => {
                 ))}
             </Stepper>
             <div>
-                {allStepsCompleted() ? (
-                    <>
-                        <Typography sx={{ mt: 2, mb: 1 }}>
-                            All steps completed - you&apos;re finished
-                        </Typography>
-                        <Box
-                            sx={{
-                                display: "flex",
-                                flexDirection: "row",
-                                pt: 2,
-                            }}
+                {steps.map(({ content }, index) => (
+                    <CustomTabPanel
+                        key={index}
+                        value={activeStep}
+                        index={index}
+                    >
+                        {content}
+                    </CustomTabPanel>
+                ))}
+                <Box
+                    sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        pt: 2,
+                    }}
+                >
+                    <Button disabled={activeStep === 0} onClick={handleBack}>
+                        back
+                    </Button>
+                    {activeStep !== steps.length && (
+                        <Button
+                            variant="contained"
+                            endIcon={<NavigateNext />}
+                            onClick={
+                                completed[activeStep]
+                                    ? handleNext
+                                    : handleComplete
+                            }
                         >
-                            <Box sx={{ flex: "1 1 auto" }} />
-                            <Button onClick={handleReset}>Reset</Button>
-                        </Box>
-                    </>
-                ) : (
-                    <>
-                        {steps.map(({ content, requiresSubmit }, index) => (
-                            <CustomTabPanel
-                                key={index}
-                                value={activeStep}
-                                index={index}
-                            >
-                                {content}
-                            </CustomTabPanel>
-                        ))}
-                        <Box
-                            sx={{
-                                display: "flex",
-                                flexDirection: "row",
-                                pt: 2,
-                            }}
-                        >
-                            <Box sx={{ flex: "1 1 auto" }} />
-                            {activeStep !== steps.length &&
-                                (completed[activeStep] ? (
-                                    <Typography
-                                        variant="caption"
-                                        sx={{ display: "inline-block" }}
-                                    >
-                                        Step {activeStep + 1} already completed
-                                    </Typography>
-                                ) : (
-                                    <Button onClick={handleComplete}>
-                                        {completedSteps() === totalSteps() - 1
-                                            ? "Finish"
-                                            : "Complete Step"}
-                                    </Button>
-                                ))}
-                        </Box>
-                    </>
-                )}
+                            {steps[activeStep + 1]
+                                ? steps[activeStep + 1].label
+                                : ""}
+                        </Button>
+                    )}
+                </Box>
             </div>
         </Box>
     );

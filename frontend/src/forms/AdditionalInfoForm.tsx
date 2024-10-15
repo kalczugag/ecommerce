@@ -22,6 +22,8 @@ const AdditionalInfoForm = ({ isLoading }: AdditionalInfoFormProps) => {
                                 : null
                         }
                         disabled={isLoading}
+                        multiline
+                        rows={4}
                         fullWidth
                     />
                 )}

@@ -1,6 +1,15 @@
 import type { Cart } from "./Cart";
 import type { Role } from "./Role";
 
+export interface Address {
+    street: string;
+    apartment?: string;
+    city: string;
+    state?: string;
+    postalCode: number;
+    country: string;
+}
+
 export interface User {
     _id?: string;
     _cart: string | Cart;
@@ -8,14 +17,7 @@ export interface User {
     lastName: string;
     role: Role;
     birthday?: Date;
-    address?: {
-        street: string;
-        apartment?: string;
-        city: string;
-        state?: string;
-        postalCode: number;
-        country: string;
-    };
+    address?: Address;
     phone?: string;
     email: string;
     refreshToken: {

@@ -1,0 +1,39 @@
+import { Button } from "@mui/material";
+import type { Address, User } from "@/types/User";
+
+const Address = ({ data }: { data: Address }) => {
+    const { street, postalCode, city, country } = data;
+
+    return (
+        <div className="flex flex-col">
+            <p>st. {street || "-"}</p>
+            <p>
+                {postalCode || "-"} {city || "-"}, {country || "-"}
+            </p>
+        </div>
+    );
+};
+
+interface ContactProps {
+    data?: User;
+}
+
+const Contact = ({ data }: ContactProps) => (
+    <div className="flex justify-between items-end">
+        <div className="space-y-4">
+            <div>
+                <h3 className="text-lg font-bold mb-1">Delivery Address</h3>
+                {data?.address && <Address data={data.address} />}
+            </div>
+            <div>
+                <h4 className="font-bold mb-1">Phone number</h4>
+                <p>{data?.phone}</p>
+            </div>
+        </div>
+        <div>
+            <Button>Cancel Order</Button>
+        </div>
+    </div>
+);
+
+export default Contact;

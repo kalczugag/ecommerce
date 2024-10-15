@@ -6,18 +6,20 @@ import type { Sizes } from "@/modules/ProductsModule/ReadProductModule";
 interface CartProductItemProps {
     data: Item;
     isLoading: boolean;
-    onQuantityChange: (
+    editable?: boolean;
+    onQuantityChange?: (
         productId: string,
         quantity: number,
         size: Sizes,
         color: string
     ) => void;
-    onDelete: (productId: string, size: Sizes, color: string) => void;
+    onDelete?: (productId: string, size: Sizes, color: string) => void;
 }
 
 const CartProductItem = ({
     data,
     isLoading,
+    editable = true,
     onQuantityChange,
     onDelete,
 }: CartProductItemProps) => {
@@ -69,46 +71,48 @@ const CartProductItem = ({
                     </p>
                 </div>
             </div>
-            <div className="flex space-x-8">
-                <div className="flex items-center space-x-1">
-                    <IconButton
+            {editable && onQuantityChange && onDelete && (
+                <div className="flex space-x-8">
+                    <div className="flex items-center space-x-1">
+                        <IconButton
+                            onClick={() =>
+                                onQuantityChange(
+                                    product!._id!,
+                                    itemQuantity - 1,
+                                    data.size,
+                                    data.color
+                                )
+                            }
+                            disabled={isLoading || itemQuantity === 1}
+                        >
+                            <RemoveCircleOutline />
+                        </IconButton>
+                        <span>{itemQuantity}</span>
+                        <IconButton
+                            onClick={() =>
+                                onQuantityChange(
+                                    product!._id!,
+                                    itemQuantity + 1,
+                                    data.size,
+                                    data.color
+                                )
+                            }
+                            disabled={isLoading}
+                        >
+                            <AddCircleOutline />
+                        </IconButton>
+                    </div>
+                    <Button
+                        variant="contained"
                         onClick={() =>
-                            onQuantityChange(
-                                product!._id!,
-                                itemQuantity - 1,
-                                data.size,
-                                data.color
-                            )
-                        }
-                        disabled={isLoading || itemQuantity === 1}
-                    >
-                        <RemoveCircleOutline />
-                    </IconButton>
-                    <span>{itemQuantity}</span>
-                    <IconButton
-                        onClick={() =>
-                            onQuantityChange(
-                                product!._id!,
-                                itemQuantity + 1,
-                                data.size,
-                                data.color
-                            )
+                            onDelete(product!._id!, data.size, data.color)
                         }
                         disabled={isLoading}
                     >
-                        <AddCircleOutline />
-                    </IconButton>
+                        Remove
+                    </Button>
                 </div>
-                <Button
-                    variant="contained"
-                    onClick={() =>
-                        onDelete(product!._id!, data.size, data.color)
-                    }
-                    disabled={isLoading}
-                >
-                    Remove
-                </Button>
-            </div>
+            )}
         </div>
     );
 };
