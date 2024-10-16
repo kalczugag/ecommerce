@@ -19,19 +19,14 @@ interface ContactProps {
 }
 
 const Contact = ({ data }: ContactProps) => (
-    <div className="flex justify-between items-end">
-        <div className="space-y-4">
-            <div>
-                <h3 className="text-lg font-bold mb-1">Delivery Address</h3>
-                {data?.address && <Address data={data.address} />}
-            </div>
-            <div>
-                <h4 className="font-bold mb-1">Phone number</h4>
-                <p>{data?.phone}</p>
-            </div>
+    <div className="space-y-4">
+        <div>
+            <h3 className="text-lg font-bold mb-1">Delivery Address</h3>
+            {data?.address && <Address data={data.address} />}
         </div>
         <div>
-            <Button>Cancel Order</Button>
+            <h4 className="font-bold mb-1">Phone number</h4>
+            <p>{data?.phone}</p>
         </div>
     </div>
 );
