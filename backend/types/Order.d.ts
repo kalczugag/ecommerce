@@ -1,8 +1,9 @@
+import type { Product } from "./Product";
 import { User } from "./User";
 import { ParsedQs } from "qs";
 
 export interface Item {
-    product?: string;
+    product?: string | Product;
     color: string;
     size: string;
     unitPrice: number;

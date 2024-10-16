@@ -18,11 +18,7 @@ export const getOrderById = async (
                 path: "_user",
                 select: "firstName lastName phone address",
             })
-            .populate({
-                path: "items.product",
-                model: "Product",
-                select: "imageUrl brand title discountedPrice price discountPercent",
-            })
+            .populate("items.product")
             .exec();
 
         if (!order) {

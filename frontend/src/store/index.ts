@@ -28,3 +28,4 @@ export * from "./apis/summaryApi";
 export * from "./apis/reviewsApi";
 export * from "./apis/cartApi";
 export * from "./apis/userApi";
+export * from "./apis/paymentApi";

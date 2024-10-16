@@ -9,6 +9,7 @@ import summary from "./summary";
 import categories from "./categories";
 import reviews from "./reviews";
 import cart from "./cart";
+import payment from "./payment";
 
 const router = express.Router();
 
@@ -22,6 +23,7 @@ export default (): express.Router => {
     categories(router);
     reviews(router);
     cart(router);
+    payment(router);
 
     return router;
 };

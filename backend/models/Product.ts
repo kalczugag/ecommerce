@@ -35,8 +35,6 @@ const productSchema = new mongoose.Schema<Product>({
     description: { type: String },
 });
 
-export const ProductModel = mongoose.model("Product", productSchema);
-
 productSchema.pre("validate", async function (next) {
     const product = this;
 
@@ -70,3 +68,16 @@ productSchema.pre("validate", async function (next) {
 
     next();
 });
+
+productSchema.pre("save", function (next) {
+    if (this.discountPercent && this.price) {
+        this.discountedPrice =
+            this.price - (this.price * this.discountPercent) / 100;
+    } else {
+        this.discountedPrice = this.price;
+    }
+
+    next();
+});
+
+export const ProductModel = mongoose.model("Product", productSchema);

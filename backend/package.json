@@ -28,6 +28,7 @@
         "nodemon": "^3.1.4",
         "passport": "^0.7.0",
         "passport-jwt": "^4.0.1",
+        "stripe": "^17.2.0",
         "ts-node": "^10.9.2",
         "typescript": "^5.5.4"
     },
