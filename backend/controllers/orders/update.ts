@@ -50,7 +50,10 @@ export const updateOrder = async (
             return res.status(404).json({ error: "Order not found" });
         }
 
-        return res.status(200).json(updatedOrder);
+        return res.status(200).json({
+            msg: "Order updated successfully",
+            data: updatedOrder,
+        });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: "Internal server error" });

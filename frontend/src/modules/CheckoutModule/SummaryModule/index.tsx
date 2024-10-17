@@ -1,13 +1,20 @@
-import Loading from "@/components/Loading";
-import Box from "@/components/Box";
+import { loadStripe } from "@stripe/stripe-js";
+import { useCreatePaymentMutation } from "@/store";
 import { useOrder } from "@/contexts/OrderContext";
 import CartProductItem from "@/modules/CartModule/components/CartProductItem";
-import Contact from "./Contact";
 import CheckoutSummary from "@/modules/CartModule/components/CheckoutSummary";
+import Contact from "../components/Contact";
+import Box from "@/components/Box";
 import type { Cart } from "@/types/Cart";
 
-const OrderSummary = () => {
+const stripePromise = loadStripe(
+    "pk_test_51QAVfFCeAQbmOrQrs7FGHSpQGIkEEVEVHULiWMWYAIoBy1cGNYlmVSvQxy648SjYHG5JcDD01J3YIz5tuJCoeyoV003GfOyfFz"
+);
+
+const SummaryModule = () => {
     const { order, isLoading } = useOrder();
+    const [createPayment, { isLoading: paymentLoading }] =
+        useCreatePaymentMutation();
 
     const cartProps: Cart = {
         _user: order?._user?._id || "",
@@ -18,12 +25,21 @@ const OrderSummary = () => {
         total: order?.total || 0,
     };
 
-    const handleCheckout = () => {
-        console.log("s");
+    const handleCheckout = async () => {
+        try {
+            const { data } = await createPayment(order!);
+
+            if (data?.sessionId) {
+                const stripe = await stripePromise;
+                await stripe?.redirectToCheckout({ sessionId: data.sessionId });
+            }
+        } catch (err) {
+            console.error("Checkout error:", err);
+        }
     };
 
     return (
-        <Loading isLoading={isLoading} className="space-y-4">
+        <div className="space-y-4">
             <Box>
                 <Contact data={order?._user} />
             </Box>
@@ -40,13 +56,13 @@ const OrderSummary = () => {
                 </div>
                 <CheckoutSummary
                     data={cartProps}
-                    isLoading={isLoading}
+                    isLoading={isLoading || paymentLoading}
                     handleCheckout={handleCheckout}
                     isSummary
                 />
             </div>
-        </Loading>
+        </div>
     );
 };
 
-export default OrderSummary;
+export default SummaryModule;

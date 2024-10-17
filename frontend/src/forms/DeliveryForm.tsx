@@ -9,7 +9,7 @@ interface DeliveryFormProps {
 
 const DeliveryForm = ({ isLoading }: DeliveryFormProps) => {
     return (
-        <div className="space-y-4">
+        <div className="space-y-4 w-full">
             <Row>
                 <Field name="firstName" validate={required}>
                     {(props) => (

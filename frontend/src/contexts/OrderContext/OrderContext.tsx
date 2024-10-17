@@ -3,6 +3,7 @@ import type { Order } from "@/types/Order";
 
 export interface OrderContextProps {
     order?: Order;
+    steps: string[];
     isLoading: boolean;
     isError: boolean;
 }
@@ -16,6 +17,7 @@ interface OrderProviderProps {
     order?: Order;
     isLoading: boolean;
     isError: boolean;
+    steps: string[];
 }
 
 export const OrderProvider = ({
@@ -23,8 +25,9 @@ export const OrderProvider = ({
     order,
     isLoading,
     isError,
+    steps,
 }: OrderProviderProps) => (
-    <OrderContext.Provider value={{ order, isLoading, isError }}>
+    <OrderContext.Provider value={{ order, isLoading, isError, steps }}>
         {children}
     </OrderContext.Provider>
 );

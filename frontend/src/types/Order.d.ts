@@ -38,9 +38,11 @@ export interface Order {
     updatedAt?: Date;
 }
 
-export interface Step {
-    label: string;
-    content: JSX.Element;
-    onNext?: () => void;
-    onComplete?: () => void;
+export interface UpdateOrder {
+    _id?: string;
+    status?: Order["status"];
+    paymentMethod?: Order["paymentMethod"];
+    paymentStatus?: Order["paymentStatus"];
+    deliveryMethod?: Order["deliveryMethod"];
+    additionalInfo?: Order["additionalInfo"];
 }

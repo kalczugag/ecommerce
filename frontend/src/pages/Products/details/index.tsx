@@ -4,7 +4,7 @@ import ReadProductModule from "@/modules/ProductsModule/ReadProductModule";
 import NotFound from "@/components/NotFound";
 
 const ProductDetails = () => {
-    const { id } = useParams();
+    const { id } = useParams<{ id: string }>();
     const { data, isLoading, isError } = useGetProductByIdQuery(id || "");
     const { data: rating } = useGetReviewsByProductIdQuery(id || "");
 

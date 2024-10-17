@@ -9,6 +9,9 @@ import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Cart from "@/pages/Cart";
 import Checkout from "@/pages/Checkout";
+import Delivery from "@/pages/Checkout/Delivery";
+import Summary from "@/pages/Checkout/Summary";
+import CheckoutStatus from "@/pages/Checkout/Status";
 
 const App = () => {
     return (
@@ -27,7 +30,11 @@ const App = () => {
                     <Route path=":id" element={<OrderDetails />} />
                 </Route>
                 <Route path="/cart" element={<Cart />} />
-                <Route path="/checkout" element={<Checkout />} />
+                <Route path="/checkout/:orderId/*" element={<Checkout />}>
+                    <Route path="delivery" element={<Delivery />} />
+                    <Route path="summary" element={<Summary />} />
+                    <Route path="*" element={<CheckoutStatus />} />
+                </Route>
             </Route>
         </Routes>
     );

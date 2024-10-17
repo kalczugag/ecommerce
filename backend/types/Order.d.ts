@@ -40,6 +40,16 @@ export interface Order {
     updatedAt: Date;
 }
 
+export interface UpdateOrder {
+    _id?: string;
+    _user?: string;
+    status: Order["status"];
+    paymentMethod: Order["paymentMethod"];
+    paymentStatus: Order["paymentStatus"];
+    deliveryMethod: Order["deliveryMethod"];
+    additionalInfo: Order["additionalInfo"];
+}
+
 export interface PaginatedOrders extends ParsedQs {
     page: number;
     pageSize: number;

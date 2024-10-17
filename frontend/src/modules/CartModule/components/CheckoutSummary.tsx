@@ -58,19 +58,15 @@ const CheckoutSummary = ({
                 />
                 <Box title="Total Amount" value={`$${totalAmount}`} bold />
             </div>
-            {!isSummary && (
-                <>
-                    <Divider />
-                    <Button
-                        variant="contained"
-                        onClick={handleCheckout}
-                        disabled={isLoading}
-                        fullWidth
-                    >
-                        CHECK OUT
-                    </Button>
-                </>
-            )}
+            <Divider />
+            <Button
+                variant="contained"
+                onClick={handleCheckout}
+                disabled={isLoading}
+                fullWidth
+            >
+                {isSummary ? "PAYMENT" : "CHECK OUT"}
+            </Button>
         </div>
     );
 };

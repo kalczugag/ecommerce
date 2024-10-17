@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import _ from "lodash";
 import type { Filters } from "@/types/Filters";
 import type { Product } from "@/types/Product";

@@ -1,26 +1,30 @@
-import { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useOrder } from "@/contexts/OrderContext";
+import { useNavigate, useParams } from "react-router-dom";
 
-const useStep = (): [(value: React.SetStateAction<number>) => void, number] => {
-    const location = useLocation();
+const useStep = (): [
+    step: string | undefined,
+    nextStep: () => void,
+    prevStep: () => void
+] => {
     const navigate = useNavigate();
-    const queryParams = new URLSearchParams(location.search);
-    const initialStep = parseInt(queryParams.get("step")!) || 0;
+    const { order, steps } = useOrder();
+    const { "*": step } = useParams<{
+        "*": string;
+    }>();
 
-    const [step, setStep] = useState<number>(initialStep);
+    const activeStep = steps.indexOf(step!);
 
-    useEffect(() => {
-        const updatedParams = new URLSearchParams(location.search);
-        updatedParams.set("step", step.toString());
-
-        navigate(`?${updatedParams.toString()}`);
-    }, [step, navigate, location.search]);
-
-    const handleStepChange = (value: React.SetStateAction<number>) => {
-        setStep(value);
+    const nextStep = () => {
+        navigate(`/checkout/${order?._id}/${steps[activeStep + 1]}`);
     };
 
-    return [handleStepChange, step];
+    const prevStep = () => {
+        if (activeStep > 0) {
+            navigate(`/checkout/${order?._id}/${steps[activeStep - 1]}`);
+        }
+    };
+
+    return [step, nextStep, prevStep];
 };
 
 export default useStep;

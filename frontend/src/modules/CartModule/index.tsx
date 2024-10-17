@@ -64,10 +64,7 @@ const CartModule = ({ data, isLoading }: CartModuleProps) => {
             const orderId = result.data?.data._id;
 
             if (orderId) {
-                const queryParams = new URLSearchParams(location.search);
-                const step = queryParams.get("step") || "0";
-
-                navigate(`/checkout?id=${orderId}&step=${step}`);
+                navigate(`/checkout/${orderId}/delivery`);
             }
         } catch (error) {
             console.error("Error while adding order:", error);

@@ -1,5 +1,5 @@
 import { apiSlice } from "./apiSlice";
-import type { Order } from "@/types/Order";
+import type { Order, UpdateOrder } from "@/types/Order";
 
 export const ordersApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
@@ -17,7 +17,19 @@ export const ordersApi = apiSlice.injectEndpoints({
                 body: values,
             }),
         }),
+
+        updateOrder: builder.mutation<ApiResponseObject<Order>, UpdateOrder>({
+            query: (order) => ({
+                url: `/orders/${order._id}`,
+                method: "PATCH",
+                body: order,
+            }),
+        }),
     }),
 });
 
-export const { useGetOrderByIdQuery, useAddOrderMutation } = ordersApi;
+export const {
+    useGetOrderByIdQuery,
+    useAddOrderMutation,
+    useUpdateOrderMutation,
+} = ordersApi;

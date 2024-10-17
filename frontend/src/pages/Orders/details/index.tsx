@@ -4,7 +4,7 @@ import DefaultLayout from "@/layouts/DefaultLayout";
 import NotFound from "@/components/NotFound";
 
 const OrderDetails = () => {
-    const { id } = useParams();
+    const { id } = useParams<{ id: string }>();
     const { data, isLoading, isError } = useGetOrderByIdQuery(id || "");
 
     if (isError || (!isLoading && !data)) return <NotFound />;

@@ -55,8 +55,8 @@ export const createCheckoutSession = async (
             payment_method_types: ["card", "paypal"],
             mode: "payment",
             line_items: lineItems,
-            success_url: `http://localhost:3000/checkout?id=${order._id}&step=1`,
-            cancel_url: "http://localhost:3000/checkout?id=${order._id}&step=2",
+            success_url: `http://localhost:3000/checkout/${order._id}/success`,
+            cancel_url: `http://localhost:3000/checkout/${order._id}/cancel`,
         });
 
         return res.json({ sessionId: session.id });

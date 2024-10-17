@@ -6,7 +6,8 @@ import ProductsDataListModule from "@/modules/ProductsModule/ProductsDataListMod
 const ROWS_PER_PAGE = 8;
 
 const Catalog = () => {
-    const { topLevel, secondLevel, thirdLevel } = useParams();
+    const { topLevel, secondLevel, thirdLevel } =
+        useParams<Record<string, string>>();
     const [handlePageChange, page] = usePagination();
 
     const category = [topLevel, secondLevel, thirdLevel]
