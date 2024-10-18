@@ -37,15 +37,19 @@ const DeliveryModule = () => {
                         <DeliveryForm
                             isLoading={isLoading || isUpdating || true}
                         />
-                        <div className="flex justify-end col-span-2">
-                            <Button
-                                variant="contained"
-                                type="submit"
-                                className="col-span-2"
-                                disabled={isUpdating}
-                            >
-                                Use this address
-                            </Button>
+                        <div className="flex justify-end md:col-span-2">
+                            <div className="flex flex-col items-center space-y-2">
+                                <Button
+                                    variant="contained"
+                                    type="submit"
+                                    disabled={isUpdating}
+                                >
+                                    Use this address
+                                </Button>
+                                <span className="text-sm text-gray-500 underline">
+                                    Cannot edit address
+                                </span>
+                            </div>
                         </div>
                     </form>
                 );

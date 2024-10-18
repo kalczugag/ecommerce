@@ -1,18 +1,16 @@
 import { useGetOrdersByUserIdQuery } from "@/store";
 import useAuth from "@/hooks/useAuth";
-import DefaultLayout from "@/layouts/DefaultLayout";
+import ReadOrderListModule from "@/modules/OrderModule/ReadOrderListModule";
 
 const OrdersList = () => {
     const { userId } = useAuth();
 
-    const { data } = useGetOrdersByUserIdQuery(userId || "", {
+    const { data, isLoading } = useGetOrdersByUserIdQuery(userId || "", {
         skip: !userId,
     });
 
     return (
-        <DefaultLayout>
-            <div></div>
-        </DefaultLayout>
+        <ReadOrderListModule data={data?.data || []} isLoading={isLoading} />
     );
 };
 

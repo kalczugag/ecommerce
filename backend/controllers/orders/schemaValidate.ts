@@ -21,7 +21,7 @@ const schema = Joi.object({
     ),
     total: Joi.number().positive().required(),
     subTotal: Joi.number().positive().required(),
-    discount: Joi.number().positive(),
+    discount: Joi.number().min(0).max(100),
     paymentMethod: Joi.string().valid("cash", "stripe", "paypal"),
     paymentStatus: Joi.string().valid(
         "unpaid",

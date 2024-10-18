@@ -48,7 +48,9 @@ const CheckoutSummary = ({
                 />
                 <Box
                     title="Discount"
-                    value={`-$${data.discount}`}
+                    value={
+                        data.discount > 0 ? `-$${data.discount}` : "No discount"
+                    }
                     color="green"
                 />
                 <Box
