@@ -1,7 +1,6 @@
 import "module-alias/register";
 import express from "express";
 import { summaryCronJob } from "./config/cronJob";
-import { ProductModel } from "./models/Product";
 
 import cors from "cors";
 
@@ -17,6 +16,15 @@ const app = express();
 
 app.use(cors());
 app.use(cookieParser());
+
+app.post(
+    "/api/v1/webhook",
+    bodyParser.raw({ type: "application/json" }),
+    (req, res, next) => {
+        next();
+    }
+);
+
 app.use(bodyParser.json());
 
 app.use("/api/v1", appRouter());

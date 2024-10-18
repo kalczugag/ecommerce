@@ -19,6 +19,7 @@ export const stripeWebhook = async (
             sig,
             process.env.STRIPE_WEBHOOK_SECRET!
         );
+
         console.log("webhook verified", event.type);
     } catch (error: any) {
         console.error(error);
@@ -28,14 +29,19 @@ export const stripeWebhook = async (
     }
 
     switch (event.type) {
-        case "payment_intent.succeeded":
-            const paymentIntent = event.data.object as Stripe.PaymentIntent;
-            const { orderId, userId } = paymentIntent.metadata;
+        case "checkout.session.completed":
+            const session = event.data.object as Stripe.Checkout.Session;
+            const { orderId, userId } = session.metadata!;
 
             if (orderId && userId) {
                 await updateOrder(orderId, "confirmed", "paid");
                 await clearCart(userId);
             }
+
+            break;
+
+        case "payment_intent.succeeded":
+            const paymentIntent = event.data.object as Stripe.PaymentIntent;
 
             break;
 

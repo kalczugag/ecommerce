@@ -34,33 +34,42 @@ export const createCheckoutSession = async (
         };
     });
 
-    const deliveryCost = order.deliveryCost;
-    if (deliveryCost > 0) {
-        lineItems.push({
-            price_data: {
-                currency: "usd",
-                product_data: {
-                    name: "Delivery Fee",
-                    images: [],
-                },
-                unit_amount: deliveryCost * 100,
-            },
-            quantity: 1,
-        });
-    }
-
     try {
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ["card", "paypal"],
             mode: "payment",
+            line_items: lineItems,
             metadata: {
                 userId: order._user._id!,
                 orderId: order._id!,
             },
-            line_items: lineItems,
+            shipping_options: [
+                {
+                    shipping_rate_data: {
+                        type: "fixed_amount",
+                        fixed_amount: {
+                            amount: order.deliveryCost * 100,
+                            currency: "usd",
+                        },
+                        display_name: "Free Shipping",
+                        delivery_estimate: {
+                            minimum: {
+                                unit: "business_day",
+                                value: 1,
+                            },
+                            maximum: {
+                                unit: "business_day",
+                                value: 3,
+                            },
+                        },
+                    },
+                },
+            ],
             success_url: `http://localhost:3000/checkout/${order._id}/success`,
-            cancel_url: `http://localhost:3000/checkout/${order._id}/cancel`,
+            cancel_url: `http://localhost:3000/checkout/${order._id}/summary`,
         });
+
+        console.log(session);
 
         return res.json({ sessionId: session.id });
     } catch (error) {

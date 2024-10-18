@@ -10,6 +10,13 @@ export const ordersApi = apiSlice.injectEndpoints({
             }),
         }),
 
+        getOrdersByUserId: builder.query<ApiResponseArray<Order>, string>({
+            query: (id) => ({
+                url: `/orders/userId/${id}`,
+                method: "GET",
+            }),
+        }),
+
         addOrder: builder.mutation<ApiResponseObject<Order>, Order>({
             query: (values) => ({
                 url: "/orders",
@@ -30,6 +37,7 @@ export const ordersApi = apiSlice.injectEndpoints({
 
 export const {
     useGetOrderByIdQuery,
+    useGetOrdersByUserIdQuery,
     useAddOrderMutation,
     useUpdateOrderMutation,
 } = ordersApi;

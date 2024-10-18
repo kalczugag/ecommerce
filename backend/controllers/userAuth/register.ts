@@ -61,6 +61,7 @@ export const register = async (
         return res.status(201).json({
             success: true,
             isAdmin: false,
+            userId: newUser._id,
             cartId: newUser._cart,
             ...accessToken,
         });

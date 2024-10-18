@@ -1,4 +1,5 @@
 import express from "express";
+import bodyParser from "body-parser";
 
 import methods from "@/controllers/payment";
 
@@ -6,7 +7,7 @@ const payment = (router: express.Router) => {
     router.post("/checkout", methods.create);
     router.post(
         "/webhook",
-        express.raw({ type: "application/json" }),
+        bodyParser.raw({ type: "application/json" }),
         methods.webhook
     );
 };
