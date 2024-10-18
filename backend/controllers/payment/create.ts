@@ -4,7 +4,6 @@ import type { Product } from "@/types/Product";
 
 import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_SECRET!);
-console.log(process.env.STRIPE_SECRET!);
 
 export const createCheckoutSession = async (
     req: express.Request<{}, {}, Order>,
@@ -54,6 +53,10 @@ export const createCheckoutSession = async (
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ["card", "paypal"],
             mode: "payment",
+            metadata: {
+                userId: order._user._id!,
+                orderId: order._id!,
+            },
             line_items: lineItems,
             success_url: `http://localhost:3000/checkout/${order._id}/success`,
             cancel_url: `http://localhost:3000/checkout/${order._id}/cancel`,

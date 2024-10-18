@@ -34,7 +34,9 @@ const DeliveryModule = () => {
                         <AdditionalInfoForm
                             isLoading={isLoading || isUpdating}
                         />
-                        <DeliveryForm isLoading={isLoading || isUpdating} />
+                        <DeliveryForm
+                            isLoading={isLoading || isUpdating || true}
+                        />
                         <div className="flex justify-end col-span-2">
                             <Button
                                 variant="contained"
