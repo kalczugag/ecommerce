@@ -1,8 +1,8 @@
 import express from "express";
-import { ProductModel } from "@/models/Product";
-import { CategoryModel } from "@/models/Categories";
-import { PaginatedProducts } from "@/types/Product";
-import { Category } from "@/types/Category";
+import { ProductModel } from "../../models/Product";
+import { CategoryModel } from "../../models/Categories";
+import { PaginatedProducts } from "../../types/Product";
+import { Category } from "../../types/Category";
 
 // Returns an array of products paginated by page and pageSize query parameters.
 // If query parameter 'random' is present, returns a single random product.

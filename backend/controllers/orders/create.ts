@@ -1,8 +1,8 @@
 import express from "express";
 import schema from "./schemaValidate";
-import { OrderModel } from "@/models/Order";
-import type { Order } from "@/types/Order";
-import type { User } from "@/types/User";
+import { OrderModel } from "../../models/Order";
+import type { Order } from "../../types/Order";
+import type { User } from "../../types/User";
 
 export const createOrder = async (
     req: express.Request<{}, {}, Order>,

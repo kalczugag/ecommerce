@@ -1,8 +1,8 @@
 import express from "express";
 import passport from "passport";
 
-import methods from "@/controllers/roles";
-import { hasRole } from "@/middlewares";
+import methods from "../../controllers/roles";
+import { hasRole } from "../../middlewares";
 
 const roles = (router: express.Router) => {
     router.get(

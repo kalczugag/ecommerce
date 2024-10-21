@@ -1,4 +1,4 @@
-import { updateSummaryStatistics } from "@/settings/tasks";
+import { updateSummaryStatistics } from "../settings/tasks";
 
 export const summaryCronJob = () => {
     updateSummaryStatistics().catch((error) => {

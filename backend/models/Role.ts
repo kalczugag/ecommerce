@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import type { Role } from "@/types/Role";
+import type { Role } from "../types/Role";
 
 const roleSchema = new mongoose.Schema<Role>(
     {

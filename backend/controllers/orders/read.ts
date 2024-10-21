@@ -1,6 +1,6 @@
 import express from "express";
-import { OrderModel } from "@/models/Order";
-import { PaginatedOrders } from "@/types/Order";
+import { OrderModel } from "../../models/Order";
+import { PaginatedOrders } from "../../types/Order";
 
 export const getAllOrders = async (
     req: express.Request<{}, {}, {}, PaginatedOrders>,

@@ -1,7 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 
-import methods from "@/controllers/payment";
+import methods from "../../controllers/payment";
 
 const payment = (router: express.Router) => {
     router.post("/checkout", methods.create);

@@ -1,7 +1,7 @@
 import express from "express";
 import schema from "./schemaValidate";
-import { CategoryModel } from "@/models/Categories";
-import { Category } from "@/types/Category";
+import { CategoryModel } from "../../models/Categories";
+import { Category } from "../../types/Category";
 
 export const createCategory = async (
     req: express.Request<{}, {}, Category>,

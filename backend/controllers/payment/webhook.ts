@@ -1,7 +1,7 @@
 import express from "express";
-import { OrderModel } from "@/models/Order";
-import { CartModel } from "@/models/Cart";
-import type { Order } from "@/types/Order";
+import { OrderModel } from "../../models/Order";
+import { CartModel } from "../../models/Cart";
+import type { Order } from "../../types/Order";
 
 import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_SECRET!);

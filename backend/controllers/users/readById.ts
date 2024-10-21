@@ -1,6 +1,6 @@
 import express from "express";
 import { isValidObjectId } from "mongoose";
-import { UserModel } from "@/models/User";
+import { UserModel } from "../../models/User";
 
 export const getUserById = async (
     req: express.Request<{ id: string }>,

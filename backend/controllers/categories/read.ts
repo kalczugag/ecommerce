@@ -1,10 +1,10 @@
 import express from "express";
-import { CategoryModel } from "@/models/Categories";
+import { CategoryModel } from "../../models/Categories";
 import {
     PaginatedCategories,
     Category,
     SortedCategories,
-} from "@/types/Category";
+} from "../../types/Category";
 import _ from "lodash";
 
 export const getAllCategories = async (

@@ -1,6 +1,6 @@
 import express from "express";
 import { isValidObjectId } from "mongoose";
-import { ProductModel } from "@/models/Product";
+import { ProductModel } from "../../models/Product";
 
 export const deleteProduct = async (
     req: express.Request<{ id: string }>,

@@ -1,7 +1,7 @@
 import express from "express";
 import { isValidObjectId } from "mongoose";
-import { CartModel } from "@/models/Cart";
-import type { Item } from "@/types/Order";
+import { CartModel } from "../../models/Cart";
+import type { Item } from "../../types/Order";
 
 interface BodyProps {
     action: "add" | "delete" | "changeQuantity";

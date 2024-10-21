@@ -1,7 +1,7 @@
 import express from "express";
 import schema from "./schemaValidate";
-import { ProductModel } from "@/models/Product";
-import { Product } from "@/types/Product";
+import { ProductModel } from "../../models/Product";
+import { Product } from "../../types/Product";
 
 export const createProduct = async (
     req: express.Request<{}, {}, Product>,

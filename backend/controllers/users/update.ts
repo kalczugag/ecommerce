@@ -1,7 +1,7 @@
 import express from "express";
-import { RoleModel } from "@/models/Role";
-import { UserModel } from "@/models/User";
-import { User } from "@/types/User";
+import { RoleModel } from "../../models/Role";
+import { UserModel } from "../../models/User";
+import { User } from "../../types/User";
 import { isValidObjectId } from "mongoose";
 
 //only role update for now

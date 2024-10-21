@@ -1,5 +1,5 @@
 import express from "express";
-import { SummaryModel } from "@/models/Summary";
+import { SummaryModel } from "../../models/Summary";
 
 export const getSummary = async (
     req: express.Request,

@@ -1,5 +1,5 @@
 import express from "express";
-import { UserModel } from "@/models/User";
+import { UserModel } from "../../models/User";
 
 export const logout = async (req: express.Request, res: express.Response) => {
     const cookies = req.cookies;

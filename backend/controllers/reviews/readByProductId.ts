@@ -1,6 +1,6 @@
 import { isValidObjectId } from "mongoose";
 import express from "express";
-import { ReviewModel } from "@/models/Review";
+import { ReviewModel } from "../../models/Review";
 
 export const getReviewsByProduct = async (
     req: express.Request<{ id: string }>,

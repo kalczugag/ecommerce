@@ -1,9 +1,9 @@
 import moment from "moment";
 import _ from "lodash";
 
-import { OrderModel } from "@/models/Order";
-import { UserModel } from "@/models/User";
-import { SummaryModel } from "@/models/Summary";
+import { OrderModel } from "../models/Order";
+import { UserModel } from "../models/User";
+import { SummaryModel } from "../models/Summary";
 
 export const updateSummaryStatistics = async () => {
     try {

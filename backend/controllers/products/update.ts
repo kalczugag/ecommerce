@@ -1,7 +1,7 @@
 import express from "express";
 import { isValidObjectId } from "mongoose";
-import { ProductModel } from "@/models/Product";
-import type { Product } from "@/types/Product";
+import { ProductModel } from "../../models/Product";
+import type { Product } from "../../types/Product";
 
 export const updateProduct = async (
     req: express.Request<{ id: string }, {}, Product>,

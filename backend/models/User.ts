@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import { SummaryModel } from "./Summary";
 import { CartModel } from "./Cart";
-import { getStartOfThisWeek } from "@/utils/helpers";
-import type { User } from "@/types/User";
+import { getStartOfThisWeek } from "../utils/helpers";
+import type { User } from "../types/User";
 
 const addressSchema = new mongoose.Schema(
     {

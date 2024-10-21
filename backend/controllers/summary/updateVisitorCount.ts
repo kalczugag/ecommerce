@@ -1,10 +1,10 @@
 import express from "express";
-import { SummaryModel } from "@/models/Summary";
+import { SummaryModel } from "../../models/Summary";
 import {
     getStartOfThisWeek,
     getStartOfThisMonth,
     getStartOfThisYear,
-} from "@/utils/helpers";
+} from "../../utils/helpers";
 
 export const updateVisitorCount = async (
     req: express.Request<{}, {}, { isLoggedIn?: boolean }>,

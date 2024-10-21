@@ -1,5 +1,5 @@
 import express from "express";
-import { User } from "@/types/User";
+import { User } from "../types/User";
 import { get } from "lodash";
 
 export const hasRole =

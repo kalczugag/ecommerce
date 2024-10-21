@@ -1,7 +1,7 @@
 import express from "express";
 import _ from "lodash";
-import { UserModel } from "@/models/User";
-import { PaginatedUsers } from "@/types/User";
+import { UserModel } from "../../models/User";
+import { PaginatedUsers } from "../../types/User";
 
 export const getUsersByRole = async (
     req: express.Request<{}, {}, {}, PaginatedUsers>,

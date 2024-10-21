@@ -1,5 +1,5 @@
 import express from "express";
-import { CategoryModel } from "@/models/Categories";
+import { CategoryModel } from "../../models/Categories";
 
 export const getCategoryByLevel = async (
     req: express.Request<{}, {}, {}, { level: string }>,

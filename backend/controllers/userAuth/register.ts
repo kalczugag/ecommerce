@@ -1,10 +1,10 @@
 import express from "express";
 import ms from "ms";
-import { genPassword, issueJWT } from "@/utils/helpers";
+import { genPassword, issueJWT } from "../../utils/helpers";
 import schema from "./schemaValidate";
-import { UserModel } from "@/models/User";
-import { RoleModel } from "@/models/Role";
-import { User } from "@/types/User";
+import { UserModel } from "../../models/User";
+import { RoleModel } from "../../models/Role";
+import { User } from "../../types/User";
 
 interface RegisterRequestBody extends User {
     password: string;

@@ -1,6 +1,6 @@
 import express from "express";
-import { UserModel } from "@/models/User";
-import { PaginatedUsers } from "@/types/User";
+import { UserModel } from "../../models/User";
+import { PaginatedUsers } from "../../types/User";
 
 export const getAllUsers = async (
     req: express.Request<{}, {}, {}, PaginatedUsers>,

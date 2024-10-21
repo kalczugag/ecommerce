@@ -1,7 +1,7 @@
 import express from "express";
 import passport from "passport";
 
-import methods from "@/controllers/userAuth";
+import methods from "../../controllers/userAuth";
 
 const auth = (router: express.Router) => {
     router.get(

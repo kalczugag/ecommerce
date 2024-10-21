@@ -1,6 +1,6 @@
 import express from "express";
-import { CartModel } from "@/models/Cart";
-import type { User } from "@/types/User";
+import { CartModel } from "../../models/Cart";
+import type { User } from "../../types/User";
 
 export const getCartItems = async (
     req: express.Request,

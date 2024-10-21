@@ -1,6 +1,6 @@
 import express from "express";
 import moment from "moment";
-import { OrderModel } from "@/models/Order";
+import { OrderModel } from "../../models/Order";
 
 interface IncomeByPeriod {
     period: string;

@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import type { Cart } from "@/types/Cart";
+import type { Cart } from "../types/Cart";
 import { itemSchema } from "./Order";
 
 const cartSchema = new mongoose.Schema<Cart>({

@@ -1,7 +1,7 @@
 import express from "express";
 import schema from "./schemaValidate";
-import { RoleModel } from "@/models/Role";
-import { Permission } from "@/types/Role";
+import { RoleModel } from "../../models/Role";
+import { Permission } from "../../types/Role";
 
 export const createRole = async (
     req: express.Request<{}, {}, Permission[]>,

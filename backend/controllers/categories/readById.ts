@@ -1,6 +1,6 @@
 import express from "express";
 import { isValidObjectId } from "mongoose";
-import { CategoryModel } from "@/models/Categories";
+import { CategoryModel } from "../../models/Categories";
 
 export const getCategoryById = async (
     req: express.Request<{ id: string }>,

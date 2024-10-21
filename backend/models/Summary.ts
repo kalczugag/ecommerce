@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Summary } from "@/types/Summary";
+import { Summary } from "../types/Summary";
 
 const SummarySchema = new mongoose.Schema<Summary>(
     {

@@ -1,6 +1,6 @@
 import express from "express";
-import type { Order } from "@/types/Order";
-import type { Product } from "@/types/Product";
+import type { Order } from "../../types/Order";
+import type { Product } from "../../types/Product";
 
 import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_SECRET!);
