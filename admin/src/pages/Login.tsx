@@ -25,6 +25,16 @@ const Login = () => {
             onSubmit={handleLogin}
             render={({ handleSubmit }) => (
                 <form onSubmit={handleSubmit} className="space-y-8">
+                    <div className="text-gray-400">
+                        <p className="font-bold">Admin demo credentials</p>
+                        <p>
+                            email:{" "}
+                            <span className="underline">admin@test.pl</span>
+                        </p>
+                        <p>
+                            password: <span className="underline">test123</span>
+                        </p>
+                    </div>
                     <LoginForm isLoading={isLoading} />
                     <Button
                         type="submit"
