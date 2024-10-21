@@ -5,7 +5,8 @@
     "scripts": {
         "dev": "nodemon",
         "build": "tsc",
-        "start": "cross-env NODE_ENV=production node dist/server.js"
+        "start": "node dist/server.js",
+        "serve": "cross-env NODE_ENV=production && node dist/server.js"
     },
     "author": "",
     "license": "ISC",

@@ -1,8 +1,8 @@
 import dotenv from "dotenv";
+dotenv.config({ path: [".env.local", ".env"] });
+
 import mongoose from "mongoose";
 import app from "./app";
-
-dotenv.config({ path: [".env.local", ".env"] });
 
 if (!process.env.DATABASE) {
     throw new Error("DATABASE environment variable is not set");
