@@ -8,8 +8,7 @@ import { setCredentials, logOut } from "../auth/authSlice";
 import { RootState } from "..";
 
 const baseQuery = fetchBaseQuery({
-    baseUrl:
-        window.location.protocol + "//" + window.location.host + "/api" + "/v1",
+    baseUrl: import.meta.env.VITE_BACKEND_SERVER + "/api" + "/v1",
     credentials: "include",
     prepareHeaders: (headers, { getState }) => {
         const state = getState() as RootState;
