@@ -1,0 +1,5 @@
+[[redirects]]
+  from = "/api/*"
+  to = "https://backend-nine-pearl.vercel.app/api/:splat"
+  status = 200
+  force = true

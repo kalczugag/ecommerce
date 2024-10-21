@@ -16,12 +16,15 @@ const app = express();
 app.use(
     cors({
         origin: [
+            "http://localhost:3000",
             "https://admin-ecommerce-df8fb1.netlify.app/",
             "https://frontend-ecommerce-df8fb1.netlify.app",
         ],
         credentials: true,
+        methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     })
 );
+app.options("*", cors());
 app.use(cookieParser());
 
 app.post(
