@@ -15,7 +15,10 @@ const app = express();
 
 app.use(
     cors({
-        origin: true,
+        origin: [
+            "https://admin-ecommerce-df8fb1.netlify.app/",
+            "https://frontend-ecommerce-df8fb1.netlify.app",
+        ],
         credentials: true,
     })
 );
