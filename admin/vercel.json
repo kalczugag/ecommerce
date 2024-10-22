@@ -1,0 +1,20 @@
+{
+    "rewrites": [
+        {
+            "source": "/api/(.*)",
+            "destination": "https://backend-sable-seven.vercel.app/api/$1"
+        }
+    ],
+    "headers": [
+        {
+            "source": "/(.*)",
+            "headers": [
+                {
+                    "key": "Access-Control-Allow-Origin",
+                    "value": "https://ecommerce-admin-seven-cyan.vercel.app"
+                },
+                { "key": "Access-Control-Allow-Credentials", "value": "true" }
+            ]
+        }
+    ]
+}
