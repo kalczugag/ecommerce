@@ -13,13 +13,7 @@ import "./config/cron";
 
 const app = express();
 
-app.use(
-    cors({
-        origin: true,
-        credentials: true,
-    })
-);
-app.options("*", cors());
+app.use(cors());
 app.use(cookieParser());
 
 app.post(
@@ -32,7 +26,7 @@ app.post(
 
 app.use(bodyParser.json());
 
-app.use("/api/v1", cors(), appRouter());
+app.use("/api/v1", appRouter());
 
 app.post("/trigger-summary-cron", (req, res) => {
     summaryCronJob();
