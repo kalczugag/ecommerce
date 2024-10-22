@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useGetUsersCartQuery, useLogoutMutation } from "@/store";
+import { useSnackbar } from "notistack";
 import useAuth from "@/hooks/useAuth";
 import { Box, Tooltip, IconButton, Menu } from "@mui/material";
 import { Search, PersonOutlineOutlined } from "@mui/icons-material";
@@ -13,6 +14,7 @@ const AccountTools = () => {
     const { data } = useGetUsersCartQuery(undefined, {
         skip: !token,
     });
+    const { enqueueSnackbar } = useSnackbar();
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
     const [logout] = useLogoutMutation();
@@ -26,9 +28,17 @@ const AccountTools = () => {
     };
 
     const handleLogout = async () => {
-        handleCloseUserMenu();
-        await logout();
-        alert("Logged out");
+        try {
+            handleCloseUserMenu();
+            await logout();
+            enqueueSnackbar("Logged out successfully", {
+                variant: "success",
+            });
+        } catch (error) {
+            enqueueSnackbar("Failed to logout", {
+                variant: "error",
+            });
+        }
     };
 
     return (

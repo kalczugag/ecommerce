@@ -3,10 +3,12 @@ import { Outlet, useLocation } from "react-router-dom";
 import { useRefreshTokenQuery, useUpdateVisitorCountMutation } from "@/store";
 import Layout from "@/layouts/Layout";
 import useAuth from "@/hooks/useAuth";
+import { useSnackbar } from "notistack";
 
 const PrivateOutlet = () => {
     const { token } = useAuth();
     const location = useLocation();
+    const { enqueueSnackbar } = useSnackbar();
 
     useRefreshTokenQuery(undefined, {
         skip:
@@ -20,6 +22,12 @@ const PrivateOutlet = () => {
     useEffect(() => {
         updateView({});
     }, []);
+
+    useEffect(() => {
+        if (token) {
+            enqueueSnackbar("Logged in successfully", { variant: "success" });
+        }
+    }, [token]);
 
     return (
         <Layout>

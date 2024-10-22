@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useAddOrderMutation, useEditUsersCartMutation } from "@/store";
+import { useSnackbar } from "notistack";
 import useAuth from "@/hooks/useAuth";
 import DefaultLayout from "@/layouts/DefaultLayout";
 import Loading from "@/components/Loading";
@@ -17,6 +18,7 @@ interface CartModuleProps {
 const CartModule = ({ data, isLoading }: CartModuleProps) => {
     const navigate = useNavigate();
     const { token } = useAuth();
+    const { enqueueSnackbar } = useSnackbar();
 
     const [editCart, { isLoading: editLoading }] = useEditUsersCartMutation();
     const [addOrder, { isLoading: addLoading }] = useAddOrderMutation();
@@ -37,8 +39,28 @@ const CartModule = ({ data, isLoading }: CartModuleProps) => {
         });
     };
 
-    const handleDelete = (productId: string, size: Sizes, color: string) => {
-        editCart({ _id: data?._id, action: "delete", productId, size, color });
+    const handleDelete = async (
+        productId: string,
+        size: Sizes,
+        color: string
+    ) => {
+        try {
+            await editCart({
+                _id: data?._id,
+                action: "delete",
+                productId,
+                size,
+                color,
+            }).unwrap();
+
+            enqueueSnackbar("Product removed from cart successfully", {
+                variant: "success",
+            });
+        } catch (error) {
+            enqueueSnackbar("Failed to remove product from cart", {
+                variant: "error",
+            });
+        }
     };
 
     const handleCheckout = async () => {

@@ -5,12 +5,15 @@ import { BrowserRouter } from "react-router-dom";
 import { store } from "./store";
 import App from "./App.tsx";
 import "./index.css";
+import { SnackbarProvider } from "notistack";
 
 createRoot(document.getElementById("root")!).render(
     <StrictMode>
         <Provider store={store}>
             <BrowserRouter>
-                <App />
+                <SnackbarProvider autoHideDuration={2000} preventDuplicate>
+                    <App />
+                </SnackbarProvider>
             </BrowserRouter>
         </Provider>
     </StrictMode>
