@@ -16,9 +16,10 @@ import {
     ListItemIcon,
 } from "@mui/material";
 import { Logout, Settings, Menu as MenuIcon } from "@mui/icons-material";
+import { enqueueSnackbar } from "notistack";
 
 const Header = () => {
-    const [logout, { isLoading }] = useLogoutMutation();
+    const [logout] = useLogoutMutation();
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
@@ -36,9 +37,18 @@ const Header = () => {
     };
 
     const handleLogout = async () => {
-        handleClose();
-        await logout();
-        navigate("/login");
+        try {
+            handleClose();
+            await logout().unwrap();
+            navigate("/login");
+            enqueueSnackbar("Logged out successfully", {
+                variant: "success",
+            });
+        } catch (error) {
+            enqueueSnackbar("Failed to logout", {
+                variant: "error",
+            });
+        }
     };
 
     return (

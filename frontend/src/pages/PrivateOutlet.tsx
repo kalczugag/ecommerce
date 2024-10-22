@@ -1,14 +1,13 @@
 import { useEffect } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { useRefreshTokenQuery, useUpdateVisitorCountMutation } from "@/store";
-import Layout from "@/layouts/Layout";
 import useAuth from "@/hooks/useAuth";
-import { useSnackbar } from "notistack";
+import { enqueueSnackbar } from "notistack";
+import Layout from "@/layouts/Layout";
 
 const PrivateOutlet = () => {
     const { token } = useAuth();
     const location = useLocation();
-    const { enqueueSnackbar } = useSnackbar();
 
     useRefreshTokenQuery(undefined, {
         skip:

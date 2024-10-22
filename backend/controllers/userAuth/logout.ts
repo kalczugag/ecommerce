@@ -21,7 +21,7 @@ export const logout = async (req: express.Request, res: express.Response) => {
             res.clearCookie("refreshToken", {
                 httpOnly: true,
                 secure: true,
-                sameSite: "strict",
+                sameSite: "none",
             });
 
             return res.status(401).json({ error: "Invalid refresh token" });
@@ -35,7 +35,7 @@ export const logout = async (req: express.Request, res: express.Response) => {
         res.clearCookie("refreshToken", {
             httpOnly: true,
             secure: true,
-            sameSite: "strict",
+            sameSite: "none",
         });
 
         return res.status(200).json("Logged out successfully");

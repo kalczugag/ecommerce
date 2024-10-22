@@ -1,3 +1,4 @@
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { apiSlice } from "../apis/apiSlice";
 import { logOut, setCredentials } from "./authSlice";
 
@@ -33,17 +34,20 @@ export const authApiSlice = apiSlice.injectEndpoints({
             async onQueryStarted(arg, { dispatch, queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled;
-                    dispatch(
-                        setCredentials({
-                            token: data.token,
-                            isAdmin: data.isAdmin,
-                            expires: data.expires,
-                            userId: data.userId,
-                            cartId: data.cartId,
-                        })
-                    );
-                } catch (err) {
-                    console.error("Login error", err);
+                    if ("token" in data) {
+                        dispatch(
+                            setCredentials({
+                                token: data.token,
+                                isAdmin: data.isAdmin,
+                                expires: data.expires,
+                                userId: data.userId,
+                                cartId: data.cartId,
+                            })
+                        );
+                    }
+                } catch (err: any) {
+                    const errorMessage = err?.data?.error || "Login failed";
+                    return Promise.reject(errorMessage);
                 }
             },
         }),
@@ -57,17 +61,21 @@ export const authApiSlice = apiSlice.injectEndpoints({
             async onQueryStarted(arg, { dispatch, queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled;
-                    dispatch(
-                        setCredentials({
-                            token: data.token,
-                            isAdmin: data.isAdmin,
-                            expires: data.expires,
-                            userId: data.userId,
-                            cartId: data.cartId,
-                        })
-                    );
-                } catch (err) {
-                    console.error("Register error", err);
+                    if ("token" in data) {
+                        dispatch(
+                            setCredentials({
+                                token: data.token,
+                                isAdmin: data.isAdmin,
+                                expires: data.expires,
+                                userId: data.userId,
+                                cartId: data.cartId,
+                            })
+                        );
+                    }
+                } catch (err: any) {
+                    const errorMessage =
+                        err?.data?.error || "Registration failed";
+                    return Promise.reject(errorMessage);
                 }
             },
         }),
@@ -80,16 +88,17 @@ export const authApiSlice = apiSlice.injectEndpoints({
             async onQueryStarted(arg, { dispatch, queryFulfilled }) {
                 try {
                     const { data } = await queryFulfilled;
-
-                    dispatch(
-                        setCredentials({
-                            token: data.token,
-                            isAdmin: data.isAdmin,
-                            expires: data.expires,
-                            userId: data.userId,
-                            cartId: data.cartId,
-                        })
-                    );
+                    if ("token" in data) {
+                        dispatch(
+                            setCredentials({
+                                token: data.token,
+                                isAdmin: data.isAdmin,
+                                expires: data.expires,
+                                userId: data.userId,
+                                cartId: data.cartId,
+                            })
+                        );
+                    }
                 } catch (err) {
                     console.error("Refresh token error", err);
                 }

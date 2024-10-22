@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { Form } from "react-final-form";
 import { useNavigate } from "react-router-dom";
+import { RegisterInput, useRegisterMutation } from "@/store";
+import { enqueueSnackbar } from "notistack";
 import { useTitle } from "@/hooks/useTitle";
-import { useMutationHandler } from "@/hooks/useMutationHandler";
-import { useRegisterMutation } from "@/store";
 import { Button } from "@mui/material";
 import AuthModule from "@/modules/AuthModule";
 import RegisterForm from "@/forms/RegisterForm";
@@ -13,12 +13,22 @@ const Register = () => {
     const [register, { isLoading, isSuccess }] = useRegisterMutation();
     useTitle("Sign Up");
 
-    const { handleMutation: handleRegister, errorMessage } =
-        useMutationHandler(register);
-
     useEffect(() => {
         if (isSuccess) navigate("/");
     }, [isSuccess]);
+
+    const handleRegister = async (values: RegisterInput) => {
+        try {
+            await register(values).unwrap();
+            enqueueSnackbar("Registered in successfully", {
+                variant: "success",
+            });
+        } catch (error: any) {
+            const errorMessage =
+                error.data?.error || "An unexpected error occurred.";
+            enqueueSnackbar(errorMessage, { variant: "error" });
+        }
+    };
 
     const FormContainer = () => (
         <Form
@@ -34,7 +44,6 @@ const Register = () => {
                     >
                         Sign Up
                     </Button>
-                    {errorMessage && <p>{errorMessage}</p>}
                 </form>
             )}
         />

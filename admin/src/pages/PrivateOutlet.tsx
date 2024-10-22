@@ -1,6 +1,8 @@
+import { useEffect } from "react";
 import { useLocation, Navigate, Outlet } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectCurrentToken, useRefreshTokenQuery } from "@/store";
+import { enqueueSnackbar } from "notistack";
 import NavigationLayout from "@/layouts/NavigationLayout";
 import LoadingBackdrop from "@/components/LoadingBackdrop";
 
@@ -13,6 +15,12 @@ const RequireAuth = () => {
             location.pathname === "/login" ||
             location.pathname === "/register",
     });
+
+    useEffect(() => {
+        if (token) {
+            enqueueSnackbar("Logged in successfully", { variant: "success" });
+        }
+    }, [token]);
 
     if (isLoading) {
         return <LoadingBackdrop isLoading={isLoading} />;

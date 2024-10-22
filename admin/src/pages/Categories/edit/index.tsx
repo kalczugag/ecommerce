@@ -5,6 +5,7 @@ import {
     useGetChildrensQuery,
 } from "@/store";
 import { useTitle } from "@/hooks/useTitle";
+import { enqueueSnackbar } from "notistack";
 import CrudModule from "@/modules/CrudModule";
 import UpdateForm from "@/components/UpdateForm";
 import NotFound from "@/components/NotFound";
@@ -24,8 +25,17 @@ const CategoriesEdit = () => {
     if (isError || (!isLoading && !data)) return <NotFound />;
 
     const handleSubmit = async (values: Category) => {
-        await editCategory(values);
-        navigate(-1);
+        try {
+            await editCategory(values).unwrap();
+            navigate(-1);
+            enqueueSnackbar("Category updated successfully", {
+                variant: "success",
+            });
+        } catch (error) {
+            enqueueSnackbar("Failed to update category", {
+                variant: "error",
+            });
+        }
     };
 
     const hasChildren =

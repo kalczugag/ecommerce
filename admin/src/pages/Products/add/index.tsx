@@ -1,4 +1,5 @@
 import { useAddProductMutation, useGetGroupedCategoriesQuery } from "@/store";
+import { enqueueSnackbar } from "notistack";
 import CreateForm from "@/components/CreateForm";
 import CrudModule from "@/modules/CrudModule";
 import type { Product } from "@/types/Product";
@@ -15,25 +16,34 @@ const ProductAdd = () => {
     const [addProduct, result] = useAddProductMutation();
 
     const handleSubmit = async (values: Product) => {
-        await addProduct({
-            ...values,
-            imageUrl: (values.imageUrl as string)?.trim().split(","),
-            size: [
-                {
-                    name: "S",
-                    quantity: 20,
-                },
-                {
-                    name: "M",
-                    quantity: 30,
-                },
-                {
-                    name: "L",
-                    quantity: 50,
-                },
-            ],
-        });
-        navigate("/products");
+        try {
+            await addProduct({
+                ...values,
+                imageUrl: (values.imageUrl as string)?.trim().split(","),
+                size: [
+                    {
+                        name: "S",
+                        quantity: 20,
+                    },
+                    {
+                        name: "M",
+                        quantity: 30,
+                    },
+                    {
+                        name: "L",
+                        quantity: 50,
+                    },
+                ],
+            }).unwrap();
+            navigate("/products");
+            enqueueSnackbar("product added successfully", {
+                variant: "success",
+            });
+        } catch (error) {
+            enqueueSnackbar("Failed to add product", {
+                variant: "error",
+            });
+        }
     };
 
     return (

@@ -4,6 +4,7 @@ import {
     useEditProductMutation,
     useGetGroupedCategoriesQuery,
 } from "@/store";
+import { enqueueSnackbar } from "notistack";
 import { useTitle } from "@/hooks/useTitle";
 import NotFound from "@/components/NotFound";
 import type { Product } from "@/types/Product";
@@ -31,11 +32,20 @@ const ProductsEdit = () => {
     if (isError || (!productsLoading && !productsData)) return <NotFound />;
 
     const handleSubmit = async (values: Product) => {
-        await editProduct({
-            ...values,
-            imageUrl: (values.imageUrl as string)?.trim().split(",\n"),
-        });
-        navigate(-1);
+        try {
+            await editProduct({
+                ...values,
+                imageUrl: (values.imageUrl as string)?.trim().split(",\n"),
+            }).unwrap();
+            navigate(-1);
+            enqueueSnackbar("Product updated successfully", {
+                variant: "success",
+            });
+        } catch (error) {
+            enqueueSnackbar("Failed to update product", {
+                variant: "error",
+            });
+        }
     };
 
     const updatedInitialValues = {

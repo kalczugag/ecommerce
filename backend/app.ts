@@ -16,8 +16,6 @@ const app = express();
 app.use(
     cors({
         origin: (origin, callback) => {
-            console.log("Incoming request origin:", origin);
-
             const allowedOrigins = [
                 "https://admin-ecommerce-df8fb1.netlify.app",
                 "https://frontend-ecommerce-df8fb1.netlify.app",

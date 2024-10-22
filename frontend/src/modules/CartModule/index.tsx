@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useAddOrderMutation, useEditUsersCartMutation } from "@/store";
-import { useSnackbar } from "notistack";
+import { enqueueSnackbar } from "notistack";
 import useAuth from "@/hooks/useAuth";
 import DefaultLayout from "@/layouts/DefaultLayout";
 import Loading from "@/components/Loading";
@@ -18,7 +18,6 @@ interface CartModuleProps {
 const CartModule = ({ data, isLoading }: CartModuleProps) => {
     const navigate = useNavigate();
     const { token } = useAuth();
-    const { enqueueSnackbar } = useSnackbar();
 
     const [editCart, { isLoading: editLoading }] = useEditUsersCartMutation();
     const [addOrder, { isLoading: addLoading }] = useAddOrderMutation();

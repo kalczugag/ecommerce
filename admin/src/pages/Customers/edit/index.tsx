@@ -1,6 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetUserByIdQuery, useEditUserMutation } from "@/store";
 import { useTitle } from "@/hooks/useTitle";
+import { enqueueSnackbar } from "notistack";
 import CrudModule from "@/modules/CrudModule";
 import CustomerForm from "@/forms/CustomerForm";
 import NotFound from "@/components/NotFound";
@@ -18,8 +19,17 @@ const CustomersEdit = () => {
     if (isError || (!isLoading && !data)) return <NotFound />;
 
     const handleSubmit = async (values: User) => {
-        await editUser(values);
-        navigate(-1);
+        try {
+            await editUser(values).unwrap();
+            navigate(-1);
+            enqueueSnackbar("User updated successfully", {
+                variant: "success",
+            });
+        } catch (error) {
+            enqueueSnackbar("Failed to update category", {
+                variant: "error",
+            });
+        }
     };
 
     return (

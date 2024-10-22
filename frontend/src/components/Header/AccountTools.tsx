@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useGetUsersCartQuery, useLogoutMutation } from "@/store";
-import { useSnackbar } from "notistack";
+import { enqueueSnackbar } from "notistack";
 import useAuth from "@/hooks/useAuth";
 import { Box, Tooltip, IconButton, Menu } from "@mui/material";
 import { Search, PersonOutlineOutlined } from "@mui/icons-material";
@@ -14,7 +14,6 @@ const AccountTools = () => {
     const { data } = useGetUsersCartQuery(undefined, {
         skip: !token,
     });
-    const { enqueueSnackbar } = useSnackbar();
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
     const [logout] = useLogoutMutation();

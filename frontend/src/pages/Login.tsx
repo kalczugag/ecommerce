@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Form } from "react-final-form";
-import { useLoginMutation } from "@/store";
+import { useLoginMutation, LoginInput } from "@/store";
+import { enqueueSnackbar } from "notistack";
 import { useTitle } from "@/hooks/useTitle";
 import { Button } from "@mui/material";
 import AuthModule from "@/modules/AuthModule";
@@ -16,9 +17,20 @@ const Login = () => {
         if (isSuccess) navigate("/");
     }, [isSuccess]);
 
+    const handleLogin = async (values: LoginInput) => {
+        try {
+            await login(values).unwrap();
+            enqueueSnackbar("Logged in successfully", { variant: "success" });
+        } catch (error: any) {
+            const errorMessage =
+                error.data?.error || "An unexpected error occurred.";
+            enqueueSnackbar(errorMessage, { variant: "error" });
+        }
+    };
+
     const FormContainer = () => (
         <Form
-            onSubmit={login}
+            onSubmit={handleLogin}
             render={({ handleSubmit }) => (
                 <form onSubmit={handleSubmit} className="space-y-8">
                     <LoginForm isLoading={isLoading} />

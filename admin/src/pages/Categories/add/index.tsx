@@ -1,4 +1,5 @@
 import { useAddCategoryMutation } from "@/store";
+import { enqueueSnackbar } from "notistack";
 import CreateForm from "@/components/CreateForm";
 import CrudModule from "@/modules/CrudModule";
 import CategoryForm from "@/forms/CategoryForm";
@@ -10,8 +11,17 @@ const CategoriesAdd = () => {
     const [addCategory, result] = useAddCategoryMutation();
 
     const handleSubmit = async (values: Category) => {
-        await addCategory(values);
-        navigate(-1);
+        try {
+            await addCategory(values).unwrap();
+            navigate(-1);
+            enqueueSnackbar("Category added successfully", {
+                variant: "success",
+            });
+        } catch (error) {
+            enqueueSnackbar("Failed to add category", {
+                variant: "error",
+            });
+        }
     };
 
     return (
