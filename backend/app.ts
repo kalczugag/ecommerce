@@ -13,7 +13,12 @@ import "./config/cron";
 
 const app = express();
 
-app.use(cors());
+app.use(
+    cors({
+        origin: "*",
+        credentials: true,
+    })
+);
 app.use(cookieParser());
 
 app.post(
