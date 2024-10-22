@@ -15,12 +15,8 @@ const app = express();
 
 app.use(
     cors({
-        origin: [
-            "https://ecommerce-cnxq84jlu-kalczugags-projects.vercel.app/",
-            "https://ecommerce-a3he.vercel.app/",
-        ],
+        origin: true,
         credentials: true,
-        allowedHeaders: ["Content-Type", "Authorization"],
     })
 );
 app.options("*", cors());
