@@ -33,12 +33,12 @@ export default defineConfig(({ mode }) => {
             },
         },
         server: {
-            port: 5165,
             proxy: {
                 "/api": {
                     target: env.VITE_BACKEND_SERVER,
                     changeOrigin: true,
                     secure: false,
+                    rewrite: (path) => path.replace(/^\/api/, ""),
                 },
             },
         },

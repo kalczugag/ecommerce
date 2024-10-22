@@ -15,11 +15,23 @@ const app = express();
 
 app.use(
     cors({
-        origin: [
-            "http://localhost:3000",
-            "https://admin-ecommerce-df8fb1.netlify.app/",
-            "https://frontend-ecommerce-df8fb1.netlify.app",
-        ],
+        origin: (origin, callback) => {
+            console.log("Incoming request origin:", origin);
+
+            const allowedOrigins = [
+                "https://admin-ecommerce-df8fb1.netlify.app",
+                "https://frontend-ecommerce-df8fb1.netlify.app",
+                "http://localhost:3000",
+                "http://localhost:5173",
+                "http://localhost:4173",
+            ];
+
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                callback(new Error("Not allowed by CORS"));
+            }
+        },
         credentials: true,
         methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     })
