@@ -39,8 +39,7 @@ export default defineConfig(({ mode }) => {
                 "/api": {
                     target: env.VITE_BACKEND_SERVER,
                     changeOrigin: true,
-                    secure: true,
-                    rewrite: (path) => path.replace(/^\/api/, ""),
+                    secure: false,
                 },
             },
         },
