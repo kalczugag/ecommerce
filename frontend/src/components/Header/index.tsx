@@ -7,10 +7,10 @@ import { useGetGroupedCategoriesQuery } from "@/store";
 import { CategoryContainer, CategoryList } from "./Categories";
 
 interface HeaderProps {
-    deliveryBar?: string;
+    topLabel?: string;
 }
 
-const Header = ({ deliveryBar }: HeaderProps) => {
+const Header = ({ topLabel }: HeaderProps) => {
     const [openCategories, setOpenCategories] = useState({
         isOpen: false,
         page: "",
@@ -20,7 +20,7 @@ const Header = ({ deliveryBar }: HeaderProps) => {
 
     return (
         <>
-            {deliveryBar && (
+            {topLabel && (
                 <Container
                     maxWidth={false}
                     disableGutters
@@ -36,7 +36,7 @@ const Header = ({ deliveryBar }: HeaderProps) => {
                         component="div"
                         sx={{ flexGrow: 1 }}
                     >
-                        {deliveryBar}
+                        {topLabel}
                     </Typography>
                 </Container>
             )}
@@ -51,12 +51,12 @@ const Header = ({ deliveryBar }: HeaderProps) => {
             >
                 <Container maxWidth="xl">
                     <Toolbar disableGutters>
-                        <div className="flex items-center flex-1 md:flex-none">
+                        <div className="flex items-center flex-1 md:flex-none md:flex">
                             <div className="flex items-center mr-2 flex-grow ">
                                 <Adb className="mr-1 text-black" />
                                 <Link
                                     to="/"
-                                    className="font-mono font-bold text-xl tracking-[.3rem] text-black no-underline"
+                                    className="hidden font-mono font-bold text-xl tracking-[.3rem] text-black no-underline md:block"
                                 >
                                     LOGO
                                 </Link>

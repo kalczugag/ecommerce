@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Box, Button, Container } from "@mui/material";
+import useIsMobile from "@/hooks/useIsMobile";
 import type { GroupedCategories } from "@/types/Category";
 
 interface CategoryButtonProps {
@@ -181,7 +182,7 @@ const CategoryContainer = ({
     };
 
     return (
-        <Box className="hidden flex-grow md:flex">
+        <Box className="flex flex-grow">
             {data
                 ? data.topLevelCategories.map(({ name }, index) => (
                       <CategoryButton

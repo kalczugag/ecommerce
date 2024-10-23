@@ -1,15 +1,33 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useGetUsersCartQuery, useLogoutMutation } from "@/store";
 import { enqueueSnackbar } from "notistack";
 import useAuth from "@/hooks/useAuth";
-import { Box, Tooltip, IconButton, Menu } from "@mui/material";
-import { Search, PersonOutlineOutlined } from "@mui/icons-material";
-import { AvatarMenuItem, AvatarAuth } from "./AvatarSettings";
+import {
+    Box,
+    Tooltip,
+    IconButton,
+    Menu,
+    MenuItem,
+    Avatar,
+} from "@mui/material";
+import {
+    Search,
+    PersonOutlineOutlined,
+    Logout,
+    Inbox,
+    Settings,
+    AssignmentReturned,
+} from "@mui/icons-material";
+import {
+    AvatarMenuItem,
+    AvatarAuth,
+    AvatarMenuItemProps,
+} from "./AvatarSettings";
 import CartIcon from "./CartIcon";
 
-const settings = ["Account", "Orders", "Return"];
-
 const AccountTools = () => {
+    const navigate = useNavigate();
     const { token } = useAuth();
     const { data } = useGetUsersCartQuery(undefined, {
         skip: !token,
@@ -26,6 +44,11 @@ const AccountTools = () => {
         setAnchorElUser(null);
     };
 
+    const handleNavigate = (to: string) => {
+        handleCloseUserMenu();
+        navigate(to);
+    };
+
     const handleLogout = async () => {
         try {
             handleCloseUserMenu();
@@ -40,6 +63,45 @@ const AccountTools = () => {
         }
     };
 
+    const config: AvatarMenuItemProps[] = [
+        {
+            visible: Boolean(!token),
+            customElement: <AvatarAuth />,
+        },
+        {
+            visible: Boolean(token),
+            customElement: (
+                <MenuItem>
+                    <Avatar /> Profile
+                </MenuItem>
+            ),
+            divider: true,
+            onClick: () => handleNavigate("/account"),
+        },
+        {
+            label: "Orders",
+            icon: <Inbox />,
+            visible: Boolean(token),
+            onClick: () => handleNavigate("/orders"),
+        },
+        {
+            label: "Settings",
+            icon: <Settings />,
+            onClick: () => handleNavigate("/settings"),
+        },
+        {
+            label: "Return",
+            icon: <AssignmentReturned />,
+            onClick: () => handleNavigate("/return"),
+        },
+        {
+            label: "Logout",
+            icon: <Logout />,
+            visible: Boolean(token),
+            onClick: handleLogout,
+        },
+    ];
+
     return (
         <Box sx={{ flexGrow: 0 }} className="space-x-2">
             <Tooltip title="Open settings">
@@ -51,33 +113,47 @@ const AccountTools = () => {
                 sx={{ mt: "45px" }}
                 id="menu-appbar"
                 anchorEl={anchorElUser}
+                keepMounted
                 anchorOrigin={{
                     vertical: "top",
                     horizontal: "right",
                 }}
-                keepMounted
                 transformOrigin={{
                     vertical: "top",
                     horizontal: "right",
                 }}
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
+                PaperProps={{
+                    elevation: 0,
+                    sx: {
+                        overflow: "visible",
+                        filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                        mt: 1.5,
+                        "& .MuiAvatar-root": {
+                            width: 32,
+                            height: 32,
+                            ml: -0.5,
+                            mr: 1,
+                        },
+                        "&::before": {
+                            content: '""',
+                            display: "block",
+                            position: "absolute",
+                            top: 0,
+                            right: 14,
+                            width: 10,
+                            height: 10,
+                            bgcolor: "background.paper",
+                            transform: "translateY(-50%) rotate(45deg)",
+                            zIndex: 0,
+                        },
+                    },
+                }}
             >
-                <AvatarAuth isAuth={Boolean(token)} />
-                {settings.map((setting, index) => (
-                    <AvatarMenuItem
-                        key={setting + "_" + index}
-                        label={setting}
-                        action={handleCloseUserMenu}
-                    />
+                {config.map((item, index) => (
+                    <AvatarMenuItem key={index} {...item} />
                 ))}
-                {token && (
-                    <AvatarMenuItem
-                        key="logout"
-                        label="Logout"
-                        action={handleLogout}
-                    />
-                )}
             </Menu>
             <IconButton>
                 <Search />

@@ -28,5 +28,5 @@
         "noUnusedParameters": true,
         "noFallthroughCasesInSwitch": true
     },
-    "include": ["src", "src/tests"]
+    "include": ["src", "coverage/tests"]
 }

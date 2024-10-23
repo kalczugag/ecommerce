@@ -11,7 +11,7 @@ const ListItem = ({ data }: ListItemProps) => {
 
     return (
         <div className="flex">
-            <Link to={data._id || ""}>
+            <Link to={`/checkout/${data._id}/success`}>
                 <div>{data._id}</div>
                 <Address
                     street={data._user?.address?.street}

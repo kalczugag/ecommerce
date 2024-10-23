@@ -8,7 +8,7 @@ interface LayoutProps {
 const Layout = ({ children }: LayoutProps) => {
     return (
         <div>
-            <Header deliveryBar={"Get free delivery on orders over $100"} />
+            <Header topLabel={"Get free delivery on orders over $100"} />
             {children}
         </div>
     );

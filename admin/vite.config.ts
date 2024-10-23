@@ -34,12 +34,12 @@ export default defineConfig(({ mode }) => {
         },
         server: {
             host: "0.0.0.0",
-            port: 3000,
+            port: 5000,
             proxy: {
                 "/api": {
                     target: env.VITE_BACKEND_SERVER,
                     changeOrigin: true,
-                    secure: false,
+                    secure: true,
                     rewrite: (path) => path.replace(/^\/api/, ""),
                 },
             },
@@ -47,7 +47,7 @@ export default defineConfig(({ mode }) => {
         test: {
             globals: true,
             environment: "jsdom",
-            setupFiles: "./src/tests/setup.ts",
+            setupFiles: "./coverage/tests/setup.ts",
         },
     };
 });
