@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { useOrder } from "@/contexts/OrderContext";
-import { Box, Container, Step, StepLabel, Stepper } from "@mui/material";
+import { Skeleton, Container, Step, StepLabel, Stepper } from "@mui/material";
 import useIsMobile from "@/hooks/useIsMobile";
 import useStep from "@/modules/CheckoutModule/hooks/useStep";
 import type { Order } from "@/types/Order";
@@ -20,7 +20,7 @@ const orderStatuses: Record<NonNullable<Order["status"]>, string> = {
 
 const CheckoutLayout = ({ children }: CheckoutLayoutProps) => {
     const isMobile = useIsMobile();
-    const { steps, order } = useOrder();
+    const { steps, order, isLoading } = useOrder();
     const [activeStep] = useStep();
 
     const orderSteps = Object.values(orderStatuses);
@@ -46,7 +46,11 @@ const CheckoutLayout = ({ children }: CheckoutLayoutProps) => {
                             key={label}
                             completed={index < activeCheckoutStepIndex}
                         >
-                            <StepLabel color="inherit">{label}</StepLabel>
+                            {isLoading ? (
+                                <Skeleton width={80} height={30} />
+                            ) : (
+                                <StepLabel color="inherit">{label}</StepLabel>
+                            )}
                         </Step>
                     ))}
                 </Stepper>
@@ -58,7 +62,11 @@ const CheckoutLayout = ({ children }: CheckoutLayoutProps) => {
                 >
                     {isMobile ? (
                         <Step>
-                            <StepLabel>Status: {order?.status}</StepLabel>
+                            {isLoading ? (
+                                <Skeleton width={80} height={30} />
+                            ) : (
+                                <StepLabel>Status: {order?.status}</StepLabel>
+                            )}
                         </Step>
                     ) : (
                         orderSteps.map((label, index) => {
@@ -69,16 +77,28 @@ const CheckoutLayout = ({ children }: CheckoutLayoutProps) => {
                                     key={label}
                                     completed={index < activeOrderStepIndex}
                                 >
-                                    <StepLabel color="inherit">
-                                        {label}
-                                    </StepLabel>
+                                    {isLoading ? (
+                                        <Skeleton width={80} height={30} />
+                                    ) : (
+                                        <StepLabel color="inherit">
+                                            {label}
+                                        </StepLabel>
+                                    )}
                                 </Step>
                             );
                         })
                     )}
                 </Stepper>
             )}
-            {children}
+            {isLoading ? (
+                <div className="flex flex-col -space-y-16">
+                    <Skeleton height={150} width={isMobile ? "100%" : 350} />
+                    <Skeleton height={240} />
+                    <Skeleton height={240} />
+                </div>
+            ) : (
+                children
+            )}
         </Container>
     );
 };

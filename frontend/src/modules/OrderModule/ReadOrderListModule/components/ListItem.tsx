@@ -10,7 +10,7 @@ const ListItem = ({ data }: ListItemProps) => {
     console.log(data);
 
     return (
-        <div className="flex">
+        <div className="flex border my-1">
             <Link to={`/checkout/${data._id}/success`}>
                 <div>{data._id}</div>
                 <Address
