@@ -10,7 +10,7 @@ Feel free to explore, contribute, or even break things (we'll fix them 😉). St
 
 Checkout live demo:
 
-client:  [demo](https://ecommerce-admin-seven-cyan.vercel.app/)
+client:  [demo](https://ecommerce-frontend-six-black.vercel.app/)
 admin: [demo](https://ecommerce-admin-seven-cyan.vercel.app/)
 
 ## Table of Contents
