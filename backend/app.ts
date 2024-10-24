@@ -11,16 +11,14 @@ import appRouter from "./routes/v1";
 import "./config/passport";
 import "./config/cron";
 
-const allowedOrigins: string[] = [
-    "https://ecom-admin-12.netlify.app",
-    "https://ecommerce-frontend-six-black.vercel.app",
-];
-
 const app = express();
 
 app.use(
     cors({
-        origin: ["https://ecom-admin-12.netlify.app"],
+        origin: [
+            "https://ecommerce-frontend-six-black.vercel.app",
+            "https://ecommerce-admin-seven-cyan.vercel.app",
+        ],
         methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
         credentials: true,
     })
