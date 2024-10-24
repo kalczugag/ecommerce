@@ -10,6 +10,7 @@ export const createCheckoutSession = async (
     res: express.Response
 ) => {
     const order = req.body;
+    const url = process.env.REDIRECT_URL;
 
     if (!order) {
         return res.status(400).json({ error: "No order provided" });
@@ -65,8 +66,8 @@ export const createCheckoutSession = async (
                     },
                 },
             ],
-            success_url: `http://localhost:3000/checkout/${order._id}/success`,
-            cancel_url: `http://localhost:3000/checkout/${order._id}/summary`,
+            success_url: `${url}/checkout/${order._id}/success`,
+            cancel_url: `${url}/checkout/${order._id}/summary`,
         });
 
         console.log(session);

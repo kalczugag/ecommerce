@@ -9,7 +9,13 @@ import { RootState } from "..";
 
 const baseQuery = fetchBaseQuery({
     baseUrl:
-        window.location.protocol + "//" + window.location.host + "/api" + "/v1",
+        import.meta.env.MODE === "production"
+            ? import.meta.env.VITE_BACKEND_SERVER + "/api/v1"
+            : window.location.protocol +
+              "//" +
+              window.location.host +
+              "/api/v1",
+
     credentials: "include",
     prepareHeaders: (headers, { getState }) => {
         const state = getState() as RootState;

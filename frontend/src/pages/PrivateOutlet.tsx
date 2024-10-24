@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import { useRefreshTokenQuery, useUpdateVisitorCountMutation } from "@/store";
 import useAuth from "@/hooks/useAuth";
-import { enqueueSnackbar } from "notistack";
 import Layout from "@/layouts/Layout";
 
 const PrivateOutlet = () => {
@@ -21,12 +20,6 @@ const PrivateOutlet = () => {
     useEffect(() => {
         updateView({});
     }, []);
-
-    useEffect(() => {
-        if (token) {
-            enqueueSnackbar("Logged in successfully", { variant: "success" });
-        }
-    }, [token]);
 
     return (
         <Layout>
