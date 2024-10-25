@@ -1,7 +1,11 @@
-import Loading from "@/components/Loading";
+import { Field } from "react-final-form";
+import { Checkbox, FormControlLabel } from "@mui/material";
+import { orderStatuses } from "@/constants/orderStatuses";
 import DefaultLayout from "@/layouts/DefaultLayout";
+import Loading from "@/components/Loading";
+import Filters from "@/components/Filters";
 import type { Order } from "@/types/Order";
-import ListItem from "./components/ListItem";
+import OrderListItem from "./components/OrderListItem";
 
 interface ReadOrderListModuleProps {
     data: Order[];
@@ -9,12 +13,49 @@ interface ReadOrderListModuleProps {
 }
 
 const ReadOrderListModule = ({ data, isLoading }: ReadOrderListModuleProps) => {
+    const orderValues = Object.values(orderStatuses);
+
+    const handleSubmit = (values: any) => {
+        console.log(values);
+    };
+
+    const formElements = (
+        <>
+            <Field name="status" type="checkbox">
+                {({ input }) => (
+                    <div className="flex flex-col">
+                        {orderValues?.map((status, index) => (
+                            <FormControlLabel
+                                key={status + "_" + index.toString()}
+                                control={<Checkbox />}
+                                name={input.name}
+                                value={input.value}
+                                onChange={() => input.onChange(status)}
+                                label={status}
+                                disabled={isLoading}
+                            />
+                        ))}
+                    </div>
+                )}
+            </Field>
+        </>
+    );
+
     return (
         <Loading isLoading={isLoading}>
-            <DefaultLayout>
-                {data.map((order) => (
-                    <ListItem key={order._id} data={order} />
-                ))}
+            <DefaultLayout direction="row" className="md:space-x-14">
+                <div className="hidden md:block">
+                    <Filters
+                        onSubmit={handleSubmit}
+                        formElements={formElements}
+                        label="Order Status"
+                    />
+                </div>
+                <div className="flex flex-col w-full space-y-28">
+                    {data.map((order) => (
+                        <OrderListItem key={order._id} data={order} />
+                    ))}
+                </div>
             </DefaultLayout>
         </Loading>
     );
