@@ -1,10 +1,19 @@
 {
     "version": 2,
-    "builds": [{ "src": "dist/server.js", "use": "@vercel/node" }],
+    "builds": [
+        {
+            "src": "server.ts",
+            "use": "@vercel/node"
+        }
+    ],
     "routes": [
         {
-            "src": "/(.*)",
-            "dest": "dist/server.js"
+            "src": "/api/(.*)",
+            "dest": "server.ts",
+            "methods": ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+            "headers": {
+                "Access-Control-Allow-Credentials": "true"
+            }
         }
     ]
 }

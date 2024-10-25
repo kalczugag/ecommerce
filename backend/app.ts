@@ -1,7 +1,7 @@
 import express from "express";
 import { summaryCronJob } from "./config/cronJob";
 
-import cors from "cors";
+import cors, { CorsOptions } from "cors";
 
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
@@ -13,7 +13,17 @@ import "./config/cron";
 
 const app = express();
 
-app.use(cors());
+app.use(
+    cors({
+        origin: [
+            "https://ecommerce-frontend-six-black.vercel.app",
+            "https://ecommerce-admin-seven-cyan.vercel.app",
+        ],
+        methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+        credentials: true,
+    })
+);
+app.options("*", cors());
 app.use(cookieParser());
 
 app.post(

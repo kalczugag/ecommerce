@@ -6,6 +6,13 @@ This project is still a work in progress! While many core features are already i
 
 Feel free to explore, contribute, or even break things (we'll fix them 😉). Stay tuned for new updates and features as we continue to build and improve this e-commerce platform.
 
+## Demo
+
+Checkout live demo:
+
+client:  [demo](https://ecommerce-frontend-six-black.vercel.app/)
+admin: [demo](https://ecommerce-admin-seven-cyan.vercel.app/)
+
 ## Table of Contents
 
 -   [Introduction](#introduction)
