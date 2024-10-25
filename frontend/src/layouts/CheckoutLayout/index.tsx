@@ -3,20 +3,11 @@ import { useOrder } from "@/contexts/OrderContext";
 import { Skeleton, Container, Step, StepLabel, Stepper } from "@mui/material";
 import useIsMobile from "@/hooks/useIsMobile";
 import useStep from "@/modules/CheckoutModule/hooks/useStep";
-import type { Order } from "@/types/Order";
+import { orderStatuses } from "@/constants/orderStatuses";
 
 interface CheckoutLayoutProps {
     children: ReactNode;
 }
-
-const orderStatuses: Record<NonNullable<Order["status"]>, string> = {
-    placed: "Placed",
-    confirmed: "Confirmed",
-    shipped: "Shipped",
-    in_delivery: "In Delivery",
-    delivered: "Delivered",
-    cancelled: "Cancelled",
-};
 
 const CheckoutLayout = ({ children }: CheckoutLayoutProps) => {
     const isMobile = useIsMobile();

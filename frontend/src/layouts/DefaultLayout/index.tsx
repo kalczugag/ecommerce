@@ -1,10 +1,12 @@
 import { HTMLAttributes, ReactNode } from "react";
+import clsx from "clsx";
 import { Container, Box } from "@mui/material";
 import SortBar from "@/components/SortBar";
 
 interface DefaultPageProps extends HTMLAttributes<HTMLDivElement> {
     children: ReactNode;
     pagination?: JSX.Element;
+    direction?: "row" | "column";
     featuredElement?: JSX.Element;
     isCatalog?: boolean;
 }
@@ -12,8 +14,10 @@ interface DefaultPageProps extends HTMLAttributes<HTMLDivElement> {
 const DefaultLayout = ({
     children,
     pagination,
+    direction = "column",
     featuredElement,
     isCatalog = false,
+    className,
     ...rest
 }: DefaultPageProps) => {
     return (
@@ -34,12 +38,10 @@ const DefaultLayout = ({
             )}
             <Container
                 maxWidth="xl"
-                sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    marginY: "40px",
-                }}
-                className={rest.className}
+                sx={{ display: "flex", marginY: "40px" }}
+                className={`${
+                    direction === "column" ? "flex-col" : "flex-row"
+                } ${className}`}
                 {...rest}
             >
                 {isCatalog && <SortBar />}
