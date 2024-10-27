@@ -10,7 +10,7 @@ import { Button } from "@mui/material";
 const CategoriesList = () => {
     const [pagination] = usePagination();
     const navigate = useNavigate();
-    useTitle("Categories");
+    useTitle("Categories - List");
 
     const { data, isFetching } = useGetAllCategoriesQuery(pagination);
     const [deleteCategory, result] = useDeleteCategoryMutation();

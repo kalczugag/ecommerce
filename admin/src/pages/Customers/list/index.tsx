@@ -7,7 +7,7 @@ import SortForm from "@/forms/SortForm";
 
 const CustomersList = () => {
     const [pagination] = usePagination();
-    useTitle("Customers");
+    useTitle("Customers - List");
 
     const args = {
         roleName: "admin",

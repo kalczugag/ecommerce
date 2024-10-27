@@ -7,7 +7,7 @@ import SortForm from "@/forms/SortForm";
 
 const OrdersList = () => {
     const [pagination] = usePagination();
-    useTitle("Orders");
+    useTitle("Orders - List");
 
     const { data, isFetching } = useGetAllOrdersQuery(pagination);
 

@@ -5,9 +5,11 @@ import CrudModule from "@/modules/CrudModule";
 import type { Product } from "@/types/Product";
 import ProductForm from "@/forms/ProductForm";
 import { useNavigate } from "react-router-dom";
+import { useTitle } from "@/hooks/useTitle";
 
 const ProductAdd = () => {
     const navigate = useNavigate();
+    useTitle("Product - Add");
 
     const { data, isLoading } = useGetGroupedCategoriesQuery({
         sorted: true,

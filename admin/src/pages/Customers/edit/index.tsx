@@ -11,7 +11,7 @@ import type { User } from "@/types/User";
 const CustomersEdit = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    useTitle("Customers - Edit");
+    useTitle("Customer - Edit");
 
     const { data, isError, isLoading } = useGetUserByIdQuery(id || "");
     const [editUser, result] = useEditUserMutation();
