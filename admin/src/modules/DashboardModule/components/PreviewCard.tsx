@@ -1,5 +1,4 @@
 import Box from "@/components/Box";
-import Loading from "@/components/Loading";
 import {
     Area,
     AreaChart,
@@ -35,54 +34,51 @@ interface PreviewCardProps {
         period: string;
         total: number;
     }[];
-    isLoading: boolean;
 }
 
-const PreviewCard = ({ chartData, isLoading }: PreviewCardProps) => {
+const PreviewCard = ({ chartData }: PreviewCardProps) => {
     return (
         <Box className="flex items-center w-full">
-            <Loading className="w-full" isLoading={isLoading}>
-                <ResponsiveContainer height={300}>
-                    <AreaChart
-                        width={730}
-                        height={250}
-                        data={chartData}
-                        margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-                    >
-                        <defs>
-                            <linearGradient
-                                id="totalColor"
-                                x1="0"
-                                y1="0"
-                                x2="0"
-                                y2="1"
-                            >
-                                <stop
-                                    offset="5%"
-                                    stopColor="#3B7DDD"
-                                    stopOpacity={0.8}
-                                />
-                                <stop
-                                    offset="95%"
-                                    stopColor="#3B7DDD"
-                                    stopOpacity={0}
-                                />
-                            </linearGradient>
-                        </defs>
-                        <XAxis dataKey="period" />
-                        <YAxis />
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <Tooltip content={<CustomTooltip />} />
-                        <Area
-                            type="monotone"
-                            dataKey="total"
-                            stroke="#3B7DDD"
-                            fillOpacity={1}
-                            fill="url(#totalColor)"
-                        />
-                    </AreaChart>
-                </ResponsiveContainer>
-            </Loading>
+            <ResponsiveContainer height={300}>
+                <AreaChart
+                    width={730}
+                    height={250}
+                    data={chartData}
+                    margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                >
+                    <defs>
+                        <linearGradient
+                            id="totalColor"
+                            x1="0"
+                            y1="0"
+                            x2="0"
+                            y2="1"
+                        >
+                            <stop
+                                offset="5%"
+                                stopColor="#3B7DDD"
+                                stopOpacity={0.8}
+                            />
+                            <stop
+                                offset="95%"
+                                stopColor="#3B7DDD"
+                                stopOpacity={0}
+                            />
+                        </linearGradient>
+                    </defs>
+                    <XAxis dataKey="period" />
+                    <YAxis />
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <Tooltip content={<CustomTooltip />} />
+                    <Area
+                        type="monotone"
+                        dataKey="total"
+                        stroke="#3B7DDD"
+                        fillOpacity={1}
+                        fill="url(#totalColor)"
+                    />
+                </AreaChart>
+            </ResponsiveContainer>
         </Box>
     );
 };

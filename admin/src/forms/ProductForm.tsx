@@ -8,15 +8,26 @@ import {
 } from "@mui/material";
 import { required, mustBeNumber, minValue, compose } from "@/utils/validators";
 import Row from "@/components/Row";
-import { GroupedCategories } from "@/types/Category";
+import type { GroupedCategories } from "@/types/Category";
+import type { Product } from "@/types/Product";
 
 interface CustomerFormProps {
     data?: GroupedCategories;
+    formValues?: Product;
     isUpdateForm?: boolean;
     isLoading: boolean;
 }
 
-const ProductForm = ({ data, isLoading, isUpdateForm }: CustomerFormProps) => {
+const ProductForm = ({
+    data,
+    isLoading,
+    isUpdateForm,
+    formValues,
+}: CustomerFormProps) => {
+    const price = formValues?.price || 0;
+    const discountPercent = formValues?.discountPercent || 0;
+    const discountedPrice = price - (price * discountPercent) / 100;
+
     return (
         <div className="space-y-4">
             <Field name="imageUrl" validate={required}>
@@ -103,6 +114,7 @@ const ProductForm = ({ data, isLoading, isUpdateForm }: CustomerFormProps) => {
                 >
                     {(props) => (
                         <TextField
+                            type="number"
                             label="Quantity"
                             name={props.input.name}
                             value={props.input.value}
@@ -127,25 +139,8 @@ const ProductForm = ({ data, isLoading, isUpdateForm }: CustomerFormProps) => {
                 >
                     {(props) => (
                         <TextField
+                            type="number"
                             label="Price"
-                            name={props.input.name}
-                            value={props.input.value}
-                            onChange={props.input.onChange}
-                            error={props.meta.error && props.meta.touched}
-                            helperText={
-                                props.meta.error && props.meta.touched
-                                    ? props.meta.error
-                                    : null
-                            }
-                            disabled={isLoading}
-                            fullWidth
-                        />
-                    )}
-                </Field>
-                <Field name="discountedPrice" type="number">
-                    {(props) => (
-                        <TextField
-                            label="Discounted Price"
                             name={props.input.name}
                             value={props.input.value}
                             onChange={props.input.onChange}
@@ -163,10 +158,15 @@ const ProductForm = ({ data, isLoading, isUpdateForm }: CustomerFormProps) => {
                 <Field name="discountPercent" type="number">
                     {(props) => (
                         <TextField
+                            type="number"
                             label="Discount Percentage"
                             name={props.input.name}
                             value={props.input.value}
                             onChange={props.input.onChange}
+                            inputProps={{
+                                min: 0,
+                                max: 100,
+                            }}
                             error={props.meta.error && props.meta.touched}
                             helperText={
                                 props.meta.error && props.meta.touched
@@ -174,6 +174,24 @@ const ProductForm = ({ data, isLoading, isUpdateForm }: CustomerFormProps) => {
                                     : null
                             }
                             disabled={isLoading}
+                            fullWidth
+                        />
+                    )}
+                </Field>
+                <Field name="discountedPrice" type="number">
+                    {(props) => (
+                        <TextField
+                            type="number"
+                            label="Discounted Price"
+                            name={props.input.name}
+                            value={discountedPrice}
+                            error={props.meta.error && props.meta.touched}
+                            helperText={
+                                props.meta.error && props.meta.touched
+                                    ? props.meta.error
+                                    : null
+                            }
+                            inputProps={{ readOnly: true }}
                             fullWidth
                         />
                     )}
@@ -244,6 +262,7 @@ const ProductForm = ({ data, isLoading, isUpdateForm }: CustomerFormProps) => {
                                 value={props.input.value}
                                 label="Second Level"
                                 onChange={props.input.onChange}
+                                disabled={!formValues?.topLevelCategory}
                                 error={props.meta.error && props.meta.touched}
                             >
                                 <MenuItem value="">None</MenuItem>
@@ -273,6 +292,7 @@ const ProductForm = ({ data, isLoading, isUpdateForm }: CustomerFormProps) => {
                                 value={props.input.value}
                                 label="Third Level"
                                 onChange={props.input.onChange}
+                                disabled={!formValues?.secondLevelCategory}
                                 error={props.meta.error && props.meta.touched}
                             >
                                 <MenuItem value="">None</MenuItem>
