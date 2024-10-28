@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Button, Rating } from "@mui/material";
+import { Rating } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import type { Sizes } from "../../ReadProductModule";
 import type { ShortReviewsCount } from "@/types/Review";
 import type { Product } from "@/types/Product";
@@ -100,13 +101,13 @@ const DetailsProductCard = ({
                     </div>
                 </div>
                 <div>
-                    <Button
+                    <LoadingButton
                         onClick={() => onAddToCart(currSize)}
-                        disabled={isLoading}
+                        loading={isLoading}
                         variant="contained"
                     >
                         Add to cart
-                    </Button>
+                    </LoadingButton>
                 </div>
                 <div className="text-gray-700 md:w-96">{data.description}</div>
             </div>

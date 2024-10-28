@@ -4,7 +4,7 @@ import { Form } from "react-final-form";
 import { useLoginMutation, LoginInput } from "@/store";
 import { enqueueSnackbar } from "notistack";
 import { useTitle } from "@/hooks/useTitle";
-import { Button } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import AuthModule from "@/modules/AuthModule";
 import LoginForm from "@/forms/LoginForm";
 
@@ -34,26 +34,20 @@ const Login = () => {
             render={({ handleSubmit }) => (
                 <form onSubmit={handleSubmit} className="space-y-8">
                     <LoginForm isLoading={isLoading} />
-                    <Button
+                    <LoadingButton
                         type="submit"
                         variant="contained"
-                        disabled={isLoading}
+                        loading={isLoading}
                         fullWidth
                     >
                         Sign In
-                    </Button>
+                    </LoadingButton>
                 </form>
             )}
         />
     );
 
-    return (
-        <AuthModule
-            authContent={<FormContainer />}
-            title={"Sign In"}
-            isLoading={isLoading}
-        />
-    );
+    return <AuthModule authContent={<FormContainer />} title={"Sign In"} />;
 };
 
 export default Login;

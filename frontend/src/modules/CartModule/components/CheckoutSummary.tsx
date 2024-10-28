@@ -1,4 +1,5 @@
-import { Button, Divider } from "@mui/material";
+import { Divider } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import type { Cart } from "@/types/Cart";
 
 interface CheckoutSummaryProps {
@@ -61,14 +62,14 @@ const CheckoutSummary = ({
                 <Box title="Total Amount" value={`$${totalAmount}`} bold />
             </div>
             <Divider />
-            <Button
+            <LoadingButton
                 variant="contained"
+                loading={isLoading}
                 onClick={handleCheckout}
-                disabled={isLoading}
                 fullWidth
             >
                 {isSummary ? "PAYMENT" : "CHECK OUT"}
-            </Button>
+            </LoadingButton>
         </div>
     );
 };

@@ -1,11 +1,13 @@
-import { Button, IconButton } from "@mui/material";
+import { IconButton } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import { RemoveCircleOutline, AddCircleOutline } from "@mui/icons-material";
 import type { Item } from "@/types/Cart";
 import type { Sizes } from "@/modules/ProductsModule/ReadProductModule";
 
 interface CartProductItemProps {
     data: Item;
-    isLoading: boolean;
+    isLoadingQuantity: boolean;
+    isLoadingDelete: boolean;
     editable?: boolean;
     onQuantityChange?: (
         productId: string,
@@ -18,7 +20,8 @@ interface CartProductItemProps {
 
 const CartProductItem = ({
     data,
-    isLoading,
+    isLoadingQuantity,
+    isLoadingDelete,
     editable = true,
     onQuantityChange,
     onDelete,
@@ -83,7 +86,7 @@ const CartProductItem = ({
                                     data.color
                                 )
                             }
-                            disabled={isLoading || itemQuantity === 1}
+                            disabled={isLoadingQuantity || itemQuantity === 1}
                         >
                             <RemoveCircleOutline />
                         </IconButton>
@@ -97,20 +100,20 @@ const CartProductItem = ({
                                     data.color
                                 )
                             }
-                            disabled={isLoading}
+                            disabled={isLoadingQuantity}
                         >
                             <AddCircleOutline />
                         </IconButton>
                     </div>
-                    <Button
+                    <LoadingButton
                         variant="contained"
                         onClick={() =>
                             onDelete(product!._id!, data.size, data.color)
                         }
-                        disabled={isLoading}
+                        loading={isLoadingDelete}
                     >
                         Remove
-                    </Button>
+                    </LoadingButton>
                 </div>
             )}
         </div>

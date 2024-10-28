@@ -1,6 +1,7 @@
 import { Field } from "react-final-form";
 import {
     FormControl,
+    InputAdornment,
     InputLabel,
     MenuItem,
     Select,
@@ -141,6 +142,15 @@ const ProductForm = ({
                         <TextField
                             type="number"
                             label="Price"
+                            slotProps={{
+                                input: {
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            $
+                                        </InputAdornment>
+                                    ),
+                                },
+                            }}
                             name={props.input.name}
                             value={props.input.value}
                             onChange={props.input.onChange}
@@ -163,6 +173,15 @@ const ProductForm = ({
                             name={props.input.name}
                             value={props.input.value}
                             onChange={props.input.onChange}
+                            slotProps={{
+                                input: {
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            %
+                                        </InputAdornment>
+                                    ),
+                                },
+                            }}
                             inputProps={{
                                 min: 0,
                                 max: 100,
@@ -183,6 +202,15 @@ const ProductForm = ({
                         <TextField
                             type="number"
                             label="Discounted Price"
+                            slotProps={{
+                                input: {
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            $
+                                        </InputAdornment>
+                                    ),
+                                },
+                            }}
                             name={props.input.name}
                             value={discountedPrice}
                             error={props.meta.error && props.meta.touched}

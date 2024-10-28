@@ -4,7 +4,7 @@ import { CartModel } from "../../models/Cart";
 import type { Item } from "../../types/Order";
 
 interface BodyProps {
-    action: "add" | "delete" | "changeQuantity";
+    action: "add" | "delete" | "clear" | "changeQuantity";
     productId: string;
     color: string;
     size: string;
@@ -71,6 +71,13 @@ export const updateCart = async (
             return res
                 .status(200)
                 .json({ msg: "Product removed from cart", data: cart });
+        }
+
+        if (action === "clear") {
+            cart._products = [];
+
+            await cart.save();
+            return res.status(200).json({ msg: "Cart cleared", data: cart });
         }
 
         if (action === "changeQuantity") {

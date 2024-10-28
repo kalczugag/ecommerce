@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAddOrderMutation, useEditUsersCartMutation } from "@/store";
 import { enqueueSnackbar } from "notistack";
@@ -18,24 +19,42 @@ interface CartModuleProps {
 const CartModule = ({ data, isLoading }: CartModuleProps) => {
     const navigate = useNavigate();
     const { token } = useAuth();
+    const [loadingProductId, setLoadingProductId] = useState<{
+        loadingQuantityId: string | null;
+        loadingDeleteId: string | null;
+    }>({
+        loadingDeleteId: null,
+        loadingQuantityId: null,
+    });
 
-    const [editCart, { isLoading: editLoading }] = useEditUsersCartMutation();
+    const [editCart] = useEditUsersCartMutation();
     const [addOrder, { isLoading: addLoading }] = useAddOrderMutation();
 
-    const handleQuantityChange = (
+    const handleQuantityChange = async (
         productId: string,
         quantity: number,
         size: Sizes,
         color: string
     ) => {
-        editCart({
-            _id: data?._id,
-            action: "changeQuantity",
-            productId,
-            quantity,
-            size,
-            color,
-        });
+        setLoadingProductId((prev) => ({
+            ...prev,
+            loadingQuantityId: productId,
+        }));
+        try {
+            await editCart({
+                _id: data?._id,
+                action: "changeQuantity",
+                productId,
+                quantity,
+                size,
+                color,
+            });
+        } finally {
+            setLoadingProductId((prev) => ({
+                ...prev,
+                loadingQuantityId: null,
+            }));
+        }
     };
 
     const handleDelete = async (
@@ -43,6 +62,10 @@ const CartModule = ({ data, isLoading }: CartModuleProps) => {
         size: Sizes,
         color: string
     ) => {
+        setLoadingProductId((prev) => ({
+            ...prev,
+            loadingDeleteId: productId,
+        }));
         try {
             await editCart({
                 _id: data?._id,
@@ -59,6 +82,11 @@ const CartModule = ({ data, isLoading }: CartModuleProps) => {
             enqueueSnackbar("Failed to remove product from cart", {
                 variant: "error",
             });
+        } finally {
+            setLoadingProductId((prev) => ({
+                ...prev,
+                loadingDeleteId: productId,
+            }));
         }
     };
 
@@ -93,7 +121,7 @@ const CartModule = ({ data, isLoading }: CartModuleProps) => {
     };
 
     return (
-        <Loading isLoading={isLoading || editLoading}>
+        <Loading isLoading={isLoading}>
             <DefaultLayout>
                 {data && data?._products.length > 0 ? (
                     <div className="flex flex-col items-center space-y-10 md:flex-row md:justify-between md:items-start md:space-x-10 md:space-y-0">
@@ -102,7 +130,14 @@ const CartModule = ({ data, isLoading }: CartModuleProps) => {
                                 <CartProductItem
                                     key={product.product?._id + "_" + index}
                                     data={product}
-                                    isLoading={editLoading}
+                                    isLoadingQuantity={
+                                        loadingProductId.loadingQuantityId ===
+                                        product.product?._id
+                                    }
+                                    isLoadingDelete={
+                                        loadingProductId.loadingDeleteId ===
+                                        product.product?._id
+                                    }
                                     onQuantityChange={handleQuantityChange}
                                     onDelete={handleDelete}
                                 />
@@ -110,7 +145,7 @@ const CartModule = ({ data, isLoading }: CartModuleProps) => {
                         </div>
                         <CheckoutSummary
                             data={data}
-                            isLoading={isLoading || editLoading || addLoading}
+                            isLoading={isLoading || addLoading}
                             handleCheckout={handleCheckout}
                         />
                     </div>
