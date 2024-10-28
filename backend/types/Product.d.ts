@@ -15,6 +15,8 @@ export interface Product {
         quantity: number;
     }[];
     quantity: number;
+    featured: boolean;
+    salesCount: number;
     topLevelCategory: string | Category;
     secondLevelCategory: string | Category;
     thirdLevelCategory: string | Category;
