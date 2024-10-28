@@ -14,7 +14,9 @@ const OrderListItem = ({ data }: OrderListItemProps) => {
     return (
         <div className="flex flex-col space-y-4">
             <div className="flex flex-row items-center justify-between">
-                <p className="font-bold text-lg">Order number: {data._id}</p>
+                <p className="font-semibold text-2xl">
+                    Order number: {data._id}
+                </p>
                 <Button onClick={() => navigate(`/orders/${data._id}`)}>
                     View
                 </Button>
@@ -27,12 +29,12 @@ const OrderListItem = ({ data }: OrderListItemProps) => {
                         <p>{moment(data.createdAt).format("dd, DD.MM.YYYY")}</p>
                     </div>
                     <div className="flex flex-col">
-                        <p className="font-bold">Order date</p>
-                        <p>{moment(data.createdAt).format("dd, DD.MM.YYYY")}</p>
+                        <p className="font-bold">Total cost</p>
+                        <p>${data.total}</p>
                     </div>
                     <div className="flex flex-col">
-                        <p className="font-bold">Order date</p>
-                        <p>{moment(data.createdAt).format("dd, DD.MM.YYYY")}</p>
+                        <p className="font-bold">Payment status</p>
+                        <p>{data.paymentStatus}</p>
                     </div>
                 </div>
                 <div className="flex flex-col space-y-4 md:flex-row md:space-x-8 md:space-y-0">
@@ -69,9 +71,7 @@ const OrderListItem = ({ data }: OrderListItemProps) => {
                             <p className="font-bold">
                                 {(item.product as Product).brand}
                             </p>
-                            <p className="text-sm">
-                                {item.size} {item.color}
-                            </p>
+                            <p className="text-sm">Size: {item.size}</p>
                         </Link>
                     ))}
                 </div>

@@ -1,7 +1,7 @@
 import express from "express";
 import { summaryCronJob } from "./config/cronJob";
 
-import cors, { CorsOptions } from "cors";
+import cors from "cors";
 
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";

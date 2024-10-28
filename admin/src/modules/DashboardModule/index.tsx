@@ -9,6 +9,7 @@ import {
     AttachMoneyOutlined,
     ShoppingCartOutlined,
 } from "@mui/icons-material";
+import Loading from "@/components/Loading";
 
 const DashboardModule = () => {
     const {
@@ -49,6 +50,7 @@ const DashboardModule = () => {
         {
             title: "Earnings",
             value: summary.orders.paid,
+            prefix: "$",
             summary: weeklyComparison(
                 summary.orders.thisWeek,
                 summary.orders.lastWeek
@@ -67,21 +69,17 @@ const DashboardModule = () => {
     ];
 
     return (
-        <DefaultLayout className="flex flex-col xl:flex-row xl:space-x-8">
-            <div className="grid gap-x-8 xl:w-2/3 sm:grid-cols-2">
-                {content.map((item, index) => (
-                    <SummaryCard
-                        key={index}
-                        {...item}
-                        isLoading={summaryIsloading}
-                    />
-                ))}
-            </div>
-            <PreviewCard
-                chartData={ordersSummary}
-                isLoading={ordersSummaryIsLoading}
-            />
-        </DefaultLayout>
+        <Loading isLoading={summaryIsloading || ordersSummaryIsLoading}>
+            <DefaultLayout className="flex flex-col xl:flex-row xl:space-x-8">
+                <div className="grid gap-x-8 xl:w-2/3 sm:grid-cols-2">
+                    {content.map((item, index) => (
+                        <SummaryCard key={index} {...item} />
+                    ))}
+                </div>
+
+                <PreviewCard chartData={ordersSummary} />
+            </DefaultLayout>
+        </Loading>
     );
 };
 

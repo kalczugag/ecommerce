@@ -1,10 +1,13 @@
+import { Link } from "react-router-dom";
+
 interface FeaturedProps {
+    id: string;
     imageUrl: string;
     title: string;
     description: string;
 }
 
-const Featured = ({ imageUrl, title, description }: FeaturedProps) => {
+const Featured = ({ id, imageUrl, title, description }: FeaturedProps) => {
     return (
         <div className="flex flex-col space-y-2 md:space-x-2 md:space-y-0 md:flex-row">
             <img
@@ -13,7 +16,12 @@ const Featured = ({ imageUrl, title, description }: FeaturedProps) => {
                 className="w-96 h-96 object-contain"
             />
             <div className="flex flex-col space-y-4 px-2 max-w-96">
-                <h1 className="text-3xl font-bold">{title}</h1>
+                <Link
+                    to={`/product/${id}`}
+                    className="text-3xl font-bold hover:underline"
+                >
+                    {title}
+                </Link>
                 <p>{description}</p>
             </div>
         </div>

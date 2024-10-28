@@ -15,7 +15,7 @@ import ProductForm from "@/forms/ProductForm";
 const ProductsEdit = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    useTitle("Products - Edit");
+    useTitle("Product - Edit");
 
     const { data: categoriesData, isLoading: categoriesLoading } =
         useGetGroupedCategoriesQuery({

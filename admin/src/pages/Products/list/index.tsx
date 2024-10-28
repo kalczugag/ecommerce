@@ -7,7 +7,7 @@ import SortForm from "@/forms/SortForm";
 
 const ProductsList = () => {
     const [pagination] = usePagination();
-    useTitle("Products");
+    useTitle("Products - List");
 
     const { data, isFetching } = useGetAllProductsQuery(pagination);
     const [deleteProduct, result] = useDeleteProductMutation();

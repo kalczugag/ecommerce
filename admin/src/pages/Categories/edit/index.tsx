@@ -15,7 +15,7 @@ import type { Category } from "@/types/Category";
 const CategoriesEdit = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    useTitle("Categories - Edit");
+    useTitle("Category - Edit");
 
     const { data, isError, isLoading } = useGetCategoryByIdQuery(id || "");
     const { data: childrenData, isSuccess: childrenIsSuccess } =

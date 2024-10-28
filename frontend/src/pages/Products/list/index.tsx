@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useGetAllProductsQuery } from "@/store";
+import { useTitle } from "@/hooks/useTitle";
 import usePagination from "@/hooks/usePagination";
 import ProductsDataListModule from "@/modules/ProductsModule/ProductsDataListModule";
 
@@ -9,6 +10,22 @@ const Catalog = () => {
     const { topLevel, secondLevel, thirdLevel } =
         useParams<Record<string, string>>();
     const [handlePageChange, page] = usePagination();
+
+    const title = [
+        topLevel
+            ? `${topLevel.charAt(0).toUpperCase() + topLevel.slice(1)}`
+            : "",
+        secondLevel
+            ? `${secondLevel.charAt(0).toUpperCase() + secondLevel.slice(1)}`
+            : "",
+        thirdLevel
+            ? `${thirdLevel.charAt(0).toUpperCase() + thirdLevel.slice(1)}`
+            : "",
+    ]
+        .filter(Boolean)
+        .join(" - ");
+
+    useTitle(title ? title : "");
 
     const category = [topLevel, secondLevel, thirdLevel]
         .filter(Boolean)

@@ -9,6 +9,7 @@ const DashboardModule = () => {
     const content = data?.map((item) => (
         <Featured
             key={item._id}
+            id={item._id || ""}
             imageUrl={item.imageUrl[0]}
             title={item.title}
             description={item.description || ""}

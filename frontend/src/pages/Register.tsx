@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
 import { useTitle } from "@/hooks/useTitle";
 import { RegisterInput, useRegisterMutation } from "@/store";
-import { Button } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
 import AuthModule from "@/modules/AuthModule";
 import RegisterForm from "@/forms/RegisterForm";
 
@@ -36,26 +36,20 @@ const Register = () => {
             render={({ handleSubmit }) => (
                 <form onSubmit={handleSubmit} className="space-y-8">
                     <RegisterForm isLoading={isLoading} />
-                    <Button
+                    <LoadingButton
                         type="submit"
                         variant="contained"
-                        disabled={isLoading}
+                        loading={isLoading}
                         fullWidth
                     >
                         Sign Up
-                    </Button>
+                    </LoadingButton>
                 </form>
             )}
         />
     );
 
-    return (
-        <AuthModule
-            authContent={<FormContainer />}
-            title="Sign Up"
-            isLoading={isLoading}
-        />
-    );
+    return <AuthModule authContent={<FormContainer />} title="Sign Up" />;
 };
 
 export default Register;

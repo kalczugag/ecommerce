@@ -5,10 +5,13 @@ import CrudModule from "@/modules/CrudModule";
 import CategoryForm from "@/forms/CategoryForm";
 import type { Category } from "@/types/Category";
 import { useNavigate } from "react-router-dom";
+import { useTitle } from "@/hooks/useTitle";
 
 const CategoriesAdd = () => {
     const navigate = useNavigate();
     const [addCategory, result] = useAddCategoryMutation();
+
+    useTitle("Category - Add");
 
     const handleSubmit = async (values: Category) => {
         try {

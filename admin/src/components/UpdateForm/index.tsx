@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
-import { Form } from "react-final-form";
+import { cloneElement, isValidElement, ReactElement, ReactNode } from "react";
+import { Form, FormSpy } from "react-final-form";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 import Loading from "../Loading";
@@ -28,7 +28,22 @@ const UpdateForm = ({
                 initialValues={initialValues}
                 render={({ handleSubmit, values }) => (
                     <form onSubmit={handleSubmit}>
-                        {formElements}
+                        <FormSpy subscription={{ values: true }}>
+                            {({ values }) => (
+                                <>
+                                    {isValidElement(formElements) ? (
+                                        cloneElement(
+                                            formElements as ReactElement,
+                                            {
+                                                formValues: values,
+                                            }
+                                        )
+                                    ) : (
+                                        <div />
+                                    )}
+                                </>
+                            )}
+                        </FormSpy>
                         <div className="flex space-x-2 mt-8">
                             <Button
                                 type="button"
