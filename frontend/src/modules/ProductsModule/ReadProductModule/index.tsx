@@ -3,7 +3,6 @@ import { useSnackbar } from "notistack";
 import useAuth from "@/hooks/useAuth";
 import DefaultLayout from "@/layouts/DefaultLayout";
 import DetailsProductCard from "../components/DetailsProductCard";
-import Loading from "@/components/Loading";
 import type { Product } from "@/types/Product";
 import type { ShortReviewsCount } from "@/types/Review";
 
@@ -53,18 +52,15 @@ const ReadProductModule = ({ config, data }: ReadProductModuleProps) => {
     };
 
     return (
-        <Loading isLoading={isLoading}>
-            <DefaultLayout className="items-center">
-                {data && (
-                    <DetailsProductCard
-                        data={data}
-                        isLoading={editLoading}
-                        rating={rating}
-                        onAddToCart={handleAddToCart}
-                    />
-                )}
-            </DefaultLayout>
-        </Loading>
+        <DefaultLayout className="items-center">
+            <DetailsProductCard
+                data={data}
+                isLoading={isLoading}
+                editLoading={editLoading}
+                rating={rating}
+                onAddToCart={handleAddToCart}
+            />
+        </DefaultLayout>
     );
 };
 

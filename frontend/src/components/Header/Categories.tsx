@@ -154,7 +154,7 @@ const CategoryList = ({ data, page, isOpen, setOpen }: CategoryListProps) => {
 };
 
 interface CategoryContainerProps {
-    data: GroupedCategories;
+    data?: GroupedCategories;
     openCategories: {
         isOpen: boolean;
         page: string;
@@ -182,16 +182,16 @@ const CategoryContainer = ({
 
     return (
         <Box className="flex flex-grow">
-            {data
-                ? data.topLevelCategories.map(({ name }, index) => (
-                      <CategoryButton
-                          key={name + "_" + index}
-                          name={name}
-                          onMouseOver={handleMouseOver}
-                          onClick={handleCloseCategories}
-                      />
-                  ))
-                : null}
+            {(
+                data?.topLevelCategories || [{ name: "men" }, { name: "women" }]
+            ).map(({ name }, index) => (
+                <CategoryButton
+                    key={name + "_" + index}
+                    name={name}
+                    onMouseOver={handleMouseOver}
+                    onClick={handleCloseCategories}
+                />
+            ))}
         </Box>
     );
 };

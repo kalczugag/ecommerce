@@ -62,23 +62,23 @@ const Header = ({ topLabel }: HeaderProps) => {
                                 </Link>
                             </div>
                         </div>
-                        {data?.data && (
-                            <CategoryContainer
-                                data={data.data}
-                                setOpen={setOpenCategories}
-                                openCategories={openCategories}
-                            />
-                        )}
+                        <CategoryContainer
+                            data={data?.data}
+                            setOpen={setOpenCategories}
+                            openCategories={openCategories}
+                        />
                         <AccountTools />
                     </Toolbar>
                 </Container>
             </AppBar>
-            <CategoryList
-                data={data?.data}
-                page={openCategories.page}
-                isOpen={openCategories.isOpen}
-                setOpen={setOpenCategories}
-            />
+            {data?.data && (
+                <CategoryList
+                    data={data.data}
+                    page={openCategories.page}
+                    isOpen={openCategories.isOpen}
+                    setOpen={setOpenCategories}
+                />
+            )}
         </>
     );
 };
