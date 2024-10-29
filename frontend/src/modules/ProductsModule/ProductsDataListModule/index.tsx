@@ -32,30 +32,30 @@ const ProductsDataListModule = ({ config }: ProductsDataListModuleProps) => {
     const count = Math.ceil(config.total / pageSize);
 
     return (
-        <Loading isLoading={isLoading}>
-            <DefaultLayout
-                pagination={
-                    <Pagination
-                        count={count}
-                        page={page}
-                        onChange={handlePageChange}
-                        sx={{ marginTop: "60px", alignSelf: "center" }}
-                    />
-                }
-                isCatalog
-            >
-                <Sidebar
-                    data={simplifiedData}
-                    disabled={!filteredData.length}
-                    onSubmit={handleSubmit}
+        <DefaultLayout
+            pagination={
+                <Pagination
+                    count={count}
+                    page={page}
+                    onChange={handlePageChange}
+                    sx={{ marginTop: "60px", alignSelf: "center" }}
                 />
-                {filteredData.length > 0 ? (
-                    <ProductsList data={filteredData} />
-                ) : (
-                    <div>No products available for this category.</div>
-                )}
-            </DefaultLayout>
-        </Loading>
+            }
+            isCatalog
+        >
+            <Sidebar
+                data={simplifiedData}
+                disabled={!filteredData.length}
+                onSubmit={handleSubmit}
+            />
+            {isLoading ? (
+                <ProductsList data={filteredData} isLoading={true} />
+            ) : filteredData.length > 0 ? (
+                <ProductsList data={filteredData} isLoading={false} />
+            ) : (
+                <div>No products available for this category.</div>
+            )}
+        </DefaultLayout>
     );
 };
 

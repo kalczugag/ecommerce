@@ -1,4 +1,3 @@
-import Loading from "@/components/Loading";
 import DefaultLayout from "@/layouts/DefaultLayout";
 import OrderListItem from "../ReadOrderListModule/components/OrderListItem";
 import type { Order } from "@/types/Order";
@@ -10,11 +9,9 @@ interface ReadOrderListModuleProps {
 
 const ReadOrderModule = ({ data, isLoading }: ReadOrderListModuleProps) => {
     return (
-        <Loading isLoading={isLoading}>
-            <DefaultLayout>
-                {data && <OrderListItem data={data} />}
-            </DefaultLayout>
-        </Loading>
+        <DefaultLayout>
+            <OrderListItem data={data} isLoading={isLoading} />
+        </DefaultLayout>
     );
 };
 
