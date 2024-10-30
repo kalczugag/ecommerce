@@ -1,3 +1,4 @@
+import { placeholderArray } from "@/utils/helpers";
 import ProductCard from "../ProductCard";
 import type { Product } from "@/types/Product";
 
@@ -7,7 +8,7 @@ interface ProductsListProps {
 }
 
 const ProductsList = ({ data, isLoading }: ProductsListProps) => {
-    const placeholderData = new Array(8).fill(null);
+    const placeholderData = placeholderArray(8);
 
     return (
         <div className="grid justify-items-center grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
