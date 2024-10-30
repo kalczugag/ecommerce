@@ -1,5 +1,6 @@
 import { Route, Routes } from "react-router-dom";
-import PrivateOutlet from "@/pages/PrivateOutlet";
+import PrivateOutlet from "@/pages/Outlets/PrivateOutlet";
+import VisitorsCounterOutlet from "@/pages/Outlets/VisitorsCounterOutlet";
 import Dashboard from "@/pages/Dashboard";
 import Catalog from "@/pages/Products/list";
 import ProductDetails from "@/pages/Products/details";
@@ -18,22 +19,24 @@ const App = () => {
         <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route element={<PrivateOutlet />}>
+            <Route element={<VisitorsCounterOutlet />}>
                 <Route index element={<Dashboard />} />
                 <Route
                     path="/:topLevel/:secondLevel?/:thirdLevel?"
                     element={<Catalog />}
                 />
                 <Route path="/product/:id" element={<ProductDetails />} />
-                <Route path="/orders">
-                    <Route index element={<OrdersList />} />
-                    <Route path=":id" element={<OrderDetails />} />
-                </Route>
-                <Route path="/cart" element={<Cart />} />
-                <Route path="/checkout/:orderId/*" element={<Checkout />}>
-                    <Route path="delivery" element={<Delivery />} />
-                    <Route path="summary" element={<Summary />} />
-                    <Route path="*" element={<CheckoutStatus />} />
+                <Route element={<PrivateOutlet />}>
+                    <Route path="/orders">
+                        <Route index element={<OrdersList />} />
+                        <Route path=":id" element={<OrderDetails />} />
+                    </Route>
+                    <Route path="/cart" element={<Cart />} />
+                    <Route path="/checkout/:orderId/*" element={<Checkout />}>
+                        <Route path="delivery" element={<Delivery />} />
+                        <Route path="summary" element={<Summary />} />
+                        <Route path="*" element={<CheckoutStatus />} />
+                    </Route>
                 </Route>
             </Route>
         </Routes>

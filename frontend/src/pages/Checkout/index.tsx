@@ -1,12 +1,11 @@
 import { Outlet, useParams } from "react-router-dom";
 import { useGetOrderByIdQuery } from "@/store";
 import { useTitle } from "@/hooks/useTitle";
+import { checkoutSteps } from "@/constants/checkoutSteps";
 import { OrderProvider } from "@/contexts/OrderContext";
 import CheckoutLayout from "@/layouts/CheckoutLayout";
 import NotFound from "@/components/NotFound";
 import Loading from "@/components/Loading";
-
-const steps = ["delivery", "summary"];
 
 const Checkout = () => {
     const { orderId } = useParams<{ orderId: string }>();
@@ -19,7 +18,7 @@ const Checkout = () => {
     return (
         <OrderProvider
             order={data}
-            steps={steps}
+            steps={checkoutSteps}
             isError={isError}
             isLoading={isLoading}
         >
