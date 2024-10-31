@@ -1,5 +1,6 @@
 import { cloneElement, isValidElement, ReactElement, ReactNode } from "react";
 import { Form, FormSpy } from "react-final-form";
+import arrayMutators from "final-form-arrays";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@mui/material";
 import Loading from "../Loading";
@@ -25,6 +26,9 @@ const UpdateForm = ({
         <Loading isLoading={isLoading}>
             <Form
                 onSubmit={handleSubmit}
+                mutators={{
+                    ...arrayMutators,
+                }}
                 initialValues={initialValues}
                 render={({ handleSubmit, values }) => (
                     <form onSubmit={handleSubmit}>

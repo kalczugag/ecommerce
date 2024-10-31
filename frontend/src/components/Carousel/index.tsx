@@ -3,9 +3,10 @@ import Carousel from "react-multi-carousel";
 
 interface CarouselProps {
     content: JSX.Element[];
+    config?: any;
 }
 
-const CustomCarousel = ({ content }: CarouselProps) => {
+const CustomCarousel = ({ content, config }: CarouselProps) => {
     const responsive = {
         desktop: {
             breakpoint: { max: 3000, min: 1024 },
@@ -26,7 +27,7 @@ const CustomCarousel = ({ content }: CarouselProps) => {
 
     return (
         <Carousel
-            responsive={responsive}
+            responsive={config ? config : responsive}
             autoPlaySpeed={1000}
             transitionDuration={500}
             containerClass="carousel-container"

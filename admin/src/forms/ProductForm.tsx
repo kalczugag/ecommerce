@@ -1,16 +1,20 @@
 import { Field } from "react-final-form";
 import {
+    Button,
     FormControl,
+    IconButton,
     InputAdornment,
     InputLabel,
     MenuItem,
     Select,
     TextField,
 } from "@mui/material";
+import { Add, Remove } from "@mui/icons-material";
 import { required, mustBeNumber, minValue, compose } from "@/utils/validators";
 import Row from "@/components/Row";
 import type { GroupedCategories } from "@/types/Category";
 import type { Product } from "@/types/Product";
+import { FieldArray } from "react-final-form-arrays";
 
 interface CustomerFormProps {
     data?: GroupedCategories;
@@ -244,6 +248,94 @@ const ProductForm = ({
                     />
                 )}
             </Field>
+            <Row label="Sizes" direction="column">
+                <FieldArray name="size">
+                    {({ fields }) => (
+                        <>
+                            {fields.map((name, index) => (
+                                <div
+                                    key={name}
+                                    className="flex items-center space-x-4"
+                                >
+                                    <Field
+                                        name={`${name}.name`}
+                                        validate={required}
+                                    >
+                                        {({ input, meta }) => (
+                                            <TextField
+                                                label="Size Name"
+                                                {...input}
+                                                error={
+                                                    meta.error && meta.touched
+                                                }
+                                                helperText={
+                                                    meta.error && meta.touched
+                                                        ? meta.error
+                                                        : null
+                                                }
+                                                disabled={isLoading}
+                                            />
+                                        )}
+                                    </Field>
+                                    <Field
+                                        name={`${name}.quantity`}
+                                        validate={compose(
+                                            required,
+                                            mustBeNumber
+                                        )}
+                                    >
+                                        {({ input, meta }) => (
+                                            <TextField
+                                                label="Quantity"
+                                                type="number"
+                                                {...input}
+                                                error={
+                                                    meta.error && meta.touched
+                                                }
+                                                helperText={
+                                                    meta.error && meta.touched
+                                                        ? meta.error
+                                                        : null
+                                                }
+                                                disabled={isLoading}
+                                                InputProps={{
+                                                    endAdornment: (
+                                                        <InputAdornment position="end">
+                                                            <IconButton
+                                                                onClick={() =>
+                                                                    fields.remove(
+                                                                        index
+                                                                    )
+                                                                }
+                                                                disabled={
+                                                                    isLoading
+                                                                }
+                                                            >
+                                                                <Remove />
+                                                            </IconButton>
+                                                        </InputAdornment>
+                                                    ),
+                                                }}
+                                            />
+                                        )}
+                                    </Field>
+                                </div>
+                            ))}
+                            <Button
+                                variant="outlined"
+                                onClick={() =>
+                                    fields.push({ name: "", quantity: 0 })
+                                }
+                                startIcon={<Add />}
+                                disabled={isLoading}
+                                sx={{ width: "150px" }}
+                            >
+                                Add Size
+                            </Button>
+                        </>
+                    )}
+                </FieldArray>
+            </Row>
             <Row label="Categories">
                 <Field
                     name={
