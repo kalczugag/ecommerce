@@ -8,7 +8,7 @@ interface LayoutProps {
 
 const Layout = ({ children }: LayoutProps) => {
     return (
-        <div>
+        <div className="flex flex-col min-h-screen">
             <Header topLabel={"Get free delivery on orders over $100"} />
             {children}
             <Footer />

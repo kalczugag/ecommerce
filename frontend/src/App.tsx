@@ -13,6 +13,7 @@ import Checkout from "@/pages/Checkout";
 import Delivery from "@/pages/Checkout/Delivery";
 import Summary from "@/pages/Checkout/Summary";
 import CheckoutStatus from "@/pages/Checkout/Status";
+import NotFound from "@/pages/404";
 
 const App = () => {
     return (
@@ -39,6 +40,7 @@ const App = () => {
                     </Route>
                 </Route>
             </Route>
+            <Route path="*" element={<NotFound />} />
         </Routes>
     );
 };
