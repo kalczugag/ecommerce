@@ -1,16 +1,27 @@
 import { Field } from "react-final-form";
 import {
+    Button,
     FormControl,
+    IconButton,
     InputAdornment,
     InputLabel,
     MenuItem,
     Select,
     TextField,
+    Tooltip,
 } from "@mui/material";
-import { required, mustBeNumber, minValue, compose } from "@/utils/validators";
+import { Add, Info, Remove } from "@mui/icons-material";
+import {
+    required,
+    mustBeNumber,
+    minValue,
+    compose,
+    maxValue,
+} from "@/utils/validators";
 import Row from "@/components/Row";
 import type { GroupedCategories } from "@/types/Category";
 import type { Product } from "@/types/Product";
+import { FieldArray } from "react-final-form-arrays";
 
 interface CustomerFormProps {
     data?: GroupedCategories;
@@ -28,6 +39,12 @@ const ProductForm = ({
     const price = formValues?.price || 0;
     const discountPercent = formValues?.discountPercent || 0;
     const discountedPrice = price - (price * discountPercent) / 100;
+    const quantity = formValues?.size?.length
+        ? formValues.size.reduce(
+              (acc, size) => acc + Number(size.quantity || 0),
+              0
+          )
+        : 0;
 
     return (
         <div className="space-y-4">
@@ -116,10 +133,22 @@ const ProductForm = ({
                     {(props) => (
                         <TextField
                             type="number"
-                            label="Quantity"
+                            label={"Quantity"}
                             name={props.input.name}
-                            value={props.input.value}
+                            value={quantity}
                             onChange={props.input.onChange}
+                            slotProps={{
+                                input: {
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            <Tooltip title="Set sizes to change quantity">
+                                                <Info />
+                                            </Tooltip>
+                                        </InputAdornment>
+                                    ),
+                                    readOnly: true,
+                                },
+                            }}
                             error={props.meta.error && props.meta.touched}
                             helperText={
                                 props.meta.error && props.meta.touched
@@ -151,6 +180,9 @@ const ProductForm = ({
                                     ),
                                 },
                             }}
+                            inputProps={{
+                                min: 0,
+                            }}
                             name={props.input.name}
                             value={props.input.value}
                             onChange={props.input.onChange}
@@ -165,7 +197,11 @@ const ProductForm = ({
                         />
                     )}
                 </Field>
-                <Field name="discountPercent" type="number">
+                <Field
+                    name="discountPercent"
+                    type="number"
+                    validate={compose(minValue(0), maxValue(100))}
+                >
                     {(props) => (
                         <TextField
                             type="number"
@@ -209,6 +245,7 @@ const ProductForm = ({
                                             $
                                         </InputAdornment>
                                     ),
+                                    readOnly: true,
                                 },
                             }}
                             name={props.input.name}
@@ -219,7 +256,6 @@ const ProductForm = ({
                                     ? props.meta.error
                                     : null
                             }
-                            inputProps={{ readOnly: true }}
                             fullWidth
                         />
                     )}
@@ -244,6 +280,101 @@ const ProductForm = ({
                     />
                 )}
             </Field>
+            <Row label="Sizes" direction="column">
+                <FieldArray name="size">
+                    {({ fields }) => (
+                        <>
+                            {fields.map((name, index) => (
+                                <div key={name} className="flex space-x-4">
+                                    <Field
+                                        name={`${name}.name`}
+                                        validate={required}
+                                    >
+                                        {(props) => (
+                                            <TextField
+                                                label="Size Name"
+                                                {...props.input}
+                                                error={
+                                                    props.meta.error &&
+                                                    props.meta.touched
+                                                }
+                                                helperText={
+                                                    props.meta.error &&
+                                                    props.meta.touched
+                                                        ? props.meta.error
+                                                        : null
+                                                }
+                                                disabled={isLoading}
+                                            />
+                                        )}
+                                    </Field>
+                                    <Field
+                                        name={`${name}.quantity`}
+                                        validate={compose(
+                                            required,
+                                            mustBeNumber,
+                                            minValue(0)
+                                        )}
+                                    >
+                                        {(props) => (
+                                            <TextField
+                                                label="Quantity"
+                                                type="number"
+                                                {...props.input}
+                                                error={
+                                                    props.meta.error &&
+                                                    props.meta.touched
+                                                }
+                                                helperText={
+                                                    props.meta.error &&
+                                                    props.meta.touched
+                                                        ? props.meta.error
+                                                        : null
+                                                }
+                                                disabled={isLoading}
+                                                slotProps={{
+                                                    input: {
+                                                        endAdornment: (
+                                                            <InputAdornment position="end">
+                                                                <IconButton
+                                                                    onClick={() =>
+                                                                        fields.remove(
+                                                                            index
+                                                                        )
+                                                                    }
+                                                                    disabled={
+                                                                        isLoading
+                                                                    }
+                                                                >
+                                                                    <Remove />
+                                                                </IconButton>
+                                                            </InputAdornment>
+                                                        ),
+                                                    },
+                                                }}
+                                                inputProps={{
+                                                    min: 0,
+                                                }}
+                                            />
+                                        )}
+                                    </Field>
+                                </div>
+                            ))}
+                            <Button
+                                variant="outlined"
+                                onClick={() =>
+                                    fields.push({ name: "", quantity: 0 })
+                                }
+                                startIcon={<Add />}
+                                disabled={isLoading}
+                                sx={{ width: "150px" }}
+                            >
+                                Add Size
+                            </Button>
+                        </>
+                    )}
+                </FieldArray>
+            </Row>
             <Row label="Categories">
                 <Field
                     name={

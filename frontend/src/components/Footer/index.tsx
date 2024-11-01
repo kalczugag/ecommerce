@@ -5,7 +5,7 @@ const Footer = () => {
     const currYear = new Date().getFullYear();
 
     return (
-        <footer className="flex flex-col text-center text-white text-lg">
+        <footer className="flex flex-col text-center text-white text-lg mt-auto">
             <div className="grid grid-cols-2 gap-12 p-4 py-12 bg-[#1A1A1A] md:grid-cols-4">
                 {footerLinks.map(({ label, icon, links }) => (
                     <div key={label} className="space-y-2">

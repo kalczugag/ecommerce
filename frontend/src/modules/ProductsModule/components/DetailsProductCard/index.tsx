@@ -4,6 +4,7 @@ import { LoadingButton } from "@mui/lab";
 import type { Sizes } from "../../ReadProductModule";
 import type { ShortReviewsCount } from "@/types/Review";
 import type { Product } from "@/types/Product";
+import CustomCarousel from "@/components/Carousel";
 
 interface DetailsProductCardProps {
     data?: Product;
@@ -31,18 +32,23 @@ const DetailsProductCard = ({
             : +(price - (price * data.discountPercent) / 100).toFixed(2);
     }
 
+    const content = data?.imageUrl.map((url, index) => (
+        <img
+            key={url + "_" + index}
+            src={url}
+            alt={`${data?.title} photo-${index}`}
+        />
+    ));
+
     return (
         <div className="flex flex-col space-x-0 md:flex-row md:space-x-10">
             <div>
                 {isLoading ? (
                     <Skeleton variant="rectangular" width={400} height={550} />
                 ) : (
-                    <img
-                        src={data?.imageUrl[0]}
-                        alt={data?.title}
-                        loading="lazy"
-                        className="max-h-[850px]"
-                    />
+                    <div className="overflow-x-scroll flex max-w-[600px]">
+                        {content}
+                    </div>
                 )}
             </div>
             <div className="flex flex-col py-4 space-y-6 w-full">
@@ -112,7 +118,7 @@ const DetailsProductCard = ({
                     ) : (
                         <p className="font-bold text-sm">Size</p>
                     )}
-                    <div className="grid grid-cols-3 w-40 gap-4">
+                    <div className="flex space-x-2">
                         {isLoading
                             ? Array.from(new Array(3)).map((_, index) => (
                                   <Skeleton

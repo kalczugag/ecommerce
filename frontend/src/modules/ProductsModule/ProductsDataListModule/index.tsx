@@ -3,7 +3,6 @@ import DefaultLayout from "@/layouts/DefaultLayout";
 import { Pagination } from "@mui/material";
 import Sidebar from "@/components/Sidebar";
 import ProductsList from "../components/ProductsList";
-import Loading from "@/components/Loading";
 import { Product } from "@/types/Product";
 
 interface ProductsDataListModuleProps {

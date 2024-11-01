@@ -9,6 +9,7 @@ interface RowProps extends Order {
 export const sortConfig = [
     {
         label: "Sort By Price",
+        criteria: "total",
         items: [
             { label: "Low to high", value: "asc" },
             { label: "High to low", value: "desc" },

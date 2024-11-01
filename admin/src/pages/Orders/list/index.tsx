@@ -2,6 +2,7 @@ import { useGetAllOrdersQuery } from "@/store";
 import { sortConfig, tableConfig } from "./config";
 import { useTitle } from "@/hooks/useTitle";
 import usePagination from "@/hooks/usePagination";
+import useSortedData from "@/hooks/useSortedData";
 import CrudModule from "@/modules/CrudModule";
 import SortForm from "@/forms/SortForm";
 
@@ -11,13 +12,21 @@ const OrdersList = () => {
 
     const { data, isFetching } = useGetAllOrdersQuery(pagination);
 
-    const sortFn = (values: any) => {
-        console.log(values);
+    const { sortedData, setSortCriteria } = useSortedData(
+        data?.data || [],
+        sortConfig
+    );
+
+    const handleSort = (sortValues: any) => {
+        const parsedSortCriteria = Object.entries(sortValues).map(
+            ([label, value]) => ({ label, value: value as string })
+        );
+        setSortCriteria(parsedSortCriteria);
     };
 
     const config = {
         tableConfig,
-        tableData: data?.data || [],
+        tableData: sortedData,
         total: data?.count || 0,
         isLoading: isFetching,
     };
@@ -25,7 +34,9 @@ const OrdersList = () => {
     return (
         <CrudModule
             config={config}
-            actionForm={<SortForm config={sortConfig} handleSubmit={sortFn} />}
+            actionForm={
+                <SortForm config={sortConfig} handleSubmit={handleSort} />
+            }
         />
     );
 };

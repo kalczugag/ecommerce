@@ -1,6 +1,7 @@
 import { cloneElement, isValidElement, ReactElement, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { Form, FormSpy } from "react-final-form";
+import arrayMutators from "final-form-arrays";
 import { Button } from "@mui/material";
 import Loading from "../Loading";
 import AlertDialog from "../AlertDialog";
@@ -26,6 +27,9 @@ const CreateForm = ({
             <Form
                 onSubmit={handleSubmit}
                 initialValues={initialValues}
+                mutators={{
+                    ...arrayMutators,
+                }}
                 render={({ handleSubmit, values }) => (
                     <form onSubmit={handleSubmit}>
                         <FormSpy subscription={{ values: true }}>

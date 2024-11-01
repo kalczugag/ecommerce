@@ -1,24 +1,23 @@
 import { useEffect } from "react";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { useRefreshTokenQuery, useUpdateVisitorCountMutation } from "@/store";
 import useAuth from "@/hooks/useAuth";
 import Layout from "@/layouts/Layout";
 
-const PrivateOutlet = () => {
+const VisitorsCounterOutlet = () => {
     const { token } = useAuth();
-    const location = useLocation();
+
+    const isAuthLocation =
+        location.pathname === "/login" || location.pathname === "/register";
 
     useRefreshTokenQuery(undefined, {
-        skip:
-            !!token ||
-            location.pathname === "/login" ||
-            location.pathname === "/register",
+        skip: !!token || isAuthLocation,
     });
 
     const [updateView] = useUpdateVisitorCountMutation();
 
     useEffect(() => {
-        updateView({});
+        updateView({ isLoggedIn: !!token });
     }, []);
 
     return (
@@ -28,4 +27,4 @@ const PrivateOutlet = () => {
     );
 };
 
-export default PrivateOutlet;
+export default VisitorsCounterOutlet;

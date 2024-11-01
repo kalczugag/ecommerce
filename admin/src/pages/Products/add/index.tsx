@@ -22,20 +22,6 @@ const ProductAdd = () => {
             await addProduct({
                 ...values,
                 imageUrl: (values.imageUrl as string)?.trim().split(","),
-                size: [
-                    {
-                        name: "S",
-                        quantity: 20,
-                    },
-                    {
-                        name: "M",
-                        quantity: 30,
-                    },
-                    {
-                        name: "L",
-                        quantity: 50,
-                    },
-                ],
             }).unwrap();
             navigate("/products");
             enqueueSnackbar("product added successfully", {

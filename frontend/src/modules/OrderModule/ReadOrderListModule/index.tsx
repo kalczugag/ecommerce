@@ -1,10 +1,11 @@
 import { Field } from "react-final-form";
 import { Checkbox, FormControlLabel } from "@mui/material";
 import { orderStatuses } from "@/constants/orderStatuses";
+import { placeholderArray } from "@/utils/helpers";
 import DefaultLayout from "@/layouts/DefaultLayout";
 import Filters from "@/components/Filters";
-import type { Order } from "@/types/Order";
 import OrderListItem from "./components/OrderListItem";
+import type { Order } from "@/types/Order";
 
 interface ReadOrderListModuleProps {
     data: Order[];
@@ -13,7 +14,7 @@ interface ReadOrderListModuleProps {
 
 const ReadOrderListModule = ({ data, isLoading }: ReadOrderListModuleProps) => {
     const orderValues = Object.values(orderStatuses);
-    const placeholderData = new Array(2).fill(null);
+    const placeholderData = placeholderArray(2);
 
     const handleSubmit = (values: any) => {
         console.log(values);
