@@ -8,8 +8,9 @@ import {
     MenuItem,
     Select,
     TextField,
+    Tooltip,
 } from "@mui/material";
-import { Add, Remove } from "@mui/icons-material";
+import { Add, Info, Remove } from "@mui/icons-material";
 import { required, mustBeNumber, minValue, compose } from "@/utils/validators";
 import Row from "@/components/Row";
 import type { GroupedCategories } from "@/types/Category";
@@ -32,6 +33,12 @@ const ProductForm = ({
     const price = formValues?.price || 0;
     const discountPercent = formValues?.discountPercent || 0;
     const discountedPrice = price - (price * discountPercent) / 100;
+    const quantity = formValues?.size?.length
+        ? formValues.size.reduce(
+              (acc, size) => acc + Number(size.quantity || 0),
+              0
+          )
+        : 0;
 
     return (
         <div className="space-y-4">
@@ -120,10 +127,22 @@ const ProductForm = ({
                     {(props) => (
                         <TextField
                             type="number"
-                            label="Quantity"
+                            label={"Quantity"}
                             name={props.input.name}
-                            value={props.input.value}
+                            value={quantity}
                             onChange={props.input.onChange}
+                            slotProps={{
+                                input: {
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            <Tooltip title="Set sizes to change quantity">
+                                                <Info />
+                                            </Tooltip>
+                                        </InputAdornment>
+                                    ),
+                                    readOnly: true,
+                                },
+                            }}
                             error={props.meta.error && props.meta.touched}
                             helperText={
                                 props.meta.error && props.meta.touched
@@ -213,6 +232,7 @@ const ProductForm = ({
                                             $
                                         </InputAdornment>
                                     ),
+                                    readOnly: true,
                                 },
                             }}
                             name={props.input.name}
@@ -223,7 +243,6 @@ const ProductForm = ({
                                     ? props.meta.error
                                     : null
                             }
-                            inputProps={{ readOnly: true }}
                             fullWidth
                         />
                     )}
@@ -253,24 +272,23 @@ const ProductForm = ({
                     {({ fields }) => (
                         <>
                             {fields.map((name, index) => (
-                                <div
-                                    key={name}
-                                    className="flex items-center space-x-4"
-                                >
+                                <div key={name} className="flex space-x-4">
                                     <Field
                                         name={`${name}.name`}
                                         validate={required}
                                     >
-                                        {({ input, meta }) => (
+                                        {(props) => (
                                             <TextField
                                                 label="Size Name"
-                                                {...input}
+                                                {...props.input}
                                                 error={
-                                                    meta.error && meta.touched
+                                                    props.meta.error &&
+                                                    props.meta.touched
                                                 }
                                                 helperText={
-                                                    meta.error && meta.touched
-                                                        ? meta.error
+                                                    props.meta.error &&
+                                                    props.meta.touched
+                                                        ? props.meta.error
                                                         : null
                                                 }
                                                 disabled={isLoading}
@@ -284,37 +302,44 @@ const ProductForm = ({
                                             mustBeNumber
                                         )}
                                     >
-                                        {({ input, meta }) => (
+                                        {(props) => (
                                             <TextField
                                                 label="Quantity"
                                                 type="number"
-                                                {...input}
+                                                {...props.input}
                                                 error={
-                                                    meta.error && meta.touched
+                                                    props.meta.error &&
+                                                    props.meta.touched
                                                 }
                                                 helperText={
-                                                    meta.error && meta.touched
-                                                        ? meta.error
+                                                    props.meta.error &&
+                                                    props.meta.touched
+                                                        ? props.meta.error
                                                         : null
                                                 }
                                                 disabled={isLoading}
-                                                InputProps={{
-                                                    endAdornment: (
-                                                        <InputAdornment position="end">
-                                                            <IconButton
-                                                                onClick={() =>
-                                                                    fields.remove(
-                                                                        index
-                                                                    )
-                                                                }
-                                                                disabled={
-                                                                    isLoading
-                                                                }
-                                                            >
-                                                                <Remove />
-                                                            </IconButton>
-                                                        </InputAdornment>
-                                                    ),
+                                                slotProps={{
+                                                    input: {
+                                                        endAdornment: (
+                                                            <InputAdornment position="end">
+                                                                <IconButton
+                                                                    onClick={() =>
+                                                                        fields.remove(
+                                                                            index
+                                                                        )
+                                                                    }
+                                                                    disabled={
+                                                                        isLoading
+                                                                    }
+                                                                >
+                                                                    <Remove />
+                                                                </IconButton>
+                                                            </InputAdornment>
+                                                        ),
+                                                    },
+                                                }}
+                                                inputProps={{
+                                                    min: 0,
                                                 }}
                                             />
                                         )}
