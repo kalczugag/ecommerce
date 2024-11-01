@@ -9,14 +9,16 @@ interface RowProps extends Category {
 export const sortConfig = [
     {
         label: "Level",
+        criteria: "level",
         items: [
-            { label: "Top Level", value: "1" },
-            { label: "Second Level", value: "2" },
-            { label: "Third Level", value: "3" },
+            { label: "Top Level", value: "topLevel" },
+            { label: "Second Level", value: "secondLevel" },
+            { label: "Third Level", value: "thirdLevel" },
         ],
     },
     {
-        label: "Number of children",
+        label: "Number of children (not working)",
+        criteria: "children.length",
         items: [
             { label: "More than 10", value: "more than 0" },
             { label: "Less than 10", value: "less than 0" },

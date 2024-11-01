@@ -11,7 +11,13 @@ import {
     Tooltip,
 } from "@mui/material";
 import { Add, Info, Remove } from "@mui/icons-material";
-import { required, mustBeNumber, minValue, compose } from "@/utils/validators";
+import {
+    required,
+    mustBeNumber,
+    minValue,
+    compose,
+    maxValue,
+} from "@/utils/validators";
 import Row from "@/components/Row";
 import type { GroupedCategories } from "@/types/Category";
 import type { Product } from "@/types/Product";
@@ -174,6 +180,9 @@ const ProductForm = ({
                                     ),
                                 },
                             }}
+                            inputProps={{
+                                min: 0,
+                            }}
                             name={props.input.name}
                             value={props.input.value}
                             onChange={props.input.onChange}
@@ -188,7 +197,11 @@ const ProductForm = ({
                         />
                     )}
                 </Field>
-                <Field name="discountPercent" type="number">
+                <Field
+                    name="discountPercent"
+                    type="number"
+                    validate={compose(minValue(0), maxValue(100))}
+                >
                     {(props) => (
                         <TextField
                             type="number"
@@ -299,7 +312,8 @@ const ProductForm = ({
                                         name={`${name}.quantity`}
                                         validate={compose(
                                             required,
-                                            mustBeNumber
+                                            mustBeNumber,
+                                            minValue(0)
                                         )}
                                     >
                                         {(props) => (

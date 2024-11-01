@@ -26,10 +26,6 @@ const ProductsList = () => {
         setSortCriteria(parsedSortCriteria);
     };
 
-    useEffect(() => {
-        console.log(sortedData);
-    }, [sortedData]);
-
     const config = {
         tableConfig,
         tableData: sortedData,

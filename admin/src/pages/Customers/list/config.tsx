@@ -11,6 +11,7 @@ interface RowProps extends User {
 export const sortConfig = [
     {
         label: "Sort By",
+        criteria: "firstName",
         items: [
             { label: "A-Z", value: "asc" },
             { label: "Z-A", value: "desc" },
