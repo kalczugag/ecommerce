@@ -1,7 +1,9 @@
 import express from "express";
 import { OrderModel } from "../../models/Order";
 import { CartModel } from "../../models/Cart";
+import { ProductModel } from "../../models/Product";
 import type { Order } from "../../types/Order";
+import type { Product } from "../../types/Product";
 
 import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_SECRET!);
@@ -19,8 +21,6 @@ export const stripeWebhook = async (
             sig,
             process.env.STRIPE_WEBHOOK_SECRET!
         );
-
-        console.log("webhook verified", event.type);
     } catch (error: any) {
         console.error(error);
         return res
@@ -36,6 +36,7 @@ export const stripeWebhook = async (
             if (orderId && userId) {
                 await updateOrder(orderId, "confirmed", "paid");
                 await clearCart(userId);
+                await updateProductQuantities(orderId);
             }
 
             break;
@@ -96,5 +97,39 @@ const clearCart = async (userId: string) => {
         );
     } catch (error) {
         console.error("Error clearing cart:", error);
+    }
+};
+
+const updateProductQuantities = async (orderId: string) => {
+    try {
+        const order = await OrderModel.findById(orderId).populate(
+            "items.product"
+        );
+        if (!order) return;
+
+        for (const item of order.items) {
+            const product = await ProductModel.findById(
+                (item.product as Product)._id
+            );
+            if (!product) continue;
+
+            const sizeIndex = product.size.findIndex(
+                (s) => s.name === item.size
+            );
+            if (
+                sizeIndex !== -1 &&
+                product.size[sizeIndex].quantity >= item.quantity
+            ) {
+                product.size[sizeIndex].quantity -= item.quantity;
+            } else {
+                console.warn(
+                    `Insufficient quantity for product ${product._id} size ${item.size}`
+                );
+            }
+
+            await product.save();
+        }
+    } catch (error) {
+        console.error("Error updating product quantities:", error);
     }
 };

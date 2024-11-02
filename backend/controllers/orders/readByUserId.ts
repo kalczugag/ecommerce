@@ -16,6 +16,7 @@ export const getOrdersByUserId = async (
         const totalDocuments = await OrderModel.countDocuments();
 
         const orders = await OrderModel.find({ _user: userId })
+            .sort({ createdAt: -1 })
             .populate({
                 path: "_user",
                 select: "firstName lastName phone address",
