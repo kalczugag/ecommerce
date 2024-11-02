@@ -1,12 +1,14 @@
 import express from "express";
 import { isValidObjectId } from "mongoose";
 import { OrderModel } from "../../models/Order";
+import type { PaginatedOrders } from "../../types/Order";
 
 export const getOrdersByUserId = async (
-    req: express.Request<{ userId: string }>,
+    req: express.Request<{ userId: string }, {}, {}, PaginatedOrders>,
     res: express.Response
 ) => {
     const { userId } = req.params;
+    const { page = 0, pageSize = 10 } = req.query;
 
     if (!isValidObjectId(userId)) {
         return res.status(400).json({ error: "User ID is required" });
@@ -17,6 +19,8 @@ export const getOrdersByUserId = async (
 
         const orders = await OrderModel.find({ _user: userId })
             .sort({ createdAt: -1 })
+            .skip(page * pageSize)
+            .limit(pageSize)
             .populate({
                 path: "_user",
                 select: "firstName lastName phone address",

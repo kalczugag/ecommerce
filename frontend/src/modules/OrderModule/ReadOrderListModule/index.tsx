@@ -24,7 +24,7 @@ const ReadOrderListModule = ({ data, isLoading }: ReadOrderListModuleProps) => {
         <Field name="status" type="checkbox">
             {({ input }) => (
                 <div className="flex flex-col">
-                    {orderValues?.map((status, index) => (
+                    {orderValues.map((status, index) => (
                         <FormControlLabel
                             key={status + "_" + index.toString()}
                             control={<Checkbox />}
