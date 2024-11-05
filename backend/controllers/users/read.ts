@@ -1,20 +1,28 @@
 import express from "express";
 import { UserModel } from "../../models/User";
 import { PaginatedUsers } from "../../types/User";
+import { MongooseQueryParser } from "mongoose-query-parser";
+
+const parser = new MongooseQueryParser();
 
 export const getAllUsers = async (
     req: express.Request<{}, {}, {}, PaginatedUsers>,
     res: express.Response
 ) => {
-    const { page = 0, pageSize = 5 } = req.query;
+    const parsedQuery = parser.parse(req.query);
 
     try {
-        const totalDocuments = await UserModel.countDocuments();
-
-        const users = await UserModel.find()
-            .skip(page * pageSize)
-            .limit(pageSize)
+        const users = await UserModel.find(parsedQuery.filter)
+            .populate(parsedQuery.populate)
+            .select(parsedQuery.select)
+            .sort(parsedQuery.sort)
+            .skip(parsedQuery.skip || 0)
+            .limit(parsedQuery.limit || 5)
             .exec();
+
+        const totalDocuments = await UserModel.countDocuments(
+            parsedQuery.filter
+        );
 
         if (!users || users.length === 0) {
             return res.status(404).json({ error: "No users found" });
