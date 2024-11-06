@@ -15,13 +15,13 @@ const CustomersList = () => {
         ...pagination,
     };
 
-    const { data, isFetching } = useGetUsersByRoleQuery(args);
-    const [deleteUser, result] = useDeleteUserMutation();
+    const { queryConfig, setSortCriteria } = useSortedData();
+    const { data, isFetching } = useGetUsersByRoleQuery({
+        ...args,
+        ...queryConfig,
+    });
 
-    const { sortedData, setSortCriteria } = useSortedData(
-        data?.data || [],
-        sortConfig
-    );
+    const [deleteUser, result] = useDeleteUserMutation();
 
     const handleSort = (sortValues: any) => {
         const parsedSortCriteria = Object.entries(sortValues).map(
@@ -32,7 +32,7 @@ const CustomersList = () => {
 
     const config = {
         tableConfig,
-        tableData: sortedData,
+        tableData: data?.data || [],
         total: data?.count || 0,
         action: deleteUser,
         isLoading: isFetching || result.isLoading,

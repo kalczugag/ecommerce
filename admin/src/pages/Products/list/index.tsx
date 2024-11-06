@@ -5,19 +5,18 @@ import useSortedData from "@/hooks/useSortedData";
 import { sortConfig, tableConfig } from "./config";
 import CrudModule from "@/modules/CrudModule";
 import SortForm from "@/forms/SortForm";
-import { useEffect } from "react";
 
 const ProductsList = () => {
     const [pagination] = usePagination();
     useTitle("Products - List");
 
-    const { data, isFetching } = useGetAllProductsQuery(pagination);
-    const [deleteProduct, result] = useDeleteProductMutation();
+    const { queryConfig, setSortCriteria } = useSortedData();
+    const { data, isFetching } = useGetAllProductsQuery({
+        ...pagination,
+        ...queryConfig,
+    });
 
-    const { sortedData, setSortCriteria } = useSortedData(
-        data?.data || [],
-        sortConfig
-    );
+    const [deleteProduct, result] = useDeleteProductMutation();
 
     const handleSort = (sortValues: any) => {
         const parsedSortCriteria = Object.entries(sortValues).map(
@@ -28,7 +27,7 @@ const ProductsList = () => {
 
     const config = {
         tableConfig,
-        tableData: sortedData,
+        tableData: data?.data || [],
         total: data?.count || 0,
         action: deleteProduct,
         isLoading: isFetching || result.isLoading,

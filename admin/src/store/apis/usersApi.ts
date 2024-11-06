@@ -1,3 +1,4 @@
+import { buildQueryParams } from "@/utils/queryHelpers";
 import { apiSlice } from "./apiSlice";
 import type { User } from "@/types/User";
 
@@ -33,18 +34,27 @@ export const userApi = apiSlice.injectEndpoints({
         }),
 
         getUsersByRole: builder.query<ApiResponseArray<User>, fetchArgs>({
-            query: ({ roleName, skip, limit }) => {
-                const queryParams: Record<string, string> = {};
-                if (skip !== undefined) {
-                    queryParams.skip = skip.toString();
+            query: (params: Paginate = {}) => {
+                const queryParams = buildQueryParams({
+                    filter: params.filter,
+                    sort: params.sort,
+                });
+
+                if (params?.skip !== undefined) {
+                    queryParams.skip = params.skip.toString();
                 }
-                if (limit !== undefined) {
-                    queryParams.limit = limit.toString();
+                if (params?.limit !== undefined) {
+                    queryParams.limit = params.limit.toString();
                 }
+                if (params?.roleName !== undefined) {
+                    queryParams.roleName = params.roleName.toString();
+                }
+
                 return {
                     url: "/users/byRole",
                     method: "GET",
-                    params: { ...queryParams, roleName },
+                    params: queryParams,
+                    keepUnusedDataFor: 300,
                 };
             },
             providesTags: (result) =>

@@ -10,12 +10,11 @@ const OrdersList = () => {
     const [pagination] = usePagination();
     useTitle("Orders - List");
 
-    const { data, isFetching } = useGetAllOrdersQuery(pagination);
-
-    const { sortedData, setSortCriteria } = useSortedData(
-        data?.data || [],
-        sortConfig
-    );
+    const { queryConfig, setSortCriteria } = useSortedData();
+    const { data, isFetching } = useGetAllOrdersQuery({
+        ...pagination,
+        ...queryConfig,
+    });
 
     const handleSort = (sortValues: any) => {
         const parsedSortCriteria = Object.entries(sortValues).map(
@@ -26,7 +25,7 @@ const OrdersList = () => {
 
     const config = {
         tableConfig,
-        tableData: sortedData,
+        tableData: data?.data || [],
         total: data?.count || 0,
         isLoading: isFetching,
     };

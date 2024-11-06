@@ -1,3 +1,4 @@
+import { buildQueryParams } from "@/utils/queryHelpers";
 import { apiSlice } from "./apiSlice";
 import type { Order } from "@/types/Order";
 
@@ -10,14 +11,19 @@ type orderSummary = {
 export const orderApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getAllOrders: builder.query<ApiResponseArray<Order>, Paginate | void>({
-            query: (params = {}) => {
-                const queryParams: Record<string, string> = {};
+            query: (params: Paginate = {}) => {
+                const queryParams = buildQueryParams({
+                    filter: params.filter,
+                    sort: params.sort,
+                });
+
                 if (params?.skip !== undefined) {
                     queryParams.skip = params.skip.toString();
                 }
                 if (params?.limit !== undefined) {
                     queryParams.limit = params.limit.toString();
                 }
+
                 return {
                     url: "/orders",
                     method: "GET",

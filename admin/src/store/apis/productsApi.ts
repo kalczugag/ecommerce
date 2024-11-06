@@ -1,3 +1,4 @@
+import { buildQueryParams } from "@/utils/queryHelpers";
 import { apiSlice } from "./apiSlice";
 import type { Product } from "@/types/Product";
 
@@ -7,14 +8,19 @@ export const productApi = apiSlice.injectEndpoints({
             ApiResponseArray<Product>,
             Paginate | void
         >({
-            query: (params = {}) => {
-                const queryParams: Record<string, string> = {};
+            query: (params: Paginate = {}) => {
+                const queryParams = buildQueryParams({
+                    filter: params.filter,
+                    sort: params.sort,
+                });
+
                 if (params?.skip !== undefined) {
                     queryParams.skip = params.skip.toString();
                 }
                 if (params?.limit !== undefined) {
                     queryParams.limit = params.limit.toString();
                 }
+
                 return {
                     url: "/products",
                     method: "GET",

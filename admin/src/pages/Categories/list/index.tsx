@@ -13,13 +13,13 @@ const CategoriesList = () => {
     const navigate = useNavigate();
     useTitle("Categories - List");
 
-    const { data, isFetching } = useGetAllCategoriesQuery(pagination);
-    const [deleteCategory, result] = useDeleteCategoryMutation();
+    const { queryConfig, setSortCriteria } = useSortedData();
+    const { data, isFetching } = useGetAllCategoriesQuery({
+        ...pagination,
+        ...queryConfig,
+    });
 
-    const { sortedData, setSortCriteria } = useSortedData(
-        data?.data || [],
-        sortConfig
-    );
+    const [deleteCategory, result] = useDeleteCategoryMutation();
 
     const handleSort = (sortValues: any) => {
         const parsedSortCriteria = Object.entries(sortValues).map(
@@ -30,7 +30,7 @@ const CategoriesList = () => {
 
     const config = {
         tableConfig,
-        tableData: sortedData,
+        tableData: data?.data || [],
         total: data?.count || 0,
         action: deleteCategory,
         isLoading: isFetching || result.isLoading,

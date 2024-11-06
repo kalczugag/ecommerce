@@ -15,7 +15,10 @@ interface ApiResponseObject<T> {
 interface Paginate {
     category?: string;
     sorted?: boolean;
+    sort?: Record<string, any>;
     named?: boolean;
+    filter?: Record<string, any>;
     skip?: number;
     limit?: number;
+    roleName?: string;
 }
