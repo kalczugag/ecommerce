@@ -9,11 +9,11 @@ export const categoryApi = apiSlice.injectEndpoints({
         >({
             query: (params = {}) => {
                 const queryParams: Record<string, string> = {};
-                if (params?.page !== undefined) {
-                    queryParams.page = params.page.toString();
+                if (params?.skip !== undefined) {
+                    queryParams.skip = params.skip.toString();
                 }
-                if (params?.pageSize !== undefined) {
-                    queryParams.pageSize = params.pageSize.toString();
+                if (params?.limit !== undefined) {
+                    queryParams.limit = params.limit.toString();
                 }
                 if (params?.named !== undefined) {
                     queryParams.named = params.named.toString();
@@ -40,11 +40,11 @@ export const categoryApi = apiSlice.injectEndpoints({
         >({
             query: (params = {}) => {
                 const queryParams: Record<string, string> = {};
-                if (params?.page !== undefined) {
-                    queryParams.page = params.page.toString();
+                if (params?.skip !== undefined) {
+                    queryParams.skip = params.skip.toString();
                 }
-                if (params?.pageSize !== undefined) {
-                    queryParams.pageSize = params.pageSize.toString();
+                if (params?.limit !== undefined) {
+                    queryParams.limit = params.limit.toString();
                 }
                 if (params?.sorted !== undefined) {
                     queryParams.sorted = params.sorted.toString();

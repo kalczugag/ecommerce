@@ -2,12 +2,12 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 type Pagination = {
-    page?: number;
-    pageSize?: number;
+    skip?: number;
+    limit?: number;
 };
 
 const usePagination = (): [
-    { page: number; pageSize: number },
+    { skip: number; limit: number },
     (value: Pagination) => void
 ] => {
     const location = useLocation();
@@ -15,9 +15,9 @@ const usePagination = (): [
 
     const getPaginationFromUrl = () => {
         const queryParams = new URLSearchParams(location.search);
-        const page = parseInt(queryParams.get("page")!) || 0;
-        const pageSize = parseInt(queryParams.get("pageSize")!) || 5;
-        return { page, pageSize };
+        const skip = parseInt(queryParams.get("page")!) || 0;
+        const limit = parseInt(queryParams.get("pageSize")!) || 5;
+        return { skip, limit };
     };
 
     const [pagination, setPagination] = useState(getPaginationFromUrl);
@@ -27,7 +27,7 @@ const usePagination = (): [
     }, [location.search]);
 
     useEffect(() => {
-        navigate(`?page=${pagination.page}&pageSize=${pagination.pageSize}`, {
+        navigate(`?page=${pagination.skip}&pageSize=${pagination.limit}`, {
             replace: true,
         });
         window.scrollTo(0, 0);
@@ -35,8 +35,8 @@ const usePagination = (): [
 
     const handleSetPagination = (value: Pagination) => {
         setPagination((prev) => ({
-            page: value.page ?? prev.page,
-            pageSize: value.pageSize ?? prev.pageSize,
+            skip: value.skip ?? prev.skip,
+            limit: value.limit ?? prev.limit,
         }));
     };
 
