@@ -15,6 +15,18 @@ export const sortConfig = [
             { label: "High to low", value: { sort: "-total" } },
         ],
     },
+    {
+        label: "Status",
+        criteria: "status",
+        items: [
+            { label: "Placed", value: { status: "placed" } },
+            { label: "Confirmed", value: { status: "confirmed" } },
+            { label: "Shipped", value: { status: "shipped" } },
+            { label: "In Delivery", value: { status: "in_delivery" } },
+            { label: "Delivered", value: { status: "delivered" } },
+            { label: "Cancelled", value: { status: "cancelled" } },
+        ],
+    },
 ];
 
 export const tableConfig = [

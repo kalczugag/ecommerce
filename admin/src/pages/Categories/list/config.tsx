@@ -17,20 +17,6 @@ export const sortConfig: SortConfigProps[] = [
             { label: "Third Level", value: { level: "thirdLevel" } },
         ],
     },
-    {
-        label: "Number of children (not working)",
-        criteria: "children.length",
-        items: [
-            {
-                label: "More than 10",
-                value: { "children.length": { $gt: 10 } },
-            },
-            {
-                label: "Less than 10",
-                value: { "children.length": { $lt: 10 } },
-            },
-        ],
-    },
 ];
 
 export const tableConfig = [
