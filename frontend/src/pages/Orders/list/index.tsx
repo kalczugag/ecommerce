@@ -13,7 +13,10 @@ const OrdersList = () => {
     const [allOrders, setAllOrders] = useState<Order[]>([]);
 
     const { data, isLoading, isFetching } = useGetOrdersByUserIdQuery(
-        { userId: userId || "", params: { page, pageSize: 2 } },
+        {
+            userId: userId || "",
+            params: { page, pageSize: 2 },
+        },
         { skip: !userId }
     );
 

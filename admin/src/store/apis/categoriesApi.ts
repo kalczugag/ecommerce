@@ -23,6 +23,7 @@ export const categoryApi = apiSlice.injectEndpoints({
                 if (params?.named !== undefined) {
                     queryParams.named = params.named.toString();
                 }
+                
                 return {
                     url: "/categories",
                     method: "GET",

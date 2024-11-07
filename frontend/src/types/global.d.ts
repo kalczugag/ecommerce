@@ -17,4 +17,6 @@ interface Paginate {
     sorted?: boolean;
     page?: number;
     pageSize?: number;
+    sort?: string;
+    filter?: string;
 }
