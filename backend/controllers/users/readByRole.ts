@@ -2,29 +2,38 @@ import express from "express";
 import _ from "lodash";
 import { UserModel } from "../../models/User";
 import { PaginatedUsers } from "../../types/User";
+import { MongooseQueryParser } from "mongoose-query-parser";
+
+const parser = new MongooseQueryParser();
 
 export const getUsersByRole = async (
     req: express.Request<{}, {}, {}, PaginatedUsers>,
     res: express.Response
 ) => {
-    const { roleName, page = 0, pageSize = 5 } = req.query;
+    const { roleName, ...rest } = req.query;
 
     if (!roleName) {
         return res.status(400).json({ error: "Role name is required" });
     }
 
-    try {
-        const totalDocuments = await UserModel.countDocuments();
+    const parsedQuery = parser.parse(rest);
 
-        const users = await UserModel.find()
+    try {
+        const users = await UserModel.find(parsedQuery.filter)
             .populate({
                 path: "role",
                 match: { name: roleName },
                 select: "name",
             })
-            .skip(page * pageSize)
-            .limit(pageSize)
+            .select(parsedQuery.select)
+            .sort(parsedQuery.sort)
+            .skip(parsedQuery.skip || 0)
+            .limit(parsedQuery.limit || 5)
             .exec();
+
+        const totalDocuments = await UserModel.countDocuments(
+            parsedQuery.filter
+        );
 
         const filteredUsers = _.compact(
             users.map((user) => (user.role ? user : null))

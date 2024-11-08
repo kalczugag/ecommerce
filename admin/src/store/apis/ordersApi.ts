@@ -13,7 +13,7 @@ export const orderApi = apiSlice.injectEndpoints({
         getAllOrders: builder.query<ApiResponseArray<Order>, Paginate | void>({
             query: (params: Paginate = {}) => {
                 const queryParams = buildQueryParams({
-                    filter: params.filter,
+                    filter: params.filter as Record<string, any> | undefined,
                     sort: params.sort,
                 });
 
@@ -22,6 +22,9 @@ export const orderApi = apiSlice.injectEndpoints({
                 }
                 if (params?.limit !== undefined) {
                     queryParams.limit = params.limit.toString();
+                }
+                if (params?.searchTerm !== undefined) {
+                    queryParams.search = params.searchTerm;
                 }
 
                 return {

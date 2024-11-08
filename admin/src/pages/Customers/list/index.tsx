@@ -3,15 +3,17 @@ import { sortConfig, tableConfig } from "./config";
 import { useTitle } from "@/hooks/useTitle";
 import usePagination from "@/hooks/usePagination";
 import useSortedData from "@/hooks/useSortedData";
+import useDebounce from "@/hooks/useDebounce";
 import CrudModule from "@/modules/CrudModule";
 import SortForm from "@/forms/SortForm";
+import SearchItem from "@/components/SearchItem";
 
 const CustomersList = () => {
     const [pagination] = usePagination();
     useTitle("Customers - List");
 
     const args = {
-        roleName: "admin",
+        roleName: "client",
         ...pagination,
     };
 
@@ -30,6 +32,14 @@ const CustomersList = () => {
         setSortCriteria(parsedSortCriteria);
     };
 
+    const handleSearch = useDebounce((searchTerm: string) => {
+        setSortCriteria([
+            { label: "firstName", value: searchTerm },
+            { label: "phone", value: searchTerm },
+            { label: "email", value: searchTerm },
+        ]);
+    }, 250);
+
     const config = {
         tableConfig,
         tableData: data?.data || [],
@@ -42,7 +52,13 @@ const CustomersList = () => {
         <CrudModule
             config={config}
             actionForm={
-                <SortForm config={sortConfig} handleSubmit={handleSort} />
+                <div className="space-y-4">
+                    <SearchItem
+                        handleSubmit={handleSearch}
+                        // placeholder="Search"
+                    />
+                    <SortForm config={sortConfig} handleSubmit={handleSort} />
+                </div>
             }
         />
     );

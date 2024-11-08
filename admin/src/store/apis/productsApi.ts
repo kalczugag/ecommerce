@@ -10,7 +10,7 @@ export const productApi = apiSlice.injectEndpoints({
         >({
             query: (params: Paginate = {}) => {
                 const queryParams = buildQueryParams({
-                    filter: params.filter,
+                    filter: params.filter as Record<string, any> | undefined,
                     sort: params.sort,
                 });
 

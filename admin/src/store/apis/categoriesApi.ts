@@ -10,7 +10,7 @@ export const categoryApi = apiSlice.injectEndpoints({
         >({
             query: (params: Paginate = {}) => {
                 const queryParams = buildQueryParams({
-                    filter: params.filter,
+                    filter: params.filter as Record<string, any> | undefined,
                     sort: params.sort,
                 });
 
@@ -23,7 +23,7 @@ export const categoryApi = apiSlice.injectEndpoints({
                 if (params?.named !== undefined) {
                     queryParams.named = params.named.toString();
                 }
-                
+
                 return {
                     url: "/categories",
                     method: "GET",
@@ -46,7 +46,7 @@ export const categoryApi = apiSlice.injectEndpoints({
         >({
             query: (params: Paginate = {}) => {
                 const queryParams = buildQueryParams({
-                    filter: params.filter,
+                    filter: params.filter as Record<string, any> | undefined,
                     sort: params.sort,
                 });
 

@@ -17,8 +17,9 @@ interface Paginate {
     sorted?: boolean;
     named?: boolean;
     sort?: Record<string, any>;
-    filter?: Record<string, any>;
+    filter?: Record<string, any> | string;
     skip?: number;
     limit?: number;
     roleName?: string;
+    searchTerm?: string;
 }

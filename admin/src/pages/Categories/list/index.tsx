@@ -4,9 +4,11 @@ import { sortConfig, tableConfig } from "./config";
 import { useTitle } from "@/hooks/useTitle";
 import usePagination from "@/hooks/usePagination";
 import useSortedData from "@/hooks/useSortedData";
+import useDebounce from "@/hooks/useDebounce";
 import CrudModule from "@/modules/CrudModule";
 import SortForm from "@/forms/SortForm";
 import { Button } from "@mui/material";
+import SearchItem from "@/components/SearchItem";
 
 const CategoriesList = () => {
     const [pagination] = usePagination();
@@ -28,6 +30,10 @@ const CategoriesList = () => {
         setSortCriteria(parsedSortCriteria);
     };
 
+    const handleSearch = useDebounce((searchTerm: string) => {
+        setSortCriteria([{ label: "name", value: searchTerm }]);
+    }, 250);
+
     const config = {
         tableConfig,
         tableData: data?.data || [],
@@ -40,14 +46,23 @@ const CategoriesList = () => {
         <CrudModule
             config={config}
             actionForm={
-                <div className="flex flex-col space-y-2 sm:space-y-0 sm:space-x-2 sm:flex-row">
-                    <SortForm config={sortConfig} handleSubmit={handleSort} />
-                    <Button
-                        variant="contained"
-                        onClick={() => navigate("/categories/add")}
-                    >
-                        Add Category
-                    </Button>
+                <div className="space-y-4">
+                    <SearchItem
+                        handleSubmit={handleSearch}
+                        placeholder="Search by name"
+                    />
+                    <div className="flex flex-col space-y-2 sm:space-y-0 sm:space-x-2 sm:flex-row">
+                        <SortForm
+                            config={sortConfig}
+                            handleSubmit={handleSort}
+                        />
+                        <Button
+                            variant="contained"
+                            onClick={() => navigate("/categories/add")}
+                        >
+                            Add Category
+                        </Button>
+                    </div>
                 </div>
             }
         />
