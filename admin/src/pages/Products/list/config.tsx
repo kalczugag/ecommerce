@@ -13,7 +13,7 @@ export interface SortConfigProps {
     criteria: string;
     items: {
         label: string;
-        value: string;
+        value: Record<string, any>;
     }[];
 }
 
@@ -22,24 +22,27 @@ export const sortConfig: SortConfigProps[] = [
         label: "Category",
         criteria: "secondLevelCategory.name",
         items: [
-            { label: "Dresses", value: "Dresses" },
-            { label: "Boots", value: "Boots" },
+            {
+                label: "Dresses",
+                value: { "secondLevelCategory.name": "Dresses" },
+            },
+            { label: "Boots", value: { "secondLevelCategory.name": "Boots" } },
         ],
     },
     {
         label: "Availability",
         criteria: "quantity",
         items: [
-            { label: "more than 10", value: "more than 10" },
-            { label: "less than 10", value: "less than 10" },
+            { label: "more than 10", value: { quantity: { $gt: 10 } } },
+            { label: "less than 10", value: { quantity: { $lt: 10 } } },
         ],
     },
     {
         label: "Sort By Price",
         criteria: "price",
         items: [
-            { label: "Low to high", value: "asc" },
-            { label: "High to low", value: "desc" },
+            { label: "Low to high", value: { sort: "price" } },
+            { label: "High to low", value: { sort: "-price" } },
         ],
     },
 ];

@@ -1,17 +1,24 @@
 import { useState } from "react";
-import { Rating, Skeleton } from "@mui/material";
+import {
+    Box,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Rating,
+    Select,
+    Skeleton,
+} from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import type { Sizes } from "../../ReadProductModule";
 import type { ShortReviewsCount } from "@/types/Review";
 import type { Product } from "@/types/Product";
-import CustomCarousel from "@/components/Carousel";
 
 interface DetailsProductCardProps {
     data?: Product;
     isLoading: boolean;
     editLoading: boolean;
     rating: ShortReviewsCount;
-    onAddToCart: (size: Sizes) => void;
+    onAddToCart: (size: Sizes | null) => void;
 }
 
 const DetailsProductCard = ({
@@ -21,7 +28,7 @@ const DetailsProductCard = ({
     rating,
     onAddToCart,
 }: DetailsProductCardProps) => {
-    const [currSize, setCurrSize] = useState<Sizes>("M");
+    const [currSize, setCurrSize] = useState<Sizes | null>(null);
 
     const price = data ? +data.price.toFixed(2) : 0;
     let discountedPrice: number | undefined;
@@ -112,36 +119,86 @@ const DetailsProductCard = ({
                         </div>
                     )}
                 </div>
-                <div className="space-y-2">
+                <div>
                     {isLoading ? (
-                        <Skeleton variant="text" width={100} height={20} />
+                        <Skeleton />
                     ) : (
-                        <p className="font-bold text-sm">Size</p>
+                        <Box sx={{ maxWidth: 300 }}>
+                            <FormControl fullWidth>
+                                <InputLabel id="size-label">Size</InputLabel>
+                                <Select
+                                    labelId="size-label"
+                                    id="size-select"
+                                    value={currSize}
+                                    label="Size"
+                                    onChange={(e) =>
+                                        setCurrSize(e.target.value as Sizes)
+                                    }
+                                    renderValue={(selected) => {
+                                        const selectedSize = data?.size.find(
+                                            (size) => size.name === selected
+                                        );
+                                        return (
+                                            <Box
+                                                sx={{
+                                                    display: "flex",
+                                                    justifyContent:
+                                                        "space-between",
+                                                    width: "100%",
+                                                }}
+                                            >
+                                                <span>{selected}</span>
+                                                {selectedSize &&
+                                                selectedSize.quantity < 5 &&
+                                                selectedSize.quantity !== 0 ? (
+                                                    <span
+                                                        style={{
+                                                            color: "gray",
+                                                        }}
+                                                    >
+                                                        {selectedSize.quantity}{" "}
+                                                        pcs. left
+                                                    </span>
+                                                ) : selectedSize &&
+                                                  selectedSize.quantity ===
+                                                      0 ? (
+                                                    <span
+                                                        style={{ color: "red" }}
+                                                    >
+                                                        Out of stock
+                                                    </span>
+                                                ) : null}
+                                            </Box>
+                                        );
+                                    }}
+                                >
+                                    {data?.size.map((size, index) => (
+                                        <MenuItem
+                                            key={size.name + "_" + index}
+                                            value={size.name}
+                                            sx={{
+                                                display: "flex",
+                                                justifyContent: "space-between",
+                                            }}
+                                            disabled={size.quantity === 0}
+                                        >
+                                            <span>{size.name}</span>
+                                            {size.quantity < 5 &&
+                                            size.quantity !== 0 ? (
+                                                <span className="text-gray-500">
+                                                    {size.quantity} pcs. left
+                                                </span>
+                                            ) : size.quantity === 0 ? (
+                                                <span className="text-red-500">
+                                                    Out of stock
+                                                </span>
+                                            ) : null}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Box>
                     )}
-                    <div className="flex space-x-2">
-                        {isLoading
-                            ? Array.from(new Array(3)).map((_, index) => (
-                                  <Skeleton
-                                      key={index}
-                                      variant="rectangular"
-                                      width={60}
-                                      height={40}
-                                      className="rounded"
-                                  />
-                              ))
-                            : data?.size.map((size, index) => (
-                                  <button
-                                      key={index}
-                                      onClick={() => setCurrSize(size.name)}
-                                      className={`flex items-center justify-center p-4 border rounded transition-all hover:shadow ${
-                                          currSize === size.name &&
-                                          "bg-gray-100 font-bold"
-                                      }`}
-                                  >
-                                      {size.name}
-                                  </button>
-                              ))}
-                    </div>
                 </div>
                 <div>
                     <LoadingButton

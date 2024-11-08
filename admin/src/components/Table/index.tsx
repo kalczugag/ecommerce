@@ -128,21 +128,21 @@ const CustomPaginationActionsTable = ({
     isLoading,
 }: CustomPaginationActionsTableProps) => {
     const [pagination, setPagination] = usePagination();
-    const { page, pageSize } = pagination;
+    const { skip, limit } = pagination;
 
     const handleChangePage = (
         event: React.MouseEvent<HTMLButtonElement> | null,
         newPage: number
     ) => {
-        setPagination({ page: newPage });
+        setPagination({ skip: newPage });
     };
 
     const handleChangeRowsPerPage = (
         event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
     ) => {
         setPagination({
-            page: 0,
-            pageSize: parseInt(event.target.value, 10),
+            skip: 0,
+            limit: parseInt(event.target.value, 10),
         });
     };
 
@@ -184,27 +184,26 @@ const CustomPaginationActionsTable = ({
                                 </TableCell>
                             </TableRow>
                         ) : (
-                            (pageSize > 0
-                                ? rowData.slice(0, pageSize)
-                                : rowData
-                            ).map((row, rowIndex) => (
-                                <TableRow key={rowIndex}>
-                                    {headerOptions.map(
-                                        ({ render }, colIndex) => (
-                                            <TableCell
-                                                key={colIndex}
-                                                align={
-                                                    colIndex > 1
-                                                        ? "right"
-                                                        : "left"
-                                                }
-                                            >
-                                                {render(row)}
-                                            </TableCell>
-                                        )
-                                    )}
-                                </TableRow>
-                            ))
+                            (limit > 0 ? rowData.slice(0, limit) : rowData).map(
+                                (row, rowIndex) => (
+                                    <TableRow key={rowIndex}>
+                                        {headerOptions.map(
+                                            ({ render }, colIndex) => (
+                                                <TableCell
+                                                    key={colIndex}
+                                                    align={
+                                                        colIndex > 1
+                                                            ? "right"
+                                                            : "left"
+                                                    }
+                                                >
+                                                    {render(row)}
+                                                </TableCell>
+                                            )
+                                        )}
+                                    </TableRow>
+                                )
+                            )
                         )}
                     </TableBody>
                     <TableFooter>
@@ -218,8 +217,8 @@ const CustomPaginationActionsTable = ({
                                 ]}
                                 colSpan={headerOptions.length + 1}
                                 count={totalItems}
-                                rowsPerPage={pageSize}
-                                page={!totalItems || totalItems <= 0 ? 0 : page}
+                                rowsPerPage={limit}
+                                page={!totalItems || totalItems <= 0 ? 0 : skip}
                                 slotProps={{
                                     select: {
                                         inputProps: {

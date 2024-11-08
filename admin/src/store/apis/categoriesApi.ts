@@ -1,3 +1,4 @@
+import { buildQueryParams } from "@/utils/queryHelpers";
 import { apiSlice } from "./apiSlice";
 import type { Category, GroupedCategories } from "@/types/Category";
 
@@ -7,17 +8,22 @@ export const categoryApi = apiSlice.injectEndpoints({
             ApiResponseArray<Category>,
             Paginate | void
         >({
-            query: (params = {}) => {
-                const queryParams: Record<string, string> = {};
-                if (params?.page !== undefined) {
-                    queryParams.page = params.page.toString();
+            query: (params: Paginate = {}) => {
+                const queryParams = buildQueryParams({
+                    filter: params.filter as Record<string, any> | undefined,
+                    sort: params.sort,
+                });
+
+                if (params?.skip !== undefined) {
+                    queryParams.skip = params.skip.toString();
                 }
-                if (params?.pageSize !== undefined) {
-                    queryParams.pageSize = params.pageSize.toString();
+                if (params?.limit !== undefined) {
+                    queryParams.limit = params.limit.toString();
                 }
                 if (params?.named !== undefined) {
                     queryParams.named = params.named.toString();
                 }
+
                 return {
                     url: "/categories",
                     method: "GET",
@@ -38,20 +44,19 @@ export const categoryApi = apiSlice.injectEndpoints({
             ApiResponseObject<GroupedCategories>,
             Paginate | void
         >({
-            query: (params = {}) => {
-                const queryParams: Record<string, string> = {};
-                if (params?.page !== undefined) {
-                    queryParams.page = params.page.toString();
+            query: (params: Paginate = {}) => {
+                const queryParams = buildQueryParams({
+                    filter: params.filter as Record<string, any> | undefined,
+                    sort: params.sort,
+                });
+
+                if (params?.skip !== undefined) {
+                    queryParams.skip = params.skip.toString();
                 }
-                if (params?.pageSize !== undefined) {
-                    queryParams.pageSize = params.pageSize.toString();
+                if (params?.limit !== undefined) {
+                    queryParams.limit = params.limit.toString();
                 }
-                if (params?.sorted !== undefined) {
-                    queryParams.sorted = params.sorted.toString();
-                }
-                if (params?.named !== undefined) {
-                    queryParams.named = params.named.toString();
-                }
+
                 return {
                     url: "/categories",
                     method: "GET",

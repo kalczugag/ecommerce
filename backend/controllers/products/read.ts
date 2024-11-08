@@ -3,6 +3,9 @@ import { ProductModel } from "../../models/Product";
 import { CategoryModel } from "../../models/Categories";
 import { PaginatedProducts } from "../../types/Product";
 import { Category } from "../../types/Category";
+import { MongooseQueryParser } from "mongoose-query-parser";
+
+const parser = new MongooseQueryParser();
 
 // Returns an array of products paginated by page and pageSize query parameters.
 // If query parameter 'random' is present, returns a single random product.
@@ -12,7 +15,8 @@ export const getAllProducts = async (
     req: express.Request<{}, {}, {}, PaginatedProducts>,
     res: express.Response
 ) => {
-    const { random, category, page = 0, pageSize = 8 } = req.query;
+    const { random, category } = req.query;
+    const parsedQuery = parser.parse(req.query);
 
     const query: Record<string, unknown> = {};
 
@@ -102,13 +106,17 @@ export const getAllProducts = async (
             return res.status(200).json(randomProducts);
         }
 
-        const totalDocuments = await ProductModel.countDocuments(query);
-
-        const products = await ProductModel.find(query)
-            .skip(page * pageSize)
-            .limit(pageSize)
+        const products = await ProductModel.find(parsedQuery.filter)
             .populate("topLevelCategory secondLevelCategory thirdLevelCategory")
+            .select(parsedQuery.select)
+            .sort(parsedQuery.sort)
+            .skip(parsedQuery.skip || 0)
+            .limit(parsedQuery.limit || 5)
             .exec();
+
+        const totalDocuments = await ProductModel.countDocuments(
+            parsedQuery.filter
+        );
 
         if (!products || products.length === 0) {
             return res.status(404).json({ error: "No products found" });

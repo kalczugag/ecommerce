@@ -10,11 +10,24 @@ export const ordersApi = apiSlice.injectEndpoints({
             }),
         }),
 
-        getOrdersByUserId: builder.query<ApiResponseArray<Order>, string>({
-            query: (id) => ({
-                url: `/orders/userId/${id}`,
-                method: "GET",
-            }),
+        getOrdersByUserId: builder.query<
+            ApiResponseArray<Order>,
+            { userId: string; params?: Paginate }
+        >({
+            query: ({ userId, params = {} }) => {
+                const queryParams: Record<string, string> = {};
+                if (params.page !== undefined) {
+                    queryParams.page = params.page.toString();
+                }
+                if (params.pageSize !== undefined) {
+                    queryParams.pageSize = params.pageSize.toString();
+                }
+                return {
+                    url: `/orders/userId/${userId}`,
+                    method: "GET",
+                    params: queryParams,
+                };
+            },
         }),
 
         addOrder: builder.mutation<ApiResponseObject<Order>, Order>({

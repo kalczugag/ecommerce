@@ -70,8 +70,6 @@ export const createCheckoutSession = async (
             cancel_url: `${url}/checkout/${order._id}/summary`,
         });
 
-        console.log(session);
-
         return res.json({ sessionId: session.id });
     } catch (error) {
         console.error(error);

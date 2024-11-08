@@ -6,7 +6,7 @@ import DetailsProductCard from "../components/DetailsProductCard";
 import type { Product } from "@/types/Product";
 import type { ShortReviewsCount } from "@/types/Review";
 
-export type Sizes = "S" | "M" | "L";
+export type Sizes = string;
 
 interface ReadProductModuleProps {
     config: {
@@ -23,26 +23,32 @@ const ReadProductModule = ({ config, data }: ReadProductModuleProps) => {
 
     const [editCart, { isLoading: editLoading }] = useEditUsersCartMutation();
 
-    const handleAddToCart = async (size: Sizes) => {
-        if (token && cartId) {
-            try {
-                await editCart({
-                    _id: cartId,
-                    action: "add",
-                    productId: data!._id!,
-                    color: data?.color,
-                    size,
-                    unitPrice: data?.price,
-                    quantity: 1,
-                }).unwrap();
+    const handleAddToCart = async (size: Sizes | null) => {
+        if (!size) {
+            enqueueSnackbar("Please select a size", {
+                variant: "warning",
+            });
+        } else if (token && cartId) {
+            {
+                try {
+                    await editCart({
+                        _id: cartId,
+                        action: "add",
+                        productId: data!._id!,
+                        color: data?.color,
+                        size,
+                        unitPrice: data?.price,
+                        quantity: 1,
+                    }).unwrap();
 
-                enqueueSnackbar("Product added to cart successfully", {
-                    variant: "success",
-                });
-            } catch (error) {
-                enqueueSnackbar("Failed to add product to cart", {
-                    variant: "error",
-                });
+                    enqueueSnackbar("Product added to cart successfully", {
+                        variant: "success",
+                    });
+                } catch (error) {
+                    enqueueSnackbar("Failed to add product to cart", {
+                        variant: "error",
+                    });
+                }
             }
         } else {
             enqueueSnackbar("Please log in to add items to your cart.", {

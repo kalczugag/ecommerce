@@ -7,9 +7,10 @@ import { Product } from "@/types/Product";
 interface OrderListItemProps {
     data?: Order;
     isLoading: boolean;
+    isDetails?: boolean;
 }
 
-const OrderListItem = ({ data, isLoading }: OrderListItemProps) => {
+const OrderListItem = ({ data, isLoading, isDetails }: OrderListItemProps) => {
     const navigate = useNavigate();
 
     return (
@@ -93,56 +94,90 @@ const OrderListItem = ({ data, isLoading }: OrderListItemProps) => {
                             )}
                         </p>
                     </div>
-                    {(isLoading
-                        ? Array.from(new Array(2))
-                        : data!.items.length > 1
-                        ? data!.items.slice(0, 2)
-                        : data!.items
-                    ).map((item, index) => (
-                        <div
-                            key={index}
-                            className="flex flex-col space-y-1 text-gray-800"
-                        >
-                            {isLoading ? (
-                                <Skeleton
-                                    variant="rectangular"
-                                    width={180}
-                                    height={220}
-                                />
-                            ) : (
-                                <Link
-                                    to={`/product/${
-                                        (item.product as Product)._id
-                                    }`}
-                                    className="max-w-[150px] sm:max-w-[180px] md:max-w-[220px]"
-                                >
-                                    <img
-                                        src={
-                                            (item.product as Product)
-                                                .imageUrl[0]
-                                        }
-                                        loading="lazy"
-                                        className="max-w-full object-cover object-top md:object-center"
-                                        alt={(item.product as Product).title}
+                    <div
+                        className={
+                            isDetails
+                                ? "grid grid-cols-2 gap-4"
+                                : "flex space-x-4"
+                        }
+                    >
+                        {(isLoading
+                            ? Array.from(new Array(2))
+                            : isDetails
+                            ? data!.items
+                            : data!.items.length > 1
+                            ? data!.items.slice(0, 2)
+                            : data!.items
+                        ).map((item, index) => (
+                            <div
+                                key={index}
+                                className="flex flex-col space-y-1 text-gray-800"
+                            >
+                                {isLoading ? (
+                                    <Skeleton
+                                        variant="rectangular"
+                                        width={180}
+                                        height={220}
                                     />
-                                </Link>
-                            )}
-                            <p className="font-bold">
-                                {isLoading ? (
-                                    <Skeleton variant="text" width={80} />
+                                ) : isDetails ? (
+                                    <Link
+                                        to={`/product/${
+                                            (item.product as Product)._id
+                                        }`}
+                                        className="max-w-[150px] sm:max-w-[180px] md:max-w-[220px]"
+                                    >
+                                        <img
+                                            src={
+                                                (item.product as Product)
+                                                    .imageUrl[0]
+                                            }
+                                            loading="lazy"
+                                            className="max-w-full object-cover object-top md:object-center"
+                                            alt={
+                                                (item.product as Product).title
+                                            }
+                                        />
+                                    </Link>
+                                ) : index === 1 && data!.items.length > 2 ? (
+                                    <div className="relative max-w-[150px] sm:max-w-[180px] md:max-w-[220px]">
+                                        <img
+                                            src={
+                                                (item.product as Product)
+                                                    .imageUrl[0]
+                                            }
+                                            loading="lazy"
+                                            className="max-w-full object-cover object-top md:object-center opacity-50"
+                                            alt={
+                                                (item.product as Product).title
+                                            }
+                                        />
+                                        <div className="absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 text-white text-lg font-semibold">
+                                            +{data!.items.length - 1}
+                                        </div>
+                                    </div>
                                 ) : (
-                                    (item.product as Product).brand
+                                    <Link
+                                        to={`/product/${
+                                            (item.product as Product)._id
+                                        }`}
+                                        className="max-w-[150px] sm:max-w-[180px] md:max-w-[220px]"
+                                    >
+                                        <img
+                                            src={
+                                                (item.product as Product)
+                                                    .imageUrl[0]
+                                            }
+                                            loading="lazy"
+                                            className="max-w-full object-cover object-top md:object-center"
+                                            alt={
+                                                (item.product as Product).title
+                                            }
+                                        />
+                                    </Link>
                                 )}
-                            </p>
-                            <p className="text-sm">
-                                {isLoading ? (
-                                    <Skeleton variant="text" width={40} />
-                                ) : (
-                                    `Size: ${item.size}`
-                                )}
-                            </p>
-                        </div>
-                    ))}
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
         </div>

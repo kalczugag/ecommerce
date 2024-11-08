@@ -16,6 +16,10 @@ interface Paginate {
     category?: string;
     sorted?: boolean;
     named?: boolean;
-    page?: number;
-    pageSize?: number;
+    sort?: Record<string, any>;
+    filter?: Record<string, any> | string;
+    skip?: number;
+    limit?: number;
+    roleName?: string;
+    searchTerm?: string;
 }

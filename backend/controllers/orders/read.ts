@@ -1,20 +1,28 @@
 import express from "express";
 import { OrderModel } from "../../models/Order";
 import { PaginatedOrders } from "../../types/Order";
+import { MongooseQueryParser } from "mongoose-query-parser";
+
+const parser = new MongooseQueryParser();
 
 export const getAllOrders = async (
     req: express.Request<{}, {}, {}, PaginatedOrders>,
     res: express.Response
 ) => {
-    const { page = 0, pageSize = 5 } = req.query;
+    const parsedQuery = parser.parse(req.query);
 
     try {
-        const totalDocuments = await OrderModel.countDocuments();
-
-        const orders = await OrderModel.find()
-            .skip(page * pageSize)
-            .limit(pageSize)
+        const orders = await OrderModel.find(parsedQuery.filter)
+            .populate(parsedQuery.populate)
+            .select(parsedQuery.select)
+            .sort(parsedQuery.sort)
+            .skip(parsedQuery.skip || 0)
+            .limit(parsedQuery.limit || 5)
             .exec();
+
+        const totalDocuments = await OrderModel.countDocuments(
+            parsedQuery.filter
+        );
 
         if (!orders || orders.length === 0) {
             return res.status(404).json({ error: "No orders found" });

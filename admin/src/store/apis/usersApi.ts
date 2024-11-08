@@ -1,3 +1,4 @@
+import { buildQueryParams } from "@/utils/queryHelpers";
 import { apiSlice } from "./apiSlice";
 import type { User } from "@/types/User";
 
@@ -10,11 +11,11 @@ export const userApi = apiSlice.injectEndpoints({
         getAllUsers: builder.query<ApiResponseArray<User>, Paginate | void>({
             query: (params = {}) => {
                 const queryParams: Record<string, string> = {};
-                if (params?.page !== undefined) {
-                    queryParams.page = params.page.toString();
+                if (params?.skip !== undefined) {
+                    queryParams.skip = params.skip.toString();
                 }
-                if (params?.pageSize !== undefined) {
-                    queryParams.pageSize = params.pageSize.toString();
+                if (params?.limit !== undefined) {
+                    queryParams.limit = params.limit.toString();
                 }
                 return {
                     url: "/users",
@@ -33,18 +34,27 @@ export const userApi = apiSlice.injectEndpoints({
         }),
 
         getUsersByRole: builder.query<ApiResponseArray<User>, fetchArgs>({
-            query: ({ roleName, page, pageSize }) => {
-                const queryParams: Record<string, string> = {};
-                if (page !== undefined) {
-                    queryParams.page = page.toString();
+            query: (params: Paginate = {}) => {
+                const queryParams = buildQueryParams({
+                    filter: params.filter as Record<string, any> | undefined,
+                    sort: params.sort,
+                });
+
+                if (params?.skip !== undefined) {
+                    queryParams.skip = params.skip.toString();
                 }
-                if (pageSize !== undefined) {
-                    queryParams.pageSize = pageSize.toString();
+                if (params?.limit !== undefined) {
+                    queryParams.limit = params.limit.toString();
                 }
+                if (params?.roleName !== undefined) {
+                    queryParams.roleName = params.roleName.toString();
+                }
+
                 return {
                     url: "/users/byRole",
                     method: "GET",
-                    params: { ...queryParams, roleName },
+                    params: queryParams,
+                    keepUnusedDataFor: 300,
                 };
             },
             providesTags: (result) =>

@@ -3,7 +3,7 @@ import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
 interface SelectItem {
     label: string;
-    value: string;
+    value: any;
 }
 
 export interface ConfigType {
@@ -43,8 +43,8 @@ const SelectField = ({
             }}
         >
             <MenuItem value="">None</MenuItem>
-            {items.map(({ value, label }) => (
-                <MenuItem key={value} value={value}>
+            {items.map(({ value, label }, index) => (
+                <MenuItem key={index} value={value}>
                     {label}
                 </MenuItem>
             ))}

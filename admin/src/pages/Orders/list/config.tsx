@@ -11,8 +11,20 @@ export const sortConfig = [
         label: "Sort By Price",
         criteria: "total",
         items: [
-            { label: "Low to high", value: "asc" },
-            { label: "High to low", value: "desc" },
+            { label: "Low to high", value: { sort: "total" } },
+            { label: "High to low", value: { sort: "-total" } },
+        ],
+    },
+    {
+        label: "Status",
+        criteria: "status",
+        items: [
+            { label: "Placed", value: { status: "placed" } },
+            { label: "Confirmed", value: { status: "confirmed" } },
+            { label: "Shipped", value: { status: "shipped" } },
+            { label: "In Delivery", value: { status: "in_delivery" } },
+            { label: "Delivered", value: { status: "delivered" } },
+            { label: "Cancelled", value: { status: "cancelled" } },
         ],
     },
 ];

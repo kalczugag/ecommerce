@@ -10,7 +10,7 @@ interface ReadOrderListModuleProps {
 const ReadOrderModule = ({ data, isLoading }: ReadOrderListModuleProps) => {
     return (
         <DefaultLayout>
-            <OrderListItem data={data} isLoading={isLoading} />
+            <OrderListItem data={data} isLoading={isLoading} isDetails />
         </DefaultLayout>
     );
 };

@@ -5,19 +5,20 @@ import useSortedData from "@/hooks/useSortedData";
 import { sortConfig, tableConfig } from "./config";
 import CrudModule from "@/modules/CrudModule";
 import SortForm from "@/forms/SortForm";
-import { useEffect } from "react";
+import SearchItem from "@/components/SearchItem";
+import useDebounce from "@/hooks/useDebounce";
 
 const ProductsList = () => {
     const [pagination] = usePagination();
     useTitle("Products - List");
 
-    const { data, isFetching } = useGetAllProductsQuery(pagination);
-    const [deleteProduct, result] = useDeleteProductMutation();
+    const { queryConfig, setSortCriteria } = useSortedData();
+    const { data, isFetching } = useGetAllProductsQuery({
+        ...pagination,
+        ...queryConfig,
+    });
 
-    const { sortedData, setSortCriteria } = useSortedData(
-        data?.data || [],
-        sortConfig
-    );
+    const [deleteProduct, result] = useDeleteProductMutation();
 
     const handleSort = (sortValues: any) => {
         const parsedSortCriteria = Object.entries(sortValues).map(
@@ -26,9 +27,16 @@ const ProductsList = () => {
         setSortCriteria(parsedSortCriteria);
     };
 
+    const handleSearch = useDebounce((searchTerm: string) => {
+        setSortCriteria([
+            { label: "brand", value: searchTerm },
+            { label: "title", value: searchTerm },
+        ]);
+    }, 250);
+
     const config = {
         tableConfig,
-        tableData: sortedData,
+        tableData: data?.data || [],
         total: data?.count || 0,
         action: deleteProduct,
         isLoading: isFetching || result.isLoading,
@@ -38,7 +46,10 @@ const ProductsList = () => {
         <CrudModule
             config={config}
             actionForm={
-                <SortForm config={sortConfig} handleSubmit={handleSort} />
+                <div className="space-y-4">
+                    <SearchItem handleSubmit={handleSearch} />
+                    <SortForm config={sortConfig} handleSubmit={handleSort} />
+                </div>
             }
         />
     );

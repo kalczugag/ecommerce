@@ -127,7 +127,6 @@ const ProductForm = ({
                 <Field
                     name="quantity"
                     type="number"
-                    defaultValue={150}
                     validate={compose(required, mustBeNumber, minValue(0))}
                 >
                     {(props) => (

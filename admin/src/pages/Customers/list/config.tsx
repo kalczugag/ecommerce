@@ -13,8 +13,8 @@ export const sortConfig = [
         label: "Sort By",
         criteria: "firstName",
         items: [
-            { label: "A-Z", value: "asc" },
-            { label: "Z-A", value: "desc" },
+            { label: "A-Z", value: { sort: "firstName" } },
+            { label: "Z-A", value: { sort: "-firstName" } },
         ],
     },
 ];

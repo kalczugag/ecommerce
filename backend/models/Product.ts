@@ -40,6 +40,14 @@ const productSchema = new mongoose.Schema<Product>({
 productSchema.pre("validate", async function (next) {
     const product = this;
 
+    if (
+        !product.isModified("topLevelCategory") &&
+        !product.isModified("secondLevelCategory") &&
+        !product.isModified("thirdLevelCategory")
+    ) {
+        return next();
+    }
+
     const secondLevelCategory = await CategoryModel.findById(
         product.secondLevelCategory
     );

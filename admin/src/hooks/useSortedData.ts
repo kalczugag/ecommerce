@@ -1,52 +1,43 @@
-import { useMemo, useState } from "react";
-import type { SortConfigProps } from "@/pages/Products/list/config";
+import { useState, useEffect } from "react";
 
-const useSortedData = (data: any[], initialSortConfig: SortConfigProps[]) => {
+interface QueryConfig {
+    filter: Record<string, any> | string;
+    sort?: Record<string, number>;
+}
+
+const useSortedData = () => {
     const [sortCriteria, setSortCriteria] = useState<
-        { label: string; value: string }[]
+        { label: string; value: any }[]
     >([]);
+    const [queryConfig, setQueryConfig] = useState<QueryConfig>({ filter: {} });
 
-    const sortedData = useMemo(() => {
-        if (!data) return [];
+    useEffect(() => {
+        let filter: Record<string, any> = {};
+        let sort: Record<string, number> = {};
+        const orCondition: Record<string, any>[] = [];
 
-        let sorted = [...data];
-
-        sortCriteria.forEach(({ label, value }) => {
-            const configItem = initialSortConfig.find(
-                (config) => config.label.toLowerCase() === label
-            );
-
-            if (!configItem || !configItem.criteria) return;
-
-            if (value === "asc" || value === "desc") {
-                sorted.sort((a, b) =>
-                    value === "asc"
-                        ? a[configItem.criteria] - b[configItem.criteria]
-                        : b[configItem.criteria] - a[configItem.criteria]
-                );
+        sortCriteria.forEach(({ value, label }) => {
+            if (value.sort) {
+                sort = value.sort;
+            } else if (value.searchTerm) {
+                orCondition.push({
+                    [label]: value.searchTerm,
+                });
             } else {
-                if (configItem.criteria === "quantity") {
-                    if (value === "more than 10") {
-                        sorted = sorted.filter(
-                            (item) => item[configItem.criteria] > 10
-                        );
-                    } else if (value === "less than 10") {
-                        sorted = sorted.filter(
-                            (item) => item[configItem.criteria] < 10
-                        );
-                    }
-                } else {
-                    sorted = sorted.filter(
-                        (item) => item[configItem.criteria] === value
-                    );
-                }
+                filter = { ...filter, ...value };
             }
         });
 
-        return sorted;
-    }, [data, sortCriteria, initialSortConfig]);
+        setQueryConfig({
+            filter:
+                orCondition.length > 0
+                    ? JSON.stringify({ $or: orCondition })
+                    : filter,
+            sort: sortCriteria.length > 0 ? sort : undefined,
+        });
+    }, [sortCriteria]);
 
-    return { sortedData, setSortCriteria };
+    return { queryConfig, setSortCriteria };
 };
 
 export default useSortedData;
