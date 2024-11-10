@@ -15,8 +15,15 @@ export const getAllProducts = async (
     req: express.Request<{}, {}, {}, PaginatedProducts>,
     res: express.Response
 ) => {
-    const { random, category } = req.query;
-    const parsedQuery = parser.parse(req.query);
+    const { random, category, ...rest } = req.query;
+    const parsedQuery = parser.parse(rest);
+
+    const page = parsedQuery.skip
+        ? parseInt(parsedQuery.skip as unknown as string, 10)
+        : 0;
+    const pageSize = parsedQuery.limit
+        ? parseInt(parsedQuery.limit as unknown as string, 10)
+        : 5;
 
     const query: Record<string, unknown> = {};
 
@@ -106,17 +113,15 @@ export const getAllProducts = async (
             return res.status(200).json(randomProducts);
         }
 
-        const products = await ProductModel.find(parsedQuery.filter)
+        const products = await ProductModel.find(query)
             .populate("topLevelCategory secondLevelCategory thirdLevelCategory")
             .select(parsedQuery.select)
             .sort(parsedQuery.sort)
-            .skip(parsedQuery.skip || 0)
-            .limit(parsedQuery.limit || 5)
+            .skip(page * pageSize)
+            .limit(pageSize)
             .exec();
 
-        const totalDocuments = await ProductModel.countDocuments(
-            parsedQuery.filter
-        );
+        const totalDocuments = await ProductModel.countDocuments(query);
 
         if (!products || products.length === 0) {
             return res.status(404).json({ error: "No products found" });

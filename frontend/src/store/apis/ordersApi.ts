@@ -16,11 +16,11 @@ export const ordersApi = apiSlice.injectEndpoints({
         >({
             query: ({ userId, params = {} }) => {
                 const queryParams: Record<string, string> = {};
-                if (params.page !== undefined) {
-                    queryParams.page = params.page.toString();
+                if (params?.skip !== undefined) {
+                    queryParams.skip = params.skip.toString();
                 }
-                if (params.pageSize !== undefined) {
-                    queryParams.pageSize = params.pageSize.toString();
+                if (params?.limit !== undefined) {
+                    queryParams.limit = params.limit.toString();
                 }
                 return {
                     url: `/orders/userId/${userId}`,

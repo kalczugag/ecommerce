@@ -18,6 +18,13 @@ export const getUsersByRole = async (
 
     const parsedQuery = parser.parse(rest);
 
+    const page = parsedQuery.skip
+        ? parseInt(parsedQuery.skip as unknown as string, 10)
+        : 0;
+    const pageSize = parsedQuery.limit
+        ? parseInt(parsedQuery.limit as unknown as string, 10)
+        : 5;
+
     try {
         const users = await UserModel.find(parsedQuery.filter)
             .populate({
@@ -27,8 +34,8 @@ export const getUsersByRole = async (
             })
             .select(parsedQuery.select)
             .sort(parsedQuery.sort)
-            .skip(parsedQuery.skip || 0)
-            .limit(parsedQuery.limit || 5)
+            .skip(page * pageSize)
+            .limit(pageSize)
             .exec();
 
         const totalDocuments = await UserModel.countDocuments(

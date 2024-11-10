@@ -10,18 +10,31 @@ export const getAllCategories = async (
     req: express.Request<{}, {}, {}, PaginatedCategories>,
     res: express.Response
 ) => {
-    const { category, sorted, named } = req.query;
-    const parsedQuery = parser.parse(req.query);
+    const { category, sorted, named, ...rest } = req.query;
+    const parsedQuery = parser.parse(rest);
+
+    const page = parsedQuery.skip
+        ? parseInt(parsedQuery.skip as unknown as string, 10)
+        : 0;
+    const pageSize = parsedQuery.limit
+        ? parseInt(parsedQuery.limit as unknown as string, 10)
+        : 5;
 
     try {
-        const categories = await CategoryModel.find(parsedQuery.filter)
+        const query = CategoryModel.find(parsedQuery.filter)
             .populate("parentCategory", "name")
             .select(parsedQuery.select)
-            .sort(parsedQuery.sort)
-            .skip(parsedQuery.skip || 0)
-            .limit(parsedQuery.limit || 5)
-            .lean()
-            .exec();
+            .sort(parsedQuery.sort);
+
+        if (parsedQuery.skip != null) {
+            query.skip(page * pageSize);
+        }
+
+        if (parsedQuery.limit != null) {
+            query.limit(pageSize);
+        }
+
+        const categories = await query.lean().exec();
 
         const totalDocuments = await CategoryModel.countDocuments(
             parsedQuery.filter
