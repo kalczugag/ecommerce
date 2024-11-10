@@ -15,7 +15,7 @@ const OrdersList = () => {
     const { data, isLoading, isFetching } = useGetOrdersByUserIdQuery(
         {
             userId: userId || "",
-            params: { page, pageSize: 2 },
+            params: { skip: page, limit: 2 },
         },
         { skip: !userId }
     );

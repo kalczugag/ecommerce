@@ -32,8 +32,8 @@ const Catalog = () => {
         .join(",");
 
     const { data, isFetching } = useGetAllProductsQuery({
-        page: page - 1,
-        pageSize: ROWS_PER_PAGE,
+        skip: page - 1,
+        limit: ROWS_PER_PAGE,
         category,
     });
 
