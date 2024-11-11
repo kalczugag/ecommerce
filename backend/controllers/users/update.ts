@@ -12,7 +12,7 @@ export const updateUser = async (
     const { userId } = req.params;
     const data = req.body;
 
-    if (!isValidObjectId(userId) || !isValidObjectId(data.role)) {
+    if (!isValidObjectId(userId)) {
         return res
             .status(400)
             .json({ error: "User ID and role ID are required" });

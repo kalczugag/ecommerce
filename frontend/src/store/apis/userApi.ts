@@ -1,5 +1,5 @@
 import { apiSlice } from "./apiSlice";
-import type { User } from "@/types/User";
+import type { User, UpdateUser } from "@/types/User";
 
 export const userApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
@@ -10,7 +10,15 @@ export const userApi = apiSlice.injectEndpoints({
             }),
             keepUnusedDataFor: 300,
         }),
+
+        updateUser: builder.mutation<User, UpdateUser>({
+            query: (values) => ({
+                url: `/users/${values._id}`,
+                method: "PATCH",
+                body: values,
+            }),
+        }),
     }),
 });
 
-export const { useGetCurrentUserQuery } = userApi;
+export const { useGetCurrentUserQuery, useUpdateUserMutation } = userApi;

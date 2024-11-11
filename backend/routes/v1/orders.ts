@@ -30,13 +30,13 @@ const orders = (router: express.Router) => {
     router.post(
         "/orders",
         passport.authenticate("jwt", { session: false }),
-        hasAddress,
         methods.create
     );
 
     router.patch(
         "/orders/:id",
         passport.authenticate("jwt", { session: false }),
+        hasAddress,
         methods.update
     );
 };

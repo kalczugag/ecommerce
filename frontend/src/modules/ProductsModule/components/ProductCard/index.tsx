@@ -23,7 +23,7 @@ const ProductCard = ({ data, isLoading }: ProductCardProps) => {
     return (
         <Link
             to={isLoading ? "#" : `/product/${data?._id}`}
-            className="flex flex-col"
+            className={`flex flex-col ${isLoading && "pointer-events-none"}`}
         >
             <div>
                 {isLoading ? (
