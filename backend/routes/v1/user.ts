@@ -26,7 +26,7 @@ const users = (router: express.Router) => {
     router.patch(
         "/users/:userId",
         passport.authenticate("jwt", { session: false }),
-        hasRole("admin"),
+        //add isOwner middleware
         methods.update
     );
     router.delete(

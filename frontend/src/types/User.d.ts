@@ -29,3 +29,8 @@ export interface User {
     createdAt: Date;
     updatedAt: Date;
 }
+
+export interface UpdateUser {
+    _id: string;
+    address: Address;
+}

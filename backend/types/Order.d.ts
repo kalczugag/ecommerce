@@ -51,6 +51,6 @@ export interface UpdateOrder {
 }
 
 export interface PaginatedOrders extends ParsedQs {
-    page: number;
-    pageSize: number;
+    skip: number;
+    limit: number;
 }
