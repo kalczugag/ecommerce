@@ -19,9 +19,7 @@ const PrivateOutlet = () => {
         <Outlet />
     ) : token && isAuthLocation ? (
         <Navigate to="/" replace />
-    ) : (
-        <Navigate to="/" replace />
-    );
+    ) : null;
 };
 
 export default PrivateOutlet;
