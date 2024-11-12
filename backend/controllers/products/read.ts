@@ -113,7 +113,9 @@ export const getAllProducts = async (
             return res.status(200).json(randomProducts);
         }
 
-        const products = await ProductModel.find(query)
+        const isQuery = Object.keys(query).length ? query : parsedQuery.filter;
+
+        const products = await ProductModel.find(isQuery)
             .populate("topLevelCategory secondLevelCategory thirdLevelCategory")
             .select(parsedQuery.select)
             .sort(parsedQuery.sort)
@@ -121,7 +123,7 @@ export const getAllProducts = async (
             .limit(pageSize)
             .exec();
 
-        const totalDocuments = await ProductModel.countDocuments(query);
+        const totalDocuments = await ProductModel.countDocuments(isQuery);
 
         if (!products || products.length === 0) {
             return res.status(404).json({ error: "No products found" });

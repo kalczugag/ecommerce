@@ -12,7 +12,6 @@ import {
     Avatar,
 } from "@mui/material";
 import {
-    Search,
     PersonOutlineOutlined,
     Logout,
     Inbox,
@@ -25,6 +24,7 @@ import {
     AvatarMenuItemProps,
 } from "./AvatarSettings";
 import CartIcon from "./CartIcon";
+import Search from "./Search";
 
 const AccountTools = () => {
     const navigate = useNavigate();
@@ -103,7 +103,7 @@ const AccountTools = () => {
     ];
 
     return (
-        <Box sx={{ flexGrow: 0 }} className="space-x-2">
+        <Box sx={{ flexGrow: 0 }} className="flex space-x-2">
             <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                     <PersonOutlineOutlined sx={{ fontSize: "24px" }} />
@@ -155,9 +155,7 @@ const AccountTools = () => {
                     <AvatarMenuItem key={index} {...item} />
                 ))}
             </Menu>
-            <IconButton>
-                <Search />
-            </IconButton>
+            <Search />
             <CartIcon data={data} />
         </Box>
     );

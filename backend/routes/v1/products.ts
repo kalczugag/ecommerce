@@ -11,6 +11,8 @@ const products = (router: express.Router) => {
 
     router.get("/products/featured", methods.readFeatured);
 
+    router.get("/products/filters", methods.readFilters);
+
     router.post(
         "/products",
         passport.authenticate("jwt", { session: false }),

@@ -44,6 +44,7 @@ const Catalog = () => {
         total: data?.count || 0,
         isLoading: isFetching,
         handlePageChange,
+        handleSort: () => null,
     };
 
     return <ProductsDataListModule config={config} />;

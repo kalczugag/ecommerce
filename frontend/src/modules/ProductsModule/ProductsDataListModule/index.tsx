@@ -4,6 +4,7 @@ import { Pagination } from "@mui/material";
 import Sidebar from "@/components/Sidebar";
 import ProductsList from "../components/ProductsList";
 import { Product } from "@/types/Product";
+import { useGetProductFiltersQuery } from "@/store";
 
 interface ProductsDataListModuleProps {
     config: {
@@ -16,19 +17,27 @@ interface ProductsDataListModuleProps {
             event: React.ChangeEvent<unknown>,
             value: number
         ) => void;
+        handleSort: () => void;
     };
 }
 
 const ProductsDataListModule = ({ config }: ProductsDataListModuleProps) => {
-    const { data, pageSize, page, isLoading, handlePageChange } = config;
+    const { data, pageSize, page, isLoading, handlePageChange, handleSort } =
+        config;
 
-    const simplifiedData = useFilterProps(data || []);
+    const { data: productFilters } = useGetProductFiltersQuery();
     const { handleSubmit, filteredData } = useFilter(
         data || [],
-        simplifiedData.maxPrice
+        productFilters?.maxPrice || 100
     );
 
     const count = Math.ceil(config.total / pageSize);
+
+    const sidebarConfig = {
+        data: productFilters!,
+        disabled: !filteredData.length,
+        onSubmit: handleSubmit,
+    };
 
     return (
         <DefaultLayout
@@ -42,11 +51,7 @@ const ProductsDataListModule = ({ config }: ProductsDataListModuleProps) => {
             }
             isCatalog
         >
-            <Sidebar
-                data={simplifiedData}
-                disabled={!filteredData.length}
-                onSubmit={handleSubmit}
-            />
+            <Sidebar config={sidebarConfig} />
             {isLoading ? (
                 <ProductsList data={filteredData} isLoading={true} />
             ) : filteredData.length > 0 ? (

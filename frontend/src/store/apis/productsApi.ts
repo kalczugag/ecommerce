@@ -1,5 +1,5 @@
 import { apiSlice } from "./apiSlice";
-import type { Product } from "@/types/Product";
+import type { Product, ProductFilters } from "@/types/Product";
 
 export const productApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
@@ -33,6 +33,15 @@ export const productApi = apiSlice.injectEndpoints({
                     : [{ type: "Products", id: "LIST" }],
         }),
 
+        getProductFilters: builder.query<ProductFilters, void>({
+            query: () => {
+                return {
+                    url: "/products/filters",
+                    method: "GET",
+                };
+            },
+        }),
+
         getRandomProduct: builder.query<Product[], void>({
             query: () => ({
                 url: "/products?random=true",
@@ -53,5 +62,6 @@ export const productApi = apiSlice.injectEndpoints({
 export const {
     useGetAllProductsQuery,
     useGetProductByIdQuery,
+    useGetProductFiltersQuery,
     useGetRandomProductQuery,
 } = productApi;
