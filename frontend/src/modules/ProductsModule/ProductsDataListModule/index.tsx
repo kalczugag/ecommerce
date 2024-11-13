@@ -1,4 +1,4 @@
-import { useFilterProps, useFilter } from "@/hooks/useFilter";
+import { useFilter } from "@/hooks/useFilter";
 import DefaultLayout from "@/layouts/DefaultLayout";
 import { Pagination } from "@mui/material";
 import Sidebar from "@/components/Sidebar";
@@ -11,6 +11,7 @@ interface ProductsDataListModuleProps {
         data: Product[];
         pageSize: number;
         page: number;
+        category: string;
         total: number;
         isLoading: boolean;
         handlePageChange: (
@@ -22,10 +23,18 @@ interface ProductsDataListModuleProps {
 }
 
 const ProductsDataListModule = ({ config }: ProductsDataListModuleProps) => {
-    const { data, pageSize, page, isLoading, handlePageChange, handleSort } =
-        config;
+    const {
+        data,
+        pageSize,
+        page,
+        category,
+        isLoading,
+        handlePageChange,
+        handleSort,
+    } = config;
 
-    const { data: productFilters } = useGetProductFiltersQuery();
+    console.log(category);
+    const { data: productFilters } = useGetProductFiltersQuery(category);
     const { handleSubmit, filteredData } = useFilter(
         data || [],
         productFilters?.maxPrice || 100

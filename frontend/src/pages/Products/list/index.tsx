@@ -41,6 +41,7 @@ const Catalog = () => {
         data: data?.data || [],
         pageSize: ROWS_PER_PAGE,
         page: page,
+        category,
         total: data?.count || 0,
         isLoading: isFetching,
         handlePageChange,

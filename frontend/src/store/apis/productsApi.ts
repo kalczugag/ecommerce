@@ -33,11 +33,12 @@ export const productApi = apiSlice.injectEndpoints({
                     : [{ type: "Products", id: "LIST" }],
         }),
 
-        getProductFilters: builder.query<ProductFilters, void>({
-            query: () => {
+        getProductFilters: builder.query<ProductFilters, string>({
+            query: (cat) => {
                 return {
                     url: "/products/filters",
                     method: "GET",
+                    params: { category: cat },
                 };
             },
         }),
