@@ -3,10 +3,7 @@ import type { Product, ProductFilters } from "@/types/Product";
 
 export const productApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        getAllProducts: builder.query<
-            ApiResponseArray<Product>,
-            Paginate | void
-        >({
+        getAllProducts: builder.query<ApiResponseArray<Product>, any>({
             query: (params = {}) => {
                 const queryParams: Record<string, string> = {};
                 if (params?.skip !== undefined) {
@@ -18,10 +15,11 @@ export const productApi = apiSlice.injectEndpoints({
                 if (params?.category !== undefined) {
                     queryParams.category = params.category;
                 }
+
                 return {
                     url: "/products",
                     method: "GET",
-                    params: queryParams,
+                    params: params,
                 };
             },
             providesTags: (result) =>

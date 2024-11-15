@@ -60,7 +60,9 @@ const SidebarSortForm = ({ config }: SidebarSortFormProps) => {
                     </Accordion>
                 )}
             </Field>
+
             <Divider />
+
             <Field name="size">
                 {({ input }) => (
                     <Accordion>
@@ -88,11 +90,10 @@ const SidebarSortForm = ({ config }: SidebarSortFormProps) => {
                     </Accordion>
                 )}
             </Field>
+
             <Divider />
-            <Field
-                name="priceRange"
-                parse={(value) => value || [0, data?.maxPrice]}
-            >
+
+            <Field name="price" parse={(value) => value || [0, data?.maxPrice]}>
                 {({ input }) => (
                     <Accordion>
                         <AccordionSummary expandIcon={<ExpandMore />}>
@@ -115,8 +116,10 @@ const SidebarSortForm = ({ config }: SidebarSortFormProps) => {
                     </Accordion>
                 )}
             </Field>
+
             <Divider />
-            <Field name="discountRange" parse={(value) => value || [0, 100]}>
+
+            <Field name="discountPercent" parse={(value) => value || [0, 100]}>
                 {({ input }) => (
                     <Accordion>
                         <AccordionSummary expandIcon={<ExpandMore />}>

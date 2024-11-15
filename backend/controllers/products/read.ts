@@ -113,7 +113,8 @@ export const getAllProducts = async (
             return res.status(200).json(randomProducts);
         }
 
-        const isQuery = Object.keys(query).length ? query : parsedQuery.filter;
+        const combinedFilters = { ...query, ...parsedQuery.filter };
+        const isQuery = query ? combinedFilters : parsedQuery.filter;
 
         const products = await ProductModel.find(isQuery)
             .populate("topLevelCategory secondLevelCategory thirdLevelCategory")

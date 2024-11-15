@@ -1,4 +1,3 @@
-import { useFilter } from "@/hooks/useFilter";
 import DefaultLayout from "@/layouts/DefaultLayout";
 import { Pagination } from "@mui/material";
 import Sidebar from "@/components/Sidebar";
@@ -18,7 +17,7 @@ interface ProductsDataListModuleProps {
             event: React.ChangeEvent<unknown>,
             value: number
         ) => void;
-        handleSort: () => void;
+        handleFilters: (value: any) => void;
     };
 }
 
@@ -30,23 +29,11 @@ const ProductsDataListModule = ({ config }: ProductsDataListModuleProps) => {
         category,
         isLoading,
         handlePageChange,
-        handleSort,
+        handleFilters,
     } = config;
-
-    console.log(category);
     const { data: productFilters } = useGetProductFiltersQuery(category);
-    const { handleSubmit, filteredData } = useFilter(
-        data || [],
-        productFilters?.maxPrice || 100
-    );
 
-    const count = Math.ceil(config.total / pageSize);
-
-    const sidebarConfig = {
-        data: productFilters!,
-        disabled: !filteredData.length,
-        onSubmit: handleSubmit,
-    };
+    const count = Math.ceil((config.total ?? 0) / pageSize);
 
     return (
         <DefaultLayout
@@ -60,11 +47,17 @@ const ProductsDataListModule = ({ config }: ProductsDataListModuleProps) => {
             }
             isCatalog
         >
-            <Sidebar config={sidebarConfig} />
+            <Sidebar
+                config={{
+                    data: productFilters!,
+                    disabled: !data.length,
+                    onSubmit: handleFilters,
+                }}
+            />
             {isLoading ? (
-                <ProductsList data={filteredData} isLoading={true} />
-            ) : filteredData.length > 0 ? (
-                <ProductsList data={filteredData} isLoading={false} />
+                <ProductsList data={[]} isLoading={true} />
+            ) : data.length > 0 ? (
+                <ProductsList data={data} isLoading={false} />
             ) : (
                 <div>No products available for this category.</div>
             )}

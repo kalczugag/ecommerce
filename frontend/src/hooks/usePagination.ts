@@ -13,9 +13,12 @@ const usePagination = (): [
     const [page, setPage] = useState<number>(initialPage);
 
     useEffect(() => {
-        navigate(`?page=${page}`);
+        const updatedParams = new URLSearchParams(location.search);
+        updatedParams.set("page", page.toString());
+
+        navigate({ search: updatedParams.toString() }, { replace: true });
         window.scrollTo(0, 0);
-    }, [page, navigate]);
+    }, [page, navigate, location.search]);
 
     const handlePageChange = (
         event: React.ChangeEvent<unknown>,
