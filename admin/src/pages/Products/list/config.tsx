@@ -8,15 +8,6 @@ interface RowProps extends Product {
     handleDelete: () => void;
 }
 
-export interface SortConfigProps {
-    label: string;
-    criteria: string;
-    items: {
-        label: string;
-        value: Record<string, any>;
-    }[];
-}
-
 export const sortConfig: SortConfigProps[] = [
     {
         label: "Category",
@@ -24,25 +15,25 @@ export const sortConfig: SortConfigProps[] = [
         items: [
             {
                 label: "Dresses",
-                value: { "secondLevelCategory.name": "Dresses" },
+                value: "Dresses",
             },
-            { label: "Boots", value: { "secondLevelCategory.name": "Boots" } },
+            { label: "Boots", value: "Boots" },
         ],
     },
     {
         label: "Availability",
-        criteria: "quantity",
+        criteria: "filter.quantity",
         items: [
-            { label: "more than 10", value: { quantity: { $gt: 10 } } },
-            { label: "less than 10", value: { quantity: { $lt: 10 } } },
+            { label: "more than 10", value: { $gt: 10 } },
+            { label: "less than 10", value: { $lt: 10 } },
         ],
     },
     {
         label: "Sort By Price",
-        criteria: "price",
+        criteria: "sort",
         items: [
-            { label: "Low to high", value: { sort: "price" } },
-            { label: "High to low", value: { sort: "-price" } },
+            { label: "Low to high", value: "price" },
+            { label: "High to low", value: "-price" },
         ],
     },
 ];

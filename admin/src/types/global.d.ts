@@ -23,3 +23,14 @@ interface Paginate {
     roleName?: string;
     searchTerm?: string;
 }
+
+interface SelectItemProps {
+    label: string;
+    value: string | Record<string, any>;
+}
+
+interface SortConfigProps {
+    label: string;
+    criteria: string; //for filter use choosen object key, for sort just 'sort'
+    items: SelectItemProps[];
+}

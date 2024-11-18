@@ -17,27 +17,20 @@ const CustomersList = () => {
         ...pagination,
     };
 
-    const { queryConfig, setSortCriteria } = useSortedData();
+    const { sortCriteria, setSortCriteria } = useSortedData();
     const { data, isFetching } = useGetUsersByRoleQuery({
         ...args,
-        ...queryConfig,
+        ...sortCriteria,
     });
 
     const [deleteUser, result] = useDeleteUserMutation();
 
     const handleSort = (sortValues: any) => {
-        const parsedSortCriteria = Object.entries(sortValues).map(
-            ([label, value]) => ({ label, value: value as string })
-        );
-        setSortCriteria(parsedSortCriteria);
+        setSortCriteria(sortValues);
     };
 
     const handleSearch = useDebounce((searchTerm: string) => {
-        setSortCriteria([
-            { label: "firstName", value: searchTerm },
-            { label: "phone", value: searchTerm },
-            { label: "email", value: searchTerm },
-        ]);
+        console.log(searchTerm);
     }, 250);
 
     const config = {

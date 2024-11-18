@@ -6,25 +6,25 @@ interface RowProps extends Order {
     isLoading: boolean;
 }
 
-export const sortConfig = [
+export const sortConfig: SortConfigProps[] = [
     {
         label: "Sort By Price",
-        criteria: "total",
+        criteria: "sort",
         items: [
-            { label: "Low to high", value: { sort: "total" } },
-            { label: "High to low", value: { sort: "-total" } },
+            { label: "Low to high", value: "total" },
+            { label: "High to low", value: "-total" },
         ],
     },
     {
         label: "Status",
         criteria: "status",
         items: [
-            { label: "Placed", value: { status: "placed" } },
-            { label: "Confirmed", value: { status: "confirmed" } },
-            { label: "Shipped", value: { status: "shipped" } },
-            { label: "In Delivery", value: { status: "in_delivery" } },
-            { label: "Delivered", value: { status: "delivered" } },
-            { label: "Cancelled", value: { status: "cancelled" } },
+            { label: "Placed", value: "placed" },
+            { label: "Confirmed", value: "confirmed" },
+            { label: "Shipped", value: "shipped" },
+            { label: "In Delivery", value: "in_delivery" },
+            { label: "Delivered", value: "delivered" },
+            { label: "Cancelled", value: "cancelled" },
         ],
     },
 ];

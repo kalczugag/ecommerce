@@ -1,4 +1,4 @@
-import { buildQueryParams } from "@/utils/queryHelpers";
+import { serialize } from "@/utils/helpers";
 import { apiSlice } from "./apiSlice";
 import type { Category, GroupedCategories } from "@/types/Category";
 
@@ -8,20 +8,20 @@ export const categoryApi = apiSlice.injectEndpoints({
             ApiResponseArray<Category>,
             Paginate | void
         >({
-            query: (params: Paginate = {}) => {
-                const queryParams = buildQueryParams({
-                    filter: params.filter as Record<string, any> | undefined,
-                    sort: params.sort,
-                });
+            query: ({ skip, limit, named, ...rest }: Paginate = {}) => {
+                let queryParams: Record<string, string> = {};
 
-                if (params?.skip !== undefined) {
-                    queryParams.skip = params.skip.toString();
+                if (skip !== undefined) {
+                    queryParams.skip = skip.toString();
                 }
-                if (params?.limit !== undefined) {
-                    queryParams.limit = params.limit.toString();
+                if (limit !== undefined) {
+                    queryParams.limit = limit.toString();
                 }
-                if (params?.named !== undefined) {
-                    queryParams.named = params.named.toString();
+                if (named !== undefined) {
+                    queryParams.named = named.toString();
+                }
+                if (Object.entries(rest).length > 0) {
+                    queryParams = { ...queryParams, ...serialize(rest) };
                 }
 
                 return {
@@ -44,17 +44,17 @@ export const categoryApi = apiSlice.injectEndpoints({
             ApiResponseObject<GroupedCategories>,
             Paginate | void
         >({
-            query: (params: Paginate = {}) => {
-                const queryParams = buildQueryParams({
-                    filter: params.filter as Record<string, any> | undefined,
-                    sort: params.sort,
-                });
+            query: ({ skip, limit, ...rest }: Paginate = {}) => {
+                let queryParams: Record<string, string> = {};
 
-                if (params?.skip !== undefined) {
-                    queryParams.skip = params.skip.toString();
+                if (skip !== undefined) {
+                    queryParams.skip = skip.toString();
                 }
-                if (params?.limit !== undefined) {
-                    queryParams.limit = params.limit.toString();
+                if (limit !== undefined) {
+                    queryParams.limit = limit.toString();
+                }
+                if (Object.entries(rest).length > 0) {
+                    queryParams = { ...queryParams, ...serialize(rest) };
                 }
 
                 return {

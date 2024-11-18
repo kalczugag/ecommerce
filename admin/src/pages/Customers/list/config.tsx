@@ -8,13 +8,13 @@ interface RowProps extends User {
     handleDelete: () => void;
 }
 
-export const sortConfig = [
+export const sortConfig: SortConfigProps[] = [
     {
         label: "Sort By",
-        criteria: "firstName",
+        criteria: "sort",
         items: [
-            { label: "A-Z", value: { sort: "firstName" } },
-            { label: "Z-A", value: { sort: "-firstName" } },
+            { label: "A-Z", value: "firstName" },
+            { label: "Z-A", value: "-firstName" },
         ],
     },
 ];

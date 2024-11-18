@@ -1,26 +1,16 @@
 import { Field, Form } from "react-final-form";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
-interface SelectItem {
-    label: string;
-    value: any;
-}
-
-export interface ConfigType {
-    label: string;
-    items: SelectItem[];
-}
-
 interface SelectFieldProps {
     label: string;
-    items: SelectItem[];
+    items: SelectItemProps[];
     value: string;
     onChange: (value: string) => void;
     onSubmit: () => void;
 }
 
 export interface SortFormProps {
-    config: ConfigType[];
+    config: SortConfigProps[];
     handleSubmit: (values: any) => void;
 }
 
@@ -61,13 +51,9 @@ const SortForm = ({ config, handleSubmit }: SortFormProps) => {
                     onSubmit={handleSubmit}
                     className="flex-1 flex flex-col space-y-2 sm:space-y-0 sm:space-x-2 sm:flex-row"
                 >
-                    {config.map(({ label, items }) => {
+                    {config.map(({ label, criteria, items }) => {
                         return (
-                            <Field
-                                name={label.toLowerCase()}
-                                type="select"
-                                key={label}
-                            >
+                            <Field name={criteria} type="select" key={label}>
                                 {(props) => (
                                     <SelectField
                                         label={label}
