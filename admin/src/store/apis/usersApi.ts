@@ -83,6 +83,17 @@ export const userApi = apiSlice.injectEndpoints({
             providesTags: (result, error, id) => [{ type: "Users", id: id }],
         }),
 
+        addUser: builder.mutation<User, User>({
+            query: (values) => ({
+                url: "/users",
+                method: "POST",
+                body: values,
+            }),
+            invalidatesTags: (result, error, values) => [
+                { type: "Users", id: values._id },
+            ],
+        }),
+
         editUser: builder.mutation<User, User>({
             query: (values) => ({
                 url: `/users/${values._id}`,
@@ -109,6 +120,7 @@ export const {
     useGetAllUsersQuery,
     useGetUsersByRoleQuery,
     useGetUserByIdQuery,
+    useAddUserMutation,
     useEditUserMutation,
     useDeleteUserMutation,
 } = userApi;

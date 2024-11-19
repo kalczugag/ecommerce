@@ -22,7 +22,6 @@ const ProductsList = () => {
 
     const handleSort = (sortValues: any) => {
         setSortCriteria(sortValues);
-        console.log(sortValues);
     };
 
     const handleSearch = useDebounce((searchTerm: { search: string }) => {

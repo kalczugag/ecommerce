@@ -1,4 +1,5 @@
-import { useGetUsersByRoleQuery, useDeleteUserMutation } from "@/store";
+import { useNavigate } from "react-router-dom";
+import { useDeleteUserMutation, useGetAllUsersQuery } from "@/store";
 import { sortConfig, tableConfig } from "./config";
 import { useTitle } from "@/hooks/useTitle";
 import usePagination from "@/hooks/usePagination";
@@ -7,19 +8,16 @@ import useDebounce from "@/hooks/useDebounce";
 import CrudModule from "@/modules/CrudModule";
 import SortForm from "@/forms/SortForm";
 import SearchItem from "@/components/SearchItem";
+import { Button } from "@mui/material";
 
 const CustomersList = () => {
+    const navigate = useNavigate();
     const [pagination] = usePagination();
     useTitle("Customers - List");
 
-    const args = {
-        roleName: "client",
-        ...pagination,
-    };
-
     const { sortCriteria, setSortCriteria } = useSortedData();
-    const { data, isFetching } = useGetUsersByRoleQuery({
-        ...args,
+    const { data, isFetching } = useGetAllUsersQuery({
+        ...pagination,
         ...sortCriteria,
     });
 
@@ -54,11 +52,20 @@ const CustomersList = () => {
             config={config}
             actionForm={
                 <div className="space-y-4">
-                    <SearchItem
-                        handleSubmit={handleSearch}
-                        // placeholder="Search"
-                    />
-                    <SortForm config={sortConfig} handleSubmit={handleSort} />
+                    <SearchItem handleSubmit={handleSearch} />
+                    <div className="flex flex-col space-y-2 sm:space-y-0 sm:space-x-2 sm:flex-row">
+                        <SortForm
+                            config={sortConfig}
+                            handleSubmit={handleSort}
+                        />
+                        <Button
+                            variant="contained"
+                            onClick={() => navigate("/customers/add")}
+                            sx={{ textDecoration: "line-through" }}
+                        >
+                            Add Customer
+                        </Button>
+                    </div>
                 </div>
             }
         />

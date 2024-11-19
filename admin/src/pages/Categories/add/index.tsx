@@ -1,11 +1,11 @@
+import { useNavigate } from "react-router-dom";
 import { useAddCategoryMutation } from "@/store";
 import { enqueueSnackbar } from "notistack";
+import { useTitle } from "@/hooks/useTitle";
 import CreateForm from "@/components/CreateForm";
 import CrudModule from "@/modules/CrudModule";
 import CategoryForm from "@/forms/CategoryForm";
 import type { Category } from "@/types/Category";
-import { useNavigate } from "react-router-dom";
-import { useTitle } from "@/hooks/useTitle";
 
 const CategoriesAdd = () => {
     const navigate = useNavigate();

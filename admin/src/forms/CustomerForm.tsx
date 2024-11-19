@@ -1,16 +1,27 @@
 import { Field } from "react-final-form";
-import { TextField } from "@mui/material";
+import { useGetRolesQuery } from "@/store";
+import { required, validateEmail, compose } from "@/utils/validators";
+import {
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
+    TextField,
+} from "@mui/material";
 import Row from "@/components/Row";
 
 interface CustomerFormProps {
     isLoading: boolean;
+    isUpdateForm?: boolean;
 }
 
-const CustomerForm = ({ isLoading }: CustomerFormProps) => {
+const CustomerForm = ({ isUpdateForm, isLoading }: CustomerFormProps) => {
+    const { data, isSuccess } = useGetRolesQuery();
+
     return (
         <div className="space-y-4">
             <Row>
-                <Field name="firstName">
+                <Field name="firstName" validate={required}>
                     {(props) => (
                         <TextField
                             label="First Name"
@@ -28,7 +39,7 @@ const CustomerForm = ({ isLoading }: CustomerFormProps) => {
                         />
                     )}
                 </Field>
-                <Field name="lastName">
+                <Field name="lastName" validate={required}>
                     {(props) => (
                         <TextField
                             label="Last Name"
@@ -144,7 +155,7 @@ const CustomerForm = ({ isLoading }: CustomerFormProps) => {
                 )}
             </Field>
             <Row label="Contact">
-                <Field name="phone">
+                <Field name="phone" validate={required}>
                     {(props) => (
                         <TextField
                             label="Phone"
@@ -162,7 +173,7 @@ const CustomerForm = ({ isLoading }: CustomerFormProps) => {
                         />
                     )}
                 </Field>
-                <Field name="email">
+                <Field name="email" validate={compose(validateEmail, required)}>
                     {(props) => (
                         <TextField
                             label="Email"
@@ -178,6 +189,26 @@ const CustomerForm = ({ isLoading }: CustomerFormProps) => {
                             disabled={isLoading}
                             fullWidth
                         />
+                    )}
+                </Field>
+            </Row>
+            <Row label="Roles">
+                <Field name="role" type="select" validate={required}>
+                    {(props) => (
+                        <FormControl fullWidth>
+                            <InputLabel>Role</InputLabel>
+                            <Select
+                                label="Role"
+                                value={props.input.value}
+                                onChange={props.input.onChange}
+                                error={props.meta.error && props.meta.touched}
+                            >
+                                {isSuccess &&
+                                    data.map(({ _id, name }) => (
+                                        <MenuItem value={_id}>{name}</MenuItem>
+                                    ))}
+                            </Select>
+                        </FormControl>
                     )}
                 </Field>
             </Row>
