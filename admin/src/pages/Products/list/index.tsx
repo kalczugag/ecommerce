@@ -25,8 +25,12 @@ const ProductsList = () => {
         console.log(sortValues);
     };
 
-    const handleSearch = useDebounce((searchTerm: string) => {
-        console.log(searchTerm);
+    const handleSearch = useDebounce((searchTerm: { search: string }) => {
+        const filter = {
+            $or: [{ brand: searchTerm.search }, { title: searchTerm.search }],
+        };
+
+        setSortCriteria({ filter });
     }, 250);
 
     const config = {

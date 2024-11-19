@@ -29,8 +29,16 @@ const CustomersList = () => {
         setSortCriteria(sortValues);
     };
 
-    const handleSearch = useDebounce((searchTerm: string) => {
-        console.log(searchTerm);
+    const handleSearch = useDebounce((searchTerm: { search: string }) => {
+        const filter = {
+            $or: [
+                { firstName: searchTerm.search },
+                { phone: searchTerm.search },
+                { email: searchTerm.search },
+            ],
+        };
+
+        setSortCriteria({ filter });
     }, 250);
 
     const config = {

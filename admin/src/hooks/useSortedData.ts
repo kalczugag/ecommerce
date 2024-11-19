@@ -1,14 +1,7 @@
-import { useState, useEffect } from "react";
-
-interface QueryConfig {
-    filter: Record<string, any> | string;
-    sort?: Record<string, number>;
-}
+import { useState } from "react";
 
 const useSortedData = () => {
-    const [sortCriteria, setSortCriteria] = useState<Record<string, string>>(
-        {}
-    );
+    const [sortCriteria, setSortCriteria] = useState<Record<string, any>>({});
 
     return { sortCriteria, setSortCriteria };
 };

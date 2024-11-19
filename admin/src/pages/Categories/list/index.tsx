@@ -23,12 +23,16 @@ const CategoriesList = () => {
 
     const [deleteCategory, result] = useDeleteCategoryMutation();
 
-    const handleSort = (sortValues: any) => {
+    const handleSort = (sortValues: Record<string, string>) => {
         setSortCriteria(sortValues);
     };
 
-    const handleSearch = useDebounce((searchTerm: string) => {
-        console.log(searchTerm);
+    const handleSearch = useDebounce((searchTerm: { search: string }) => {
+        const filter = {
+            $or: [{ name: searchTerm.search }],
+        };
+
+        setSortCriteria({ filter });
     }, 250);
 
     const config = {

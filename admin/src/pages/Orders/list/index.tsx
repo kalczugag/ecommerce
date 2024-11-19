@@ -22,10 +22,13 @@ const OrdersList = () => {
         setSortCriteria(sortValues);
     };
 
-    const handleSearch = useDebounce((searchTerm: string) => {
-        console.log(searchTerm);
-    }, 250);
+    const handleSearch = useDebounce((searchTerm: { search: string }) => {
+        const filter = {
+            $or: [{ _id: searchTerm.search }, { _user: searchTerm.search }],
+        };
 
+        setSortCriteria({ filter });
+    }, 250);
     const config = {
         tableConfig,
         tableData: data?.data || [],

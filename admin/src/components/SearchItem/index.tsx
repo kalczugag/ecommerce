@@ -13,7 +13,7 @@ const SearchItem = ({ placeholder, handleSubmit }: SearchItemProps) => {
             onSubmit={handleSubmit}
             render={({ handleSubmit, form }) => (
                 <form onSubmit={handleSubmit} className="text-end">
-                    <Field name="searchTerm">
+                    <Field name="search">
                         {(props) => (
                             <TextField
                                 {...props.input}
