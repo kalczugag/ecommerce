@@ -1,22 +1,37 @@
+import { useState } from "react";
 import { Field } from "react-final-form";
 import { useGetRolesQuery } from "@/store";
 import { required, validateEmail, compose } from "@/utils/validators";
 import {
     FormControl,
+    FormHelperText,
+    IconButton,
+    InputAdornment,
     InputLabel,
     MenuItem,
+    OutlinedInput,
     Select,
     TextField,
 } from "@mui/material";
 import Row from "@/components/Row";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 interface CustomerFormProps {
     isLoading: boolean;
-    isUpdateForm?: boolean;
 }
 
-const CustomerForm = ({ isUpdateForm, isLoading }: CustomerFormProps) => {
+const CustomerForm = ({ isLoading }: CustomerFormProps) => {
     const { data, isSuccess } = useGetRolesQuery();
+
+    const [showPassword, setShowPassword] = useState(false);
+
+    const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+    const handleMouseDownPassword = (
+        event: React.MouseEvent<HTMLButtonElement>
+    ) => {
+        event.preventDefault();
+    };
 
     return (
         <div className="space-y-4">
@@ -192,6 +207,58 @@ const CustomerForm = ({ isUpdateForm, isLoading }: CustomerFormProps) => {
                     )}
                 </Field>
             </Row>
+            <Row label="Security">
+                <Field name="password" validate={required}>
+                    {(props) => (
+                        <FormControl variant="outlined" fullWidth>
+                            <InputLabel
+                                error={props.meta.error && props.meta.touched}
+                                htmlFor="password-input"
+                            >
+                                Password
+                            </InputLabel>
+                            <OutlinedInput
+                                id="password-input"
+                                type={showPassword ? "text" : "password"}
+                                name={props.input.name}
+                                value={props.input.value}
+                                onChange={props.input.onChange}
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={handleClickShowPassword}
+                                            onMouseDown={
+                                                handleMouseDownPassword
+                                            }
+                                            edge="end"
+                                        >
+                                            {showPassword ? (
+                                                <VisibilityOff />
+                                            ) : (
+                                                <Visibility />
+                                            )}
+                                        </IconButton>
+                                    </InputAdornment>
+                                }
+                                error={props.meta.error && props.meta.touched}
+                                label="Password"
+                                disabled={isLoading}
+                                fullWidth
+                            />
+                            {props.meta.error && props.meta.touched && (
+                                <FormHelperText
+                                    error={
+                                        props.meta.error && props.meta.touched
+                                    }
+                                >
+                                    {props.meta.error}
+                                </FormHelperText>
+                            )}
+                        </FormControl>
+                    )}
+                </Field>
+            </Row>
             <Row label="Roles">
                 <Field name="role" type="select" validate={required}>
                     {(props) => (
@@ -205,9 +272,16 @@ const CustomerForm = ({ isUpdateForm, isLoading }: CustomerFormProps) => {
                             >
                                 {isSuccess &&
                                     data.map(({ _id, name }) => (
-                                        <MenuItem value={_id}>{name}</MenuItem>
+                                        <MenuItem key={_id} value={_id}>
+                                            {name}
+                                        </MenuItem>
                                     ))}
                             </Select>
+                            {props.meta.error && props.meta.touched && (
+                                <FormHelperText error>
+                                    {props.meta.error}
+                                </FormHelperText>
+                            )}
                         </FormControl>
                     )}
                 </Field>

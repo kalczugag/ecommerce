@@ -1,23 +1,21 @@
 import Joi from "joi";
 
-const addressSchema = Joi.object({
-    street: Joi.string().optional(),
-    apartment: Joi.string().optional(),
-    city: Joi.string().optional(),
-    state: Joi.string().optional(),
-    postalCode: Joi.string().optional(),
-    country: Joi.string().optional(),
-});
-
 const schema = Joi.object({
-    _cart: Joi.string().hex().length(24).optional(),
-    firstName: Joi.string().required(),
-    lastName: Joi.string().required(),
+    firstName: Joi.string().min(2).required(),
+    lastName: Joi.string().min(2).required(),
+    birthday: Joi.date().iso().optional(),
     role: Joi.string().hex().length(24).optional(),
-    birthday: Joi.date().optional(),
-    address: addressSchema.optional(),
+    address: Joi.object({
+        street: Joi.string().min(2).optional(),
+        apartment: Joi.string().min(1).optional(),
+        city: Joi.string().min(2).optional(),
+        state: Joi.string().min(2).optional(),
+        postalCode: Joi.string().min(2).optional(),
+        country: Joi.string().min(2).optional(),
+    }).optional(),
     phone: Joi.string().optional(),
     email: Joi.string().email().required(),
-}).options({ allowUnknown: true });
+    password: Joi.string().min(6).required(),
+});
 
 export default schema;

@@ -6,7 +6,6 @@ import CreateForm from "@/components/CreateForm";
 import CustomerForm from "@/forms/CustomerForm";
 import CrudModule from "@/modules/CrudModule";
 import type { User } from "@/types/User";
-import { useEffect } from "react";
 
 const CustomersAdd = () => {
     const navigate = useNavigate();
@@ -25,10 +24,6 @@ const CustomersAdd = () => {
             enqueueSnackbar("Failed to add customer", { variant: "error" });
         }
     };
-
-    useEffect(() => {
-        enqueueSnackbar("Adding a customer not working", { variant: "info" });
-    }, []);
 
     return (
         <CrudModule

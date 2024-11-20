@@ -61,7 +61,6 @@ const CustomersList = () => {
                         <Button
                             variant="contained"
                             onClick={() => navigate("/customers/add")}
-                            sx={{ textDecoration: "line-through" }}
                         >
                             Add Customer
                         </Button>

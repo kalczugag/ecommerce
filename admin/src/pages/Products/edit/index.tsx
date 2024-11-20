@@ -32,9 +32,11 @@ const ProductsEdit = () => {
     if (isError || (!productsLoading && !productsData)) return <NotFound />;
 
     const handleSubmit = async (values: Product) => {
+        const { quantity, ...rest } = values;
+
         try {
             await editProduct({
-                ...values,
+                ...rest,
                 imageUrl: (values.imageUrl as string)?.trim().split(",\n"),
             }).unwrap();
             navigate(-1);

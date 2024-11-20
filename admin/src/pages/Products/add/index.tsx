@@ -18,9 +18,11 @@ const ProductAdd = () => {
     const [addProduct, result] = useAddProductMutation();
 
     const handleSubmit = async (values: Product) => {
+        const { quantity, ...rest } = values;
+
         try {
             await addProduct({
-                ...values,
+                ...rest,
                 imageUrl: (values.imageUrl as string)?.trim().split(","),
             }).unwrap();
             navigate("/products");

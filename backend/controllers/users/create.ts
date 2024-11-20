@@ -2,6 +2,8 @@ import express from "express";
 import schema from "./schemaValidate";
 import { UserModel } from "../../models/User";
 import type { User } from "../../types/User";
+import { genPassword } from "../../utils/helpers";
+import { RoleModel } from "../../models/Role";
 
 export const createUser = async (
     req: express.Request<{}, {}, User>,
@@ -15,8 +17,24 @@ export const createUser = async (
         });
     }
 
+    let params = req.body;
+
     try {
-        const newUser = new UserModel(req.body);
+        const { salt, hash } = genPassword(params.password);
+
+        let defaultRole: any;
+        if (!params.role) {
+            defaultRole = await RoleModel.findOne({ name: "client" }).exec();
+        }
+
+        const role = params.role ? params.role : defaultRole._id;
+
+        const newUser = new UserModel({
+            ...params,
+            hash,
+            salt,
+            role,
+        });
 
         await newUser.save();
 

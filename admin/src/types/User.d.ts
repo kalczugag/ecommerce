@@ -14,6 +14,7 @@ export interface User {
         postalCode: number;
         country: string;
     };
+    password?: string;
     phone?: string;
     email: string;
 }
