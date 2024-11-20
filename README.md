@@ -56,8 +56,7 @@ This is a fully functional e-commerce website built using the MERN (MongoDB, Exp
 
 -   **Other Technologies**:
     -   [Mongoose](https://mongoosejs.com/) for MongoDB object modeling
-    -   [Stripe](https://stripe.com/) or [PayPal](https://www.paypal.com/) for payment processing
-    -   [Cloudinary](https://cloudinary.com/) or similar for image hosting
+    -   [Stripe](https://stripe.com/) for payment processing
     -   [Nodemailer](https://nodemailer.com/about/) for sending emails (e.g., order confirmation)
 
 ### Prerequisites
