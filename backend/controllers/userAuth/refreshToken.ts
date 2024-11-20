@@ -53,7 +53,8 @@ export const refreshToken = async (
 
         return res.status(200).json({
             success: true,
-            isAdmin: user.role.name === "admin",
+            isAdmin:
+                typeof user.role === "object" && user.role.name === "admin",
             userId: user._id,
             cartId: user._cart,
             ...accessToken,

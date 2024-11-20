@@ -1,6 +1,5 @@
 import ActionButtons from "@/components/Table/ActionButtons";
 import type { Category } from "@/types/Category";
-import type { SortConfigProps } from "@/pages/Products/list/config";
 
 interface RowProps extends Category {
     isLoading: boolean;
@@ -12,9 +11,9 @@ export const sortConfig: SortConfigProps[] = [
         label: "Level",
         criteria: "level",
         items: [
-            { label: "Top Level", value: { level: "topLevel" } },
-            { label: "Second Level", value: { level: "secondLevel" } },
-            { label: "Third Level", value: { level: "thirdLevel" } },
+            { label: "Top Level", value: "topLevel" },
+            { label: "Second Level", value: "secondLevel" },
+            { label: "Third Level", value: "thirdLevel" },
         ],
     },
 ];

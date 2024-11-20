@@ -1,4 +1,4 @@
-import { buildQueryParams } from "@/utils/queryHelpers";
+import { serialize } from "@/utils/helpers";
 import { apiSlice } from "./apiSlice";
 import type { User } from "@/types/User";
 
@@ -9,14 +9,22 @@ interface fetchArgs extends Paginate {
 export const userApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getAllUsers: builder.query<ApiResponseArray<User>, Paginate | void>({
-            query: (params = {}) => {
-                const queryParams: Record<string, string> = {};
-                if (params?.skip !== undefined) {
-                    queryParams.skip = params.skip.toString();
+            query: ({ skip, limit, searchTerm, ...rest }: Paginate = {}) => {
+                let queryParams: Record<string, string> = {};
+
+                if (skip !== undefined) {
+                    queryParams.skip = skip.toString();
                 }
-                if (params?.limit !== undefined) {
-                    queryParams.limit = params.limit.toString();
+                if (limit !== undefined) {
+                    queryParams.limit = limit.toString();
                 }
+                if (searchTerm !== undefined) {
+                    queryParams.search = searchTerm.toString();
+                }
+                if (Object.entries(rest).length > 0) {
+                    queryParams = { ...queryParams, ...serialize(rest) };
+                }
+
                 return {
                     url: "/users",
                     method: "GET",
@@ -34,20 +42,20 @@ export const userApi = apiSlice.injectEndpoints({
         }),
 
         getUsersByRole: builder.query<ApiResponseArray<User>, fetchArgs>({
-            query: (params: Paginate = {}) => {
-                const queryParams = buildQueryParams({
-                    filter: params.filter as Record<string, any> | undefined,
-                    sort: params.sort,
-                });
+            query: ({ skip, limit, searchTerm, ...rest }: Paginate = {}) => {
+                let queryParams: Record<string, string> = {};
 
-                if (params?.skip !== undefined) {
-                    queryParams.skip = params.skip.toString();
+                if (skip !== undefined) {
+                    queryParams.skip = skip.toString();
                 }
-                if (params?.limit !== undefined) {
-                    queryParams.limit = params.limit.toString();
+                if (limit !== undefined) {
+                    queryParams.limit = limit.toString();
                 }
-                if (params?.roleName !== undefined) {
-                    queryParams.roleName = params.roleName.toString();
+                if (searchTerm !== undefined) {
+                    queryParams.search = searchTerm.toString();
+                }
+                if (Object.entries(rest).length > 0) {
+                    queryParams = { ...queryParams, ...serialize(rest) };
                 }
 
                 return {
@@ -73,6 +81,17 @@ export const userApi = apiSlice.injectEndpoints({
                 keepUnusedDataFor: 300,
             }),
             providesTags: (result, error, id) => [{ type: "Users", id: id }],
+        }),
+
+        addUser: builder.mutation<User, User>({
+            query: (values) => ({
+                url: "/users",
+                method: "POST",
+                body: values,
+            }),
+            invalidatesTags: (result, error, values) => [
+                { type: "Users", id: values._id },
+            ],
         }),
 
         editUser: builder.mutation<User, User>({
@@ -101,6 +120,7 @@ export const {
     useGetAllUsersQuery,
     useGetUsersByRoleQuery,
     useGetUserByIdQuery,
+    useAddUserMutation,
     useEditUserMutation,
     useDeleteUserMutation,
 } = userApi;

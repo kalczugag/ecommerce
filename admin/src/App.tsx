@@ -9,6 +9,7 @@ import ProductsList from "@/pages/Products/list";
 import ProductsEdit from "@/pages/Products/edit";
 import CustomersList from "@/pages/Customers/list";
 import CustomersEdit from "@/pages/Customers/edit";
+import CustomersAdd from "@/pages/Customers/add";
 import OrdersList from "@/pages/Orders/list";
 import OrderDetails from "@/pages/Orders/details";
 import CategoriesList from "@/pages/Categories/list";
@@ -39,6 +40,7 @@ const App = () => {
                     <Route path="/customers">
                         <Route index element={<CustomersList />} />
                         <Route path=":id" element={<CustomersEdit />} />
+                        <Route path="add" element={<CustomersAdd />} />
                     </Route>
                     <Route path="/orders">
                         <Route index element={<OrdersList />} />

@@ -2,6 +2,7 @@ import { Field } from "react-final-form";
 import {
     Button,
     FormControl,
+    FormHelperText,
     IconButton,
     InputAdornment,
     InputLabel,
@@ -124,15 +125,11 @@ const ProductForm = ({
                         />
                     )}
                 </Field>
-                <Field
-                    name="quantity"
-                    type="number"
-                    validate={compose(required, mustBeNumber, minValue(0))}
-                >
+                <Field name="quantity" type="number">
                     {(props) => (
                         <TextField
                             type="number"
-                            label={"Quantity"}
+                            label="Quantity"
                             name={props.input.name}
                             value={quantity}
                             onChange={props.input.onChange}
@@ -401,6 +398,11 @@ const ProductForm = ({
                                         </MenuItem>
                                     ))}
                             </Select>
+                            {props.meta.error && props.meta.touched && (
+                                <FormHelperText error>
+                                    {props.meta.error}
+                                </FormHelperText>
+                            )}
                         </FormControl>
                     )}
                 </Field>
@@ -431,6 +433,11 @@ const ProductForm = ({
                                         </MenuItem>
                                     ))}
                             </Select>
+                            {props.meta.error && props.meta.touched && (
+                                <FormHelperText error>
+                                    {props.meta.error}
+                                </FormHelperText>
+                            )}
                         </FormControl>
                     )}
                 </Field>
@@ -461,6 +468,11 @@ const ProductForm = ({
                                         </MenuItem>
                                     ))}
                             </Select>
+                            {props.meta.error && props.meta.touched && (
+                                <FormHelperText error>
+                                    {props.meta.error}
+                                </FormHelperText>
+                            )}
                         </FormControl>
                     )}
                 </Field>

@@ -1,12 +1,9 @@
 import { apiSlice } from "./apiSlice";
-import type { Product } from "@/types/Product";
+import type { Product, ProductFilters } from "@/types/Product";
 
 export const productApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        getAllProducts: builder.query<
-            ApiResponseArray<Product>,
-            Paginate | void
-        >({
+        getAllProducts: builder.query<ApiResponseArray<Product>, any>({
             query: (params = {}) => {
                 const queryParams: Record<string, string> = {};
                 if (params?.skip !== undefined) {
@@ -18,10 +15,11 @@ export const productApi = apiSlice.injectEndpoints({
                 if (params?.category !== undefined) {
                     queryParams.category = params.category;
                 }
+
                 return {
                     url: "/products",
                     method: "GET",
-                    params: queryParams,
+                    params: params,
                 };
             },
             providesTags: (result) =>
@@ -31,6 +29,16 @@ export const productApi = apiSlice.injectEndpoints({
                           id: product._id,
                       }))
                     : [{ type: "Products", id: "LIST" }],
+        }),
+
+        getProductFilters: builder.query<ProductFilters, string>({
+            query: (cat) => {
+                return {
+                    url: "/products/filters",
+                    method: "GET",
+                    params: { category: cat },
+                };
+            },
         }),
 
         getRandomProduct: builder.query<Product[], void>({
@@ -53,5 +61,6 @@ export const productApi = apiSlice.injectEndpoints({
 export const {
     useGetAllProductsQuery,
     useGetProductByIdQuery,
+    useGetProductFiltersQuery,
     useGetRandomProductQuery,
 } = productApi;

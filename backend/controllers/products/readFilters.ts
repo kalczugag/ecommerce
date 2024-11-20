@@ -1,31 +1,22 @@
 import express from "express";
+import _ from "lodash";
 import { ProductModel } from "../../models/Product";
-import { CategoryModel } from "../../models/Categories";
-import { PaginatedProducts } from "../../types/Product";
-import { Category } from "../../types/Category";
 import { MongooseQueryParser } from "mongoose-query-parser";
+import { CategoryModel } from "../../models/Categories";
+import type { Category } from "../../types/Category";
 
 const parser = new MongooseQueryParser();
 
-// Returns an array of products paginated by page and pageSize query parameters.
-// If query parameter 'random' is present, returns a single random product.
-// If query parameter 'category' is present, filters products by category name.
-
-export const getAllProducts = async (
-    req: express.Request<{}, {}, {}, PaginatedProducts>,
+export const getFilters = async (
+    req: express.Request<{}, {}, {}, { category: string }>,
     res: express.Response
 ) => {
-    const { random, category, ...rest } = req.query;
+    const { category, ...rest } = req.query;
     const parsedQuery = parser.parse(rest);
 
-    const page = parsedQuery.skip
-        ? parseInt(parsedQuery.skip as unknown as string, 10)
-        : 0;
-    const pageSize = parsedQuery.limit
-        ? parseInt(parsedQuery.limit as unknown as string, 10)
-        : 5;
-
     const query: Record<string, unknown> = {};
+    const selectQuery =
+        "-title -quantity -description -imageUrl -topLevelCategory -secondLevelCategory -thirdLevelCategory";
 
     if (category) {
         const categoryNames = (category as string)
@@ -80,7 +71,6 @@ export const getAllProducts = async (
                     query.topLevelCategory = topLevelCategoryId[0].id;
             }
 
-            //make double check conditional
             if (categoryNames.length > 1) {
                 const topLevelCategoryId = categoryMap[categoryNames[0]];
                 const secondLevelCategoryId = categoryMap[categoryNames[1]];
@@ -101,39 +91,38 @@ export const getAllProducts = async (
     }
 
     try {
-        if (random) {
-            const randomProducts = await ProductModel.aggregate()
-                .sample(5)
-                .exec();
-
-            if (!randomProducts) {
-                return res.status(404).json({ error: "No products found" });
-            }
-
-            return res.status(200).json(randomProducts);
-        }
-
-        const combinedFilters = { ...query, ...parsedQuery.filter };
-        const isQuery = query ? combinedFilters : parsedQuery.filter;
-
-        const products = await ProductModel.find(isQuery)
+        const filters = await ProductModel.find(query)
             .populate("topLevelCategory secondLevelCategory thirdLevelCategory")
-            .select(parsedQuery.select)
+            .select(selectQuery)
             .sort(parsedQuery.sort)
-            .skip(page * pageSize)
-            .limit(pageSize)
             .exec();
 
-        const totalDocuments = await ProductModel.countDocuments(isQuery);
-
-        if (!products || products.length === 0) {
-            return res.status(404).json({ error: "No products found" });
+        if (!filters) {
+            return res.status(404).json({ error: "Error getting filters" });
         }
 
-        return res.status(200).json({ data: products, count: totalDocuments });
+        const colorsCount = _.chain(filters)
+            .countBy("color")
+            .map((count, color) => ({ color, count }))
+            .value();
+
+        const availableSizes = _.chain(filters)
+            .flatMap("size")
+            .map("name")
+            .uniq()
+            .value();
+
+        const maxPrice = _.chain(filters).map("price").max().value();
+
+        const result = {
+            colorsCount,
+            availableSizes,
+            maxPrice,
+        };
+
+        return res.status(200).json(result);
     } catch (error) {
-        return res
-            .status(500)
-            .json({ data: [], error: "Internal server error" });
+        console.error(error);
+        return res.status(500).json({ error: "Internal server error" });
     }
 };

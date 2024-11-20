@@ -1,4 +1,5 @@
-import { useGetUsersByRoleQuery, useDeleteUserMutation } from "@/store";
+import { useNavigate } from "react-router-dom";
+import { useDeleteUserMutation, useGetAllUsersQuery } from "@/store";
 import { sortConfig, tableConfig } from "./config";
 import { useTitle } from "@/hooks/useTitle";
 import usePagination from "@/hooks/usePagination";
@@ -7,37 +8,35 @@ import useDebounce from "@/hooks/useDebounce";
 import CrudModule from "@/modules/CrudModule";
 import SortForm from "@/forms/SortForm";
 import SearchItem from "@/components/SearchItem";
+import { Button } from "@mui/material";
 
 const CustomersList = () => {
+    const navigate = useNavigate();
     const [pagination] = usePagination();
     useTitle("Customers - List");
 
-    const args = {
-        roleName: "client",
+    const { sortCriteria, setSortCriteria } = useSortedData();
+    const { data, isFetching } = useGetAllUsersQuery({
         ...pagination,
-    };
-
-    const { queryConfig, setSortCriteria } = useSortedData();
-    const { data, isFetching } = useGetUsersByRoleQuery({
-        ...args,
-        ...queryConfig,
+        ...sortCriteria,
     });
 
     const [deleteUser, result] = useDeleteUserMutation();
 
     const handleSort = (sortValues: any) => {
-        const parsedSortCriteria = Object.entries(sortValues).map(
-            ([label, value]) => ({ label, value: value as string })
-        );
-        setSortCriteria(parsedSortCriteria);
+        setSortCriteria(sortValues);
     };
 
-    const handleSearch = useDebounce((searchTerm: string) => {
-        setSortCriteria([
-            { label: "firstName", value: searchTerm },
-            { label: "phone", value: searchTerm },
-            { label: "email", value: searchTerm },
-        ]);
+    const handleSearch = useDebounce((searchTerm: { search: string }) => {
+        const filter = {
+            $or: [
+                { firstName: searchTerm.search },
+                { phone: searchTerm.search },
+                { email: searchTerm.search },
+            ],
+        };
+
+        setSortCriteria({ filter });
     }, 250);
 
     const config = {
@@ -53,11 +52,19 @@ const CustomersList = () => {
             config={config}
             actionForm={
                 <div className="space-y-4">
-                    <SearchItem
-                        handleSubmit={handleSearch}
-                        // placeholder="Search"
-                    />
-                    <SortForm config={sortConfig} handleSubmit={handleSort} />
+                    <SearchItem handleSubmit={handleSearch} />
+                    <div className="flex flex-col space-y-2 sm:space-y-0 sm:space-x-2 sm:flex-row">
+                        <SortForm
+                            config={sortConfig}
+                            handleSubmit={handleSort}
+                        />
+                        <Button
+                            variant="contained"
+                            onClick={() => navigate("/customers/add")}
+                        >
+                            Add Customer
+                        </Button>
+                    </div>
                 </div>
             }
         />

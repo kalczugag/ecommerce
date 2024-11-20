@@ -19,3 +19,12 @@ export interface Product {
     thirdLevelCategory: string;
     description?: string;
 }
+
+export interface ProductFilters {
+    colorsCount: {
+        color: string;
+        count: number;
+    }[];
+    availableSizes: string[];
+    maxPrice: number;
+}

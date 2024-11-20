@@ -7,7 +7,7 @@ export interface User {
     _cart: string | Cart;
     firstName: string;
     lastName: string;
-    role: Role;
+    role: Role | string;
     birthday?: Date;
     address?: {
         street: string;
@@ -25,6 +25,7 @@ export interface User {
     };
     hash: string;
     salt: string;
+    password: string;
     createdAt: Date;
     updatedAt: Date;
 }

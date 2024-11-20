@@ -12,26 +12,23 @@ const OrdersList = () => {
     const [pagination] = usePagination();
     useTitle("Orders - List");
 
-    const { queryConfig, setSortCriteria } = useSortedData();
+    const { sortCriteria, setSortCriteria } = useSortedData();
     const { data, isFetching } = useGetAllOrdersQuery({
         ...pagination,
-        ...queryConfig,
+        ...sortCriteria,
     });
 
     const handleSort = (sortValues: any) => {
-        const parsedSortCriteria = Object.entries(sortValues).map(
-            ([label, value]) => ({ label, value: value as string })
-        );
-        setSortCriteria(parsedSortCriteria);
+        setSortCriteria(sortValues);
     };
 
-    const handleSearch = useDebounce((searchTerm: string) => {
-        setSortCriteria([
-            { label: "_id", value: searchTerm },
-            { label: "_user", value: searchTerm },
-        ]);
-    }, 250);
+    const handleSearch = useDebounce((searchTerm: { search: string }) => {
+        const filter = {
+            $or: [{ _id: searchTerm.search }, { _user: searchTerm.search }],
+        };
 
+        setSortCriteria({ filter });
+    }, 250);
     const config = {
         tableConfig,
         tableData: data?.data || [],

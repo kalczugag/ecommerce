@@ -13,7 +13,7 @@ export interface Product {
         name: string;
         quantity: number;
     }[];
-    quantity: number;
+    quantity?: number;
     topLevelCategory: Category;
     secondLevelCategory: Category;
     thirdLevelCategory: Category;

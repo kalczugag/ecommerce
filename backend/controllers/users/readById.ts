@@ -13,7 +13,7 @@ export const getUserById = async (
     }
 
     try {
-        const user = await UserModel.findById(id);
+        const user = await UserModel.findById(id).exec();
 
         if (!user) {
             return res.status(404).json({ error: "User not found" });

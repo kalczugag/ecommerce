@@ -1,29 +1,27 @@
 import { useNavigate } from "react-router-dom";
-import { useAddCategoryMutation } from "@/store";
+import { useAddUserMutation } from "@/store";
 import { enqueueSnackbar } from "notistack";
 import { useTitle } from "@/hooks/useTitle";
 import CreateForm from "@/components/CreateForm";
+import CustomerForm from "@/forms/CustomerForm";
 import CrudModule from "@/modules/CrudModule";
-import CategoryForm from "@/forms/CategoryForm";
-import type { Category } from "@/types/Category";
+import type { User } from "@/types/User";
 
-const CategoriesAdd = () => {
+const CustomersAdd = () => {
     const navigate = useNavigate();
-    const [addCategory, result] = useAddCategoryMutation();
+    const [addCategory, result] = useAddUserMutation();
 
-    useTitle("Category - Add");
+    useTitle("Customer - Add");
 
-    const handleSubmit = async (values: Category) => {
+    const handleSubmit = async (values: User) => {
         try {
             await addCategory(values).unwrap();
             navigate(-1);
-            enqueueSnackbar("Category added successfully", {
+            enqueueSnackbar("Customer added successfully", {
                 variant: "success",
             });
         } catch (error) {
-            enqueueSnackbar("Failed to add category", {
-                variant: "error",
-            });
+            enqueueSnackbar("Failed to add customer", { variant: "error" });
         }
     };
 
@@ -33,11 +31,11 @@ const CategoriesAdd = () => {
                 <CreateForm
                     handleSubmit={handleSubmit}
                     isLoading={result.isLoading}
-                    formElements={<CategoryForm isLoading={result.isLoading} />}
+                    formElements={<CustomerForm isLoading={result.isLoading} />}
                 />
             }
         />
     );
 };
 
-export default CategoriesAdd;
+export default CustomersAdd;

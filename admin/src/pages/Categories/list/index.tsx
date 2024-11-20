@@ -15,23 +15,24 @@ const CategoriesList = () => {
     const navigate = useNavigate();
     useTitle("Categories - List");
 
-    const { queryConfig, setSortCriteria } = useSortedData();
+    const { sortCriteria, setSortCriteria } = useSortedData();
     const { data, isFetching } = useGetAllCategoriesQuery({
         ...pagination,
-        ...queryConfig,
+        ...sortCriteria,
     });
 
     const [deleteCategory, result] = useDeleteCategoryMutation();
 
-    const handleSort = (sortValues: any) => {
-        const parsedSortCriteria = Object.entries(sortValues).map(
-            ([label, value]) => ({ label, value: value as string })
-        );
-        setSortCriteria(parsedSortCriteria);
+    const handleSort = (sortValues: Record<string, string>) => {
+        setSortCriteria(sortValues);
     };
 
-    const handleSearch = useDebounce((searchTerm: string) => {
-        setSortCriteria([{ label: "name", value: searchTerm }]);
+    const handleSearch = useDebounce((searchTerm: { search: string }) => {
+        const filter = {
+            $or: [{ name: searchTerm.search }],
+        };
+
+        setSortCriteria({ filter });
     }, 250);
 
     const config = {

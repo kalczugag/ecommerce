@@ -1,5 +1,5 @@
-import { buildQueryParams } from "@/utils/queryHelpers";
 import { apiSlice } from "./apiSlice";
+import { serialize } from "@/utils/helpers";
 import type { Order } from "@/types/Order";
 
 export type summaryType = "yearly" | "monthly" | "weekly";
@@ -11,20 +11,20 @@ type orderSummary = {
 export const orderApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getAllOrders: builder.query<ApiResponseArray<Order>, Paginate | void>({
-            query: (params: Paginate = {}) => {
-                const queryParams = buildQueryParams({
-                    filter: params.filter as Record<string, any> | undefined,
-                    sort: params.sort,
-                });
+            query: ({ skip, limit, searchTerm, ...rest }: Paginate = {}) => {
+                let queryParams: Record<string, string> = {};
 
-                if (params?.skip !== undefined) {
-                    queryParams.skip = params.skip.toString();
+                if (skip !== undefined) {
+                    queryParams.skip = skip.toString();
                 }
-                if (params?.limit !== undefined) {
-                    queryParams.limit = params.limit.toString();
+                if (limit !== undefined) {
+                    queryParams.limit = limit.toString();
                 }
-                if (params?.searchTerm !== undefined) {
-                    queryParams.search = params.searchTerm;
+                if (searchTerm !== undefined) {
+                    queryParams.search = searchTerm.toString();
+                }
+                if (Object.entries(rest).length > 0) {
+                    queryParams = { ...queryParams, ...serialize(rest) };
                 }
 
                 return {

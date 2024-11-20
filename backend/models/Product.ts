@@ -87,6 +87,32 @@ productSchema.pre("save", function (next) {
         this.discountedPrice = this.price;
     }
 
+    if (this.size && Array.isArray(this.size)) {
+        this.quantity = this.size.reduce((total, sizeItem) => {
+            return total + (sizeItem.quantity || 0);
+        }, 0);
+    }
+
+    next();
+});
+
+productSchema.pre("findOneAndUpdate", function (next) {
+    const update = this.getUpdate() as any;
+
+    if (update.discountPercent && update.price) {
+        update.discountedPrice =
+            update.price - (update.price * update.discountPercent) / 100;
+    }
+
+    if (update.size && Array.isArray(update.size)) {
+        update.quantity = update.size.reduce(
+            (total: number, sizeItem: { quantity: number }) => {
+                return total + (sizeItem.quantity || 0);
+            },
+            0
+        );
+    }
+
     next();
 });
 

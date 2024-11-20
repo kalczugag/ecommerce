@@ -11,7 +11,12 @@ export const hasRole =
     ) => {
         const user = req.user as User;
 
-        if (!user || !user.role.name.includes(requiredRole)) {
+        if (
+            !user ||
+            !user.role ||
+            typeof user.role !== "object" ||
+            !user.role.name.includes(requiredRole)
+        ) {
             return res.status(403).json({ error: "Access denied." });
         }
 

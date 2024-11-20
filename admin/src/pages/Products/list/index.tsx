@@ -1,8 +1,8 @@
 import { useGetAllProductsQuery, useDeleteProductMutation } from "@/store";
+import { sortConfig, tableConfig } from "./config";
 import { useTitle } from "@/hooks/useTitle";
 import usePagination from "@/hooks/usePagination";
 import useSortedData from "@/hooks/useSortedData";
-import { sortConfig, tableConfig } from "./config";
 import CrudModule from "@/modules/CrudModule";
 import SortForm from "@/forms/SortForm";
 import SearchItem from "@/components/SearchItem";
@@ -12,26 +12,24 @@ const ProductsList = () => {
     const [pagination] = usePagination();
     useTitle("Products - List");
 
-    const { queryConfig, setSortCriteria } = useSortedData();
+    const { sortCriteria, setSortCriteria } = useSortedData();
     const { data, isFetching } = useGetAllProductsQuery({
         ...pagination,
-        ...queryConfig,
+        ...sortCriteria,
     });
 
     const [deleteProduct, result] = useDeleteProductMutation();
 
     const handleSort = (sortValues: any) => {
-        const parsedSortCriteria = Object.entries(sortValues).map(
-            ([label, value]) => ({ label, value: value as string })
-        );
-        setSortCriteria(parsedSortCriteria);
+        setSortCriteria(sortValues);
     };
 
-    const handleSearch = useDebounce((searchTerm: string) => {
-        setSortCriteria([
-            { label: "brand", value: searchTerm },
-            { label: "title", value: searchTerm },
-        ]);
+    const handleSearch = useDebounce((searchTerm: { search: string }) => {
+        const filter = {
+            $or: [{ brand: searchTerm.search }, { title: searchTerm.search }],
+        };
+
+        setSortCriteria({ filter });
     }, 250);
 
     const config = {

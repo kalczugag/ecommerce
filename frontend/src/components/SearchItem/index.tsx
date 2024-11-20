@@ -4,16 +4,21 @@ import { Search } from "@mui/icons-material";
 
 interface SearchItemProps {
     placeholder?: string;
+    endAdornment?: JSX.Element;
     handleSubmit: (searchTerm: string) => void;
 }
 
-const SearchItem = ({ placeholder, handleSubmit }: SearchItemProps) => {
+const SearchItem = ({
+    placeholder,
+    endAdornment,
+    handleSubmit,
+}: SearchItemProps) => {
     return (
         <Form
             onSubmit={handleSubmit}
             render={({ handleSubmit, form }) => (
                 <form onSubmit={handleSubmit} className="text-end">
-                    <Field name="search">
+                    <Field name="searchTerm">
                         {(props) => (
                             <TextField
                                 {...props.input}
@@ -33,6 +38,7 @@ const SearchItem = ({ placeholder, handleSubmit }: SearchItemProps) => {
                                                 <Search />
                                             </InputAdornment>
                                         ),
+                                        endAdornment,
                                     },
                                 }}
                             />

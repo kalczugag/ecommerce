@@ -51,7 +51,7 @@ const Header = ({ topLabel }: HeaderProps) => {
             >
                 <Container maxWidth="xl">
                     <Toolbar disableGutters>
-                        <div className="flex items-center flex-1 md:flex-none md:flex">
+                        <div className="flex items-center md:flex-none md:flex">
                             <div className="flex items-center mr-2 flex-grow ">
                                 <Adb className="mr-1 text-black" />
                                 <Link
