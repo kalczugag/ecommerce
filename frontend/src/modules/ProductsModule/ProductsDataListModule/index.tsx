@@ -1,7 +1,7 @@
 import DefaultLayout from "@/layouts/DefaultLayout";
 import { Pagination } from "@mui/material";
 import Sidebar from "@/components/Sidebar";
-import ProductsList from "../components/ProductsList";
+import ProductsList from "./components/ProductsList";
 import { Product } from "@/types/Product";
 import { useGetProductFiltersQuery } from "@/store";
 

@@ -1,4 +1,4 @@
-import type { Sizes } from "@/modules/ProductsModule/ReadProductModule";
+import type { Sizes } from "@/modules/ProductsModule/ReadProductDetailsModule";
 
 export interface Product {
     _id?: string;

@@ -8,19 +8,13 @@ const useFilters = () => {
     );
 
     const updateFilters = (newFilters: Record<string, any>) => {
-        const updatedParams = {
-            ...filters,
-            ...newFilters,
-        };
-
-        Object.keys(updatedParams).forEach(
+        Object.keys(newFilters).forEach(
             (key) =>
-                (updatedParams[key] === null ||
-                    updatedParams[key] === undefined) &&
-                delete updatedParams[key]
+                (newFilters[key] === null || newFilters[key] === undefined) &&
+                delete newFilters[key]
         );
 
-        setSearchParams(updatedParams);
+        setSearchParams(newFilters);
     };
 
     const clearFilters = () => {

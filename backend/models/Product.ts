@@ -37,6 +37,8 @@ const productSchema = new mongoose.Schema<Product>({
     description: { type: String },
 });
 
+productSchema.index({ brand: "text", title: "text" });
+
 productSchema.pre("validate", async function (next) {
     const product = this;
 

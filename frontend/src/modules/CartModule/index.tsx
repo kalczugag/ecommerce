@@ -9,7 +9,7 @@ import CheckoutSummary from "./components/CheckoutSummary";
 import EmptyCart from "./components/EmptyCart";
 import CartProductItem from "./components/CartProductItem";
 import type { Cart } from "@/types/Cart";
-import type { Sizes } from "../ProductsModule/ReadProductModule";
+import type { Sizes } from "../ProductsModule/ReadProductDetailsModule";
 
 interface CartModuleProps {
     data?: Cart;

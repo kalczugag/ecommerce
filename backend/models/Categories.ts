@@ -25,6 +25,8 @@ const categorySchema = new mongoose.Schema<Category>(
     { timestamps: true }
 );
 
+categorySchema.index({ name: "text" });
+
 categorySchema.pre("save", async function (next) {
     try {
         if (!this.parentCategory) {

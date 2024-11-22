@@ -49,6 +49,13 @@ const userSchema = new mongoose.Schema<User>(
     { timestamps: true }
 );
 
+userSchema.index({
+    firstName: "text",
+    lastName: "text",
+    email: "text",
+    phone: "text",
+});
+
 userSchema.post("save", async function (doc) {
     try {
         if (!doc._cart) {

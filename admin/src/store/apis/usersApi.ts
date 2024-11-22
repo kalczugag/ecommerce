@@ -9,7 +9,7 @@ interface fetchArgs extends Paginate {
 export const userApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getAllUsers: builder.query<ApiResponseArray<User>, Paginate | void>({
-            query: ({ skip, limit, searchTerm, ...rest }: Paginate = {}) => {
+            query: ({ skip, limit, search, ...rest }: Paginate = {}) => {
                 let queryParams: Record<string, string> = {};
 
                 if (skip !== undefined) {
@@ -18,8 +18,8 @@ export const userApi = apiSlice.injectEndpoints({
                 if (limit !== undefined) {
                     queryParams.limit = limit.toString();
                 }
-                if (searchTerm !== undefined) {
-                    queryParams.search = searchTerm.toString();
+                if (search !== undefined) {
+                    queryParams.search = search.toString();
                 }
                 if (Object.entries(rest).length > 0) {
                     queryParams = { ...queryParams, ...serialize(rest) };
@@ -42,7 +42,7 @@ export const userApi = apiSlice.injectEndpoints({
         }),
 
         getUsersByRole: builder.query<ApiResponseArray<User>, fetchArgs>({
-            query: ({ skip, limit, searchTerm, ...rest }: Paginate = {}) => {
+            query: ({ skip, limit, search, ...rest }: Paginate = {}) => {
                 let queryParams: Record<string, string> = {};
 
                 if (skip !== undefined) {
@@ -51,8 +51,8 @@ export const userApi = apiSlice.injectEndpoints({
                 if (limit !== undefined) {
                     queryParams.limit = limit.toString();
                 }
-                if (searchTerm !== undefined) {
-                    queryParams.search = searchTerm.toString();
+                if (search !== undefined) {
+                    queryParams.search = search.toString();
                 }
                 if (Object.entries(rest).length > 0) {
                     queryParams = { ...queryParams, ...serialize(rest) };

@@ -1,4 +1,4 @@
-import type { Sizes } from "@/modules/ProductsModule/ReadProductModule";
+import type { Sizes } from "@/modules/ProductsModule/ReadProductDetailsModule";
 import type { Product } from "./Product";
 import type { User } from "./User";
 

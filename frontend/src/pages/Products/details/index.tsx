@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useGetProductByIdQuery, useGetReviewsByProductIdQuery } from "@/store";
 import { useTitle } from "@/hooks/useTitle";
-import ReadProductModule from "@/modules/ProductsModule/ReadProductModule";
+import ReadProductDetailsModule from "@/modules/ProductsModule/ReadProductDetailsModule";
 import NotFound from "@/components/NotFound";
 
 const ProductDetails = () => {
@@ -18,7 +18,7 @@ const ProductDetails = () => {
         isLoading,
     };
 
-    return <ReadProductModule config={config} data={data} />;
+    return <ReadProductDetailsModule config={config} data={data} />;
 };
 
 export default ProductDetails;

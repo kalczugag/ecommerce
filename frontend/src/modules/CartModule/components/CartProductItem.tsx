@@ -2,7 +2,7 @@ import { IconButton } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { RemoveCircleOutline, AddCircleOutline } from "@mui/icons-material";
 import type { Item } from "@/types/Cart";
-import type { Sizes } from "@/modules/ProductsModule/ReadProductModule";
+import type { Sizes } from "@/modules/ProductsModule/ReadProductDetailsModule";
 
 interface CartProductItemProps {
     data: Item;

@@ -24,10 +24,10 @@ const ProductsList = () => {
         setSortCriteria(sortValues);
     };
 
-    const handleSearch = useDebounce((searchTerm: { search: string }) => {
-        const filter = {
-            $or: [{ brand: searchTerm.search }, { title: searchTerm.search }],
-        };
+    const handleSearch = useDebounce((search: { search: string }) => {
+        if (search.search === undefined) return;
+
+        const filter = { $text: { $search: search.search } };
 
         setSortCriteria({ filter });
     }, 250);
