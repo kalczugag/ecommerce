@@ -25,6 +25,8 @@ const ProductsList = () => {
     };
 
     const handleSearch = useDebounce((search: { search: string }) => {
+        if (search.search === undefined) return;
+
         const filter = { $text: { $search: search.search } };
 
         setSortCriteria({ filter });

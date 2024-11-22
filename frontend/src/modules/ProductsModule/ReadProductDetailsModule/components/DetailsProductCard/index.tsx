@@ -9,7 +9,8 @@ import {
     Skeleton,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import type { Sizes } from "../../ReadProductModule";
+import ImagePicker from "../ImagePicker";
+import type { Sizes } from "../..";
 import type { ShortReviewsCount } from "@/types/Review";
 import type { Product } from "@/types/Product";
 
@@ -39,23 +40,13 @@ const DetailsProductCard = ({
             : +(price - (price * data.discountPercent) / 100).toFixed(2);
     }
 
-    const content = data?.imageUrl.map((url, index) => (
-        <img
-            key={url + "_" + index}
-            src={url}
-            alt={`${data?.title} photo-${index}`}
-        />
-    ));
-
     return (
         <div className="flex flex-col space-x-0 md:flex-row md:space-x-10">
             <div>
                 {isLoading ? (
                     <Skeleton variant="rectangular" width={400} height={550} />
                 ) : (
-                    <div className="overflow-x-scroll flex max-w-[600px]">
-                        {content}
-                    </div>
+                    <ImagePicker data={data?.imageUrl || []} />
                 )}
             </div>
             <div className="flex flex-col py-4 space-y-6 w-full">

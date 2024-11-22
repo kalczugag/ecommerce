@@ -5,7 +5,7 @@ import { Search } from "@mui/icons-material";
 interface SearchItemProps {
     placeholder?: string;
     endAdornment?: JSX.Element;
-    handleSubmit: (searchTerm: string) => void;
+    handleSubmit: (value: { searchTerm: string }) => void;
 }
 
 const SearchItem = ({
@@ -16,21 +16,19 @@ const SearchItem = ({
     return (
         <Form
             onSubmit={handleSubmit}
-            render={({ handleSubmit, form }) => (
+            render={({ handleSubmit }) => (
                 <form onSubmit={handleSubmit} className="text-end">
                     <Field name="searchTerm">
                         {(props) => (
                             <TextField
                                 {...props.input}
+                                autoFocus
                                 placeholder={
                                     placeholder ? placeholder : "Search"
                                 }
                                 sx={{ minWidth: "300px" }}
                                 variant="standard"
-                                onChange={(e) => {
-                                    props.input.onChange(e);
-                                    form.submit();
-                                }}
+                                onChange={props.input.onChange}
                                 slotProps={{
                                     input: {
                                         startAdornment: (
