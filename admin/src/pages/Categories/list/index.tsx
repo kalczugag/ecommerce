@@ -27,10 +27,8 @@ const CategoriesList = () => {
         setSortCriteria(sortValues);
     };
 
-    const handleSearch = useDebounce((searchTerm: { search: string }) => {
-        const filter = {
-            $or: [{ name: searchTerm.search }],
-        };
+    const handleSearch = useDebounce((search: { search: string }) => {
+        const filter = { $text: { $search: search.search } };
 
         setSortCriteria({ filter });
     }, 250);

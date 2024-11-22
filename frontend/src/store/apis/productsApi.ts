@@ -1,25 +1,30 @@
 import { apiSlice } from "./apiSlice";
+import { serialize } from "@/utils/helpers";
 import type { Product, ProductFilters } from "@/types/Product";
 
 export const productApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getAllProducts: builder.query<ApiResponseArray<Product>, any>({
-            query: (params = {}) => {
-                const queryParams: Record<string, string> = {};
-                if (params?.skip !== undefined) {
-                    queryParams.skip = params.skip.toString();
+            query: ({ skip, limit, category, ...rest }: Paginate) => {
+                let queryParams: Record<string, string> = {};
+
+                if (skip !== undefined) {
+                    queryParams.skip = skip.toString();
                 }
-                if (params?.limit !== undefined) {
-                    queryParams.limit = params.limit.toString();
+                if (limit !== undefined) {
+                    queryParams.limit = limit.toString();
                 }
-                if (params?.category !== undefined) {
-                    queryParams.category = params.category;
+                if (category !== undefined) {
+                    queryParams.category = category;
+                }
+                if (Object.entries(rest).length > 0) {
+                    queryParams = { ...queryParams, ...serialize(rest) };
                 }
 
                 return {
                     url: "/products",
                     method: "GET",
-                    params: params,
+                    params: queryParams,
                 };
             },
             providesTags: (result) =>

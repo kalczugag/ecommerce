@@ -27,14 +27,8 @@ const CustomersList = () => {
         setSortCriteria(sortValues);
     };
 
-    const handleSearch = useDebounce((searchTerm: { search: string }) => {
-        const filter = {
-            $or: [
-                { firstName: searchTerm.search },
-                { phone: searchTerm.search },
-                { email: searchTerm.search },
-            ],
-        };
+    const handleSearch = useDebounce((search: { search: string }) => {
+        const filter = { $text: { $search: search.search } };
 
         setSortCriteria({ filter });
     }, 250);

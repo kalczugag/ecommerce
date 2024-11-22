@@ -21,7 +21,7 @@ interface Paginate {
     skip?: number;
     limit?: number;
     roleName?: string;
-    searchTerm?: string;
+    search?: string;
 }
 
 interface SelectItemProps {
