@@ -9,8 +9,8 @@ import {
     Skeleton,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
-import ImagePicker from "../ImagePicker";
-import type { Sizes } from "../..";
+import ImagePicker from "./ImagePicker";
+import type { Sizes } from "..";
 import type { ShortReviewsCount } from "@/types/Review";
 import type { Product } from "@/types/Product";
 
@@ -44,7 +44,35 @@ const DetailsProductCard = ({
         <div className="flex flex-col space-x-0 md:flex-row md:space-x-10">
             <div>
                 {isLoading ? (
-                    <Skeleton variant="rectangular" width={400} height={550} />
+                    <div className="flex flex-col-reverse xl:space-x-10 xl:flex-row">
+                        <div className="flex flex-row mt-10 space-x-2 xl:mt-0 xl:space-y-2 xl:space-x-0 xl:flex-col">
+                            <Skeleton
+                                variant="rectangular"
+                                width={100}
+                                height={120}
+                            />
+                            <Skeleton
+                                variant="rectangular"
+                                width={100}
+                                height={120}
+                            />
+                            <Skeleton
+                                variant="rectangular"
+                                width={100}
+                                height={120}
+                            />
+                            <Skeleton
+                                variant="rectangular"
+                                width={100}
+                                height={120}
+                            />
+                        </div>
+                        <Skeleton
+                            variant="rectangular"
+                            width={400}
+                            height={550}
+                        />
+                    </div>
                 ) : (
                     <ImagePicker data={data?.imageUrl || []} />
                 )}

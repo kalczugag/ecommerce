@@ -1,15 +1,16 @@
 import { Link, useNavigate } from "react-router-dom";
 import moment from "moment";
+import { placeholderArray } from "@/utils/helpers";
 import { Button, Divider, Skeleton } from "@mui/material";
 import type { Order } from "@/types/Order";
 import { Product } from "@/types/Product";
 
-interface OrderListItemProps {
+interface OrderDetailsProps {
     data?: Order;
     isLoading: boolean;
 }
 
-const OrderListItem = ({ data, isLoading }: OrderListItemProps) => {
+const OrderDetails = ({ data, isLoading }: OrderDetailsProps) => {
     const navigate = useNavigate();
 
     return (
@@ -22,13 +23,7 @@ const OrderListItem = ({ data, isLoading }: OrderListItemProps) => {
                         `Order number: ${data?._id}`
                     )}
                 </p>
-                {isLoading ? (
-                    <Skeleton variant="rectangular" width={80} height={36} />
-                ) : (
-                    <Button onClick={() => navigate(`/orders/${data?._id}`)}>
-                        View
-                    </Button>
-                )}
+                {/* place for button */}
             </div>
             <Divider />
             <div className="space-y-10">
@@ -93,62 +88,62 @@ const OrderListItem = ({ data, isLoading }: OrderListItemProps) => {
                             )}
                         </p>
                     </div>
-                    <div className="flex space-x-4">
-                        {(isLoading
-                            ? Array.from(new Array(2))
-                            : data!.items.length > 1
-                            ? data!.items.slice(0, 2)
-                            : data!.items
-                        ).map((item, index) => (
-                            <div
-                                key={index}
-                                className="flex flex-col space-y-1 text-gray-800"
-                            >
-                                {isLoading ? (
-                                    <Skeleton
-                                        variant="rectangular"
-                                        width={180}
-                                        height={220}
-                                    />
-                                ) : index === 1 && data!.items.length > 2 ? (
-                                    <div className="relative max-w-[150px] sm:max-w-[180px] md:max-w-[220px]">
-                                        <img
-                                            src={
-                                                (item.product as Product)
-                                                    .imageUrl[0]
-                                            }
-                                            loading="lazy"
-                                            className="max-w-full object-cover object-top md:object-center opacity-50"
-                                            alt={
-                                                (item.product as Product).title
-                                            }
+                    <div className="grid grid-cols-2 gap-4">
+                        {(isLoading ? placeholderArray(2) : data!.items).map(
+                            (item, index) => (
+                                <div
+                                    key={index}
+                                    className="flex flex-col space-y-1 text-gray-800"
+                                >
+                                    {isLoading ? (
+                                        <Skeleton
+                                            variant="rectangular"
+                                            width={180}
+                                            height={220}
                                         />
-                                        <div className="absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 text-white text-lg font-semibold">
-                                            +{data!.items.length - 1}
+                                    ) : index === 1 &&
+                                      data!.items.length > 2 ? (
+                                        <div className="relative max-w-[150px] sm:max-w-[180px] md:max-w-[220px]">
+                                            <img
+                                                src={
+                                                    (item.product as Product)
+                                                        .imageUrl[0]
+                                                }
+                                                loading="lazy"
+                                                className="max-w-full object-cover object-top md:object-center opacity-50"
+                                                alt={
+                                                    (item.product as Product)
+                                                        .title
+                                                }
+                                            />
+                                            <div className="absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 text-white text-lg font-semibold">
+                                                +{data!.items.length - 1}
+                                            </div>
                                         </div>
-                                    </div>
-                                ) : (
-                                    <Link
-                                        to={`/product/${
-                                            (item.product as Product)._id
-                                        }`}
-                                        className="max-w-[150px] sm:max-w-[180px] md:max-w-[220px]"
-                                    >
-                                        <img
-                                            src={
-                                                (item.product as Product)
-                                                    .imageUrl[0]
-                                            }
-                                            loading="lazy"
-                                            className="max-w-full object-cover object-top md:object-center"
-                                            alt={
-                                                (item.product as Product).title
-                                            }
-                                        />
-                                    </Link>
-                                )}
-                            </div>
-                        ))}
+                                    ) : (
+                                        <Link
+                                            to={`/product/${
+                                                (item.product as Product)._id
+                                            }`}
+                                            className="max-w-[150px] sm:max-w-[180px] md:max-w-[220px]"
+                                        >
+                                            <img
+                                                src={
+                                                    (item.product as Product)
+                                                        .imageUrl[0]
+                                                }
+                                                loading="lazy"
+                                                className="max-w-full object-cover object-top md:object-center"
+                                                alt={
+                                                    (item.product as Product)
+                                                        .title
+                                                }
+                                            />
+                                        </Link>
+                                    )}
+                                </div>
+                            )
+                        )}
                     </div>
                 </div>
             </div>
@@ -156,4 +151,4 @@ const OrderListItem = ({ data, isLoading }: OrderListItemProps) => {
     );
 };
 
-export default OrderListItem;
+export default OrderDetails;
