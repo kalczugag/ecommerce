@@ -50,6 +50,10 @@ npm run dev
 
 This command will start the backend server, and it will listen for incoming requests.
 
+**Note:**  
+To handle webhooks (e.g., payment gateways), a webhook tunnel like [Ngrok](https://ngrok.com/) is required. Start Ngrok with `ngrok http 5000` and use the generated public URL for webhook configuration.
+
+
 ### Frontend Setup
 
 #### Step 6: Install Frontend Dependencies
