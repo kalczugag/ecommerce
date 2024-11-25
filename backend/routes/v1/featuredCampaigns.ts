@@ -2,14 +2,10 @@ import express from "express";
 import passport from "passport";
 
 import methods from "../../controllers/featuredCampaigns";
-import { hasRole } from "../../middlewares";
+import { hasRole, optionalAuth } from "../../middlewares";
 
 const featuredCampaigns = (router: express.Router) => {
-    router.get(
-        "/campaigns",
-        passport.authenticate("jwt", { session: false }),
-        methods.read
-    );
+    router.get("/campaigns", optionalAuth, methods.read);
 
     router.post(
         "/campaigns",

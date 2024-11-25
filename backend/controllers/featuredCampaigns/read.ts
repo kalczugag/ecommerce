@@ -10,7 +10,7 @@ export const getAllCampaigns = async (
     req: express.Request,
     res: express.Response
 ) => {
-    const user = req.user as User;
+    const user = req.user ? (req.user as User) : null;
     const parsedQuery = parser.parse(req.query);
 
     const page = parsedQuery.skip
@@ -23,7 +23,7 @@ export const getAllCampaigns = async (
     try {
         let userPreferenceCategory: any;
 
-        if (user.preferences !== "all")
+        if (user && user.preferences !== "all")
             userPreferenceCategory = await CategoryModel.findOne({
                 name: new RegExp(user.preferences, "i"),
             });
@@ -32,6 +32,8 @@ export const getAllCampaigns = async (
             ? { category: userPreferenceCategory._id }
             : {};
         const combined = { ...parsedQuery.filter, ...preferences };
+
+        console.log(preferences, user);
 
         const campaigns = await FeaturedCampaignModel.find(combined)
             .populate(parsedQuery.populate)
