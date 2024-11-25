@@ -15,8 +15,6 @@ const ImagePicker = ({ data }: ImagePickerProps) => {
             : data.slice(1, 4)
         : data;
 
-    const progressPercentage = ((selectedImage + 1) / data.length) * 100;
-
     return (
         <div className="flex flex-col-reverse xl:space-x-10 xl:flex-row">
             <div className="flex flex-row justify-center space-x-2 xl:justify-normal xl:mt-0 xl:space-y-2 xl:space-x-0 xl:flex-col">
@@ -42,9 +40,9 @@ const ImagePicker = ({ data }: ImagePickerProps) => {
                                     ? () => setSelectedImage(absoluteIndex)
                                     : undefined
                             }
-                            className={`w-32 h-32 object-cover hover:shadow-md cursor-pointer transition-all duration-300 ${
+                            className={`w-32 h-32 object-cover cursor-pointer transition-all duration-300 ${
                                 selectedImage === absoluteIndex
-                                    ? "shadow-md scale-105"
+                                    ? "shadow-lg"
                                     : ""
                             }`}
                         />

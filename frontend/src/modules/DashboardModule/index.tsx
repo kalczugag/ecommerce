@@ -1,18 +1,28 @@
-import { useGetRandomProductQuery } from "@/store";
+import { useGetFeaturedCampaignQuery } from "@/store";
+import useAuth from "@/hooks/useAuth";
 import DefaultLayout from "@/layouts/DefaultLayout";
 import CustomCarousel from "@/components/Carousel";
 import Featured from "./components/Featured";
 
 const DashboardModule = () => {
-    const { data } = useGetRandomProductQuery();
+    const { token } = useAuth();
 
-    const content = data?.map((item) => (
+    const options = {
+        populate:
+            "products.title,products.brand,products.description,products.imageUrl",
+    };
+
+    const { data } = useGetFeaturedCampaignQuery(options, {
+        skip: !token,
+    });
+
+    const content = data?.data[0].products.map((product) => (
         <Featured
-            key={item._id}
-            id={item._id || ""}
-            imageUrl={item.imageUrl[0]}
-            title={item.title}
-            description={item.description || ""}
+            key={product._id}
+            id={product._id || ""}
+            imageUrl={product.imageUrl[0]}
+            title={product.title}
+            description={product.description || ""}
         />
     ));
 
@@ -20,15 +30,7 @@ const DashboardModule = () => {
         <DefaultLayout
             featuredElement={<CustomCarousel content={content || []} />}
         >
-            <div className="text-xl text-center shadow-md border-y p-10">
-                here will be a carousel
-            </div>
-            <div className="text-xl text-center shadow-md border-y p-10">
-                here will be a carousel
-            </div>
-            <div className="text-xl text-center shadow-md border-y p-10">
-                here will be a carousel
-            </div>
+            <div></div>
         </DefaultLayout>
     );
 };

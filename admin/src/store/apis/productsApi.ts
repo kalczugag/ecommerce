@@ -8,7 +8,7 @@ export const productApi = apiSlice.injectEndpoints({
             ApiResponseArray<Product>,
             Paginate | void
         >({
-            query: ({ skip, limit, searchTerm, ...rest }: Paginate = {}) => {
+            query: ({ skip, limit, search, ...rest }: Paginate = {}) => {
                 let queryParams: Record<string, any> = {};
 
                 if (skip !== undefined) {
@@ -17,8 +17,8 @@ export const productApi = apiSlice.injectEndpoints({
                 if (limit !== undefined) {
                     queryParams.limit = limit.toString();
                 }
-                if (searchTerm !== undefined) {
-                    queryParams.search = searchTerm.toString();
+                if (search !== undefined) {
+                    queryParams.search = search.toString();
                 }
                 if (Object.entries(rest).length > 0) {
                     queryParams = { ...queryParams, ...serialize(rest) };

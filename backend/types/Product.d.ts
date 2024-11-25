@@ -1,5 +1,6 @@
-import { ParsedQs } from "qs";
-import { Category } from "./Category";
+import type { ParsedQs } from "qs";
+import type { Category } from "./Category";
+import type { FeaturedCampaign } from "./FeaturedCampaign";
 
 export interface Product {
     _id?: string;
@@ -15,7 +16,7 @@ export interface Product {
         quantity: number;
     }[];
     quantity: number;
-    featured: boolean;
+    featuredCampaigns: string[] | FeaturedCampaign[];
     salesCount: number;
     topLevelCategory: string | Category;
     secondLevelCategory: string | Category;

@@ -1,4 +1,4 @@
-import { ParsedQs } from "qs";
+import type { ParsedQs } from "qs";
 
 export interface Category {
     _id?: string;

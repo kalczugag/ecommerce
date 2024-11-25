@@ -17,7 +17,13 @@ const productSchema = new mongoose.Schema<Product>({
         },
     ],
     quantity: { type: Number, required: true },
-    featured: { type: Boolean, default: false },
+    featuredCampaigns: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "FeaturedCampaign",
+            required: false,
+        },
+    ],
     salesCount: { type: Number, default: 0 },
     topLevelCategory: {
         type: mongoose.Schema.ObjectId,
