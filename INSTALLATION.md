@@ -12,19 +12,17 @@ git clone https://github.com/kalczugag/ecommerce.git
 cd ecommerce
 ```
 
-#### Step 2: Edit the Environment File
+### Step 2: Update Backend Environment Variables
 
--   Check a file named .env in the /backend directory.
+-   Open the `.env` file in the `/backend` directory.
+-   Update all variables with your own values.
 
-    This file will store environment variables for the project to run.
+### Step 3: Update Frontend and Admin Environment Variables
 
-#### Step 3: Update MongoDB URI
-
-In the .env file, find the line that reads:
-
-`DATABASE="your-mongodb-uri"`
-
-Replace "your-mongodb-uri" with the actual URI of your MongoDB database.
+-   In `/frontend/.env`, update:  
+    `VITE_BACKEND_SERVER="your-backend-url"`
+-   In `/admin/.env`, update:  
+    `VITE_BACKEND_SERVER="your-backend-url"`
 
 #### Step 4: Install Backend Dependencies
 
