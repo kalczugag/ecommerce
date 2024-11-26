@@ -1,6 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
 import moment from "moment";
+import { placeholderArray } from "@/utils/helpers";
 import { Button, Divider, Skeleton } from "@mui/material";
+import SummaryCard from "./SummaryCard";
 import type { Order } from "@/types/Order";
 import { Product } from "@/types/Product";
 
@@ -15,13 +17,13 @@ const OrderListItem = ({ data, isLoading }: OrderListItemProps) => {
     return (
         <div className="flex flex-col space-y-4">
             <div className="flex flex-row items-center justify-between">
-                <p className="font-semibold text-2xl">
+                <h1 className="font-semibold text-2xl">
                     {isLoading ? (
                         <Skeleton variant="text" width={150} />
                     ) : (
                         `Order number: ${data?._id}`
                     )}
-                </p>
+                </h1>
                 {isLoading ? (
                     <Skeleton variant="rectangular" width={80} height={36} />
                 ) : (
@@ -30,72 +32,39 @@ const OrderListItem = ({ data, isLoading }: OrderListItemProps) => {
                     </Button>
                 )}
             </div>
+
             <Divider />
+
             <div className="space-y-10">
                 <div className="flex flex-row space-x-8">
-                    <div className="flex flex-col">
-                        {isLoading ? (
-                            <Skeleton variant="text" width={100} />
-                        ) : (
-                            <p className="font-bold">Order date</p>
-                        )}
-                        <p>
-                            {isLoading ? (
-                                <Skeleton variant="text" width={100} />
-                            ) : (
-                                moment(data?.createdAt).format("dd, DD.MM.YYYY")
-                            )}
-                        </p>
-                    </div>
-                    <div className="flex flex-col">
-                        {isLoading ? (
-                            <Skeleton variant="text" width={100} />
-                        ) : (
-                            <p className="font-bold">Total cost</p>
-                        )}
-                        <p>
-                            {isLoading ? (
-                                <Skeleton variant="text" width={60} />
-                            ) : (
-                                `$${data?.total}`
-                            )}
-                        </p>
-                    </div>
-                    <div className="flex flex-col">
-                        {isLoading ? (
-                            <Skeleton variant="text" width={100} />
-                        ) : (
-                            <p className="font-bold">Payment status</p>
-                        )}
-                        <p>
-                            {isLoading ? (
-                                <Skeleton variant="text" width={80} />
-                            ) : (
-                                data?.paymentStatus
-                            )}
-                        </p>
-                    </div>
+                    <SummaryCard
+                        label="Order date"
+                        value={moment(data?.createdAt).format("dd, DD.MM.YYYY")}
+                        isLoading={isLoading}
+                    />
+                    <SummaryCard
+                        label="Total cost"
+                        value={`$${data?.total}`}
+                        isLoading={isLoading}
+                    />
+                    <SummaryCard
+                        label="Payment status"
+                        value={data?.paymentStatus || ""}
+                        isLoading={isLoading}
+                    />
                 </div>
                 <div className="flex flex-col space-y-4 md:flex-row md:space-x-8 md:space-y-0">
-                    <div className="flex flex-col">
-                        {isLoading ? (
-                            <Skeleton variant="text" width={150} />
-                        ) : (
-                            <p className="font-bold">Expected delivery</p>
-                        )}
-                        <p>
-                            {isLoading ? (
-                                <Skeleton variant="text" width={120} />
-                            ) : (
-                                moment(data?.createdAt)
-                                    .add(2, "days")
-                                    .format("dd, DD.MM.YYYY")
-                            )}
-                        </p>
-                    </div>
+                    <SummaryCard
+                        label="Expected delivery"
+                        value={moment(data?.createdAt)
+                            .add(2, "days")
+                            .format("dd, DD.MM.YYYY")}
+                        isLoading={isLoading}
+                        width={150}
+                    />
                     <div className="flex space-x-4">
                         {(isLoading
-                            ? Array.from(new Array(2))
+                            ? placeholderArray(2)
                             : data!.items.length > 1
                             ? data!.items.slice(0, 2)
                             : data!.items
@@ -118,7 +87,7 @@ const OrderListItem = ({ data, isLoading }: OrderListItemProps) => {
                                                     .imageUrl[0]
                                             }
                                             loading="lazy"
-                                            className="max-w-full object-cover object-top md:object-center opacity-50"
+                                            className="max-w-full object-cover object-top opacity-50 md:object-center"
                                             alt={
                                                 (item.product as Product).title
                                             }

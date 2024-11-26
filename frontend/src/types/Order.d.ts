@@ -1,4 +1,5 @@
 import type { User } from "./User";
+import type { Product } from "./Product";
 
 interface Item {
     product?: string | Product;

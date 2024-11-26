@@ -41,7 +41,7 @@ const orderSchema = new mongoose.Schema<Order>(
 
 orderSchema.post("save", async (doc) => {
     try {
-        const orderTotal = doc.total;
+        const orderTotal = doc.total + doc.deliveryCost;
         const orderDate = new Date(new Date(doc.get("createdAt")));
         const startOfWeek = getStartOfThisWeek();
 
