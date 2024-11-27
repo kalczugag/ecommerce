@@ -32,13 +32,16 @@ const orderSchema = new mongoose.Schema<Order>(
         deliveryMethod: { type: String, required: false },
         deliveryCost: { type: Number, required: true },
         additionalInfo: { type: String, required: false },
+        trackingNumber: { type: String, required: false },
+        isPending: { type: Boolean, default: true },
+        leftOn: { type: String, required: false },
     },
     { timestamps: true }
 );
 
 orderSchema.post("save", async (doc) => {
     try {
-        const orderTotal = doc.total;
+        const orderTotal = doc.total + doc.deliveryCost;
         const orderDate = new Date(new Date(doc.get("createdAt")));
         const startOfWeek = getStartOfThisWeek();
 

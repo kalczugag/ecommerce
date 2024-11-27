@@ -26,6 +26,9 @@ export interface Order {
         | "delivered"
         | "cancelled";
     total: number;
+    trackingNumber?: string;
+    isPending: boolean;
+    leftOn?: string;
     paymentMethod: string;
     paymentStatus?: string;
 }

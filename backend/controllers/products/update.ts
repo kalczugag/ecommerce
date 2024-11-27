@@ -22,7 +22,7 @@ export const updateProduct = async (
     try {
         const updatedProduct = await ProductModel.findByIdAndUpdate(
             id,
-            req.body,
+            updates,
             { new: true, runValidators: true }
         );
 

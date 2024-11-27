@@ -19,4 +19,5 @@ interface Paginate {
     limit?: number;
     sort?: string;
     filter?: string;
+    populate?: string;
 }

@@ -1,6 +1,6 @@
 import type { Product } from "./Product";
-import { User } from "./User";
-import { ParsedQs } from "qs";
+import type { User } from "./User";
+import type { ParsedQs } from "qs";
 
 export interface Item {
     product?: string | Product;
@@ -36,6 +36,9 @@ export interface Order {
     deliveryMethod: "pickup" | "delivery";
     deliveryCost: number;
     additionalInfo?: string;
+    trackingNumber?: string;
+    isPending: boolean;
+    leftOn?: string;
     createdAt: Date;
     updatedAt: Date;
 }

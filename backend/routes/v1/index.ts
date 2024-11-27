@@ -9,6 +9,7 @@ import summary from "./summary";
 import categories from "./categories";
 import reviews from "./reviews";
 import cart from "./cart";
+import featuredCampaigns from "./featuredCampaigns";
 import payment from "./payment";
 
 const router = express.Router();
@@ -23,6 +24,7 @@ export default (): express.Router => {
     categories(router);
     reviews(router);
     cart(router);
+    featuredCampaigns(router);
     payment(router);
 
     return router;

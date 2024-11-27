@@ -22,7 +22,7 @@ export const updateCategory = async (
     try {
         const updatedCategory = await CategoryModel.findByIdAndUpdate(
             id,
-            req.body,
+            updates,
             { new: true, runValidators: true }
         );
 

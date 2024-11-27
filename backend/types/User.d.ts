@@ -1,12 +1,13 @@
 import type { Cart } from "./Cart";
 import type { Role } from "./Role";
-import { ParsedQs } from "qs";
+import type { ParsedQs } from "qs";
 
 export interface User {
     _id?: string;
     _cart: string | Cart;
     firstName: string;
     lastName: string;
+    preferences: "men" | "women" | "unisex" | "kids" | "all";
     role: Role | string;
     birthday?: Date;
     address?: {

@@ -13,38 +13,17 @@ export const updateOrder = async (
         return res.status(400).json({ error: "Invalid order ID format" });
     }
 
-    const {
-        status,
-        paymentMethod,
-        paymentStatus,
-        deliveryMethod,
-        additionalInfo,
-    } = req.body;
+    const updates = req.body;
 
-    if (
-        !status &&
-        !paymentMethod &&
-        !paymentStatus &&
-        !deliveryMethod &&
-        !additionalInfo
-    ) {
+    if (Object.keys(updates).length === 0) {
         return res.status(400).json({ error: "No update fields provided" });
     }
+
     try {
-        const updatedOrder = await OrderModel.findByIdAndUpdate(
-            id,
-            {
-                status,
-                paymentMethod,
-                paymentStatus,
-                deliveryMethod,
-                additionalInfo,
-            },
-            {
-                new: true,
-                runValidators: true,
-            }
-        );
+        const updatedOrder = await OrderModel.findByIdAndUpdate(id, updates, {
+            new: true,
+            runValidators: true,
+        });
 
         if (!updatedOrder) {
             return res.status(404).json({ error: "Order not found" });

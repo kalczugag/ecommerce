@@ -2,6 +2,8 @@ import express from "express";
 import { OrderModel } from "../../models/Order";
 import { CartModel } from "../../models/Cart";
 import { ProductModel } from "../../models/Product";
+import { sendEmail } from "../../config/nodemailer";
+import { orderConfirmation } from "../../emailTemplates/orderConfirmation";
 import type { Order } from "../../types/Order";
 import type { Product } from "../../types/Product";
 
@@ -28,42 +30,53 @@ export const stripeWebhook = async (
             .json({ error: `Webhook Error: ${error.message}` });
     }
 
-    switch (event.type) {
-        case "checkout.session.completed":
-            const session = event.data.object as Stripe.Checkout.Session;
-            const { orderId, userId } = session.metadata!;
+    try {
+        switch (event.type) {
+            case "checkout.session.completed": {
+                const session = event.data.object as Stripe.Checkout.Session;
+                const { orderId, userId, email } = session.metadata!;
 
-            if (orderId && userId) {
-                await updateOrder(orderId, "confirmed", "paid");
-                await clearCart(userId);
-                await updateProductQuantities(orderId);
+                console.log(session.metadata);
+
+                if (orderId && userId) {
+                    await Promise.all([
+                        updateOrder(orderId, "confirmed", "paid"),
+                        clearCart(userId),
+                        updateProductQuantities(orderId),
+                    ]);
+
+                    if (email) {
+                        await sendOrderConfirmationEmail(email, orderId);
+                    }
+                }
+                break;
             }
 
-            break;
+            case "payment_intent.succeeded":
+                break;
 
-        case "payment_intent.succeeded":
-            const paymentIntent = event.data.object as Stripe.PaymentIntent;
+            case "payment_intent.payment_failed": {
+                const failedPayment = event.data.object as Stripe.PaymentIntent;
 
-            break;
-
-        case "payment_intent.payment_failed":
-            const failedPayment = event.data.object as Stripe.PaymentIntent;
-
-            if (failedPayment.metadata.orderId) {
-                await updateOrder(
-                    failedPayment.metadata.orderId,
-                    "cancelled",
-                    "failed"
-                );
+                if (failedPayment.metadata.orderId) {
+                    await updateOrder(
+                        failedPayment.metadata.orderId,
+                        "cancelled",
+                        "failed"
+                    );
+                }
+                break;
             }
 
-            break;
+            default:
+                console.warn(`Unhandled event type: ${event.type}`);
+        }
 
-        default:
-            console.warn(`Unhandled event type: ${event.type}`);
+        res.json({ received: true });
+    } catch (error) {
+        console.error("Error handling webhook:", error);
+        res.status(500).json({ error: "Internal Server Error" });
     }
-
-    res.json({ received: true });
 };
 
 const updateOrder = async (
@@ -74,14 +87,8 @@ const updateOrder = async (
     try {
         await OrderModel.findByIdAndUpdate(
             orderId,
-            {
-                status,
-                paymentStatus,
-            },
-            {
-                new: true,
-                runValidators: true,
-            }
+            { status, paymentStatus },
+            { new: true, runValidators: true }
         );
     } catch (error) {
         console.error("Error updating order:", error);
@@ -105,13 +112,13 @@ const updateProductQuantities = async (orderId: string) => {
         const order = await OrderModel.findById(orderId).populate(
             "items.product"
         );
-        if (!order) return;
+        if (!order) throw new Error("Order not found");
 
-        for (const item of order.items) {
+        const updates = order.items.map(async (item) => {
             const product = await ProductModel.findById(
                 (item.product as Product)._id
             );
-            if (!product) continue;
+            if (!product) return;
 
             const sizeIndex = product.size.findIndex(
                 (s) => s.name === item.size
@@ -121,15 +128,42 @@ const updateProductQuantities = async (orderId: string) => {
                 product.size[sizeIndex].quantity >= item.quantity
             ) {
                 product.size[sizeIndex].quantity -= item.quantity;
+                await product.save();
             } else {
                 console.warn(
-                    `Insufficient quantity for product ${product._id} size ${item.size}`
+                    `Insufficient stock for product ${product._id} (size: ${item.size})`
                 );
             }
+        });
 
-            await product.save();
-        }
+        await Promise.all(updates);
     } catch (error) {
         console.error("Error updating product quantities:", error);
+    }
+};
+
+const sendOrderConfirmationEmail = async (email: string, orderId: string) => {
+    const subject = "Order Confirmation";
+
+    try {
+        const order = await OrderModel.findById(orderId)
+            .populate({
+                path: "_user",
+                select: "firstName lastName phone address",
+            })
+            .populate("items.product")
+            .exec();
+
+        if (!order) throw new Error("Order not found");
+
+        await sendEmail({
+            to: email,
+            subject,
+            html: orderConfirmation(order),
+        });
+
+        console.log(`Order confirmation email sent to ${email}`);
+    } catch (error) {
+        console.error("Error sending email:", error);
     }
 };

@@ -16,7 +16,7 @@ export const getOrderById = async (
         const order = await OrderModel.findById(id)
             .populate({
                 path: "_user",
-                select: "firstName lastName phone address",
+                select: "firstName lastName email phone address",
             })
             .populate("items.product")
             .exec();

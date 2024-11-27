@@ -1,5 +1,5 @@
 import { placeholderArray } from "@/utils/helpers";
-import ProductCard from "../ProductCard";
+import ProductCard from "./ProductCard";
 import type { Product } from "@/types/Product";
 
 interface ProductsListProps {

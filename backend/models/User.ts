@@ -29,6 +29,7 @@ const userSchema = new mongoose.Schema<User>(
         _cart: { type: mongoose.Schema.Types.ObjectId, ref: "Cart" },
         firstName: { type: String, required: true },
         lastName: { type: String, required: true },
+        preferences: { type: String, required: false, defult: "all" },
         role: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Role",
@@ -95,6 +96,17 @@ userSchema.post("save", async function (doc) {
             "Error creating cart or updating summary after user save:",
             error
         );
+    }
+});
+
+userSchema.pre("findOneAndDelete", async function (next) {
+    const cartId = this.getQuery()._cart;
+
+    try {
+        await mongoose.model("Cart").findByIdAndDelete(cartId);
+        next();
+    } catch (error: any) {
+        next(error);
     }
 });
 

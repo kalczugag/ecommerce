@@ -1,4 +1,5 @@
 import type { User } from "./User";
+import type { Product } from "./Product";
 
 interface Item {
     product?: string | Product;
@@ -34,6 +35,9 @@ export interface Order {
     deliveryMethod?: "pickup" | "delivery";
     deliveryCost: number;
     additionalInfo?: string;
+    trackingNumber?: string;
+    new: boolean;
+    leftOn?: string;
     createdAt?: Date;
     updatedAt?: Date;
 }
