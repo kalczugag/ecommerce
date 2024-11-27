@@ -25,7 +25,7 @@ const OrderTotal = ({
                     </div>
                     <div className="flex justify-between">
                         <span>Delivery:</span>
-                        <span>${delivery !== 0 ? delivery : "Free"}</span>
+                        <span>${delivery}</span>
                     </div>
                     <div className="flex justify-between">
                         <span>Discount:</span>

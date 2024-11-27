@@ -24,6 +24,7 @@ const SummaryModule = () => {
         deliveryCost: order?.deliveryCost || 0,
         total: order?.total || 0,
     };
+    console.log(order);
 
     const handleCheckout = async () => {
         try {
