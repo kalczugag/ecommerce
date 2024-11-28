@@ -20,7 +20,6 @@ const Login = () => {
     const handleLogin = async (values: LoginInput) => {
         try {
             await login(values).unwrap();
-            enqueueSnackbar("Logged in successfully", { variant: "success" });
         } catch (error: any) {
             const errorMessage =
                 error.data?.error || "An unexpected error occurred.";

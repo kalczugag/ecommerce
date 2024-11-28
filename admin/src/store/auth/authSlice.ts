@@ -41,6 +41,3 @@ export const { setCredentials, logOut } = authSlice.actions;
 
 export default authSlice.reducer;
 export type { AuthState };
-
-export const selectTokenExpiresIn = (state: RootState) => state.auth.expires;
-export const selectCurrentToken = (state: RootState) => state.auth.token;

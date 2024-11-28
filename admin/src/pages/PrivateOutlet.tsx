@@ -1,14 +1,16 @@
 import { useEffect } from "react";
 import { useLocation, Navigate, Outlet } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { selectCurrentToken, useRefreshTokenQuery } from "@/store";
+import { useRefreshTokenQuery, useLogoutMutation } from "@/store";
 import { enqueueSnackbar } from "notistack";
+import useAuth from "@/hooks/useAuth";
 import NavigationLayout from "@/layouts/NavigationLayout";
 import LoadingBackdrop from "@/components/LoadingBackdrop";
 
 const RequireAuth = () => {
-    const token = useSelector(selectCurrentToken);
+    const { token, isAdmin } = useAuth();
     const location = useLocation();
+
+    const [logout] = useLogoutMutation();
     const { isLoading } = useRefreshTokenQuery(undefined, {
         skip:
             !!token ||
@@ -18,15 +20,22 @@ const RequireAuth = () => {
 
     useEffect(() => {
         if (token) {
-            enqueueSnackbar("Logged in successfully", { variant: "success" });
+            if (isAdmin) {
+                enqueueSnackbar("Logged in successfully", {
+                    variant: "success",
+                });
+            } else {
+                enqueueSnackbar("You are not an admin", { variant: "error" });
+                logout();
+            }
         }
-    }, [token]);
+    }, [token, isAdmin]);
 
     if (isLoading) {
         return <LoadingBackdrop isLoading={isLoading} />;
     }
 
-    return token ? (
+    return token && isAdmin ? (
         <NavigationLayout>
             <Outlet />
         </NavigationLayout>
