@@ -16,8 +16,8 @@ const OrderListItem = ({ data, isLoading }: OrderListItemProps) => {
 
     return (
         <div className="flex flex-col space-y-4">
-            <div className="flex flex-row items-center justify-between">
-                <h1 className="font-semibold text-2xl">
+            <div className="flex flex-col space-y-2 justify-between md:space-y-0 md:items-center md:flex-row">
+                <h1 className="font-semibold text-2xl break-words">
                     {isLoading ? (
                         <Skeleton variant="text" width={150} />
                     ) : (
@@ -27,7 +27,10 @@ const OrderListItem = ({ data, isLoading }: OrderListItemProps) => {
                 {isLoading ? (
                     <Skeleton variant="rectangular" width={80} height={36} />
                 ) : (
-                    <Button onClick={() => navigate(`/orders/${data?._id}`)}>
+                    <Button
+                        variant="outlined"
+                        onClick={() => navigate(`/orders/${data?._id}`)}
+                    >
                         View
                     </Button>
                 )}

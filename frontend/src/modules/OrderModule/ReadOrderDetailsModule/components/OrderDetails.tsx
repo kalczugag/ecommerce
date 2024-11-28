@@ -26,7 +26,7 @@ const OrderDetails = ({ data, isLoading }: OrderDetailsProps) => {
     return (
         <div className="flex flex-col space-y-8">
             <div className="flex flex-col space-y-2 justify-between md:space-y-0 md:items-center md:flex-row">
-                <h1 className="font-bold text-3xl">
+                <h1 className="font-bold text-3xl break-words">
                     {isLoading ? (
                         <Skeleton variant="text" width={150} />
                     ) : (
@@ -34,7 +34,6 @@ const OrderDetails = ({ data, isLoading }: OrderDetailsProps) => {
                     )}
                 </h1>
                 <Button
-                    color="inherit"
                     variant="outlined"
                     onClick={() => navigate(`/return/${data?._id}`)}
                 >
