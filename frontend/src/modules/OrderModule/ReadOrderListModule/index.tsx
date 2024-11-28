@@ -10,15 +10,16 @@ import type { Order } from "@/types/Order";
 interface ReadOrderListModuleProps {
     data: Order[];
     isLoading: boolean;
+    handleFilter: (value: { status: string }) => void;
 }
 
-const ReadOrderListModule = ({ data, isLoading }: ReadOrderListModuleProps) => {
+const ReadOrderListModule = ({
+    data,
+    isLoading,
+    handleFilter,
+}: ReadOrderListModuleProps) => {
     const orderValues = Object.values(orderStatuses);
     const placeholderData = placeholderArray(2);
-
-    const handleSubmit = (values: any) => {
-        console.log(values);
-    };
 
     const formElements = (
         <Field name="status" type="checkbox">
@@ -30,7 +31,9 @@ const ReadOrderListModule = ({ data, isLoading }: ReadOrderListModuleProps) => {
                             control={<Checkbox />}
                             name={input.name}
                             value={input.value}
-                            onChange={() => input.onChange(status)}
+                            onChange={() =>
+                                input.onChange(status.toLowerCase())
+                            }
                             label={status}
                             disabled={isLoading}
                         />
@@ -44,7 +47,7 @@ const ReadOrderListModule = ({ data, isLoading }: ReadOrderListModuleProps) => {
         <DefaultLayout direction="row" className="md:space-x-14">
             <div className="hidden md:block">
                 <Filters
-                    onSubmit={handleSubmit}
+                    onSubmit={handleFilter}
                     formElements={formElements}
                     label="Order Status"
                 />

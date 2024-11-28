@@ -1,3 +1,4 @@
+import { serialize } from "@/utils/helpers";
 import { apiSlice } from "./apiSlice";
 import type { Order, UpdateOrder } from "@/types/Order";
 
@@ -14,14 +15,27 @@ export const ordersApi = apiSlice.injectEndpoints({
             ApiResponseArray<Order>,
             { userId: string; params?: Paginate }
         >({
-            query: ({ userId, params = {} }) => {
-                const queryParams: Record<string, string> = {};
-                if (params?.skip !== undefined) {
-                    queryParams.skip = params.skip.toString();
+            query: ({
+                userId,
+                params = {},
+            }: {
+                userId: string;
+                params?: Paginate;
+            }) => {
+                const { skip, limit, ...rest } = params;
+
+                let queryParams: Record<string, string> = {};
+
+                if (skip !== undefined) {
+                    queryParams.skip = skip.toString();
                 }
-                if (params?.limit !== undefined) {
-                    queryParams.limit = params.limit.toString();
+                if (limit !== undefined) {
+                    queryParams.limit = limit.toString();
                 }
+                if (Object.entries(rest).length > 0) {
+                    queryParams = { ...queryParams, ...serialize(rest) };
+                }
+
                 return {
                     url: `/orders/userId/${userId}`,
                     method: "GET",
