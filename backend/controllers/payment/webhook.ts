@@ -36,7 +36,7 @@ export const stripeWebhook = async (
                 const session = event.data.object as Stripe.Checkout.Session;
                 const { orderId, userId, email } = session.metadata!;
 
-                console.log(session.metadata);
+                console.log("colo");
 
                 if (orderId && userId) {
                     await Promise.all([
@@ -61,7 +61,7 @@ export const stripeWebhook = async (
                 if (failedPayment.metadata.orderId) {
                     await updateOrder(
                         failedPayment.metadata.orderId,
-                        "cancelled",
+                        "canceled",
                         "failed"
                     );
                 }

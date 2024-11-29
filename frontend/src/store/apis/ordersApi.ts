@@ -9,6 +9,7 @@ export const ordersApi = apiSlice.injectEndpoints({
                 url: `/orders/id/${id}`,
                 method: "GET",
             }),
+            providesTags: (result, error, id) => [{ type: "Orders", id: id }],
         }),
 
         getOrdersByUserId: builder.query<
@@ -58,6 +59,9 @@ export const ordersApi = apiSlice.injectEndpoints({
                 method: "PATCH",
                 body: order,
             }),
+            invalidatesTags: (result, error, values) => [
+                { type: "Orders", id: values._id },
+            ],
         }),
     }),
 });

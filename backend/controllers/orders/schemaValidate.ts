@@ -17,7 +17,7 @@ const schema = Joi.object({
         "shipped",
         "in_delivery",
         "delivered",
-        "cancelled"
+        "canceled"
     ),
     total: Joi.number().positive().required(),
     subTotal: Joi.number().positive().required(),

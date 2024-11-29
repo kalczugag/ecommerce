@@ -19,7 +19,7 @@ export interface Order {
         | "shipped"
         | "in_delivery"
         | "delivered"
-        | "cancelled";
+        | "canceled";
     subTotal: number;
     discount: number;
     deliveryCost: number;
@@ -36,7 +36,7 @@ export interface Order {
     deliveryCost: number;
     additionalInfo?: string;
     trackingNumber?: string;
-    new: boolean;
+    isPending?: boolean;
     leftOn?: string;
     createdAt?: Date;
     updatedAt?: Date;
@@ -49,4 +49,5 @@ export interface UpdateOrder {
     paymentStatus?: Order["paymentStatus"];
     deliveryMethod?: Order["deliveryMethod"];
     additionalInfo?: Order["additionalInfo"];
+    isPending?: boolean;
 }

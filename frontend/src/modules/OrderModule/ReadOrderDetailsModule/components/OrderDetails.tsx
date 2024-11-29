@@ -16,6 +16,21 @@ interface OrderDetailsProps {
 const OrderDetails = ({ data, isLoading }: OrderDetailsProps) => {
     const navigate = useNavigate();
 
+    const summaryCardsData = [
+        {
+            label: "Order date",
+            value: moment(data?.createdAt).format("dd, DD.MM.YYYY"),
+        },
+        {
+            label: "Payment Method",
+            value: data?.paymentMethod,
+        },
+        {
+            label: "Status",
+            value: data?.status,
+        },
+    ];
+
     const priceData = {
         total: data?.total.toFixed(2) || "",
         subTotal: data?.subTotal.toFixed(2) || "",
@@ -33,49 +48,61 @@ const OrderDetails = ({ data, isLoading }: OrderDetailsProps) => {
                         `Order number: ${data?._id}`
                     )}
                 </h1>
-                <Button
-                    variant="outlined"
-                    onClick={() => navigate(`/return/${data?._id}`)}
-                >
-                    Return
-                </Button>
+                {data?.status !== "canceled" && (
+                    <Button
+                        variant="outlined"
+                        onClick={() => navigate(`/return/${data?._id}`)}
+                    >
+                        Return
+                    </Button>
+                )}
             </div>
             <div className="space-y-10">
                 <div className="flex flex-row space-x-8">
-                    <SummaryCard
-                        label="Order date"
-                        value={moment(data?.createdAt).format("dd, DD.MM.YYYY")}
-                        isLoading={isLoading}
-                    />
-                    <SummaryCard
-                        label="Payment Method"
-                        value={data?.paymentMethod || ""}
-                        isLoading={isLoading}
-                    />
+                    {summaryCardsData.map(({ label, value }) => (
+                        <SummaryCard
+                            key={label}
+                            label={label}
+                            value={value || ""}
+                            isLoading={isLoading}
+                        />
+                    ))}
                 </div>
 
                 <Divider />
 
-                <div className="flex flex-col space-y-">
-                    <div className="flex flex-col font-semibold space-y-2">
-                        <h2 className="text-2xl">
-                            {isLoading ? (
-                                <Skeleton variant="text" width={150} />
-                            ) : (
-                                `Expected delivery: ${moment(data?.createdAt)
-                                    .add(2, "days")
-                                    .format("dd, DD.MM.YYYY")}`
-                            )}
-                        </h2>
-                        <p>
-                            {isLoading ? (
-                                <Skeleton variant="text" width={120} />
-                            ) : (
-                                "Standard delivery within 1-3 business days"
-                            )}
-                        </p>
+                {data?.status !== "canceled" ? (
+                    <div className="flex flex-col">
+                        <div className="flex flex-col font-semibold space-y-2">
+                            <h2 className="text-2xl">
+                                {isLoading ? (
+                                    <Skeleton variant="text" width={150} />
+                                ) : (
+                                    `Expected delivery: ${moment(
+                                        data?.createdAt
+                                    )
+                                        .add(2, "days")
+                                        .format("dd, DD.MM.YYYY")}`
+                                )}
+                            </h2>
+                            <p>
+                                {isLoading ? (
+                                    <Skeleton variant="text" width={120} />
+                                ) : (
+                                    "Standard delivery within 1-3 business days"
+                                )}
+                            </p>
+                        </div>
                     </div>
-                </div>
+                ) : (
+                    <h2 className="text-2xl font-semibold">
+                        {isLoading ? (
+                            <Skeleton variant="text" width={150} />
+                        ) : (
+                            "Order products"
+                        )}
+                    </h2>
+                )}
                 {data?.items.map((item) => (
                     <ProductCard
                         key={(item.product as Product)._id}
@@ -86,7 +113,7 @@ const OrderDetails = ({ data, isLoading }: OrderDetailsProps) => {
 
                 <Divider />
 
-                <OrderTotal {...priceData} />
+                <OrderTotal {...priceData} status={data?.status} />
 
                 <Divider />
 

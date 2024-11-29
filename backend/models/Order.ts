@@ -33,7 +33,7 @@ const orderSchema = new mongoose.Schema<Order>(
         deliveryCost: { type: Number, required: true },
         additionalInfo: { type: String, required: false },
         trackingNumber: { type: String, required: false },
-        isPending: { type: Boolean, default: true },
+        isPending: { type: Boolean, required: false, default: false },
         leftOn: { type: String, required: false },
     },
     { timestamps: true }

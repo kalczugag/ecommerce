@@ -3,7 +3,7 @@ import { useCreatePaymentMutation } from "@/store";
 import { useOrder } from "@/contexts/OrderContext";
 import CartProductItem from "@/modules/CartModule/components/CartProductItem";
 import CheckoutSummary from "@/modules/CartModule/components/CheckoutSummary";
-import Contact from "../components/Contact";
+import Contact from "./components/Contact";
 import Box from "@/components/Box";
 import type { Cart } from "@/types/Cart";
 
@@ -24,7 +24,6 @@ const SummaryModule = () => {
         deliveryCost: order?.deliveryCost || 0,
         total: order?.total || 0,
     };
-    console.log(order);
 
     const handleCheckout = async () => {
         try {

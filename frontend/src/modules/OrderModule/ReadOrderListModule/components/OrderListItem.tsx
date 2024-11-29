@@ -51,8 +51,8 @@ const OrderListItem = ({ data, isLoading }: OrderListItemProps) => {
                         isLoading={isLoading}
                     />
                     <SummaryCard
-                        label="Payment status"
-                        value={data?.paymentStatus || ""}
+                        label="Status"
+                        value={data?.status || ""}
                         isLoading={isLoading}
                     />
                 </div>

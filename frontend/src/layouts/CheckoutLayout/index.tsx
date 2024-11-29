@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { useOrder } from "@/contexts/OrderContext";
 import { Skeleton, Container, Step, StepLabel, Stepper } from "@mui/material";
 import useIsMobile from "@/hooks/useIsMobile";
-import useStep from "@/modules/CheckoutModule/hooks/useStep";
+import useStep from "@/modules/CheckoutModule/DeliveryModule/hooks/useStep";
 import { orderStatuses } from "@/constants/orderStatuses";
 
 interface CheckoutLayoutProps {

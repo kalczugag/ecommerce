@@ -20,7 +20,7 @@ export interface Order {
         | "shipped"
         | "in_delivery"
         | "delivered"
-        | "cancelled";
+        | "canceled";
     subTotal: number;
     discount: number;
     deliveryCost: number;

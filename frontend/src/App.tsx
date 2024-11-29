@@ -12,7 +12,6 @@ import Cart from "@/pages/Cart";
 import Checkout from "@/pages/Checkout";
 import Delivery from "@/pages/Checkout/Delivery";
 import Summary from "@/pages/Checkout/Summary";
-import CheckoutStatus from "@/pages/Checkout/Status";
 import NotFound from "@/pages/404";
 
 const App = () => {
@@ -36,7 +35,6 @@ const App = () => {
                     <Route path="/checkout/:orderId/*" element={<Checkout />}>
                         <Route path="delivery" element={<Delivery />} />
                         <Route path="summary" element={<Summary />} />
-                        <Route path="*" element={<CheckoutStatus />} />
                     </Route>
                 </Route>
             </Route>

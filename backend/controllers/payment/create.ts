@@ -67,8 +67,8 @@ export const createCheckoutSession = async (
                     },
                 },
             ],
-            success_url: `${url}/checkout/${order._id}/success`,
-            cancel_url: `${url}/checkout/${order._id}/summary`,
+            success_url: `${url}/orders/${order._id}?status=success`,
+            cancel_url: `${url}/orders/${order._id}?status=canceled`,
         });
 
         return res.json({ sessionId: session.id });
