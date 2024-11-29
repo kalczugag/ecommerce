@@ -5,6 +5,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/kalczugag/ecommerce/blob/main/LICENSE)
 [![Build](https://github.com/Kosmit147/Zenith/actions/workflows/build.yml/badge.svg)](https://github.com/kalczugag/ecommerce/actions/workflows/build.yml)
 
+This is a fully functional e-commerce website built using the MERN (MongoDB, Express, React, Node.js) stack. It offers a seamless shopping experience for users and includes features like authentication, role-based access control (RBAC), and an admin panel for product management. The website is secure, scalable, and built with token-based authentication using JWT (JSON Web Token).
+
 </div>
 
 ## 🚧 Work in Progress 🚧
@@ -22,17 +24,12 @@ admin: [demo](https://ecommerce-admin-seven-cyan.vercel.app/)
 
 ## Table of Contents
 
--   [Introduction](#introduction)
 -   [Features](#features)
 -   [Tech Stack](#tech-stack)
 -   [Installation](#installation)
 -   [Usage](#usage)
 -   [Contributing](#contributing)
 -   [License](#license)
-
-## Introduction
-
-This is a fully functional e-commerce website built using the MERN (MongoDB, Express, React, Node.js) stack. It offers a seamless shopping experience for users and includes features like authentication, role-based access control (RBAC), and an admin panel for product management. The website is secure, scalable, and built with token-based authentication using JWT (JSON Web Token).
 
 ## Features
 
