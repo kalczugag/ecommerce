@@ -1,4 +1,11 @@
+<div align="center">
+
 # E-Commerce Website
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/kalczugag/ecommerce/blob/main/LICENSE)
+[![Build](https://github.com/Kosmit147/Zenith/actions/workflows/build.yml/badge.svg)](https://github.com/kalczugag/ecommerce/actions/workflows/build.yml)
+
+</div>
 
 ## 🚧 Work in Progress 🚧
 
