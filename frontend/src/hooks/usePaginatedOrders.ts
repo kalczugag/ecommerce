@@ -7,7 +7,7 @@ export const usePaginatedOrders = (
     limit = 2,
     arg?: Paginate
 ) => {
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(0);
     const [allOrders, setAllOrders] = useState<Order[]>([]);
     const [hasMoreOrders, setHasMoreOrders] = useState(true);
 

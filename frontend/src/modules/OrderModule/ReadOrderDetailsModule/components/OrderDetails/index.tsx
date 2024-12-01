@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import { Button, Divider, Skeleton } from "@mui/material";
-import SummaryCard from "../../ReadOrderListModule/components/SummaryCard";
-import ProductCard from "./ProductCard";
-import OrderTotal from "./OrderTotal";
-import OrderAddress from "./OrderAddress";
 import type { Order } from "@/types/Order";
-import type { Product } from "@/types/Product";
+import SummaryCard from "../../../ReadOrderListModule/components/SummaryCard";
+import ProductCard from "../ProductCard";
+import OrderTotal from "../OrderTotal";
+import OrderAddress from "../OrderAddress";
+import ProductCardSkeleton from "../ProductCard/ProductCardSkeleton";
 
 interface OrderDetailsProps {
     data?: Order;
@@ -42,16 +42,22 @@ const OrderDetails = ({ data, isLoading }: OrderDetailsProps) => {
         <div className="flex flex-col space-y-8">
             <div className="flex flex-col space-y-2 justify-between md:space-y-0 md:items-center md:flex-row">
                 <h1 className="font-bold text-3xl break-words">
+                    Order number:{" "}
                     {isLoading ? (
-                        <Skeleton variant="text" width={150} />
+                        <Skeleton
+                            variant="text"
+                            width={250}
+                            sx={{ display: "inline-block" }}
+                        />
                     ) : (
-                        `Order number: ${data?._id}`
+                        data?._id
                     )}
                 </h1>
                 {data?.status !== "canceled" && (
                     <Button
                         variant="outlined"
                         onClick={() => navigate(`/return/${data?._id}`)}
+                        disabled={isLoading}
                     >
                         Return
                     </Button>
@@ -71,55 +77,30 @@ const OrderDetails = ({ data, isLoading }: OrderDetailsProps) => {
 
                 <Divider />
 
-                {data?.status !== "canceled" ? (
-                    <div className="flex flex-col">
-                        <div className="flex flex-col font-semibold space-y-2">
-                            <h2 className="text-2xl">
-                                {isLoading ? (
-                                    <Skeleton variant="text" width={150} />
-                                ) : (
-                                    `Expected delivery: ${moment(
-                                        data?.createdAt
-                                    )
-                                        .add(2, "days")
-                                        .format("dd, DD.MM.YYYY")}`
-                                )}
-                            </h2>
-                            <p>
-                                {isLoading ? (
-                                    <Skeleton variant="text" width={120} />
-                                ) : (
-                                    "Standard delivery within 1-3 business days"
-                                )}
-                            </p>
-                        </div>
-                    </div>
-                ) : (
-                    <h2 className="text-2xl font-semibold">
-                        {isLoading ? (
-                            <Skeleton variant="text" width={150} />
-                        ) : (
-                            "Order products"
-                        )}
-                    </h2>
-                )}
-                {data?.items.map((item) => (
+                {data?.items.map((item, index) => (
                     <ProductCard
-                        key={(item.product as Product)._id}
+                        key={index}
                         data={item}
+                        status={data?.status}
+                        timestamp={data?.createdAt}
                         isLoading={isLoading}
                     />
                 ))}
 
                 <Divider />
 
-                <OrderTotal {...priceData} status={data?.status} />
+                <OrderTotal
+                    {...priceData}
+                    status={data?.status}
+                    isLoading={isLoading}
+                />
 
                 <Divider />
 
                 <OrderAddress
                     name={data?._user?.firstName + " " + data?._user?.lastName}
                     address={data?._user?.address}
+                    isLoading={isLoading}
                 />
             </div>
         </div>

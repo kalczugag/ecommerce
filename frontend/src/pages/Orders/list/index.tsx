@@ -15,7 +15,7 @@ const OrdersList = () => {
         2,
         {
             sort: "-createdAt",
-            status: searchParams.get("status") as string,
+            status: (searchParams.get("status") as string) || "",
         }
     );
 
