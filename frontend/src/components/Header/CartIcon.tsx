@@ -14,7 +14,7 @@ const CartIcon = ({ data }: CartIconProps) => {
         <IconButton onClick={() => navigate("/cart")}>
             <LocalMallOutlined sx={{ position: "relative" }} />
             {data && data._products.length > 0 ? (
-                <div className="absolute -right-2 top-0 flex justify-center items-center  rounded-full w-5 h-5 text-xs text-white bg-red-500">
+                <div className="absolute -right-2 top-0 flex justify-center items-center rounded-full w-5 h-5 text-xs text-white bg-red-500">
                     {data._products.length}
                 </div>
             ) : null}

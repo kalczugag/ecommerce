@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { AppBar, Toolbar, Typography, Container } from "@mui/material";
 import { Adb } from "@mui/icons-material";
-import AccountTools from "./AccountTools";
+import IconButtonTools from "./IconButtonTools";
 import { useGetGroupedCategoriesQuery } from "@/store";
 import { CategoryContainer, CategoryList } from "./Categories";
 
@@ -67,7 +67,7 @@ const Header = ({ topLabel }: HeaderProps) => {
                             setOpen={setOpenCategories}
                             openCategories={openCategories}
                         />
-                        <AccountTools />
+                        <IconButtonTools />
                     </Toolbar>
                 </Container>
             </AppBar>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useGetAllProductsQuery } from "@/store";
 import useDebounce from "@/hooks/useDebounce";
 import { IconButton } from "@mui/material";
@@ -10,7 +10,7 @@ const Search = () => {
     const navigate = useNavigate();
 
     const [isOpen, setIsOpen] = useState(false);
-    const [query, setQuery] = useState<any>(null);
+    const [query, setQuery] = useSearchParams();
 
     const { isSuccess } = useGetAllProductsQuery(query, {
         skip: !query,
@@ -18,13 +18,13 @@ const Search = () => {
 
     const handleSearch = useDebounce((value: { searchTerm: string }) => {
         if (value.searchTerm === undefined) return;
+        // const filter = { $text: { $search: value.searchTerm } };
 
-        const filter = { $text: { $search: value.searchTerm } };
-        setQuery({ filter });
+        setQuery({ q: value.searchTerm });
     }, 250);
 
     useEffect(() => {
-        if (isSuccess) navigate(`products?q=${query.filter.$text.$search}`);
+        if (isSuccess) navigate(`products?q=${query.get("q")}`);
     }, [isSuccess]);
 
     return (
