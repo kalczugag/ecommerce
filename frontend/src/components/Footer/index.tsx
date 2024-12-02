@@ -6,7 +6,7 @@ const Footer = () => {
     const currYear = new Date().getFullYear();
 
     return (
-        <footer className="text-center bg-[#1A1A1A] text-white text-lg mt-auto">
+        <footer className="text-center bg-[#1A1A1A] text-white text-lg mt-auto print:hidden">
             <Container maxWidth="xl" disableGutters>
                 <div className="grid grid-cols-2 gap-12 py-12 md:grid-cols-4">
                     {footerLinks.map(({ label, icon, links }) => (

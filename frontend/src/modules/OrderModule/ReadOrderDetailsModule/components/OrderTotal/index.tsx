@@ -19,11 +19,26 @@ const OrderTotal = ({
     status,
     isLoading,
 }: OrderTotalProps) => {
+    const handlePrint = () => {
+        window.print();
+    };
+
     return (
         <div className="flex flex-row justify-between font-semibold">
             <h2 className="text-2xl">Total cost</h2>
             <div className="flex flex-col items-end text-sm space-y-2">
-                {status !== "canceled" && <Button>Invoice</Button>}
+                {status !== "canceled" && (
+                    <Button
+                        sx={{
+                            "@media print": {
+                                display: "none",
+                            },
+                        }}
+                        onClick={handlePrint}
+                    >
+                        Invoice
+                    </Button>
+                )}
                 {isLoading ? (
                     <OrderTotalSkeleton />
                 ) : (

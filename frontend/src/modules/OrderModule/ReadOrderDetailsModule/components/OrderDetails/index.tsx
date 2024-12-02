@@ -57,13 +57,18 @@ const OrderDetails = ({ data, isLoading }: OrderDetailsProps) => {
                         variant="outlined"
                         onClick={() => navigate(`/return/${data?._id}`)}
                         disabled={isLoading}
+                        sx={{
+                            "@media print": {
+                                display: "none",
+                            },
+                        }}
                     >
                         Return
                     </Button>
                 )}
             </div>
             <div className="space-y-10">
-                <div className="flex flex-row space-x-8">
+                <div className="flex flex-row space-x-8 print:hidden">
                     {summaryCardsData.map(({ label, value }) => (
                         <SummaryCard
                             key={label}

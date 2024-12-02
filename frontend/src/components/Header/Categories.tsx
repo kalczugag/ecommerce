@@ -181,7 +181,14 @@ const CategoryContainer = ({
     };
 
     return (
-        <Box className="flex flex-grow">
+        <Box
+            className="flex flex-grow"
+            sx={{
+                "@media print": {
+                    display: "none",
+                },
+            }}
+        >
             {(
                 data?.topLevelCategories || [{ name: "men" }, { name: "women" }]
             ).map(({ name }, index) => (

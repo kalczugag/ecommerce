@@ -29,6 +29,9 @@ const Header = ({ topLabel }: HeaderProps) => {
                         color: "white",
                         textAlign: "center",
                         padding: "5px",
+                        "@media print": {
+                            display: "none",
+                        },
                     }}
                 >
                     <Typography
@@ -47,6 +50,9 @@ const Header = ({ topLabel }: HeaderProps) => {
                     boxShadow: "none",
                     borderBottom: "1px solid #e0e0e0",
                     color: "black",
+                    "@media print": {
+                        display: "none",
+                    },
                 }}
             >
                 <Container maxWidth="xl">
