@@ -33,8 +33,6 @@ export const getAllCampaigns = async (
             : {};
         const combined = { ...parsedQuery.filter, ...preferences };
 
-        console.log(preferences, user);
-
         const campaigns = await FeaturedCampaignModel.find(combined)
             .populate(parsedQuery.populate)
             .select(parsedQuery.select)

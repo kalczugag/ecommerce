@@ -6,7 +6,6 @@ import SummaryCard from "../../../ReadOrderListModule/components/SummaryCard";
 import ProductCard from "../ProductCard";
 import OrderTotal from "../OrderTotal";
 import OrderAddress from "../OrderAddress";
-import ProductCardSkeleton from "../ProductCard/ProductCardSkeleton";
 
 interface OrderDetailsProps {
     data?: Order;
@@ -77,6 +76,21 @@ const OrderDetails = ({ data, isLoading }: OrderDetailsProps) => {
 
                 <Divider />
 
+                {data?.status !== "canceled" ? (
+                    <div className="flex flex-col">
+                        <div className="flex flex-col font-semibold space-y-2">
+                            <h2 className="text-2xl">
+                                Expected delivery:{" "}
+                                {moment(data?.createdAt)
+                                    .add(2, "days")
+                                    .format("dd, DD.MM.YYYY")}
+                            </h2>
+                            <p>Standard delivery within 1-3 business days</p>
+                        </div>
+                    </div>
+                ) : (
+                    <h2 className="text-2xl font-semibold">Products</h2>
+                )}
                 {data?.items.map((item, index) => (
                     <ProductCard
                         key={index}

@@ -13,7 +13,7 @@ const Search = () => {
     const [query, setQuery] = useSearchParams();
 
     const { isSuccess } = useGetAllProductsQuery(query, {
-        skip: !query,
+        skip: !!query,
     });
 
     const handleSearch = useDebounce((value: { searchTerm: string }) => {
