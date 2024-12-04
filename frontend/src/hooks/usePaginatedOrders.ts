@@ -5,7 +5,8 @@ import type { Order } from "@/types/Order";
 export const usePaginatedOrders = (
     userId: string | null,
     limit = 2,
-    arg?: Paginate
+    status?: string,
+    sort?: string
 ) => {
     const [page, setPage] = useState(0);
     const [allOrders, setAllOrders] = useState<Order[]>([]);
@@ -17,19 +18,18 @@ export const usePaginatedOrders = (
             params: {
                 skip: page,
                 limit,
-                ...arg,
+                status,
+                sort,
             },
         },
         { skip: !userId }
     );
 
-    // const { data, isLoading, isFetching } = useGetOrdersByUserIdQuery(
-    //     {
-    //         userId: userId || "",
-    //         params: { skip: page, limit, ...arg },
-    //     },
-    //     { skip: !userId }
-    // );
+    useEffect(() => {
+        setPage(0);
+        setAllOrders([]);
+        setHasMoreOrders(true);
+    }, [status]);
 
     useEffect(() => {
         if (data?.data) {
@@ -71,5 +71,5 @@ export const usePaginatedOrders = (
         };
     }, [loadMoreOrders, hasMoreOrders]);
 
-    return { allOrders, isLoading, hasMoreOrders };
+    return { allOrders, isLoading: isLoading || isFetching, hasMoreOrders };
 };

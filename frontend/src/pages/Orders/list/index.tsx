@@ -9,18 +9,24 @@ const OrdersList = () => {
 
     const { userId } = useAuth();
     const [searchParams, setSearchParams] = useSearchParams();
+    const status = searchParams.get("status") || "";
 
     const { allOrders, isLoading, hasMoreOrders } = usePaginatedOrders(
         userId,
         2,
-        {
-            sort: "-createdAt",
-            status: (searchParams.get("status") as string) || "",
-        }
+        status,
+        "-createdAt"
     );
 
     const handleFilter = (value: { status: string }) => {
         setSearchParams(value);
+
+        if (!value.status) clearParam("status");
+    };
+
+    const clearParam = (param: string) => {
+        searchParams.delete(param);
+        setSearchParams(searchParams);
     };
 
     return (

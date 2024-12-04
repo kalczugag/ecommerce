@@ -6,5 +6,5 @@ export const orderStatuses: Record<NonNullable<Order["status"]>, string> = {
     shipped: "Shipped",
     in_delivery: "In Delivery",
     delivered: "Delivered",
-    cancelled: "Cancelled",
+    canceled: "Canceled",
 };

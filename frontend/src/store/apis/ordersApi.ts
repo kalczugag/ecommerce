@@ -23,7 +23,7 @@ export const ordersApi = apiSlice.injectEndpoints({
                 userId: string;
                 params?: Paginate;
             }) => {
-                const { skip, limit, ...rest } = params;
+                const { skip, limit, status, sort, ...rest } = params;
 
                 let queryParams: Record<string, string> = {};
 
@@ -32,6 +32,12 @@ export const ordersApi = apiSlice.injectEndpoints({
                 }
                 if (limit !== undefined) {
                     queryParams.limit = limit.toString();
+                }
+                if (status !== undefined) {
+                    queryParams.status = status;
+                }
+                if (sort !== undefined) {
+                    queryParams.sort = sort;
                 }
                 if (Object.entries(rest).length > 0) {
                     queryParams = { ...queryParams, ...serialize(rest) };
