@@ -1,21 +1,18 @@
 import express from "express";
-import { RoleModel } from "../../models/Role";
 import { UserModel } from "../../models/User";
 import { User } from "../../types/User";
 import { isValidObjectId } from "mongoose";
 
 //only role update for now
 export const updateUser = async (
-    req: express.Request<{ userId: string }, {}, User>,
+    req: express.Request<{ id: string }, {}, User>,
     res: express.Response
 ) => {
-    const { userId } = req.params;
+    const { id } = req.params;
     const data = req.body;
 
-    if (!isValidObjectId(userId)) {
-        return res
-            .status(400)
-            .json({ error: "User ID and role ID are required" });
+    if (!isValidObjectId(id)) {
+        return res.status(400).json({ error: "Invalid user ID format" });
     }
 
     try {
@@ -23,7 +20,7 @@ export const updateUser = async (
         //     return res.status(404).json({ error: "Role not found" });
         // }
 
-        const updatedUser = await UserModel.findByIdAndUpdate(userId, data, {
+        const updatedUser = await UserModel.findByIdAndUpdate(id, data, {
             new: true,
         });
 
@@ -33,7 +30,7 @@ export const updateUser = async (
 
         return res
             .status(200)
-            .json({ msg: "User role updated successfully", data: updatedUser });
+            .json({ msg: "User updated successfully", data: updatedUser });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: "Internal server error" });

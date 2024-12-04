@@ -1,6 +1,5 @@
 import express from "express";
-import { User } from "../types/User";
-import { get } from "lodash";
+import type { User } from "../types/User";
 
 export const hasRole =
     (requiredRole: string | "all") =>

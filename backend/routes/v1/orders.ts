@@ -2,7 +2,7 @@ import express from "express";
 import passport from "passport";
 
 import methods from "../../controllers/orders";
-import { hasRole, hasAddress } from "../../middlewares";
+import { hasRole, hasAddress, isOwner } from "../../middlewares";
 
 const orders = (router: express.Router) => {
     router.get(
@@ -37,6 +37,7 @@ const orders = (router: express.Router) => {
         "/orders/:id",
         passport.authenticate("jwt", { session: false }),
         hasAddress,
+        isOwner("order"),
         methods.update
     );
 

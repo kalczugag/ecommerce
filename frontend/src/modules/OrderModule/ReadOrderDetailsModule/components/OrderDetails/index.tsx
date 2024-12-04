@@ -55,7 +55,7 @@ const OrderDetails = ({ data, isLoading }: OrderDetailsProps) => {
                 {data?.status !== "canceled" && (
                     <Button
                         variant="outlined"
-                        onClick={() => navigate(`/return/${data?._id}`)}
+                        onClick={() => navigate(`return`)}
                         disabled={isLoading}
                         sx={{
                             "@media print": {

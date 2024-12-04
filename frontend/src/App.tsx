@@ -2,10 +2,11 @@ import { Route, Routes } from "react-router-dom";
 import PrivateOutlet from "@/pages/Outlets/PrivateOutlet";
 import VisitorsCounterOutlet from "@/pages/Outlets/VisitorsCounterOutlet";
 import Dashboard from "@/pages/Dashboard";
-import Catalog from "@/pages/Products/list";
-import ProductDetails from "@/pages/Products/details";
-import OrderDetails from "@/pages/Orders/details";
-import OrdersList from "@/pages/Orders/list";
+import Catalog from "@/pages/Products/List";
+import ProductDetails from "@/pages/Products/Details";
+import OrderDetails from "@/pages/Orders/Details";
+import OrdersList from "@/pages/Orders/List";
+import OrderReturn from "@/pages/Orders/Return";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Cart from "@/pages/Cart";
@@ -30,6 +31,7 @@ const App = () => {
                     <Route path="/orders">
                         <Route index element={<OrdersList />} />
                         <Route path=":id" element={<OrderDetails />} />
+                        <Route path=":id/return" element={<OrderReturn />} />
                     </Route>
                     <Route path="/cart" element={<Cart />} />
                     <Route path="/checkout/:orderId/*" element={<Checkout />}>
