@@ -1,46 +1,75 @@
 import type { Product } from "./Product";
 import type { User } from "./User";
+import type { Payment } from "./Payment";
 import type { ParsedQs } from "qs";
 
-export interface Item {
-    product?: string | Product;
-    color: string;
-    size: string;
+interface Item {
+    _id?: string;
+    orderId: string | Order;
+    productId: string | Product;
+    name: string;
+    sku: string;
+    color?: string;
+    size?: string;
     unitPrice: number;
     quantity: number;
+    total: number;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
-export interface Order {
+interface ShippingAddress {
+    street: string;
+    city: string;
+    state: string;
+    postalCode: string;
+    country: string;
+}
+
+interface Payment {
     _id?: string;
-    _user: User;
+    orderId: string | Order;
+    paymentMethod: string;
+    paymentStatus: "pending" | "completed" | "failed" | "refunded";
+    amount: number;
+    transactionId?: string;
+    paymentDate?: Date;
+    createdAt?: Date;
+    updatedAt?: Date;
+}
+
+interface Order {
+    _id?: string;
+    userId: User;
     items: Item[];
-    status?:
-        | "placed"
-        | "confirmed"
-        | "shipped"
-        | "in_delivery"
-        | "delivered"
-        | "canceled";
+    status?: "placed" | "confirmed" | "shipped" | "delivered" | "canceled";
+    shippingAddress: ShippingAddress;
+    billingAddress: ShippingAddress;
     subTotal: number;
+    tax: number;
     discount: number;
     deliveryCost: number;
     total: number;
-    paymentMethod: "cash" | "stripe" | "paypal";
-    paymentStatus?:
-        | "unpaid"
-        | "paid"
-        | "failed"
-        | "refunded"
-        | "completed"
-        | "canceled";
-    deliveryMethod: "pickup" | "delivery";
-    deliveryCost: number;
-    additionalInfo?: string;
+    payment: Payment;
     trackingNumber?: string;
-    isPending: boolean;
-    leftOn?: string;
+    shippingMethod: "standard" | "express" | "same-day";
+    deliveryMethod: "pickup" | "delivery";
     createdAt: Date;
     updatedAt: Date;
+}
+
+interface ReturnOrder {
+    _id?: string;
+    orderId: string | Order;
+    userId: string | User;
+    returnedItems: string | Item[];
+    returnReason: string;
+    returnStatus: "initiated" | "approved" | "rejected" | "completed";
+    refundAmount: number;
+    refundMethod: "credit_card" | "paypal" | "bank_transfer";
+    returnDate: Date;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
 export interface UpdateOrder {

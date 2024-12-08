@@ -1,6 +1,6 @@
 import DefaultLayout from "@/layouts/DefaultLayout";
 import StepperForm from "@/components/StepperForm";
-import ReturnReasonForm from "@/forms/ReturnReasonForm";
+import ReasonStep from "./components/ReasonStep";
 import ReturnMethodStep from "./components/ReturnMethodStep";
 import SummaryStep from "./components/SummaryStep";
 import type { Order } from "@/types/Order";
@@ -13,7 +13,7 @@ interface OrderReturnModule {
 const steps = [
     {
         label: "Reason for return",
-        element: (props: StepProps) => <ReturnReasonForm {...props} />,
+        element: (props: StepProps) => <ReasonStep {...props} />,
     },
     {
         label: "Return Method",
