@@ -14,7 +14,7 @@ export const getCategoryById = async (
 
     try {
         const category = await CategoryModel.findById(id)
-            .populate("parentCategory")
+            .populate("_parentCategory")
             .exec();
 
         if (!category) {

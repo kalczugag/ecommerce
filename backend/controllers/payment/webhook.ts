@@ -32,39 +32,27 @@ export const stripeWebhook = async (
 
     try {
         switch (event.type) {
+            case "charge.refunded": {
+                console.log("charge.refunded", event.data.object);
+            }
+
             case "checkout.session.completed": {
-                const session = event.data.object as Stripe.Checkout.Session;
-                const { orderId, userId, email } = session.metadata!;
-
-                console.log("colo");
-
-                if (orderId && userId) {
-                    await Promise.all([
-                        updateOrder(orderId, "confirmed", "paid"),
-                        clearCart(userId),
-                        updateProductQuantities(orderId),
-                    ]);
-
-                    if (email) {
-                        await sendOrderConfirmationEmail(email, orderId);
-                    }
-                }
+                console.log("checkout.session.completed", event.data.object);
                 break;
             }
 
-            case "payment_intent.succeeded":
+            case "checkout.session.expired": {
+                console.log("checkout.session.expired", event.data.object);
                 break;
+            }
+
+            case "payment_intent.succeeded": {
+                console.log("payment_intent.succeeded", event.data.object);
+                break;
+            }
 
             case "payment_intent.payment_failed": {
-                const failedPayment = event.data.object as Stripe.PaymentIntent;
-
-                if (failedPayment.metadata.orderId) {
-                    await updateOrder(
-                        failedPayment.metadata.orderId,
-                        "canceled",
-                        "failed"
-                    );
-                }
+                console.log("payment_intent.payment_failed", event.data.object);
                 break;
             }
 
@@ -82,7 +70,7 @@ export const stripeWebhook = async (
 const updateOrder = async (
     orderId: string,
     status: Order["status"],
-    paymentStatus: Order["paymentStatus"]
+    paymentStatus: Order["_payment"]
 ) => {
     try {
         await OrderModel.findByIdAndUpdate(
@@ -114,9 +102,9 @@ const updateProductQuantities = async (orderId: string) => {
         );
         if (!order) throw new Error("Order not found");
 
-        const updates = order.items.map(async (item) => {
+        const updates = order.items.map(async (item: any) => {
             const product = await ProductModel.findById(
-                (item.product as Product)._id
+                (item._product as Product)._id
             );
             if (!product) return;
 

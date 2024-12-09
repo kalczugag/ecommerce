@@ -41,7 +41,7 @@ export const getOrdersByUserId = async (
                         path: "_user",
                         select: "firstName lastName phone address",
                     },
-                    "items.product",
+                    "items._product",
                 ]
             )
             .select(parsedQuery.select)

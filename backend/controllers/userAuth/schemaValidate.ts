@@ -6,7 +6,6 @@ const schema = Joi.object({
     birthday: Joi.date().iso().optional(),
     address: Joi.object({
         street: Joi.string().min(2).optional(),
-        apartment: Joi.string().min(1).optional(),
         city: Joi.string().min(2).optional(),
         state: Joi.string().min(2).optional(),
         postalCode: Joi.string().min(2).optional(),

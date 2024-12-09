@@ -18,7 +18,7 @@ export const getCartItems = async (
 
     try {
         const cart = await CartModel.findById(user._cart)
-            .populate("_products.product")
+            .populate("items._product")
             .exec();
 
         if (!cart) {

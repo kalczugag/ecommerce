@@ -1,8 +1,9 @@
 import { Product } from "../types/Product";
 import type { Order } from "../types/Order";
+import type { User } from "../types/User";
 
 export const orderConfirmation = (order: Order) => {
-    const user = order._user;
+    const user = order._user as User;
     const priceData = {
         total: order.total.toFixed(2) || "",
         subTotal: order.subTotal.toFixed(2) || "",
@@ -47,9 +48,9 @@ export const orderConfirmation = (order: Order) => {
                                     
                                     <!-- Product Details (Table-Based Layout) -->
                                     ${order.items
-                                        .map((item) => {
+                                        .map((item: any) => {
                                             const product =
-                                                item.product as Product;
+                                                item._product as Product;
                                             return `
                                         <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom: 16px; padding-bottom: 16px;">
                                             <tr>

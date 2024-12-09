@@ -38,7 +38,7 @@ export const register = async (
             ...req.body,
             hash,
             salt,
-            role: defaultRole._id,
+            _role: defaultRole._id,
         });
 
         await newUser.save();

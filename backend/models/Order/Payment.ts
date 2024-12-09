@@ -3,7 +3,7 @@ import type { Payment } from "../../types/Order";
 
 const paymentSchema = new mongoose.Schema<Payment>(
     {
-        orderId: {
+        _order: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Order",
             required: true,

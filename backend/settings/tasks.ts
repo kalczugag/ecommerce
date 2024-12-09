@@ -4,6 +4,7 @@ import _ from "lodash";
 import { OrderModel } from "../models/Order";
 import { UserModel } from "../models/User";
 import { SummaryModel } from "../models/Summary";
+import type { Item, Payment } from "../types/Order";
 
 export const updateSummaryStatistics = async () => {
     try {
@@ -15,7 +16,7 @@ export const updateSummaryStatistics = async () => {
         const startOfYear = moment().startOf("year").toDate();
         const endOfYear = moment().endOf("year").toDate();
 
-        const orders = await OrderModel.find();
+        const orders = await OrderModel.find().populate("_payment").exec();
         const users = await UserModel.find();
 
         const summary = await SummaryModel.findOneAndUpdate(
@@ -27,11 +28,14 @@ export const updateSummaryStatistics = async () => {
         const totalEarnings = _.sumBy(orders, "total");
         const ordersCount = orders.length;
         const paidEarnings = _.sumBy(
-            orders.filter((order) => order.paymentStatus === "paid"),
+            orders.filter(
+                (order) =>
+                    (order._payment as Payment).paymentStatus === "completed"
+            ),
             "total"
         );
         const itemsCount = _.sumBy(orders, (order) =>
-            _.sumBy(order.items, "quantity")
+            _.sumBy(order.items as Item[], "quantity")
         );
 
         const thisWeekEarnings = _.sumBy(

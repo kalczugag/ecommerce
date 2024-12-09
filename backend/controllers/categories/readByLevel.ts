@@ -13,7 +13,7 @@ export const getCategoryByLevel = async (
 
     try {
         const categories = await CategoryModel.find({ level: level })
-            .populate("parentCategory", "name")
+            .populate("_parentCategory", "name")
             .lean()
             .exec();
 
@@ -25,12 +25,12 @@ export const getCategoryByLevel = async (
         if (level === "secondLevel") {
             labelledCategories = categories.map((category) => {
                 if (
-                    category?.parentCategory &&
-                    typeof category.parentCategory === "object"
+                    category?._parentCategory &&
+                    typeof category._parentCategory === "object"
                 ) {
                     return {
                         ...category,
-                        name: `${category.parentCategory.name} - ${category.name}`,
+                        name: `${category._parentCategory.name} - ${category.name}`,
                     };
                 }
             });

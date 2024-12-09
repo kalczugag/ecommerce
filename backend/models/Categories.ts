@@ -11,7 +11,7 @@ const categorySchema = new mongoose.Schema<Category>(
             type: String,
             required: false,
         },
-        parentCategory: {
+        _parentCategory: {
             type: mongoose.Schema.ObjectId,
             ref: "Category",
             default: null,
@@ -29,12 +29,12 @@ categorySchema.index({ name: "text" });
 
 categorySchema.pre("save", async function (next) {
     try {
-        if (!this.parentCategory) {
+        if (!this._parentCategory) {
             this.level = "topLevel";
         } else {
             const parent = await mongoose
                 .model<Category>("Category")
-                .findById(this.parentCategory);
+                .findById(this._parentCategory);
             if (parent) {
                 if (parent.level === "topLevel") {
                     this.level = "secondLevel";
@@ -50,6 +50,6 @@ categorySchema.pre("save", async function (next) {
     }
 });
 
-categorySchema.index({ name: 1, parentCategory: 1 }, { unique: true });
+categorySchema.index({ name: 1, _parentCategory: 1 }, { unique: true });
 
 export const CategoryModel = mongoose.model("Category", categorySchema);

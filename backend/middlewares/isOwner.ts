@@ -22,7 +22,7 @@ export const isOwner =
             return res.status(400).json({ error: "Invalid order ID format" });
         }
 
-        if ((user.role as Role).name.includes("admin")) {
+        if ((user._role as Role).name.includes("admin")) {
             return next();
         }
 

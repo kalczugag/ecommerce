@@ -43,7 +43,7 @@ export const getUsersByRole = async (
         );
 
         const filteredUsers = _.compact(
-            users.map((user) => (user.role ? user : null))
+            users.map((user) => (user._role ? user : null))
         );
 
         if (filteredUsers.length === 0) {

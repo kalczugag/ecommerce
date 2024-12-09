@@ -1,6 +1,7 @@
 import express from "express";
-import type { Order } from "../../types/Order";
+import type { Item, Order } from "../../types/Order";
 import type { Product } from "../../types/Product";
+import type { User } from "../../types/User";
 
 import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_SECRET!);
@@ -16,8 +17,10 @@ export const createCheckoutSession = async (
         return res.status(400).json({ error: "No order provided" });
     }
 
-    let lineItems = order.items.map((item) => {
-        const productData = item.product as Product;
+    const user = order._user as User;
+
+    let lineItems = (order.items as Item[]).map((item) => {
+        const productData = item._product as Product;
         const unitPrice = productData.discountPercent
             ? productData.discountedPrice!
             : productData.price!;
@@ -41,9 +44,9 @@ export const createCheckoutSession = async (
             mode: "payment",
             line_items: lineItems,
             metadata: {
-                userId: order._user._id!,
+                userId: user._id!,
                 orderId: order._id!,
-                email: order._user.email!,
+                email: user.email!,
             },
             shipping_options: [
                 {

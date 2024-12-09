@@ -14,7 +14,7 @@ export const getChildrens = async (
 
     try {
         const categoryChilrdens = await CategoryModel.find({
-            parentCategory: id,
+            _parentCategory: id,
         });
 
         if (!categoryChilrdens || categoryChilrdens.length === 0) {

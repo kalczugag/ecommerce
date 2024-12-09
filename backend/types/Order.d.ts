@@ -5,10 +5,10 @@ import type { ParsedQs } from "qs";
 
 interface Item {
     _id?: string;
-    orderId: string | Order;
-    productId: string | Product;
+    _order?: string | Order;
+    _product: string | Product;
     name: string;
-    sku: string;
+    sku?: string;
     color?: string;
     size?: string;
     unitPrice: number;
@@ -28,9 +28,9 @@ interface ShippingAddress {
 
 interface Payment {
     _id?: string;
-    orderId: string | Order;
+    _order: string | Order;
     paymentMethod: string;
-    paymentStatus: "pending" | "completed" | "failed" | "refunded";
+    paymentStatus: "unpaid" | "pending" | "completed" | "failed" | "refunded";
     amount: number;
     transactionId?: string;
     paymentDate?: Date;
@@ -40,8 +40,8 @@ interface Payment {
 
 interface Order {
     _id?: string;
-    userId: User;
-    items: Item[];
+    _user: string | User;
+    items: string[] | Item[];
     status?: "placed" | "confirmed" | "shipped" | "delivered" | "canceled";
     shippingAddress: ShippingAddress;
     billingAddress: ShippingAddress;
@@ -50,7 +50,7 @@ interface Order {
     discount: number;
     deliveryCost: number;
     total: number;
-    payment: Payment;
+    _payment: string | Payment;
     trackingNumber?: string;
     shippingMethod: "standard" | "express" | "same-day";
     deliveryMethod: "pickup" | "delivery";
@@ -60,8 +60,8 @@ interface Order {
 
 interface ReturnOrder {
     _id?: string;
-    orderId: string | Order;
-    userId: string | User;
+    _order: string | Order;
+    _user: string | User;
     returnedItems: string | Item[];
     returnReason: string;
     returnStatus: "initiated" | "approved" | "rejected" | "completed";
@@ -72,7 +72,7 @@ interface ReturnOrder {
     updatedAt?: Date;
 }
 
-export interface UpdateOrder {
+interface UpdateOrder {
     _id?: string;
     _user?: string;
     status: Order["status"];
@@ -82,7 +82,17 @@ export interface UpdateOrder {
     additionalInfo: Order["additionalInfo"];
 }
 
-export interface PaginatedOrders extends ParsedQs {
+interface PaginatedOrders extends ParsedQs {
     skip: number;
     limit: number;
 }
+
+export {
+    Item,
+    ShippingAddress,
+    Payment,
+    Order,
+    ReturnOrder,
+    UpdateOrder,
+    PaginatedOrders,
+};

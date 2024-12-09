@@ -3,22 +3,15 @@ import { isValidObjectId } from "mongoose";
 import { CartModel } from "../../models/Cart";
 import type { Item } from "../../types/Order";
 
-interface BodyProps {
+interface BodyProps extends Item {
     action: "add" | "delete" | "clear" | "changeQuantity";
-    productId: string;
-    color: string;
-    size: string;
-    unitPrice: number;
-    quantity: number;
-    _id: string;
 }
 
 export const updateCart = async (
     req: express.Request<{}, {}, BodyProps>,
     res: express.Response
 ) => {
-    const { action, productId, color, size, unitPrice, quantity, _id } =
-        req.body;
+    const { action, _id, _product, color, size, quantity } = req.body;
 
     if (!isValidObjectId(_id)) {
         return res.status(400).json({ error: "Cart ID is required" });
@@ -26,15 +19,16 @@ export const updateCart = async (
 
     try {
         const cart = await CartModel.findById(_id);
+        let items = cart?.items as Item[];
 
         if (!cart) {
             return res.status(404).json({ error: "Cart not found" });
         }
 
         if (action === "add") {
-            const itemExists = cart._products.find(
+            const itemExists = items.find(
                 (item) =>
-                    item.product?.toString() === productId &&
+                    item._product?.toString() === _product &&
                     item.color === color &&
                     item.size === size
             );
@@ -42,13 +36,7 @@ export const updateCart = async (
             if (itemExists) {
                 itemExists.quantity += quantity;
             } else {
-                cart._products.push({
-                    product: productId,
-                    color,
-                    size,
-                    unitPrice,
-                    quantity,
-                });
+                items.push(req.body);
             }
 
             await cart.save();
@@ -58,10 +46,10 @@ export const updateCart = async (
         }
 
         if (action === "delete") {
-            cart._products = cart._products.filter(
+            items = items.filter(
                 (item) =>
                     !(
-                        item.product?.toString() === productId &&
+                        item._product?.toString() === _product &&
                         item.color === color &&
                         item.size === size
                     )
@@ -74,16 +62,16 @@ export const updateCart = async (
         }
 
         if (action === "clear") {
-            cart._products = [];
+            items = [];
 
             await cart.save();
             return res.status(200).json({ msg: "Cart cleared", data: cart });
         }
 
         if (action === "changeQuantity") {
-            const item = cart._products.find(
+            const item = items.find(
                 (item) =>
-                    item.product?.toString() === productId &&
+                    item._product?.toString() === _product &&
                     item.color === color &&
                     item.size === size
             );

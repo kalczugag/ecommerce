@@ -6,7 +6,7 @@ import type { Order, Item } from "../../types/Order";
 
 const orderSchema = new mongoose.Schema<Order>(
     {
-        userId: {
+        _user: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
             required: true,
@@ -49,7 +49,7 @@ const orderSchema = new mongoose.Schema<Order>(
         discount: { type: Number, required: true },
         deliveryCost: { type: Number, required: true },
         total: { type: Number, required: true },
-        payment: {
+        _payment: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Payment",
             required: true,
@@ -74,7 +74,7 @@ orderSchema.post("save", async (doc) => {
         const orderDate = new Date(new Date(doc.get("createdAt")));
         const startOfWeek = getStartOfThisWeek();
 
-        const totalItems = _.sumBy(doc.items, "quantity");
+        const totalItems = _.sumBy(doc.items as Item[], "quantity");
 
         const summary = await SummaryModel.findOneAndUpdate(
             {},

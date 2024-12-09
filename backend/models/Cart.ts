@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
+import { ProductModel } from "./Product";
 import type { Cart } from "../types/Cart";
-import { itemSchema } from "./Order";
+import type { Item } from "../types/Order";
 
 const cartSchema = new mongoose.Schema<Cart>({
     _user: {
@@ -8,7 +9,13 @@ const cartSchema = new mongoose.Schema<Cart>({
         ref: "User",
         required: true,
     },
-    _products: [itemSchema],
+    items: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "OrderItem",
+            required: false,
+        },
+    ],
     subTotal: { type: Number, default: 0 },
     discount: { type: Number, default: 0 },
     deliveryCost: { type: Number, required: true },
@@ -21,8 +28,9 @@ cartSchema.pre("save", async function (next) {
     cart.subTotal = 0;
     cart.discount = 0;
 
-    for (const item of cart._products) {
-        const product = await mongoose.model("Product").findById(item.product);
+    for (const item of cart.items as Item[]) {
+        const product = await ProductModel.findById(item._product);
+
         if (!product) continue;
 
         const itemPrice = item.unitPrice * item.quantity;
