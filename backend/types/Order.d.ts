@@ -50,7 +50,7 @@ interface Order {
     discount: number;
     deliveryCost: number;
     total: number;
-    _payment: string | Payment;
+    _payment?: string | Payment;
     trackingNumber?: string;
     shippingMethod: "standard" | "express" | "same-day";
     deliveryMethod: "pickup" | "delivery";

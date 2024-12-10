@@ -43,10 +43,11 @@ export const createCheckoutSession = async (
             payment_method_types: ["card", "paypal"],
             mode: "payment",
             line_items: lineItems,
+            customer_email: user.email,
+            automatic_tax: { enabled: true },
             metadata: {
                 userId: user._id!,
                 orderId: order._id!,
-                email: user.email!,
             },
             shipping_options: [
                 {

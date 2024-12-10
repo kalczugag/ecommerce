@@ -2,6 +2,7 @@ import express from "express";
 import { OrderModel } from "../../models/Order";
 import { CartModel } from "../../models/Cart";
 import { ProductModel } from "../../models/Product";
+import { handlePaymentIntentSucceeded } from "./caseFunctions/paymentIntentSucceeded";
 import { sendEmail } from "../../config/nodemailer";
 import { orderConfirmation } from "../../emailTemplates/orderConfirmation";
 import type { Order } from "../../types/Order";
@@ -34,6 +35,7 @@ export const stripeWebhook = async (
         switch (event.type) {
             case "charge.refunded": {
                 console.log("charge.refunded", event.data.object);
+                break;
             }
 
             case "checkout.session.completed": {
@@ -47,7 +49,8 @@ export const stripeWebhook = async (
             }
 
             case "payment_intent.succeeded": {
-                console.log("payment_intent.succeeded", event.data.object);
+                handlePaymentIntentSucceeded(event.data.object);
+
                 break;
             }
 

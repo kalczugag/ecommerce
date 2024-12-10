@@ -52,7 +52,7 @@ const orderSchema = new mongoose.Schema<Order>(
         _payment: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Payment",
-            required: true,
+            required: false,
         },
         trackingNumber: { type: String, required: false },
         shippingMethod: {
