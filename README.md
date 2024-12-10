@@ -9,12 +9,6 @@ This is a fully functional e-commerce website built using the MERN (MongoDB, Exp
 
 </div>
 
-## 🚧 Work in Progress 🚧
-
-This project is still a work in progress! While many core features are already in place, there's more awesomeness coming soon! 💻🎉
-
-Feel free to explore, contribute, or even break things (we'll fix them 😉). Stay tuned for new updates and features as we continue to build and improve this e-commerce platform.
-
 ## Demo
 
 Checkout live demo:
