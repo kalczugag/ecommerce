@@ -8,6 +8,10 @@ export const handlePaymentIntentSucceeded = async (
 ) => {
     const { userId, orderId } = paymentIntent.metadata;
 
+    if (!userId || !orderId) {
+        throw new Error("Missing userId or orderId");
+    }
+
     try {
         const payment = await PaymentModel.create({
             _order: orderId,
@@ -22,7 +26,7 @@ export const handlePaymentIntentSucceeded = async (
         if (!payment) throw new Error("Error creating payment");
 
         await OrderModel.findByIdAndUpdate(orderId, {
-            status: "completed",
+            status: "placed",
             _payment: payment._id,
         });
 

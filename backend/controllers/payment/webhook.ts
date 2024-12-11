@@ -2,7 +2,12 @@ import express from "express";
 import { OrderModel } from "../../models/Order";
 import { CartModel } from "../../models/Cart";
 import { ProductModel } from "../../models/Product";
-import { handlePaymentIntentSucceeded } from "./caseFunctions/paymentIntentSucceeded";
+import {
+    handlePaymentIntentSucceeded,
+    handleCheckoutSessionCompleted,
+    handlePaymentFailed,
+    handleCheckoutSessionExpired,
+} from "./caseFunctions";
 import { sendEmail } from "../../config/nodemailer";
 import { orderConfirmation } from "../../emailTemplates/orderConfirmation";
 import type { Order } from "../../types/Order";
@@ -39,23 +44,22 @@ export const stripeWebhook = async (
             }
 
             case "checkout.session.completed": {
-                console.log("checkout.session.completed", event.data.object);
+                handleCheckoutSessionCompleted(event.data.object);
                 break;
             }
 
             case "checkout.session.expired": {
-                console.log("checkout.session.expired", event.data.object);
+                handleCheckoutSessionExpired(event.data.object);
                 break;
             }
 
             case "payment_intent.succeeded": {
                 handlePaymentIntentSucceeded(event.data.object);
-
                 break;
             }
 
             case "payment_intent.payment_failed": {
-                console.log("payment_intent.payment_failed", event.data.object);
+                handlePaymentFailed(event.data.object);
                 break;
             }
 
