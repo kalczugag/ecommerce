@@ -10,8 +10,8 @@ export const handlePaymentIntentSucceeded = async (
 
     try {
         const payment = await PaymentModel.create({
-            _order: "66f56ec90315c8d8bca30632",
-            _user: "66f56ec90315c8d8bca3062f",
+            _order: orderId,
+            _user: userId,
             paymentMethod: "credit_card",
             paymentStatus: "completed",
             amount: paymentIntent.amount / 100,

@@ -25,7 +25,7 @@ const orderSchema = new mongoose.Schema<Order>(
                 "confirmed",
                 "shipped",
                 "delivered",
-                "cancelled",
+                "canceled",
                 "returned",
             ],
             default: "placed",
