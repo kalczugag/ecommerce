@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import type { Item } from "../../types/Order";
 
-const orderItemSchema = new mongoose.Schema<Item>(
+export const orderItemSchema = new mongoose.Schema<Item>(
     {
         _order: {
             type: mongoose.Schema.Types.ObjectId,

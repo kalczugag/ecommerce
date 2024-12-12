@@ -1,0 +1,43 @@
+import express from "express";
+import passport from "passport";
+
+import methods from "../../controllers/tax";
+import { hasRole } from "../../middlewares";
+
+const tax = (router: express.Router) => {
+    router.get(
+        "/taxes",
+        passport.authenticate("jwt", { session: false }),
+        hasRole("admin"),
+        methods.read
+    );
+
+    router.get(
+        "/taxes/:id",
+        passport.authenticate("jwt", { session: false }),
+        methods.readById
+    );
+
+    router.post(
+        "/taxes",
+        passport.authenticate("jwt", { session: false }),
+        hasRole("admin"),
+        methods.create
+    );
+
+    router.delete(
+        "/taxes/:id",
+        passport.authenticate("jwt", { session: false }),
+        hasRole("admin"),
+        methods.delete
+    );
+
+    router.patch(
+        "/taxes/:id",
+        passport.authenticate("jwt", { session: false }),
+        hasRole("admin"),
+        methods.update
+    );
+};
+
+export default tax;

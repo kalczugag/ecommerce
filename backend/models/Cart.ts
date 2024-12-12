@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { ProductModel } from "./Product";
+import { orderItemSchema } from "./Order/OrderItem";
 import type { Cart } from "../types/Cart";
 import type { Item } from "../types/Order";
 
@@ -9,13 +10,7 @@ const cartSchema = new mongoose.Schema<Cart>({
         ref: "User",
         required: true,
     },
-    items: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "OrderItem",
-            required: false,
-        },
-    ],
+    items: [orderItemSchema],
     subTotal: { type: Number, default: 0 },
     discount: { type: Number, default: 0 },
     deliveryCost: { type: Number, required: true },
@@ -56,3 +51,18 @@ cartSchema.pre("save", async function (next) {
 });
 
 export const CartModel = mongoose.model("Cart", cartSchema);
+
+// async function updateDocuments() {
+//     try {
+//         const result = await CartModel.updateMany(
+//             { _products: { $exists: true } },
+//             { $rename: { _products: "items" } }
+//         );
+
+//         console.log(`Documents updated: ${result.modifiedCount}`);
+//     } catch (err) {
+//         console.error("Error updating documents:", err);
+//     }
+// }
+
+// updateDocuments();
