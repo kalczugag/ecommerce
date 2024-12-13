@@ -4,7 +4,6 @@ export interface Category {
     _id?: string;
     name: string;
     description?: string;
-    parentCategory?: string | Category;
     _parentCategory?: string | Category;
     level: "topLevel" | "secondLevel" | "thirdLevel";
 }

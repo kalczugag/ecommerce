@@ -22,9 +22,8 @@ export const sortConfig: SortConfigProps[] = [
             { label: "Placed", value: "placed" },
             { label: "Confirmed", value: "confirmed" },
             { label: "Shipped", value: "shipped" },
-            { label: "In Delivery", value: "in_delivery" },
             { label: "Delivered", value: "delivered" },
-            { label: "Cancelled", value: "cancelled" },
+            { label: "Canceled", value: "canceled" },
         ],
     },
 ];
@@ -37,7 +36,7 @@ export const tableConfig = [
     },
     {
         label: "Payment Method",
-        render: (row: RowProps) => row.paymentMethod,
+        render: (row: RowProps) => row._payment?.paymentMethod || "",
     },
     {
         label: "Price",
@@ -45,7 +44,7 @@ export const tableConfig = [
     },
     {
         label: "Id",
-        render: (row: RowProps) => row._id!,
+        render: (row: RowProps) => row._id || "",
     },
     {
         label: "Status",
@@ -57,6 +56,6 @@ export const tableConfig = [
     },
     {
         label: "Actions",
-        render: (row: RowProps) => <ActionButtons id={row._id!} info />,
+        render: (row: RowProps) => <ActionButtons id={row._id || ""} info />,
     },
 ];

@@ -29,7 +29,7 @@ export const tableConfig = [
     },
     {
         label: "Parent Category",
-        render: (row: RowProps) => row.parentCategory?.name || "-",
+        render: (row: RowProps) => row._parentCategory?.name || "-",
     },
     {
         label: "level",

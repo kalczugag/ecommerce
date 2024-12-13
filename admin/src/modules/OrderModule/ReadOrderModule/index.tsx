@@ -6,7 +6,7 @@ import Status from "../components/Status";
 import Product from "../components/Product";
 
 export interface ReadOrderProps {
-    data: Order;
+    data?: Order;
     isLoading: boolean;
 }
 
@@ -31,12 +31,12 @@ const ReadOrderModule = ({ data, isLoading }: ReadOrderProps) => {
             {data?.items.map((item, index) => (
                 <Box key={index}>
                     <Product
-                        id={item.product?._id || ""}
-                        imageUrl={item.product?.imageUrl || ""}
-                        brand={item.product?.brand || ""}
-                        title={item.product?.title || ""}
-                        color={item.color}
-                        size={item.size}
+                        id={item._product?._id || ""}
+                        imageUrl={item._product?.imageUrl[0] || ""}
+                        brand={item._product?.brand || ""}
+                        title={item._product?.title || ""}
+                        color={item.color || ""}
+                        size={item.size || ""}
                         quantity={item.quantity}
                         price={item.unitPrice}
                     />
