@@ -63,6 +63,10 @@ export const updateCart = async (
 
         if (action === "clear") {
             items = [];
+            cart.subTotal = 0;
+            cart.discount = 0;
+            cart.deliveryCost = 0;
+            cart.total = 0;
 
             await cart.save();
             return res.status(200).json({ msg: "Cart cleared", data: cart });

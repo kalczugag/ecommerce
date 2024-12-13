@@ -51,18 +51,3 @@ cartSchema.pre("save", async function (next) {
 });
 
 export const CartModel = mongoose.model("Cart", cartSchema);
-
-// async function updateDocuments() {
-//     try {
-//         const result = await CartModel.updateMany(
-//             { _products: { $exists: true } },
-//             { $rename: { _products: "items" } }
-//         );
-
-//         console.log(`Documents updated: ${result.modifiedCount}`);
-//     } catch (err) {
-//         console.error("Error updating documents:", err);
-//     }
-// }
-
-// updateDocuments();

@@ -61,7 +61,7 @@ userSchema.post("save", async function (doc) {
         if (!doc._cart) {
             const newCart = await CartModel.create({
                 _user: doc._id,
-                _products: [],
+                items: [],
                 subTotal: 0,
                 discount: 0,
                 deliveryCost: 0,
