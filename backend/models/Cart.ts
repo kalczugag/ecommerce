@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { ProductModel } from "./Product";
-import type { Cart, CartItem } from "../types/Cart";
+import type { Cart } from "../types/Cart";
+import type { Item } from "../types/Order";
 
 const cartSchema = new mongoose.Schema<Cart>({
     _user: {
@@ -27,7 +28,7 @@ cartSchema.pre("save", async function (next) {
     cart.subTotal = 0;
     cart.discount = 0;
 
-    for (const item of cart.items as CartItem[]) {
+    for (const item of cart.items as Item[]) {
         const product = await ProductModel.findById(item._product);
 
         if (!product) continue;

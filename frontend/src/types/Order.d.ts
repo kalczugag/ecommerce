@@ -5,13 +5,13 @@ interface Item {
     _id?: string;
     _order?: string | Order;
     _product: Product;
-    name: string;
+    name?: string;
     sku?: string;
     color?: string;
     size?: string;
     unitPrice: number;
     quantity: number;
-    total: number;
+    total?: number;
     createdAt?: Date;
     updatedAt?: Date;
 }

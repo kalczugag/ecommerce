@@ -9,7 +9,6 @@ import CheckoutSummary from "./components/CheckoutSummary";
 import EmptyCart from "./components/EmptyCart";
 import CartProductItem from "./components/CartProductItem";
 import type { Cart } from "@/types/Cart";
-import type { Sizes } from "../ProductsModule/ReadProductDetailsModule";
 
 interface CartModuleProps {
     data?: Cart;
@@ -30,24 +29,17 @@ const CartModule = ({ data, isLoading }: CartModuleProps) => {
     const [editCart] = useEditUsersCartMutation();
     const [addOrder, { isLoading: addLoading }] = useAddOrderMutation();
 
-    const handleQuantityChange = async (
-        _product: string,
-        quantity: number,
-        size: Sizes,
-        color: string
-    ) => {
+    const handleQuantityChange = async (id: string, quantity: number) => {
         setLoadingProductId((prev) => ({
             ...prev,
-            loadingQuantityId: _product,
+            loadingQuantityId: id,
         }));
         try {
             await editCart({
-                _id: data?._id,
+                cartId: data?._id,
                 action: "changeQuantity",
-                _product,
+                _id: id,
                 quantity,
-                size,
-                color,
             });
         } finally {
             setLoadingProductId((prev) => ({
@@ -57,22 +49,16 @@ const CartModule = ({ data, isLoading }: CartModuleProps) => {
         }
     };
 
-    const handleDelete = async (
-        _product: string,
-        size: Sizes,
-        color: string
-    ) => {
+    const handleDelete = async (id: string) => {
         setLoadingProductId((prev) => ({
             ...prev,
-            loadingDeleteId: _product,
+            loadingDeleteId: id,
         }));
         try {
             await editCart({
-                _id: data?._id,
+                cartId: data?._id,
                 action: "delete",
-                _product,
-                size,
-                color,
+                _id: id,
             }).unwrap();
 
             enqueueSnackbar("Product removed from cart successfully", {
@@ -85,7 +71,7 @@ const CartModule = ({ data, isLoading }: CartModuleProps) => {
         } finally {
             setLoadingProductId((prev) => ({
                 ...prev,
-                loadingDeleteId: _product,
+                loadingDeleteId: id,
             }));
         }
     };

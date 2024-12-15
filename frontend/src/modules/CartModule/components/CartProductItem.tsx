@@ -2,20 +2,14 @@ import { IconButton } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { RemoveCircleOutline, AddCircleOutline } from "@mui/icons-material";
 import type { Item } from "@/types/Order";
-import type { Sizes } from "@/modules/ProductsModule/ReadProductDetailsModule";
 
 interface CartProductItemProps {
     data: Item;
     isLoadingQuantity: boolean;
     isLoadingDelete: boolean;
     editable?: boolean;
-    onQuantityChange?: (
-        productId: string,
-        quantity: number,
-        size: Sizes,
-        color: string
-    ) => void;
-    onDelete?: (productId: string, size: Sizes, color: string) => void;
+    onQuantityChange?: (productId: string, quantity: number) => void;
+    onDelete?: (productId: string) => void;
 }
 
 const CartProductItem = ({
@@ -79,12 +73,7 @@ const CartProductItem = ({
                     <div className="flex items-center space-x-1">
                         <IconButton
                             onClick={() =>
-                                onQuantityChange(
-                                    _product._id!,
-                                    itemQuantity - 1,
-                                    data.size!,
-                                    data.color!
-                                )
+                                onQuantityChange(data._id!, itemQuantity - 1)
                             }
                             disabled={isLoadingQuantity || itemQuantity === 1}
                         >
@@ -93,12 +82,7 @@ const CartProductItem = ({
                         <span>{itemQuantity}</span>
                         <IconButton
                             onClick={() =>
-                                onQuantityChange(
-                                    _product._id!,
-                                    itemQuantity + 1,
-                                    data.size!,
-                                    data.color!
-                                )
+                                onQuantityChange(data._id!, itemQuantity + 1)
                             }
                             disabled={isLoadingQuantity}
                         >
@@ -107,9 +91,7 @@ const CartProductItem = ({
                     </div>
                     <LoadingButton
                         variant="contained"
-                        onClick={() =>
-                            onDelete(_product._id!, data.size!, data.color!)
-                        }
+                        onClick={() => onDelete(data._id!)}
                         loading={isLoadingDelete}
                     >
                         Remove
