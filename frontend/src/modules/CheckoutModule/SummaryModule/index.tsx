@@ -18,7 +18,7 @@ const SummaryModule = () => {
 
     const cartProps: Cart = {
         _user: order?._user?._id || "",
-        _products: order?.items || [],
+        items: order?.items || [],
         subTotal: order?.subTotal || 0,
         discount: order?.discount || 0,
         deliveryCost: order?.deliveryCost || 0,
@@ -49,7 +49,8 @@ const SummaryModule = () => {
                         <CartProductItem
                             key={index}
                             data={item}
-                            isLoading={isLoading}
+                            isLoadingDelete={false}
+                            isLoadingQuantity={false}
                             editable={false}
                         />
                     ))}

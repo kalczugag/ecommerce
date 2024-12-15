@@ -1,6 +1,7 @@
-import type { Address, User } from "@/types/User";
+import type { User } from "@/types/User";
+import type { ShippingAddress } from "@/types/Order";
 
-const Address = ({ data }: { data: Address }) => {
+const Address = ({ data }: { data: ShippingAddress }) => {
     const { street, postalCode, city, country } = data;
 
     return (

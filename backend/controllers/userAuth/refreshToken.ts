@@ -25,7 +25,7 @@ export const refreshToken = async (
 
         const user = await UserModel.findById(decoded.sub)
             .select("+refreshToken")
-            .populate("role")
+            .populate("_role")
             .exec();
 
         if (!user) {

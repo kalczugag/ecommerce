@@ -2,18 +2,19 @@ import type { Product } from "./Product";
 import type { User } from "./User";
 import type { Payment } from "./Payment";
 import type { ParsedQs } from "qs";
+import type { CartItem } from "./Cart";
 
 interface Item {
     _id?: string;
     _order?: string | Order;
     _product: string | Product;
-    name: string;
+    name?: string;
     sku?: string;
     color?: string;
     size?: string;
     unitPrice: number;
     quantity: number;
-    total: number;
+    total?: number;
     createdAt?: Date;
     updatedAt?: Date;
 }

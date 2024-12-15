@@ -13,7 +13,7 @@ export const login = async (req: express.Request, res: express.Response) => {
     try {
         const existingUser = await UserModel.findOne({ email })
             .select("+hash +salt +refreshToken")
-            .populate("role")
+            .populate("_role")
             .exec();
 
         if (!existingUser) {

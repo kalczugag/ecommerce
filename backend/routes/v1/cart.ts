@@ -11,7 +11,7 @@ const cart = (router: express.Router) => {
     );
 
     router.patch(
-        "/cart",
+        "/cart/:id",
         passport.authenticate("jwt", { session: false }),
         methods.update
     );

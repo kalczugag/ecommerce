@@ -94,7 +94,7 @@ const CategoryList = ({ data, page, isOpen, setOpen }: CategoryListProps) => {
                         {data.secondLevelCategories
                             .filter(
                                 (secondLevelCategory) =>
-                                    secondLevelCategory.parentCategory._id ===
+                                    secondLevelCategory._parentCategory._id ===
                                     topLevelCategory._id
                             )
                             .map((secondLevelCategory) => (
@@ -118,7 +118,7 @@ const CategoryList = ({ data, page, isOpen, setOpen }: CategoryListProps) => {
                                         .filter(
                                             (thirdLevelCategory) =>
                                                 thirdLevelCategory
-                                                    .parentCategory._id ===
+                                                    ._parentCategory._id ===
                                                 secondLevelCategory._id
                                         )
                                         .map((thirdLevelCategory) => (

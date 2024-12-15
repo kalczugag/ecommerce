@@ -67,7 +67,6 @@ userSchema.post("save", async function (doc) {
                 deliveryCost: 0,
                 total: 0,
             });
-            console.log("cart created");
 
             doc._cart = newCart._id;
             await doc.save();

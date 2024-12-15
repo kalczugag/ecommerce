@@ -34,7 +34,7 @@ const ReadProductModule = ({ config, data }: ReadProductModuleProps) => {
                     await editCart({
                         _id: cartId,
                         action: "add",
-                        productId: data!._id!,
+                        _product: data?._id || "",
                         color: data?.color,
                         size,
                         unitPrice: data?.price,

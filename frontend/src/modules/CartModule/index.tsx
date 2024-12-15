@@ -31,20 +31,20 @@ const CartModule = ({ data, isLoading }: CartModuleProps) => {
     const [addOrder, { isLoading: addLoading }] = useAddOrderMutation();
 
     const handleQuantityChange = async (
-        productId: string,
+        _product: string,
         quantity: number,
         size: Sizes,
         color: string
     ) => {
         setLoadingProductId((prev) => ({
             ...prev,
-            loadingQuantityId: productId,
+            loadingQuantityId: _product,
         }));
         try {
             await editCart({
                 _id: data?._id,
                 action: "changeQuantity",
-                productId,
+                _product,
                 quantity,
                 size,
                 color,
@@ -58,19 +58,19 @@ const CartModule = ({ data, isLoading }: CartModuleProps) => {
     };
 
     const handleDelete = async (
-        productId: string,
+        _product: string,
         size: Sizes,
         color: string
     ) => {
         setLoadingProductId((prev) => ({
             ...prev,
-            loadingDeleteId: productId,
+            loadingDeleteId: _product,
         }));
         try {
             await editCart({
                 _id: data?._id,
                 action: "delete",
-                productId,
+                _product,
                 size,
                 color,
             }).unwrap();
@@ -85,7 +85,7 @@ const CartModule = ({ data, isLoading }: CartModuleProps) => {
         } finally {
             setLoadingProductId((prev) => ({
                 ...prev,
-                loadingDeleteId: productId,
+                loadingDeleteId: _product,
             }));
         }
     };
@@ -95,9 +95,12 @@ const CartModule = ({ data, isLoading }: CartModuleProps) => {
             navigate("/login");
         }
 
-        const productsWithIds = data!._products.map((product) => ({
-            ...product,
-            product: product.product?._id || "",
+        const productsWithIds = data!.items.map((item) => ({
+            ...item,
+            _product: item._product._id || "",
+            name: item._product.title,
+            unitPrice: item._product.price,
+            total: item._product.price * item.quantity,
         }));
 
         const orderPayload = {
@@ -123,20 +126,20 @@ const CartModule = ({ data, isLoading }: CartModuleProps) => {
     return (
         <Loading isLoading={isLoading}>
             <DefaultLayout>
-                {data && data?._products.length > 0 ? (
+                {data && data?.items.length > 0 ? (
                     <div className="flex flex-col items-center space-y-10 md:flex-row md:justify-between md:items-start md:space-x-10 md:space-y-0">
                         <div className="flex flex-col space-y-6 w-full">
-                            {data._products.map((product, index) => (
+                            {data.items.map((item, index) => (
                                 <CartProductItem
-                                    key={product.product?._id + "_" + index}
-                                    data={product}
+                                    key={item._product?._id + "_" + index}
+                                    data={item}
                                     isLoadingQuantity={
                                         loadingProductId.loadingQuantityId ===
-                                        product.product?._id
+                                        item._product?._id
                                     }
                                     isLoadingDelete={
                                         loadingProductId.loadingDeleteId ===
-                                        product.product?._id
+                                        item._product?._id
                                     }
                                     onQuantityChange={handleQuantityChange}
                                     onDelete={handleDelete}

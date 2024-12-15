@@ -3,16 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useGetUsersCartQuery, useLogoutMutation } from "@/store";
 import { enqueueSnackbar } from "notistack";
 import useAuth from "@/hooks/useAuth";
+import { Box, MenuItem, Avatar } from "@mui/material";
 import {
-    Box,
-    Tooltip,
-    IconButton,
-    Menu,
-    MenuItem,
-    Avatar,
-} from "@mui/material";
-import {
-    PersonOutlineOutlined,
     Logout,
     Inbox,
     Settings,

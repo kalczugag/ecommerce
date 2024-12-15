@@ -1,6 +1,6 @@
 import { serialize } from "@/utils/helpers";
 import { apiSlice } from "./apiSlice";
-import type { Order, UpdateOrder } from "@/types/Order";
+import type { Order, UpdateOrder, AddOrder } from "@/types/Order";
 
 export const ordersApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
@@ -51,7 +51,7 @@ export const ordersApi = apiSlice.injectEndpoints({
             },
         }),
 
-        addOrder: builder.mutation<ApiResponseObject<Order>, Order>({
+        addOrder: builder.mutation<ApiResponseObject<Order>, AddOrder>({
             query: (values) => ({
                 url: "/orders",
                 method: "POST",

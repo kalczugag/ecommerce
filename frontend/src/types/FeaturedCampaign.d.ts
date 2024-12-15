@@ -4,7 +4,7 @@ import type { Product } from "./Product";
 export interface FeaturedCampaign {
     name: string;
     description?: string;
-    category: string | Category;
+    _category: string | Category;
     startDate: Date;
     endDate: Date;
     image?: string;

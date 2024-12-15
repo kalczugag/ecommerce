@@ -1,7 +1,7 @@
 import Joi from "joi";
 
 const itemSchema = Joi.object({
-    _order: Joi.string().required(),
+    _order: Joi.string().optional(),
     _product: Joi.string().required(),
     name: Joi.string().required(),
     sku: Joi.string().optional(),
@@ -18,11 +18,11 @@ const shippingAddressSchema = Joi.object({
     state: Joi.string().required(),
     postalCode: Joi.string().required(),
     country: Joi.string().required(),
-});
+}).optional();
 
 const schema = Joi.object({
     _user: Joi.string().required(),
-    items: Joi.array().items(itemSchema).required(),
+    items: Joi.array().items(Joi.string()).required(),
     status: Joi.string().valid(
         "placed",
         "confirmed",
@@ -33,11 +33,11 @@ const schema = Joi.object({
     shippingAddress: shippingAddressSchema,
     billingAddress: shippingAddressSchema,
     subTotal: Joi.number().positive().required(),
-    tax: Joi.number().min(0).max(100).required(),
+    tax: Joi.number().min(0).max(100),
     discount: Joi.number().min(0).max(100),
     deliveryCost: Joi.number().min(0).required(),
     total: Joi.number().positive().required(),
-    _payment: Joi.string().required(),
+    _payment: Joi.string(),
     trackingNumber: Joi.string().optional(),
     shippingMethod: Joi.string().valid("standard", "express", "same-day"),
     deliveryMethod: Joi.string().valid("pickup", "delivery"),

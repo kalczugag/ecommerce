@@ -1,9 +1,9 @@
 import OrderAddressSkeleton from "./OrderAddressSkeleton";
-import type { Address } from "@/types/User";
+import type { ShippingAddress } from "@/types/Order";
 
 interface OrderAddressProps {
     name: string;
-    address?: Address;
+    address?: ShippingAddress;
     isLoading: boolean;
 }
 

@@ -16,7 +16,7 @@ const returnSchema = new mongoose.Schema<ReturnOrder>(
         returnedItems: [
             {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: "OrderItem",
+                ref: "BaseItem",
                 required: true,
             },
         ],

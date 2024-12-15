@@ -1,4 +1,3 @@
-import { Skeleton } from "@mui/material";
 import ProductCardSkeleton from "./ProductCardSkeleton";
 import type { Item, Order } from "@/types/Order";
 import type { Product } from "@/types/Product";
@@ -11,7 +10,7 @@ interface ProductCardProps {
 }
 
 const ProductCard = ({ data, isLoading }: ProductCardProps) => {
-    const product = data.product as Product;
+    const product = data._product as Product;
 
     return (
         <>

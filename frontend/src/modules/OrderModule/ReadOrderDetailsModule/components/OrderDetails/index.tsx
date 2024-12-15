@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import { Button, Divider, Skeleton } from "@mui/material";
-import type { Order } from "@/types/Order";
+import type { Item, Order } from "@/types/Order";
 import SummaryCard from "../../../ReadOrderListModule/components/SummaryCard";
 import ProductCard from "../ProductCard";
 import OrderTotal from "../OrderTotal";
@@ -22,7 +22,7 @@ const OrderDetails = ({ data, isLoading }: OrderDetailsProps) => {
         },
         {
             label: "Payment Method",
-            value: data?.paymentMethod,
+            value: data?._payment?.paymentMethod,
         },
         {
             label: "Status",
@@ -99,7 +99,7 @@ const OrderDetails = ({ data, isLoading }: OrderDetailsProps) => {
                 {data?.items.map((item, index) => (
                     <ProductCard
                         key={index}
-                        data={item}
+                        data={item as Item}
                         status={data?.status}
                         timestamp={data?.createdAt}
                         isLoading={isLoading}

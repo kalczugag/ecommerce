@@ -3,7 +3,7 @@ import type { Cart } from "@/types/Cart";
 
 interface BodyProps {
     action: "add" | "delete" | "changeQuantity";
-    productId: string;
+    _product: string;
     color?: string;
     size?: string;
     unitPrice?: number;

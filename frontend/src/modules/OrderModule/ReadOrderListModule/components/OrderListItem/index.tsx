@@ -77,17 +77,12 @@ const OrderListItem = ({ data, isLoading }: OrderListItemProps) => {
                                             <div className="relative max-w-[150px] sm:max-w-[180px] md:max-w-[220px]">
                                                 <img
                                                     src={
-                                                        (
-                                                            item.product as Product
-                                                        ).imageUrl[0]
+                                                        item._product
+                                                            .imageUrl[0]
                                                     }
                                                     loading="lazy"
                                                     className="max-w-full object-cover object-top opacity-50 md:object-center"
-                                                    alt={
-                                                        (
-                                                            item.product as Product
-                                                        ).title
-                                                    }
+                                                    alt={item._product.title}
                                                 />
                                                 <div className="absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 text-white text-lg font-semibold">
                                                     +{data!.items.length - 1}
@@ -95,25 +90,17 @@ const OrderListItem = ({ data, isLoading }: OrderListItemProps) => {
                                             </div>
                                         ) : (
                                             <Link
-                                                to={`/product/${
-                                                    (item.product as Product)
-                                                        ._id
-                                                }`}
+                                                to={`/product/${item._product._id}`}
                                                 className="max-w-[150px] sm:max-w-[180px] md:max-w-[220px]"
                                             >
                                                 <img
                                                     src={
-                                                        (
-                                                            item.product as Product
-                                                        ).imageUrl[0]
+                                                        item._product
+                                                            .imageUrl[0]
                                                     }
                                                     loading="lazy"
                                                     className="max-w-full object-cover object-top md:object-center"
-                                                    alt={
-                                                        (
-                                                            item.product as Product
-                                                        ).title
-                                                    }
+                                                    alt={item._product.title}
                                                 />
                                             </Link>
                                         )}

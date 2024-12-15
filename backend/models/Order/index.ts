@@ -14,7 +14,7 @@ const orderSchema = new mongoose.Schema<Order>(
         items: [
             {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: "OrderItem",
+                ref: "BaseItem",
                 required: true,
             },
         ],
