@@ -1,5 +1,5 @@
 import express from "express";
-import { Document, isValidObjectId } from "mongoose";
+import { isValidObjectId } from "mongoose";
 import { CartModel } from "../../models/Cart";
 import {
     handleAdd,
@@ -7,11 +7,17 @@ import {
     handleClear,
     handleDelete,
 } from "./caseFunctions";
+import type { CartDocument } from "../../types/Cart";
 import type { Item } from "../../types/Order";
-import { Cart } from "../../types/Cart";
 
 interface BodyProps extends Item {
     action: "add" | "delete" | "clear" | "changeQuantity";
+}
+
+export interface HandleAddResult {
+    success: boolean;
+    message: string;
+    updatedCart?: CartDocument;
 }
 
 // const itemExists = items.find(
@@ -48,15 +54,15 @@ export const updateCart = async (
                 break;
             }
             case "changeQuantity": {
-                handleChangeQuantity();
+                result = await handleChangeQuantity(cart, newItem);
                 break;
             }
             case "delete": {
-                handleDelete();
+                result = await handleDelete(cart, newItem);
                 break;
             }
             case "clear": {
-                handleChangeQuantity();
+                result = await handleClear(cart);
                 break;
             }
             default:
@@ -64,7 +70,9 @@ export const updateCart = async (
         }
 
         if (result?.success) {
-            return res.status(200).json(result);
+            return res
+                .status(200)
+                .json({ msg: result.message, data: result.updatedCart });
         } else {
             return res.status(500).json(result);
         }

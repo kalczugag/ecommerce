@@ -1,12 +1,7 @@
 import { BaseItemModel } from "../../../models/BaseItem";
 import type { Item } from "../../../types/Order";
 import type { CartDocument } from "../../../types/Cart";
-
-interface HandleAddResult {
-    success: boolean;
-    message: string;
-    updatedCart?: CartDocument;
-}
+import type { HandleAddResult } from "../update";
 
 export const handleAdd = async (
     cart: CartDocument,

@@ -87,41 +87,4 @@ productSchema.pre("validate", async function (next) {
     next();
 });
 
-productSchema.pre("save", function (next) {
-    if (this.discountPercent && this.price) {
-        this.discountedPrice =
-            this.price - (this.price * this.discountPercent) / 100;
-    } else {
-        this.discountedPrice = this.price;
-    }
-
-    if (this.size && Array.isArray(this.size)) {
-        this.quantity = this.size.reduce((total, sizeItem) => {
-            return total + (sizeItem.quantity || 0);
-        }, 0);
-    }
-
-    next();
-});
-
-productSchema.pre("findOneAndUpdate", function (next) {
-    const update = this.getUpdate() as any;
-
-    if (update.discountPercent && update.price) {
-        update.discountedPrice =
-            update.price - (update.price * update.discountPercent) / 100;
-    }
-
-    if (update.size && Array.isArray(update.size)) {
-        update.quantity = update.size.reduce(
-            (total: number, sizeItem: { quantity: number }) => {
-                return total + (sizeItem.quantity || 0);
-            },
-            0
-        );
-    }
-
-    next();
-});
-
 export const ProductModel = mongoose.model("Product", productSchema);
