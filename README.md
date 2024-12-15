@@ -13,8 +13,10 @@ This is a fully functional e-commerce website built using the MERN (MongoDB, Exp
 
 Checkout live demo:
 
-client: [demo](https://ecommerce-frontend-six-black.vercel.app/)
-admin: [demo](https://ecommerce-admin-seven-cyan.vercel.app/)
+- Client: [demo](https://ecommerce-frontend-six-black.vercel.app/)
+- Admin: [demo](https://ecommerce-admin-seven-cyan.vercel.app/)
+
+> **Note:** The demo may work incorrectly or exhibit unexpected behavior as new features and updates are being actively added.
 
 ## Table of Contents
 
