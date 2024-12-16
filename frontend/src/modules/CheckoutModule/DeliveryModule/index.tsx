@@ -33,9 +33,10 @@ const DeliveryModule = () => {
 
         await updateOrder({
             _id: order?._id,
-            paymentMethod: "stripe",
             deliveryMethod: "delivery",
             additionalInfo: values.additionalInfo,
+            shippingAddress: values.address,
+            billingAddress: values.address,
         });
 
         if (!isUpdatingOrder && !isUpdatingUser && values.address) nextStep();

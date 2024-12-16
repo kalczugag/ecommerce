@@ -19,6 +19,10 @@ export const createCheckoutSession = async (
 
     const user = order._user as User;
 
+    if (!user.address) {
+        return res.status(400).json({ error: "No address provided" });
+    }
+
     let lineItems = (order.items as Item[]).map((item) => {
         const productData = item._product as Product;
         const unitPrice = productData.discountPercent

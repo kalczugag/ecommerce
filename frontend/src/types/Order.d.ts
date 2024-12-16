@@ -45,8 +45,8 @@ interface Order {
     billingAddress?: ShippingAddress;
     subTotal: number;
     tax?: number;
-    discount: number;
-    deliveryCost: number;
+    discount?: number;
+    deliveryCost?: number;
     total: number;
     _payment?: Payment;
     trackingNumber?: string;
@@ -73,54 +73,10 @@ interface ReturnOrder {
 interface UpdateOrder {
     _id?: string;
     status?: Order["status"];
-    paymentMethod?: Order["paymentMethod"];
-    paymentStatus?: Order["paymentStatus"];
+    shippingAddress: Order["shippingAddress"];
+    billingAddress: Order["billingAddress"];
     deliveryMethod?: Order["deliveryMethod"];
     additionalInfo?: Order["additionalInfo"];
-    isPending?: boolean;
 }
 
-interface AddItem {
-    _id?: string;
-    _order?: string | Order;
-    _product: string;
-    name: string;
-    sku?: string;
-    color?: string;
-    size?: string;
-    unitPrice: number;
-    quantity: number;
-    total: number;
-    createdAt?: Date;
-    updatedAt?: Date;
-}
-
-interface AddOrder {
-    _id?: string;
-    _user?: User;
-    items: AddItem[];
-    status?: "placed" | "confirmed" | "shipped" | "delivered" | "canceled";
-    shippingAddress?: ShippingAddress;
-    billingAddress?: ShippingAddress;
-    subTotal: number;
-    tax?: number;
-    discount: number;
-    deliveryCost: number;
-    total: number;
-    _payment?: Payment;
-    trackingNumber?: string;
-    shippingMethod?: "standard" | "express" | "same-day";
-    deliveryMethod?: "pickup" | "delivery";
-    createdAt?: Date;
-    updatedAt?: Date;
-}
-
-export {
-    Item,
-    ShippingAddress,
-    Payment,
-    Order,
-    ReturnOrder,
-    UpdateOrder,
-    AddOrder,
-};
+export { Item, ShippingAddress, Payment, Order, ReturnOrder, UpdateOrder };
