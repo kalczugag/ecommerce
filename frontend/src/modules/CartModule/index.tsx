@@ -81,10 +81,10 @@ const CartModule = ({ data, isLoading }: CartModuleProps) => {
             navigate("/login");
         }
 
-        const productIds = data?.items.map((item) => item._id);
+        const productIds = data?.items.map((item) => item._id!);
 
         const orderPayload = {
-            items: productIds,
+            items: productIds!,
             deliveryCost: data!.deliveryCost,
             subTotal: data!.subTotal,
             discount: data?.discount,

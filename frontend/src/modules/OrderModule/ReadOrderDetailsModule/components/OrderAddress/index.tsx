@@ -2,15 +2,21 @@ import OrderAddressSkeleton from "./OrderAddressSkeleton";
 import type { ShippingAddress } from "@/types/Order";
 
 interface OrderAddressProps {
+    label: string;
     name: string;
     address?: ShippingAddress;
     isLoading: boolean;
 }
 
-const OrderAddress = ({ name, address, isLoading }: OrderAddressProps) => {
+const OrderAddress = ({
+    label,
+    name,
+    address,
+    isLoading,
+}: OrderAddressProps) => {
     return (
         <div className="flex flex-col space-y-6">
-            <h2 className="text-2xl font-semibold">Delivery address</h2>
+            <h2 className="text-2xl font-semibold">{label}</h2>
             {isLoading ? (
                 <OrderAddressSkeleton />
             ) : (

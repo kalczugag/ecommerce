@@ -41,7 +41,13 @@ const SummaryModule = () => {
     return (
         <div className="space-y-4">
             <Box>
-                <Contact data={order?._user} />
+                <Contact
+                    data={order?._user}
+                    addressData={{
+                        shippingAddress: order?.shippingAddress,
+                        billingAddress: order?.billingAddress,
+                    }}
+                />
             </Box>
             <div className="flex flex-col items-center space-y-10 md:flex-row md:justify-between md:items-start md:space-x-10 md:space-y-0">
                 <div className="w-full space-y-4 max-h-[500px] overflow-auto">

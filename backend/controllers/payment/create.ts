@@ -53,6 +53,13 @@ export const createCheckoutSession = async (
                 userId: user._id!,
                 orderId: order._id!,
             },
+            payment_intent_data: {
+                metadata: {
+                    userId: user._id!,
+                    orderId: order._id!,
+                },
+            },
+
             shipping_options: [
                 {
                     shipping_rate_data: {
@@ -75,7 +82,7 @@ export const createCheckoutSession = async (
                     },
                 },
             ],
-            success_url: `${url}/orders/${order._id}?status=success`,
+            success_url: `${url}/orders/${order._id}?status=confirmed`,
             cancel_url: `${url}/orders/${order._id}?status=canceled`,
         });
 

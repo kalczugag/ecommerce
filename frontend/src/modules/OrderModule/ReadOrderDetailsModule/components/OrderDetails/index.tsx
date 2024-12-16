@@ -33,8 +33,8 @@ const OrderDetails = ({ data, isLoading }: OrderDetailsProps) => {
     const priceData = {
         total: data?.total.toFixed(2) || "",
         subTotal: data?.subTotal.toFixed(2) || "",
-        discount: data?.discount.toFixed(2) || "",
-        delivery: data?.deliveryCost.toFixed(2) || "",
+        discount: data?.discount?.toFixed(2) || "",
+        delivery: data?.deliveryCost?.toFixed(2) || "",
     };
 
     return (
@@ -116,11 +116,16 @@ const OrderDetails = ({ data, isLoading }: OrderDetailsProps) => {
 
                 <Divider />
 
-                <OrderAddress
-                    name={data?._user?.firstName + " " + data?._user?.lastName}
-                    address={data?._user?.address}
-                    isLoading={isLoading}
-                />
+                <div className="flex justify-between">
+                    <OrderAddress
+                        label="Shipping Address"
+                        name={
+                            data?._user?.firstName + " " + data?._user?.lastName
+                        }
+                        address={data?.shippingAddress}
+                        isLoading={isLoading}
+                    />
+                </div>
             </div>
         </div>
     );

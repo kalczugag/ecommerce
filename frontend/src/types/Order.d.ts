@@ -56,6 +56,10 @@ interface Order {
     updatedAt?: Date;
 }
 
+interface AddOrder extends Omit<Order, "items"> {
+    items: string[];
+}
+
 interface ReturnOrder {
     _id?: string;
     _order: Order;
@@ -73,10 +77,18 @@ interface ReturnOrder {
 interface UpdateOrder {
     _id?: string;
     status?: Order["status"];
-    shippingAddress: Order["shippingAddress"];
-    billingAddress: Order["billingAddress"];
+    shippingAddress?: Order["shippingAddress"];
+    billingAddress?: Order["billingAddress"];
     deliveryMethod?: Order["deliveryMethod"];
     additionalInfo?: Order["additionalInfo"];
 }
 
-export { Item, ShippingAddress, Payment, Order, ReturnOrder, UpdateOrder };
+export {
+    Item,
+    ShippingAddress,
+    Payment,
+    Order,
+    ReturnOrder,
+    AddOrder,
+    UpdateOrder,
+};
