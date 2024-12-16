@@ -23,11 +23,11 @@ export const createUser = async (
         const { salt, hash } = genPassword(params.password);
 
         let defaultRole: any;
-        if (!params.role) {
+        if (!params._role) {
             defaultRole = await RoleModel.findOne({ name: "client" }).exec();
         }
 
-        const role = params.role ? params.role : defaultRole._id;
+        const role = params._role ? params._role : defaultRole._id;
 
         const newUser = new UserModel({
             ...params,

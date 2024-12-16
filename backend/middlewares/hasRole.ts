@@ -1,6 +1,5 @@
 import express from "express";
-import { User } from "../types/User";
-import { get } from "lodash";
+import type { User } from "../types/User";
 
 export const hasRole =
     (requiredRole: string | "all") =>
@@ -13,9 +12,9 @@ export const hasRole =
 
         if (
             !user ||
-            !user.role ||
-            typeof user.role !== "object" ||
-            !user.role.name.includes(requiredRole)
+            !user._role ||
+            typeof user._role !== "object" ||
+            !user._role.name.includes(requiredRole)
         ) {
             return res.status(403).json({ error: "Access denied." });
         }

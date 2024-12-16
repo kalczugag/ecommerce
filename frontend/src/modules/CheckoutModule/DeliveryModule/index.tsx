@@ -3,16 +3,16 @@ import { useUpdateOrderMutation, useUpdateUserMutation } from "@/store";
 import { useOrder } from "@/contexts/OrderContext";
 import DeliveryForm from "@/forms/DeliveryForm";
 import AdditionalInfoForm from "@/forms/AdditionalInfoForm";
-import useStep from "../hooks/useStep";
+import useStep from "./hooks/useStep";
 import { Button } from "@mui/material";
-import { Address } from "@/types/User";
+import type { ShippingAddress } from "@/types/Order";
 
 interface DeliveryFormProps {
     _id: string;
     firstName: string;
     lastName: string;
     phone: string;
-    address?: Address;
+    address?: ShippingAddress;
     additionalInfo?: string;
 }
 
@@ -33,9 +33,10 @@ const DeliveryModule = () => {
 
         await updateOrder({
             _id: order?._id,
-            paymentMethod: "stripe",
             deliveryMethod: "delivery",
             additionalInfo: values.additionalInfo,
+            shippingAddress: values.address,
+            billingAddress: values.address,
         });
 
         if (!isUpdatingOrder && !isUpdatingUser && values.address) nextStep();

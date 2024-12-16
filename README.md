@@ -1,31 +1,31 @@
+<div align="center">
+
 # E-Commerce Website
 
-## 🚧 Work in Progress 🚧
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/kalczugag/ecommerce/blob/main/LICENSE)
+[![Build](https://github.com/Kosmit147/Zenith/actions/workflows/build.yml/badge.svg)](https://github.com/kalczugag/ecommerce/actions/workflows/build.yml)
 
-This project is still a work in progress! While many core features are already in place, there's more awesomeness coming soon! 💻🎉
+This is a fully functional e-commerce website built using the MERN (MongoDB, Express, React, Node.js) stack. It offers a seamless shopping experience for users and includes features like authentication, role-based access control (RBAC), and an admin panel for product management. The website is secure, scalable, and built with token-based authentication using JWT (JSON Web Token).
 
-Feel free to explore, contribute, or even break things (we'll fix them 😉). Stay tuned for new updates and features as we continue to build and improve this e-commerce platform.
+</div>
 
 ## Demo
 
 Checkout live demo:
 
-client: [demo](https://ecommerce-frontend-six-black.vercel.app/)
-admin: [demo](https://ecommerce-admin-seven-cyan.vercel.app/)
+- Client: [demo](https://ecommerce-frontend-six-black.vercel.app/)
+- Admin: [demo](https://ecommerce-admin-seven-cyan.vercel.app/)
+
+> **Note:** The demo may work incorrectly or exhibit unexpected behavior as new features and updates are being actively added.
 
 ## Table of Contents
 
--   [Introduction](#introduction)
 -   [Features](#features)
 -   [Tech Stack](#tech-stack)
 -   [Installation](#installation)
 -   [Usage](#usage)
 -   [Contributing](#contributing)
 -   [License](#license)
-
-## Introduction
-
-This is a fully functional e-commerce website built using the MERN (MongoDB, Express, React, Node.js) stack. It offers a seamless shopping experience for users and includes features like authentication, role-based access control (RBAC), and an admin panel for product management. The website is secure, scalable, and built with token-based authentication using JWT (JSON Web Token).
 
 ## Features
 

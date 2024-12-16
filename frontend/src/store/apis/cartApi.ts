@@ -3,7 +3,8 @@ import type { Cart } from "@/types/Cart";
 
 interface BodyProps {
     action: "add" | "delete" | "changeQuantity";
-    productId: string;
+    cartId?: string;
+    _product?: string;
     color?: string;
     size?: string;
     unitPrice?: number;
@@ -22,14 +23,14 @@ export const cartApi = apiSlice.injectEndpoints({
                 result ? [{ type: "Cart", id: result._id }] : [],
         }),
 
-        editUsersCart: builder.mutation<Cart, BodyProps>({
+        editUsersCart: builder.mutation<ApiResponseObject<Cart>, BodyProps>({
             query: (cart) => ({
-                url: "/cart",
+                url: `/cart/${cart.cartId}`,
                 method: "PATCH",
                 body: cart,
             }),
             invalidatesTags: (result, error, cart) => [
-                { type: "Cart", id: cart._id },
+                { type: "Cart", id: result?.data._id },
             ],
         }),
     }),

@@ -2,17 +2,17 @@ import { Route, Routes } from "react-router-dom";
 import PrivateOutlet from "@/pages/Outlets/PrivateOutlet";
 import VisitorsCounterOutlet from "@/pages/Outlets/VisitorsCounterOutlet";
 import Dashboard from "@/pages/Dashboard";
-import Catalog from "@/pages/Products/list";
-import ProductDetails from "@/pages/Products/details";
-import OrderDetails from "@/pages/Orders/details";
-import OrdersList from "@/pages/Orders/list";
+import Catalog from "@/pages/Products/List";
+import ProductDetails from "@/pages/Products/Details";
+import OrderDetails from "@/pages/Orders/Details";
+import OrdersList from "@/pages/Orders/List";
+import OrderReturn from "@/pages/Orders/Return";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Cart from "@/pages/Cart";
 import Checkout from "@/pages/Checkout";
 import Delivery from "@/pages/Checkout/Delivery";
 import Summary from "@/pages/Checkout/Summary";
-import CheckoutStatus from "@/pages/Checkout/Status";
 import NotFound from "@/pages/404";
 
 const App = () => {
@@ -31,12 +31,12 @@ const App = () => {
                     <Route path="/orders">
                         <Route index element={<OrdersList />} />
                         <Route path=":id" element={<OrderDetails />} />
+                        <Route path=":id/return" element={<OrderReturn />} />
                     </Route>
                     <Route path="/cart" element={<Cart />} />
                     <Route path="/checkout/:orderId/*" element={<Checkout />}>
                         <Route path="delivery" element={<Delivery />} />
                         <Route path="summary" element={<Summary />} />
-                        <Route path="*" element={<CheckoutStatus />} />
                     </Route>
                 </Route>
             </Route>

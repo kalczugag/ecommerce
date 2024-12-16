@@ -1,21 +1,15 @@
 import { IconButton } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { RemoveCircleOutline, AddCircleOutline } from "@mui/icons-material";
-import type { Item } from "@/types/Cart";
-import type { Sizes } from "@/modules/ProductsModule/ReadProductDetailsModule";
+import type { Item } from "@/types/Order";
 
 interface CartProductItemProps {
     data: Item;
     isLoadingQuantity: boolean;
     isLoadingDelete: boolean;
     editable?: boolean;
-    onQuantityChange?: (
-        productId: string,
-        quantity: number,
-        size: Sizes,
-        color: string
-    ) => void;
-    onDelete?: (productId: string, size: Sizes, color: string) => void;
+    onQuantityChange?: (productId: string, quantity: number) => void;
+    onDelete?: (productId: string) => void;
 }
 
 const CartProductItem = ({
@@ -26,16 +20,16 @@ const CartProductItem = ({
     onQuantityChange,
     onDelete,
 }: CartProductItemProps) => {
-    const { product, size, quantity: itemQuantity } = data;
+    const { _product, size, quantity: itemQuantity } = data;
 
     let discountedPrice = 0;
     let price = 0;
-    if (product) {
-        price = +product.price.toFixed(2);
+    if (_product) {
+        price = +_product.price.toFixed(2);
 
-        if (product.discountPercent) {
+        if (_product.discountPercent) {
             discountedPrice = +(
-                (price - (price * product.discountPercent) / 100) *
+                (price - (price * _product.discountPercent) / 100) *
                 itemQuantity
             ).toFixed(2);
         }
@@ -45,16 +39,16 @@ const CartProductItem = ({
         <div className="flex flex-col space-y-4 p-6 w-full shadow border rounded">
             <div className="flex space-x-2">
                 <img
-                    src={product?.imageUrl[0]}
-                    alt={product?.title}
+                    src={_product?.imageUrl[0]}
+                    alt={_product?.title}
                     className="w-36 h-36 border object-top object-cover"
                 />
                 <div className="flex flex-col space-y-4">
                     <div className="flex flex-col space-y-2">
-                        <h3 className="font-bold">{product?.title}</h3>
+                        <h3 className="font-bold">{_product?.title}</h3>
                         <p className="text-gray-500">Size: {size}</p>
                         <p className="text-gray-500">
-                            Seller: {product?.brand}
+                            Seller: {_product?.brand}
                         </p>
                     </div>
                     <p className="font-semibold space-x-2">
@@ -65,7 +59,7 @@ const CartProductItem = ({
                                     ${price * itemQuantity}
                                 </span>
                                 <span className="text-green-600">
-                                    {product?.discountPercent}% off
+                                    {_product?.discountPercent}% off
                                 </span>
                             </>
                         ) : (
@@ -79,12 +73,7 @@ const CartProductItem = ({
                     <div className="flex items-center space-x-1">
                         <IconButton
                             onClick={() =>
-                                onQuantityChange(
-                                    product!._id!,
-                                    itemQuantity - 1,
-                                    data.size,
-                                    data.color
-                                )
+                                onQuantityChange(data._id!, itemQuantity - 1)
                             }
                             disabled={isLoadingQuantity || itemQuantity === 1}
                         >
@@ -93,12 +82,7 @@ const CartProductItem = ({
                         <span>{itemQuantity}</span>
                         <IconButton
                             onClick={() =>
-                                onQuantityChange(
-                                    product!._id!,
-                                    itemQuantity + 1,
-                                    data.size,
-                                    data.color
-                                )
+                                onQuantityChange(data._id!, itemQuantity + 1)
                             }
                             disabled={isLoadingQuantity}
                         >
@@ -107,9 +91,7 @@ const CartProductItem = ({
                     </div>
                     <LoadingButton
                         variant="contained"
-                        onClick={() =>
-                            onDelete(product!._id!, data.size, data.color)
-                        }
+                        onClick={() => onDelete(data._id!)}
                         loading={isLoadingDelete}
                     >
                         Remove

@@ -27,20 +27,18 @@ export const sendEmail = async ({
         port: 465,
         secure: true,
         auth: {
-            user: "kalczugag@gmail.com",
+            user: process.env.EMAIL_ADDRESS,
             pass: process.env.EMAIL_PASSWORD,
         },
     });
 
     try {
         const info = await transporter.sendMail(message);
-        console.log("Email sent: ", info.response);
         return {
             status: 200,
             message: `Email sent successfully: ${info.response}`,
         };
     } catch (error: any) {
-        console.error("Error sending email: ", error);
         return {
             status: 500,
             message: `Failed to send email: ${error.message}`,

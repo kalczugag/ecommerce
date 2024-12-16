@@ -21,9 +21,12 @@ const Filters = ({
             </h4>
             <Form
                 onSubmit={onSubmit}
-                subscription={{}}
-                render={({ handleSubmit }) => (
-                    <form onSubmit={handleSubmit} className="px-2">
+                render={({ handleSubmit, form }) => (
+                    <form
+                        onSubmit={handleSubmit}
+                        onChange={() => form.submit()}
+                        className="px-2"
+                    >
                         {formElements}
                     </form>
                 )}

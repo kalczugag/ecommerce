@@ -9,7 +9,6 @@ import CheckoutSummary from "./components/CheckoutSummary";
 import EmptyCart from "./components/EmptyCart";
 import CartProductItem from "./components/CartProductItem";
 import type { Cart } from "@/types/Cart";
-import type { Sizes } from "../ProductsModule/ReadProductDetailsModule";
 
 interface CartModuleProps {
     data?: Cart;
@@ -30,24 +29,17 @@ const CartModule = ({ data, isLoading }: CartModuleProps) => {
     const [editCart] = useEditUsersCartMutation();
     const [addOrder, { isLoading: addLoading }] = useAddOrderMutation();
 
-    const handleQuantityChange = async (
-        productId: string,
-        quantity: number,
-        size: Sizes,
-        color: string
-    ) => {
+    const handleQuantityChange = async (id: string, quantity: number) => {
         setLoadingProductId((prev) => ({
             ...prev,
-            loadingQuantityId: productId,
+            loadingQuantityId: id,
         }));
         try {
             await editCart({
-                _id: data?._id,
+                cartId: data?._id,
                 action: "changeQuantity",
-                productId,
+                _id: id,
                 quantity,
-                size,
-                color,
             });
         } finally {
             setLoadingProductId((prev) => ({
@@ -57,22 +49,16 @@ const CartModule = ({ data, isLoading }: CartModuleProps) => {
         }
     };
 
-    const handleDelete = async (
-        productId: string,
-        size: Sizes,
-        color: string
-    ) => {
+    const handleDelete = async (id: string) => {
         setLoadingProductId((prev) => ({
             ...prev,
-            loadingDeleteId: productId,
+            loadingDeleteId: id,
         }));
         try {
             await editCart({
-                _id: data?._id,
+                cartId: data?._id,
                 action: "delete",
-                productId,
-                size,
-                color,
+                _id: id,
             }).unwrap();
 
             enqueueSnackbar("Product removed from cart successfully", {
@@ -85,7 +71,7 @@ const CartModule = ({ data, isLoading }: CartModuleProps) => {
         } finally {
             setLoadingProductId((prev) => ({
                 ...prev,
-                loadingDeleteId: productId,
+                loadingDeleteId: id,
             }));
         }
     };
@@ -95,16 +81,13 @@ const CartModule = ({ data, isLoading }: CartModuleProps) => {
             navigate("/login");
         }
 
-        const productsWithIds = data!._products.map((product) => ({
-            ...product,
-            product: product.product?._id || "",
-        }));
+        const productIds = data?.items.map((item) => item._id!);
 
         const orderPayload = {
-            items: productsWithIds,
+            items: productIds!,
             deliveryCost: data!.deliveryCost,
             subTotal: data!.subTotal,
-            discount: data!.discount,
+            discount: data?.discount,
             total: data!.total,
         };
 
@@ -123,20 +106,20 @@ const CartModule = ({ data, isLoading }: CartModuleProps) => {
     return (
         <Loading isLoading={isLoading}>
             <DefaultLayout>
-                {data && data?._products.length > 0 ? (
+                {data && data?.items.length > 0 ? (
                     <div className="flex flex-col items-center space-y-10 md:flex-row md:justify-between md:items-start md:space-x-10 md:space-y-0">
                         <div className="flex flex-col space-y-6 w-full">
-                            {data._products.map((product, index) => (
+                            {data.items.map((item, index) => (
                                 <CartProductItem
-                                    key={product.product?._id + "_" + index}
-                                    data={product}
+                                    key={item._product?._id + "_" + index}
+                                    data={item}
                                     isLoadingQuantity={
                                         loadingProductId.loadingQuantityId ===
-                                        product.product?._id
+                                        item._product?._id
                                     }
                                     isLoadingDelete={
                                         loadingProductId.loadingDeleteId ===
-                                        product.product?._id
+                                        item._product?._id
                                     }
                                     onQuantityChange={handleQuantityChange}
                                     onDelete={handleDelete}

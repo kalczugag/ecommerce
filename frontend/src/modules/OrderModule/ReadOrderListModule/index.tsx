@@ -6,19 +6,21 @@ import DefaultLayout from "@/layouts/DefaultLayout";
 import Filters from "@/components/Filters";
 import OrderListItem from "./components/OrderListItem";
 import type { Order } from "@/types/Order";
+import Loading from "@/components/Loading";
 
 interface ReadOrderListModuleProps {
     data: Order[];
     isLoading: boolean;
+    handleFilter: (value: { status: string }) => void;
 }
 
-const ReadOrderListModule = ({ data, isLoading }: ReadOrderListModuleProps) => {
+const ReadOrderListModule = ({
+    data,
+    isLoading,
+    handleFilter,
+}: ReadOrderListModuleProps) => {
     const orderValues = Object.values(orderStatuses);
     const placeholderData = placeholderArray(2);
-
-    const handleSubmit = (values: any) => {
-        console.log(values);
-    };
 
     const formElements = (
         <Field name="status" type="checkbox">
@@ -27,10 +29,19 @@ const ReadOrderListModule = ({ data, isLoading }: ReadOrderListModuleProps) => {
                     {orderValues.map((status, index) => (
                         <FormControlLabel
                             key={status + "_" + index.toString()}
-                            control={<Checkbox />}
+                            control={
+                                <Checkbox
+                                    onChange={(event) =>
+                                        input.onChange(
+                                            event.target.checked
+                                                ? status.toLowerCase()
+                                                : null
+                                        )
+                                    }
+                                />
+                            }
                             name={input.name}
                             value={input.value}
-                            onChange={() => input.onChange(status)}
                             label={status}
                             disabled={isLoading}
                         />
@@ -41,24 +52,28 @@ const ReadOrderListModule = ({ data, isLoading }: ReadOrderListModuleProps) => {
     );
 
     return (
-        <DefaultLayout direction="row" className="md:space-x-14">
-            <div className="hidden md:block">
-                <Filters
-                    onSubmit={handleSubmit}
-                    formElements={formElements}
-                    label="Order Status"
-                />
-            </div>
-            <div className="flex flex-col w-full space-y-28">
-                {(isLoading ? placeholderData : data).map((order, index) => (
-                    <OrderListItem
-                        key={order?._id || "skeleton" + "_" + index}
-                        data={order}
-                        isLoading={isLoading}
+        <Loading isLoading={isLoading}>
+            <DefaultLayout direction="row" className="md:space-x-14">
+                <div className="hidden md:block">
+                    <Filters
+                        onSubmit={handleFilter}
+                        formElements={formElements}
+                        label="Order Status"
                     />
-                ))}
-            </div>
-        </DefaultLayout>
+                </div>
+                <div className="flex flex-col w-full space-y-28">
+                    {(isLoading ? placeholderData : data).map(
+                        (order, index) => (
+                            <OrderListItem
+                                key={order?._id || "skeleton" + "_" + index}
+                                data={order}
+                                isLoading={isLoading}
+                            />
+                        )
+                    )}
+                </div>
+            </DefaultLayout>
+        </Loading>
     );
 };
 

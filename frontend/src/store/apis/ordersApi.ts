@@ -1,5 +1,6 @@
+import { serialize } from "@/utils/helpers";
 import { apiSlice } from "./apiSlice";
-import type { Order, UpdateOrder } from "@/types/Order";
+import type { Order, UpdateOrder, AddOrder } from "@/types/Order";
 
 export const ordersApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
@@ -8,20 +9,40 @@ export const ordersApi = apiSlice.injectEndpoints({
                 url: `/orders/id/${id}`,
                 method: "GET",
             }),
+            providesTags: (result, error, id) => [{ type: "Orders", id: id }],
         }),
 
         getOrdersByUserId: builder.query<
             ApiResponseArray<Order>,
             { userId: string; params?: Paginate }
         >({
-            query: ({ userId, params = {} }) => {
-                const queryParams: Record<string, string> = {};
-                if (params?.skip !== undefined) {
-                    queryParams.skip = params.skip.toString();
+            query: ({
+                userId,
+                params = {},
+            }: {
+                userId: string;
+                params?: Paginate;
+            }) => {
+                const { skip, limit, status, sort, ...rest } = params;
+
+                let queryParams: Record<string, string> = {};
+
+                if (skip !== undefined) {
+                    queryParams.skip = skip.toString();
                 }
-                if (params?.limit !== undefined) {
-                    queryParams.limit = params.limit.toString();
+                if (limit !== undefined) {
+                    queryParams.limit = limit.toString();
                 }
+                if (status !== undefined) {
+                    queryParams.status = status;
+                }
+                if (sort !== undefined) {
+                    queryParams.sort = sort;
+                }
+                if (Object.entries(rest).length > 0) {
+                    queryParams = { ...queryParams, ...serialize(rest) };
+                }
+
                 return {
                     url: `/orders/userId/${userId}`,
                     method: "GET",
@@ -30,7 +51,7 @@ export const ordersApi = apiSlice.injectEndpoints({
             },
         }),
 
-        addOrder: builder.mutation<ApiResponseObject<Order>, Order>({
+        addOrder: builder.mutation<ApiResponseObject<Order>, AddOrder>({
             query: (values) => ({
                 url: "/orders",
                 method: "POST",
@@ -44,6 +65,9 @@ export const ordersApi = apiSlice.injectEndpoints({
                 method: "PATCH",
                 body: order,
             }),
+            invalidatesTags: (result, error, values) => [
+                { type: "Orders", id: values._id },
+            ],
         }),
     }),
 });

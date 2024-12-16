@@ -3,28 +3,17 @@ import { useNavigate } from "react-router-dom";
 import { useGetUsersCartQuery, useLogoutMutation } from "@/store";
 import { enqueueSnackbar } from "notistack";
 import useAuth from "@/hooks/useAuth";
+import { Box, MenuItem, Avatar } from "@mui/material";
 import {
-    Box,
-    Tooltip,
-    IconButton,
-    Menu,
-    MenuItem,
-    Avatar,
-} from "@mui/material";
-import {
-    PersonOutlineOutlined,
     Logout,
     Inbox,
     Settings,
     AssignmentReturned,
 } from "@mui/icons-material";
-import {
-    AvatarMenuItem,
-    AvatarAuth,
-    AvatarMenuItemProps,
-} from "./AvatarSettings";
+import { AvatarAuth, AvatarMenuItemProps } from "./AvatarMenuItem";
 import CartIcon from "./CartIcon";
 import Search from "./Search";
+import AvatarMenu from "./AvatarMenu";
 
 const AccountTools = () => {
     const navigate = useNavigate();
@@ -32,6 +21,7 @@ const AccountTools = () => {
     const { data } = useGetUsersCartQuery(undefined, {
         skip: !token,
     });
+
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
     const [logout] = useLogoutMutation();
@@ -104,57 +94,12 @@ const AccountTools = () => {
 
     return (
         <Box sx={{ flexGrow: 0 }} className="flex space-x-2">
-            <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <PersonOutlineOutlined sx={{ fontSize: "24px" }} />
-                </IconButton>
-            </Tooltip>
-            <Menu
-                sx={{ mt: "45px" }}
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                keepMounted
-                anchorOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                }}
-                transformOrigin={{
-                    vertical: "top",
-                    horizontal: "right",
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-                PaperProps={{
-                    elevation: 0,
-                    sx: {
-                        overflow: "visible",
-                        filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-                        mt: 1.5,
-                        "& .MuiAvatar-root": {
-                            width: 32,
-                            height: 32,
-                            ml: -0.5,
-                            mr: 1,
-                        },
-                        "&::before": {
-                            content: '""',
-                            display: "block",
-                            position: "absolute",
-                            top: 0,
-                            right: 14,
-                            width: 10,
-                            height: 10,
-                            bgcolor: "background.paper",
-                            transform: "translateY(-50%) rotate(45deg)",
-                            zIndex: 0,
-                        },
-                    },
-                }}
-            >
-                {config.map((item, index) => (
-                    <AvatarMenuItem key={index} {...item} />
-                ))}
-            </Menu>
+            <AvatarMenu
+                config={config}
+                anchorElUser={anchorElUser}
+                handleOpenUserMenu={handleOpenUserMenu}
+                handleCloseUserMenu={handleCloseUserMenu}
+            />
             <Search />
             <CartIcon data={data} />
         </Box>

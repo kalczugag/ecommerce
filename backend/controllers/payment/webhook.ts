@@ -2,6 +2,12 @@ import express from "express";
 import { OrderModel } from "../../models/Order";
 import { CartModel } from "../../models/Cart";
 import { ProductModel } from "../../models/Product";
+import {
+    handlePaymentIntentSucceeded,
+    handleCheckoutSessionCompleted,
+    handlePaymentFailed,
+    handleCheckoutSessionExpired,
+} from "./caseFunctions";
 import { sendEmail } from "../../config/nodemailer";
 import { orderConfirmation } from "../../emailTemplates/orderConfirmation";
 import type { Order } from "../../types/Order";
@@ -32,39 +38,28 @@ export const stripeWebhook = async (
 
     try {
         switch (event.type) {
-            case "checkout.session.completed": {
-                const session = event.data.object as Stripe.Checkout.Session;
-                const { orderId, userId, email } = session.metadata!;
-
-                console.log(session.metadata);
-
-                if (orderId && userId) {
-                    await Promise.all([
-                        updateOrder(orderId, "confirmed", "paid"),
-                        clearCart(userId),
-                        updateProductQuantities(orderId),
-                    ]);
-
-                    if (email) {
-                        await sendOrderConfirmationEmail(email, orderId);
-                    }
-                }
+            case "charge.refunded": {
+                console.log("charge.refunded", event.data.object);
                 break;
             }
 
-            case "payment_intent.succeeded":
+            case "checkout.session.completed": {
+                handleCheckoutSessionCompleted(event.data.object);
                 break;
+            }
+
+            case "checkout.session.expired": {
+                handleCheckoutSessionExpired(event.data.object);
+                break;
+            }
+
+            case "payment_intent.succeeded": {
+                handlePaymentIntentSucceeded(event.data.object);
+                break;
+            }
 
             case "payment_intent.payment_failed": {
-                const failedPayment = event.data.object as Stripe.PaymentIntent;
-
-                if (failedPayment.metadata.orderId) {
-                    await updateOrder(
-                        failedPayment.metadata.orderId,
-                        "cancelled",
-                        "failed"
-                    );
-                }
+                handlePaymentFailed(event.data.object);
                 break;
             }
 
@@ -82,7 +77,7 @@ export const stripeWebhook = async (
 const updateOrder = async (
     orderId: string,
     status: Order["status"],
-    paymentStatus: Order["paymentStatus"]
+    paymentStatus: Order["_payment"]
 ) => {
     try {
         await OrderModel.findByIdAndUpdate(
@@ -114,9 +109,9 @@ const updateProductQuantities = async (orderId: string) => {
         );
         if (!order) throw new Error("Order not found");
 
-        const updates = order.items.map(async (item) => {
+        const updates = order.items.map(async (item: any) => {
             const product = await ProductModel.findById(
-                (item.product as Product)._id
+                (item._product as Product)._id
             );
             if (!product) return;
 

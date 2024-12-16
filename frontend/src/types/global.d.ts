@@ -18,6 +18,7 @@ interface Paginate {
     skip?: number;
     limit?: number;
     sort?: string;
-    filter?: string;
+    status?: string;
+    filter?: Record<string, any> | string;
     populate?: string;
 }

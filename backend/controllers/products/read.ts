@@ -40,7 +40,7 @@ export const getAllProducts = async (
                     ),
                 },
             })
-                .populate("parentCategory", "name _id")
+                .populate("_parentCategory", "name _id")
                 .exec();
 
             if (!categories || categories.length === 0) {
@@ -56,7 +56,7 @@ export const getAllProducts = async (
                     cat
                 ) => {
                     const parentCategoryId = (
-                        cat.parentCategory as Category
+                        cat._parentCategory as Category
                     )?._id?.toString();
                     const currentCategoryId = cat._id.toString();
                     const currentCategoryName = cat.name.toLowerCase();

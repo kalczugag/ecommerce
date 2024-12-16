@@ -1,6 +1,11 @@
-import type { Address, User } from "@/types/User";
+import type { User } from "@/types/User";
+import type { ShippingAddress } from "@/types/Order";
 
-const Address = ({ data }: { data: Address }) => {
+const Address = ({ data }: { data?: ShippingAddress }) => {
+    if (!data) {
+        return null;
+    }
+
     const { street, postalCode, city, country } = data;
 
     return (
@@ -15,13 +20,17 @@ const Address = ({ data }: { data: Address }) => {
 
 interface ContactProps {
     data?: User;
+    addressData: {
+        shippingAddress?: ShippingAddress;
+        billingAddress?: ShippingAddress;
+    };
 }
 
-const Contact = ({ data }: ContactProps) => (
+const Contact = ({ data, addressData }: ContactProps) => (
     <div className="space-y-4">
         <div>
             <h3 className="text-lg font-bold mb-1">Delivery Address</h3>
-            {data?.address && <Address data={data.address} />}
+            {data?.address && <Address data={addressData.shippingAddress} />}
         </div>
         <div>
             <h4 className="font-bold mb-1">Phone number</h4>

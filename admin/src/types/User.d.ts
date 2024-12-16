@@ -1,19 +1,13 @@
 import type { Role } from "./Role";
+import type { ShippingAddress } from "./Order";
 
 export interface User {
     _id?: string;
     firstName: string;
     lastName: string;
-    role: Role | string;
+    _role: Role | string;
     birthday?: Date;
-    address?: {
-        street: string;
-        apartment?: string;
-        city: string;
-        state?: string;
-        postalCode: number;
-        country: string;
-    };
+    address?: ShippingAddress;
     password?: string;
     phone?: string;
     email: string;

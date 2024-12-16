@@ -7,7 +7,6 @@ import type { User } from "../types/User";
 const addressSchema = new mongoose.Schema(
     {
         street: { type: String, required: false },
-        apartment: { type: String, required: false },
         city: { type: String, required: false },
         state: { type: String, required: false },
         postalCode: { type: String, required: false },
@@ -30,7 +29,7 @@ const userSchema = new mongoose.Schema<User>(
         firstName: { type: String, required: true },
         lastName: { type: String, required: true },
         preferences: { type: String, required: false, defult: "all" },
-        role: {
+        _role: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Role",
             required: false,
@@ -62,13 +61,12 @@ userSchema.post("save", async function (doc) {
         if (!doc._cart) {
             const newCart = await CartModel.create({
                 _user: doc._id,
-                _products: [],
+                items: [],
                 subTotal: 0,
                 discount: 0,
                 deliveryCost: 0,
                 total: 0,
             });
-            console.log("cart created");
 
             doc._cart = newCart._id;
             await doc.save();

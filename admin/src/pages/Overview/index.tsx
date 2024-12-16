@@ -11,9 +11,7 @@ const Overview = () => {
 
     useTitle(`Overview - ${type}`);
 
-    const { data, isLoading, isSuccess } = useGetOrdersSummaryQuery(
-        type as summaryType
-    );
+    const { data, isSuccess } = useGetOrdersSummaryQuery(type as summaryType);
 
     if (!isSuccess) {
         return null;
@@ -21,7 +19,7 @@ const Overview = () => {
 
     return (
         <DefaultLayout>
-            <PreviewCard chartData={data} isLoading={isLoading} />
+            <PreviewCard chartData={data} />
         </DefaultLayout>
     );
 };

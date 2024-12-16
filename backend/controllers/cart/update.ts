@@ -1,106 +1,81 @@
 import express from "express";
 import { isValidObjectId } from "mongoose";
 import { CartModel } from "../../models/Cart";
+import {
+    handleAdd,
+    handleChangeQuantity,
+    handleClear,
+    handleDelete,
+} from "./caseFunctions";
+import type { CartDocument } from "../../types/Cart";
 import type { Item } from "../../types/Order";
 
-interface BodyProps {
+interface BodyProps extends Item {
     action: "add" | "delete" | "clear" | "changeQuantity";
-    productId: string;
-    color: string;
-    size: string;
-    unitPrice: number;
-    quantity: number;
-    _id: string;
 }
 
+export interface HandleAddResult {
+    success: boolean;
+    message: string;
+    updatedCart?: CartDocument;
+}
+
+// const itemExists = items.find(
+//     (item) =>
+//         item._product?.toString() === _product &&
+//         item.color === color &&
+//         item.size === size
+// );
+
 export const updateCart = async (
-    req: express.Request<{}, {}, BodyProps>,
+    req: express.Request<{ id: string }, {}, BodyProps>,
     res: express.Response
 ) => {
-    const { action, productId, color, size, unitPrice, quantity, _id } =
-        req.body;
+    const { id } = req.params;
+    const { action, ...newItem } = req.body;
 
-    if (!isValidObjectId(_id)) {
+    if (!isValidObjectId(id)) {
         return res.status(400).json({ error: "Cart ID is required" });
     }
 
     try {
-        const cart = await CartModel.findById(_id);
+        const cart = await CartModel.findById(id).populate("items").exec();
 
         if (!cart) {
             return res.status(404).json({ error: "Cart not found" });
         }
 
-        if (action === "add") {
-            const itemExists = cart._products.find(
-                (item) =>
-                    item.product?.toString() === productId &&
-                    item.color === color &&
-                    item.size === size
-            );
+        let result;
 
-            if (itemExists) {
-                itemExists.quantity += quantity;
-            } else {
-                cart._products.push({
-                    product: productId,
-                    color,
-                    size,
-                    unitPrice,
-                    quantity,
-                });
+        switch (action) {
+            case "add": {
+                result = await handleAdd(cart, newItem);
+
+                break;
             }
+            case "changeQuantity": {
+                result = await handleChangeQuantity(cart, newItem);
+                break;
+            }
+            case "delete": {
+                result = await handleDelete(cart, newItem);
+                break;
+            }
+            case "clear": {
+                result = await handleClear(cart);
+                break;
+            }
+            default:
+                return res.status(400).json({ error: "Invalid action" });
+        }
 
-            await cart.save();
+        if (result?.success) {
             return res
                 .status(200)
-                .json({ msg: "Product added to cart", data: cart });
+                .json({ msg: result.message, data: result.updatedCart });
+        } else {
+            return res.status(500).json(result);
         }
-
-        if (action === "delete") {
-            cart._products = cart._products.filter(
-                (item) =>
-                    !(
-                        item.product?.toString() === productId &&
-                        item.color === color &&
-                        item.size === size
-                    )
-            );
-
-            await cart.save();
-            return res
-                .status(200)
-                .json({ msg: "Product removed from cart", data: cart });
-        }
-
-        if (action === "clear") {
-            cart._products = [];
-
-            await cart.save();
-            return res.status(200).json({ msg: "Cart cleared", data: cart });
-        }
-
-        if (action === "changeQuantity") {
-            const item = cart._products.find(
-                (item) =>
-                    item.product?.toString() === productId &&
-                    item.color === color &&
-                    item.size === size
-            );
-
-            if (item) {
-                item.quantity = quantity;
-                await cart.save();
-
-                return res
-                    .status(200)
-                    .json({ msg: "Product quantity updated", data: cart });
-            }
-
-            return res.status(404).json({ error: "Product not found in cart" });
-        }
-
-        return res.status(400).json({ error: "Invalid action" });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: "Internal server error" });

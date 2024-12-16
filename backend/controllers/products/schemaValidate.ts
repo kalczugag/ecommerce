@@ -11,9 +11,7 @@ const schema = Joi.object({
     size: Joi.array()
         .items(
             Joi.object({
-                name: Joi.string()
-                    .valid("S", "M", "L", "XL", "XXL", "XXXL")
-                    .required(),
+                name: Joi.string().required(),
                 quantity: Joi.number().integer().positive().required(),
             })
         )

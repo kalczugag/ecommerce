@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@media print {
+    @page {
+        margin: 20px;
+    }
+}

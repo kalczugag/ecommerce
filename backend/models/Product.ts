@@ -61,7 +61,7 @@ productSchema.pre("validate", async function (next) {
     );
     if (
         !secondLevelCategory ||
-        secondLevelCategory.parentCategory !== product.topLevelCategory
+        secondLevelCategory._parentCategory !== product.topLevelCategory
     ) {
         return next(
             new Error(
@@ -75,7 +75,7 @@ productSchema.pre("validate", async function (next) {
     );
     if (
         !thirdLevelCategory ||
-        thirdLevelCategory.parentCategory !== product.secondLevelCategory
+        thirdLevelCategory._parentCategory !== product.secondLevelCategory
     ) {
         return next(
             new Error(

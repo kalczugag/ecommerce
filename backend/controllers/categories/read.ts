@@ -22,7 +22,7 @@ export const getAllCategories = async (
 
     try {
         const query = CategoryModel.find(parsedQuery.filter)
-            .populate("parentCategory", "name")
+            .populate("_parentCategory", "name")
             .select(parsedQuery.select)
             .sort(parsedQuery.sort);
 
@@ -49,12 +49,12 @@ export const getAllCategories = async (
             modifiedCategories = categories.map((category) => {
                 if (
                     category.level !== "thirdLevel" &&
-                    category?.parentCategory
+                    category?._parentCategory
                 ) {
                     return {
                         ...category,
                         name: `${
-                            (category.parentCategory as Category).name
+                            (category._parentCategory as Category).name
                         } - ${category.name}`,
                     };
                 }

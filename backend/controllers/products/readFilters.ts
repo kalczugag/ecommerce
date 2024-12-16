@@ -31,7 +31,7 @@ export const getFilters = async (
                     ),
                 },
             })
-                .populate("parentCategory", "name _id")
+                .populate("_parentCategory", "name _id")
                 .exec();
 
             if (!categories || categories.length === 0) {
@@ -47,7 +47,7 @@ export const getFilters = async (
                     cat
                 ) => {
                     const parentCategoryId = (
-                        cat.parentCategory as Category
+                        cat._parentCategory as Category
                     )?._id?.toString();
                     const currentCategoryId = cat._id.toString();
                     const currentCategoryName = cat.name.toLowerCase();

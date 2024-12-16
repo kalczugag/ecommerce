@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { AppBar, Toolbar, Typography, Container } from "@mui/material";
 import { Adb } from "@mui/icons-material";
-import AccountTools from "./AccountTools";
+import IconButtonTools from "./IconButtonTools";
 import { useGetGroupedCategoriesQuery } from "@/store";
 import { CategoryContainer, CategoryList } from "./Categories";
 
@@ -29,6 +29,9 @@ const Header = ({ topLabel }: HeaderProps) => {
                         color: "white",
                         textAlign: "center",
                         padding: "5px",
+                        "@media print": {
+                            display: "none",
+                        },
                     }}
                 >
                     <Typography
@@ -47,6 +50,9 @@ const Header = ({ topLabel }: HeaderProps) => {
                     boxShadow: "none",
                     borderBottom: "1px solid #e0e0e0",
                     color: "black",
+                    "@media print": {
+                        display: "none",
+                    },
                 }}
             >
                 <Container maxWidth="xl">
@@ -67,7 +73,7 @@ const Header = ({ topLabel }: HeaderProps) => {
                             setOpen={setOpenCategories}
                             openCategories={openCategories}
                         />
-                        <AccountTools />
+                        <IconButtonTools />
                     </Toolbar>
                 </Container>
             </AppBar>

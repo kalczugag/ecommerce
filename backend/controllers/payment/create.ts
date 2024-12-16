@@ -1,6 +1,7 @@
 import express from "express";
-import type { Order } from "../../types/Order";
+import type { Item, Order } from "../../types/Order";
 import type { Product } from "../../types/Product";
+import type { User } from "../../types/User";
 
 import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_SECRET!);
@@ -16,8 +17,14 @@ export const createCheckoutSession = async (
         return res.status(400).json({ error: "No order provided" });
     }
 
-    let lineItems = order.items.map((item) => {
-        const productData = item.product as Product;
+    const user = order._user as User;
+
+    if (!user.address) {
+        return res.status(400).json({ error: "No address provided" });
+    }
+
+    let lineItems = (order.items as Item[]).map((item) => {
+        const productData = item._product as Product;
         const unitPrice = productData.discountPercent
             ? productData.discountedPrice!
             : productData.price!;
@@ -40,11 +47,19 @@ export const createCheckoutSession = async (
             payment_method_types: ["card", "paypal"],
             mode: "payment",
             line_items: lineItems,
+            customer_email: user.email,
+            automatic_tax: { enabled: true },
             metadata: {
-                userId: order._user._id!,
+                userId: user._id!,
                 orderId: order._id!,
-                email: order._user.email!,
             },
+            payment_intent_data: {
+                metadata: {
+                    userId: user._id!,
+                    orderId: order._id!,
+                },
+            },
+
             shipping_options: [
                 {
                     shipping_rate_data: {
@@ -67,8 +82,8 @@ export const createCheckoutSession = async (
                     },
                 },
             ],
-            success_url: `${url}/checkout/${order._id}/success`,
-            cancel_url: `${url}/checkout/${order._id}/summary`,
+            success_url: `${url}/orders/${order._id}?status=confirmed`,
+            cancel_url: `${url}/orders/${order._id}?status=canceled`,
         });
 
         return res.json({ sessionId: session.id });

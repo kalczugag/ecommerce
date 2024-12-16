@@ -4,7 +4,7 @@ import type { FeaturedCampaign } from "../types/FeaturedCampaign";
 const featuredCampaignSchema = new mongoose.Schema<FeaturedCampaign>({
     name: { type: String, required: true, unique: true },
     description: { type: String, required: false },
-    category: {
+    _category: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Category",
         required: true,

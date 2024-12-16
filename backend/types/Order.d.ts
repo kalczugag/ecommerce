@@ -1,49 +1,79 @@
 import type { Product } from "./Product";
 import type { User } from "./User";
+import type { Payment } from "./Payment";
 import type { ParsedQs } from "qs";
+import type { CartItem } from "./Cart";
 
-export interface Item {
-    product?: string | Product;
-    color: string;
-    size: string;
+interface Item {
+    _id?: string;
+    _order?: string | Order;
+    _product: string | Product;
+    name?: string;
+    sku?: string;
+    color?: string;
+    size?: string;
     unitPrice: number;
     quantity: number;
+    total?: number;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
-export interface Order {
+interface ShippingAddress {
+    street: string;
+    city: string;
+    state: string;
+    postalCode: string;
+    country: string;
+}
+
+interface Payment {
     _id?: string;
-    _user: User;
-    items: Item[];
-    status?:
-        | "placed"
-        | "confirmed"
-        | "shipped"
-        | "in_delivery"
-        | "delivered"
-        | "cancelled";
+    _order: string | Order;
+    paymentMethod: string;
+    paymentStatus: "unpaid" | "pending" | "completed" | "failed" | "refunded";
+    amount: number;
+    transactionId?: string;
+    paymentDate?: Date;
+    createdAt?: Date;
+    updatedAt?: Date;
+}
+
+interface Order {
+    _id?: string;
+    _user: string | User;
+    items: string[] | Item[];
+    status?: "placed" | "confirmed" | "shipped" | "delivered" | "canceled";
+    shippingAddress: ShippingAddress;
+    billingAddress: ShippingAddress;
     subTotal: number;
+    tax: number;
     discount: number;
     deliveryCost: number;
     total: number;
-    paymentMethod: "cash" | "stripe" | "paypal";
-    paymentStatus?:
-        | "unpaid"
-        | "paid"
-        | "failed"
-        | "refunded"
-        | "completed"
-        | "canceled";
-    deliveryMethod: "pickup" | "delivery";
-    deliveryCost: number;
-    additionalInfo?: string;
+    _payment?: string | Payment;
     trackingNumber?: string;
-    isPending: boolean;
-    leftOn?: string;
+    shippingMethod: "standard" | "express" | "same-day";
+    deliveryMethod: "pickup" | "delivery";
     createdAt: Date;
     updatedAt: Date;
 }
 
-export interface UpdateOrder {
+interface ReturnOrder {
+    _id?: string;
+    _order: string | Order;
+    _user: string | User;
+    returnedItems: string | Item[];
+    returnReason: string;
+    returnStatus: "initiated" | "approved" | "rejected" | "completed";
+    refundAmount: number;
+    refundMethod: "credit_card" | "paypal" | "bank_transfer";
+    returnDate: Date;
+    createdAt?: Date;
+    updatedAt?: Date;
+}
+
+interface UpdateOrder {
     _id?: string;
     _user?: string;
     status: Order["status"];
@@ -53,7 +83,17 @@ export interface UpdateOrder {
     additionalInfo: Order["additionalInfo"];
 }
 
-export interface PaginatedOrders extends ParsedQs {
+interface PaginatedOrders extends ParsedQs {
     skip: number;
     limit: number;
 }
+
+export {
+    Item,
+    ShippingAddress,
+    Payment,
+    Order,
+    ReturnOrder,
+    UpdateOrder,
+    PaginatedOrders,
+};

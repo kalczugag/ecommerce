@@ -1,11 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import {
-    MenuItem,
-    Typography,
-    Button,
-    Divider,
-    ListItemIcon,
-} from "@mui/material";
+import { MenuItem, Button, Divider, ListItemIcon } from "@mui/material";
 
 const AvatarAuth = () => {
     const navigate = useNavigate();

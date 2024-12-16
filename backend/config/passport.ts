@@ -16,7 +16,7 @@ passport.use(
     new Strategy(opts, async (payload, done) => {
         try {
             const user = await UserModel.findById(payload.sub)
-                .populate("role")
+                .populate("_role")
                 .exec();
 
             if (user) {

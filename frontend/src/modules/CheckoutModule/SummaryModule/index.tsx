@@ -3,7 +3,7 @@ import { useCreatePaymentMutation } from "@/store";
 import { useOrder } from "@/contexts/OrderContext";
 import CartProductItem from "@/modules/CartModule/components/CartProductItem";
 import CheckoutSummary from "@/modules/CartModule/components/CheckoutSummary";
-import Contact from "../components/Contact";
+import Contact from "./components/Contact";
 import Box from "@/components/Box";
 import type { Cart } from "@/types/Cart";
 
@@ -18,13 +18,12 @@ const SummaryModule = () => {
 
     const cartProps: Cart = {
         _user: order?._user?._id || "",
-        _products: order?.items || [],
+        items: order?.items || [],
         subTotal: order?.subTotal || 0,
         discount: order?.discount || 0,
         deliveryCost: order?.deliveryCost || 0,
         total: order?.total || 0,
     };
-    console.log(order);
 
     const handleCheckout = async () => {
         try {
@@ -42,7 +41,13 @@ const SummaryModule = () => {
     return (
         <div className="space-y-4">
             <Box>
-                <Contact data={order?._user} />
+                <Contact
+                    data={order?._user}
+                    addressData={{
+                        shippingAddress: order?.shippingAddress,
+                        billingAddress: order?.billingAddress,
+                    }}
+                />
             </Box>
             <div className="flex flex-col items-center space-y-10 md:flex-row md:justify-between md:items-start md:space-x-10 md:space-y-0">
                 <div className="w-full space-y-4 max-h-[500px] overflow-auto">
@@ -50,7 +55,8 @@ const SummaryModule = () => {
                         <CartProductItem
                             key={index}
                             data={item}
-                            isLoading={isLoading}
+                            isLoadingDelete={false}
+                            isLoadingQuantity={false}
                             editable={false}
                         />
                     ))}

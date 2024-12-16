@@ -13,7 +13,7 @@ export const login = async (req: express.Request, res: express.Response) => {
     try {
         const existingUser = await UserModel.findOne({ email })
             .select("+hash +salt +refreshToken")
-            .populate("role")
+            .populate("_role")
             .exec();
 
         if (!existingUser) {
@@ -48,8 +48,8 @@ export const login = async (req: express.Request, res: express.Response) => {
         return res.status(200).json({
             success: true,
             isAdmin:
-                typeof existingUser.role === "object" &&
-                existingUser.role.name === "admin",
+                typeof existingUser._role === "object" &&
+                existingUser._role.name === "admin",
             userId: existingUser._id,
             cartId: existingUser._cart,
             ...accessToken,

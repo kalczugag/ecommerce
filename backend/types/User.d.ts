@@ -1,23 +1,17 @@
 import type { Cart } from "./Cart";
+import type { ShippingAddress } from "./Order";
 import type { Role } from "./Role";
 import type { ParsedQs } from "qs";
 
 export interface User {
     _id?: string;
     _cart: string | Cart;
+    _role: Role | string;
     firstName: string;
     lastName: string;
     preferences: "men" | "women" | "unisex" | "kids" | "all";
-    role: Role | string;
     birthday?: Date;
-    address?: {
-        street: string;
-        apartment?: string;
-        city: string;
-        state?: string;
-        postalCode: number;
-        country: string;
-    };
+    address?: ShippingAddress;
     phone?: string;
     email: string;
     refreshToken: {

@@ -4,7 +4,7 @@ import { Tooltip } from "@mui/material";
 
 export interface SummaryCardProps {
     title: string;
-    value: number;
+    value: string;
     prefix?: string;
     summary: number;
     icon: JSX.Element;
@@ -12,7 +12,7 @@ export interface SummaryCardProps {
 
 const SummaryCard = ({
     title = "",
-    value = 0,
+    value = "",
     prefix,
     icon,
     summary = 0,

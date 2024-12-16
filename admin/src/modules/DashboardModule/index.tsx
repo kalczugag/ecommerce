@@ -30,7 +30,7 @@ const DashboardModule = () => {
     const content = [
         {
             title: "Sales",
-            value: summary.orders.total,
+            value: summary.orders.total.toFixed(2),
             prefix: "$",
             summary: weeklyComparison(
                 summary.orders.thisWeek,
@@ -40,7 +40,7 @@ const DashboardModule = () => {
         },
         {
             title: "Visitors",
-            value: summary.visitors.total,
+            value: summary.visitors.total.toString(),
             summary: weeklyComparison(
                 summary.visitors.thisWeek,
                 summary.visitors.lastWeek
@@ -49,7 +49,7 @@ const DashboardModule = () => {
         },
         {
             title: "Earnings",
-            value: summary.orders.paid,
+            value: summary.orders.paid.toFixed(2),
             prefix: "$",
             summary: weeklyComparison(
                 summary.orders.thisWeek,
@@ -59,7 +59,7 @@ const DashboardModule = () => {
         },
         {
             title: "Orders",
-            value: summary.orders.count,
+            value: summary.orders.count.toString(),
             summary: weeklyComparison(
                 summary.orders.thisWeek,
                 summary.orders.lastWeek

@@ -260,7 +260,7 @@ const CustomerForm = ({ isLoading }: CustomerFormProps) => {
                 </Field>
             </Row>
             <Row label="Roles">
-                <Field name="role" type="select" validate={required}>
+                <Field name="_role" type="select" validate={required}>
                     {(props) => (
                         <FormControl fullWidth>
                             <InputLabel>Role</InputLabel>

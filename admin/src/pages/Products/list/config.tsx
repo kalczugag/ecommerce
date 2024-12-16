@@ -51,7 +51,7 @@ export const tableConfig = [
     },
     {
         label: "Category",
-        render: (row: RowProps) => row.thirdLevelCategory.name,
+        render: (row: RowProps) => row.thirdLevelCategory?.name || "",
     },
     {
         label: "Price",

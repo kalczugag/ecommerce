@@ -4,23 +4,6 @@ import { useTitle } from "@/hooks/useTitle";
 import NotFound from "@/components/NotFound";
 import CrudModule from "@/modules/CrudModule";
 import ReadOrder from "@/modules/OrderModule/ReadOrderModule";
-import type { Order } from "@/types/Order";
-
-const defaultOrder: Order = {
-    _id: "",
-    _user: {
-        _id: "",
-        firstName: "",
-        lastName: "",
-        role: "",
-        email: "",
-    },
-    items: [],
-    status: "placed",
-    total: 0,
-    paymentMethod: "",
-    paymentStatus: "",
-};
 
 const OrdersDetails = () => {
     const { id } = useParams();
@@ -32,9 +15,7 @@ const OrdersDetails = () => {
 
     return (
         <CrudModule
-            actionForm={
-                <ReadOrder data={data || defaultOrder} isLoading={isLoading} />
-            }
+            actionForm={<ReadOrder data={data} isLoading={isLoading} />}
         />
     );
 };

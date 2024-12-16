@@ -14,7 +14,7 @@ export const deleteCategory = async (
 
     try {
         const deletedCategory = await CategoryModel.findByIdAndDelete(id);
-        await CategoryModel.deleteMany({ parentCategory: id });
+        await CategoryModel.deleteMany({ _parentCategory: id });
 
         if (!deletedCategory) {
             return res.status(404).json({ error: "Category not found" });

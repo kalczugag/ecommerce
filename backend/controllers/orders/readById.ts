@@ -14,11 +14,15 @@ export const getOrderById = async (
 
     try {
         const order = await OrderModel.findById(id)
+            .populate("_user", "firstName lastName email phone address")
+            .populate("_payment")
             .populate({
-                path: "_user",
-                select: "firstName lastName email phone address",
+                path: "items",
+                populate: {
+                    path: "_product",
+                    model: "Product",
+                },
             })
-            .populate("items.product")
             .exec();
 
         if (!order) {
