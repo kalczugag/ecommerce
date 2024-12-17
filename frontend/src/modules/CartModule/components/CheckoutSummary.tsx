@@ -33,7 +33,9 @@ const CheckoutSummary = ({
     isSummary,
     handleCheckout,
 }: CheckoutSummaryProps) => {
-    const itemsCount = data.items.length;
+    const itemsCount = data.items
+        .map((item) => item.quantity)
+        .reduce((a, b) => a + b, 0);
     const itemsLabel = `${itemsCount} ${itemsCount > 1 ? "items" : "item"}`;
     const deliveryCost = data.total < 100 ? `$${data.deliveryCost}` : "Free";
     const totalAmount = data.subTotal - data.discount + data.deliveryCost;

@@ -1,4 +1,5 @@
 import { BaseItemModel } from "../../../models/BaseItem";
+import { ProductModel } from "../../../models/Product";
 import type { Item } from "../../../types/Order";
 import type { CartDocument } from "../../../types/Cart";
 import type { HandleAddResult } from "../update";
@@ -16,8 +17,40 @@ export const handleChangeQuantity = async (
             };
         }
 
+        const product = await ProductModel.findById(baseItem._product)
+            .select("size")
+            .exec();
+
+        if (!product) {
+            return {
+                success: false,
+                message: "Product not found",
+            };
+        }
+
+        console.log("product: ", product);
+        console.log("\n\n\n\nbaseItem: ", baseItem);
+
+        const sizeIndex = product.size.findIndex(
+            (s) => s.name === baseItem.size
+        );
+
+        if (sizeIndex < 0) {
+            return {
+                success: false,
+                message: "Size not found",
+            };
+        }
+
         const updatedQuantity = itemToChange.quantity;
         const updatedTotal = baseItem.unitPrice * updatedQuantity;
+
+        if (product.size[sizeIndex].quantity < updatedQuantity) {
+            return {
+                success: false,
+                message: "Insufficient stock",
+            };
+        }
 
         const updatedItem = await BaseItemModel.findByIdAndUpdate(
             itemToChange._id,
@@ -37,6 +70,8 @@ export const handleChangeQuantity = async (
                 ? updatedItem
                 : item
         );
+
+        await cart.save();
 
         return {
             success: true,
