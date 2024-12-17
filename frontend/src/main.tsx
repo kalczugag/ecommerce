@@ -11,7 +11,11 @@ createRoot(document.getElementById("root")!).render(
     <StrictMode>
         <Provider store={store}>
             <BrowserRouter>
-                <SnackbarProvider autoHideDuration={2000} preventDuplicate>
+                <SnackbarProvider
+                    autoHideDuration={2000}
+                    preventDuplicate
+                    className="print:hidden"
+                >
                     <App />
                 </SnackbarProvider>
             </BrowserRouter>
