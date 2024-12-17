@@ -116,13 +116,21 @@ const OrderDetails = ({ data, isLoading }: OrderDetailsProps) => {
 
                 <Divider />
 
-                <div className="flex justify-between">
+                <div className="flex flex-col space-y-10 md:space-y-0 md:flex-row md:justify-between lg:w-1/2">
                     <OrderAddress
                         label="Shipping Address"
                         name={
                             data?._user?.firstName + " " + data?._user?.lastName
                         }
                         address={data?.shippingAddress}
+                        isLoading={isLoading}
+                    />
+                    <OrderAddress
+                        label="Billing Address"
+                        name={
+                            data?._user?.firstName + " " + data?._user?.lastName
+                        }
+                        address={data?.billingAddress}
                         isLoading={isLoading}
                     />
                 </div>

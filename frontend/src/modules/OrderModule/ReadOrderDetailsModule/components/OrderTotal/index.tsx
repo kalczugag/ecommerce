@@ -24,7 +24,7 @@ const OrderTotal = ({
     };
 
     return (
-        <div className="flex flex-row justify-between font-semibold">
+        <div className="flex flex-col font-semibold md:flex-row md:justify-between">
             <h2 className="text-2xl">Total cost</h2>
             <div className="flex flex-col items-end text-sm space-y-2">
                 {status !== "canceled" && (

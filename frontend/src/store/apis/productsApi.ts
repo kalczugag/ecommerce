@@ -57,6 +57,10 @@ export const productApi = apiSlice.injectEndpoints({
             query: (id) => ({
                 url: `/products/id/${id}`,
                 method: "GET",
+                params: {
+                    populate:
+                        "topLevelCategory secondLevelCategory thirdLevelCategory",
+                },
             }),
             providesTags: (result, error, id) => [{ type: "Products", id: id }],
         }),
