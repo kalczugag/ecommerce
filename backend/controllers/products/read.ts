@@ -3,6 +3,7 @@ import { ProductModel } from "../../models/Product";
 import { CategoryModel } from "../../models/Categories";
 import { PaginatedProducts } from "../../types/Product";
 import { Category } from "../../types/Category";
+import { redisClient } from "../../server";
 import { MongooseQueryParser } from "mongoose-query-parser";
 
 const parser = new MongooseQueryParser();
@@ -15,6 +16,8 @@ export const getAllProducts = async (
     req: express.Request<{}, {}, {}, PaginatedProducts>,
     res: express.Response
 ) => {
+    const cacheKey = res.locals.cacheKey;
+
     const { random, category, ...rest } = req.query;
     const parsedQuery = parser.parse(rest);
 
@@ -130,7 +133,11 @@ export const getAllProducts = async (
             return res.status(404).json({ error: "No products found" });
         }
 
-        return res.status(200).json({ data: products, count: totalDocuments });
+        const resultData = { data: products, count: totalDocuments };
+
+        await redisClient.set(cacheKey, JSON.stringify(resultData), "EX", 3600);
+
+        return res.status(200).json(resultData);
     } catch (error) {
         return res
             .status(500)
