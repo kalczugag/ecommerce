@@ -1,11 +1,6 @@
-interface AddressProps {
-    street: string;
-    city: string;
-    postalCode: number;
-    country: string;
-}
+import type { ShippingAddress } from "@/types/Order";
 
-const Address = ({ street, city, postalCode, country }: AddressProps) => {
+const Address = ({ street, city, postalCode, country }: ShippingAddress) => {
     return (
         <div className="flex flex-col">
             <p>st. {street || "-"}</p>

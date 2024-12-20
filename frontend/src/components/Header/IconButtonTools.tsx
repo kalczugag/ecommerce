@@ -77,12 +77,12 @@ const AccountTools = () => {
         {
             label: "Settings",
             icon: <Settings />,
-            onClick: () => handleNavigate("/settings"),
+            onClick: () => handleNavigate("/profile/settings/general"),
         },
         {
-            label: "Return",
+            label: "Returns",
             icon: <AssignmentReturned />,
-            onClick: () => handleNavigate("/return"),
+            onClick: () => handleNavigate("/returns"),
         },
         {
             label: "Logout",

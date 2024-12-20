@@ -28,7 +28,13 @@ const userSchema = new mongoose.Schema<User>(
         _cart: { type: mongoose.Schema.Types.ObjectId, ref: "Cart" },
         firstName: { type: String, required: true },
         lastName: { type: String, required: true },
-        preferences: { type: String, required: false, defult: "all" },
+        preferences: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Category",
+                required: false,
+            },
+        ],
         _role: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Role",

@@ -20,6 +20,8 @@ const ProductCard = ({ data, isLoading }: ProductCardProps) => {
               ).toFixed(2);
     }
 
+    console.log(`${data?.imageUrl}/imwidth=450`);
+
     return (
         <>
             {isLoading ? (
@@ -32,7 +34,7 @@ const ProductCard = ({ data, isLoading }: ProductCardProps) => {
                     }`}
                 >
                     <img
-                        src={data?.imageUrl[0]}
+                        src={`${data?.imageUrl[0]}?imwidth=450`}
                         alt={data?.title}
                         loading="lazy"
                         className="max-h-[450px]"

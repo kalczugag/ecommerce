@@ -5,13 +5,14 @@ import DeliveryForm from "@/forms/DeliveryForm";
 import AdditionalInfoForm from "@/forms/AdditionalInfoForm";
 import useStep from "./hooks/useStep";
 import { Button } from "@mui/material";
-import type { ShippingAddress } from "@/types/Order";
+import type { Order, ShippingAddress } from "@/types/Order";
 
 interface DeliveryFormProps {
     _id: string;
     firstName: string;
     lastName: string;
     phone: string;
+    deliveryMethod: Order["deliveryMethod"];
     address?: ShippingAddress;
     additionalInfo?: string;
 }
@@ -33,7 +34,7 @@ const DeliveryModule = () => {
 
         await updateOrder({
             _id: order?._id,
-            deliveryMethod: "delivery",
+            deliveryMethod: values.deliveryMethod,
             additionalInfo: values.additionalInfo,
             shippingAddress: values.address,
             billingAddress: values.address,

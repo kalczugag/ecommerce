@@ -39,7 +39,7 @@ const CartProductItem = ({
         <div className="flex flex-col space-y-4 p-6 w-full shadow border rounded">
             <div className="flex space-x-2">
                 <img
-                    src={_product?.imageUrl[0]}
+                    src={`${_product?.imageUrl[0]}?imwidth=144`}
                     alt={_product?.title}
                     className="w-36 h-36 border object-top object-cover"
                 />

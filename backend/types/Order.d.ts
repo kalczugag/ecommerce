@@ -54,7 +54,7 @@ interface Order {
     _payment?: string | Payment;
     trackingNumber?: string;
     shippingMethod: "standard" | "express" | "same-day";
-    deliveryMethod: "pickup" | "delivery";
+    deliveryMethod: "homeDelivery" | "pickupPoint" | "inStorePickup";
     createdAt: Date;
     updatedAt: Date;
 }

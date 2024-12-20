@@ -18,7 +18,7 @@ const ReadOrderModule = ({ data, isLoading }: ReadOrderProps) => {
                     address={{
                         street: "",
                         city: "",
-                        postalCode: 0,
+                        postalCode: "00000",
                         country: "",
                         ...data?._user.address,
                     }}

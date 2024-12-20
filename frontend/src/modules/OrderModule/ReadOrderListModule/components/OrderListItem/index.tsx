@@ -76,10 +76,7 @@ const OrderListItem = ({ data, isLoading }: OrderListItemProps) => {
                                         data!.items.length > 2 ? (
                                             <div className="relative max-w-[150px] sm:max-w-[180px] md:max-w-[220px]">
                                                 <img
-                                                    src={
-                                                        item._product
-                                                            .imageUrl[0]
-                                                    }
+                                                    src={`${item._product.imageUrl[0]}?imwidth=220`}
                                                     loading="lazy"
                                                     className="max-w-full object-cover object-top opacity-50 md:object-center"
                                                     alt={item._product.title}
@@ -94,10 +91,7 @@ const OrderListItem = ({ data, isLoading }: OrderListItemProps) => {
                                                 className="max-w-[150px] sm:max-w-[180px] md:max-w-[220px]"
                                             >
                                                 <img
-                                                    src={
-                                                        item._product
-                                                            .imageUrl[0]
-                                                    }
+                                                    src={`${item._product.imageUrl[0]}?imwidth=220`}
                                                     loading="lazy"
                                                     className="max-w-full object-cover object-top md:object-center"
                                                     alt={item._product.title}
