@@ -2,10 +2,10 @@ import express from "express";
 import passport from "passport";
 
 import methods from "../../controllers/products";
-import { hasRole, cache } from "../../middlewares";
+import { hasRole } from "../../middlewares";
 
 const products = (router: express.Router) => {
-    router.get("/products", cache("products"), methods.read);
+    router.get("/products", methods.read);
 
     router.get("/products/id/:id", methods.readById);
 

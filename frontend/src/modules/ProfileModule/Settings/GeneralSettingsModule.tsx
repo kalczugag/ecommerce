@@ -1,21 +1,83 @@
-import {
-    FormControl,
-    FormControlLabel,
-    FormLabel,
-    Radio,
-    RadioGroup,
-} from "@mui/material";
-import { Form, Field } from "react-final-form";
+import { Form } from "react-final-form";
+import DeliveryMethodForm, {
+    DeliveryMethodContentProps,
+} from "@/forms/DeliveryMethodForm";
 
-const content = [
-    { label: "Home Delivery", value: "homeDelivery" },
+const content: DeliveryMethodContentProps[] = [
+    {
+        label: "Home Delivery",
+        value: "homeDelivery",
+        items: [
+            //in future it will be dynamic based on available delivery methods
+            {
+                _id: "1",
+                label: "DPD",
+                value: "dpd",
+                price: 5,
+                expectedDelivery: new Date(),
+            },
+            {
+                _id: "2",
+                label: "DHL",
+                value: "dhl",
+                price: 5,
+                expectedDelivery: new Date(),
+            },
+            {
+                _id: "3",
+                label: "GLS",
+                value: "gls",
+                price: 5,
+                expectedDelivery: new Date(),
+            },
+        ],
+    },
     {
         label: "Pickup point",
         value: "pickupPoint",
+        items: [
+            //in future it will be dynamic based on available delivery methods
+            {
+                _id: "4",
+                label: "DPD",
+                value: "dpd",
+                price: 5,
+                expectedDelivery: new Date(),
+            },
+            {
+                _id: "5",
+                label: "DHL",
+                value: "dhl",
+                price: 5,
+                expectedDelivery: new Date(),
+            },
+            {
+                _id: "6",
+                label: "GLS",
+                value: "gls",
+                price: 5,
+                expectedDelivery: new Date(),
+            },
+        ],
     },
     {
         label: "In store pickup",
         value: "inStorePickup",
+        items: [
+            //in future it will be dynamic based on available delivery methods
+            {
+                _id: "7",
+                value: "dpd",
+                price: 5,
+                address: {
+                    street: "123 Main St",
+                    city: "New York",
+                    state: "NY",
+                    postalCode: "10001",
+                    country: "USA",
+                },
+            },
+        ],
     },
 ];
 
@@ -29,29 +91,7 @@ const GeneralSettingsModule = () => {
             onSubmit={handleSubmit}
             render={({ handleSubmit }) => (
                 <form onSubmit={handleSubmit}>
-                    <FormControl>
-                        <FormLabel>Delivery method</FormLabel>
-                        <Field name="deliveryMethod" type="radio">
-                            {({ input }) => (
-                                <RadioGroup
-                                    value={input.value}
-                                    onChange={input.onChange}
-                                >
-                                    {content.map((item) => (
-                                        <div className="flex flex-row items-center justify-between">
-                                            <FormControlLabel
-                                                key={item.label}
-                                                value={item.value}
-                                                control={<Radio />}
-                                                label={item.label}
-                                            />
-                                            <span>$5</span>
-                                        </div>
-                                    ))}
-                                </RadioGroup>
-                            )}
-                        </Field>
-                    </FormControl>
+                    <DeliveryMethodForm content={content} isLoading={false} />
                 </form>
             )}
         />
