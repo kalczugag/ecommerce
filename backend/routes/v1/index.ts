@@ -11,6 +11,7 @@ import reviews from "./reviews";
 import cart from "./cart";
 import featuredCampaigns from "./featuredCampaigns";
 import payment from "./payment";
+import deliveryMethods from "./deliveryMethods";
 
 const router = express.Router();
 
@@ -26,6 +27,7 @@ export default (): express.Router => {
     cart(router);
     featuredCampaigns(router);
     payment(router);
+    deliveryMethods(router);
 
     return router;
 };
