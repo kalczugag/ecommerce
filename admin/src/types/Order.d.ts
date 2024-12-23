@@ -1,5 +1,6 @@
 import { User } from "./User";
 import { Product } from "./Product";
+import type { DeliveryMethod } from "./DeliveryMethod";
 
 interface Item {
     _id?: string;
@@ -50,8 +51,8 @@ interface Order {
     total: number;
     _payment?: Payment;
     trackingNumber?: string;
-    shippingMethod: "standard" | "express" | "same-day";
-    deliveryMethod: "pickup" | "delivery";
+    _shippingMethod: deliveryMethods;
+    deliveryMethod: "home_delivery" | "locker_delivery" | "pickup";
     createdAt?: Date;
     updatedAt?: Date;
 }

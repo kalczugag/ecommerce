@@ -84,6 +84,7 @@ const DeliveryMethodForm = ({
                     <div className="space-y-4">
                         {content.map((wrap) => (
                             <RadioGroup
+                                key={wrap.label}
                                 value={input.value}
                                 onChange={input.onChange}
                             >

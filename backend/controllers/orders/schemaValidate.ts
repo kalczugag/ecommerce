@@ -39,12 +39,10 @@ const schema = Joi.object({
     total: Joi.number().positive().required(),
     _payment: Joi.string(),
     trackingNumber: Joi.string().optional(),
-    shippingMethod: Joi.string().valid("standard", "express", "same-day"),
-    deliveryMethod: Joi.string().valid(
-        "homeDelivery",
-        "pickupPoint",
-        "inStorePickup"
-    ),
+    _shippingMethod: Joi.string().optional(),
+    deliveryMethod: Joi.string()
+        .valid("home_delivery", "locker_delivery", "pickup")
+        .optional(),
 });
 
 export default schema;

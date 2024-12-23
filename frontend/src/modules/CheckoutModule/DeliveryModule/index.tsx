@@ -132,32 +132,45 @@ const DeliveryModule = () => {
             initialValues={order?._user}
             render={({ handleSubmit }) => {
                 return (
-                    <form
-                        onSubmit={handleSubmit}
-                        className="grid grid-flow-row gap-8 py-6 md:grid-cols-2"
-                    >
-                        <div className="flex flex-col">
-                            <AdditionalInfoForm isLoading={loading} />
-                            <Divider sx={{ mt: 4, mb: 2 }} />
-                            <DeliveryMethodForm
-                                content={content}
-                                isLoading={isUpdatingOrder || isUpdatingUser}
-                            />
-                            <Divider sx={{ mt: 4, mb: 2 }} />
-                        </div>
-                        <div>
-                            <DeliveryForm isLoading={loading} />
+                    <form onSubmit={handleSubmit} className="py-6">
+                        <div className="flex flex-col-reverse md:flex-row md:space-x-8">
+                            <div className="flex-1">
+                                <Divider
+                                    className="block md:hidden"
+                                    sx={{ mt: 4, mb: 4 }}
+                                />
 
-                            <div className="flex justify-end md:col-span-2">
-                                <Button
-                                    sx={{ mt: 4 }}
-                                    variant="contained"
-                                    type="submit"
-                                    disabled={isUpdatingOrder || isUpdatingUser}
-                                >
-                                    Use this address
-                                </Button>
+                                <DeliveryMethodForm
+                                    content={content}
+                                    isLoading={
+                                        isUpdatingOrder || isUpdatingUser
+                                    }
+                                />
+
+                                <Divider sx={{ mt: 4, mb: 4 }} />
                             </div>
+                            <div className="flex-1 flex flex-col">
+                                <DeliveryForm isLoading={loading} />
+
+                                <Divider
+                                    sx={{
+                                        mt: 4,
+                                        mb: 4,
+                                    }}
+                                />
+
+                                <AdditionalInfoForm isLoading={loading} />
+                            </div>
+                        </div>
+                        <div className="flex justify-end">
+                            <Button
+                                sx={{ mt: 4 }}
+                                variant="contained"
+                                type="submit"
+                                disabled={isUpdatingOrder || isUpdatingUser}
+                            >
+                                Use this address
+                            </Button>
                         </div>
                     </form>
                 );

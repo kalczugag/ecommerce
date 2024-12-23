@@ -2,10 +2,10 @@ import express from "express";
 import passport from "passport";
 
 import methods from "../../controllers/deliveryMethods";
-import { hasRole } from "../../middlewares";
+import { hasRole, cache } from "../../middlewares";
 
 const deliveryMethods = (router: express.Router) => {
-    router.get("/deliveryMethods", methods.read);
+    router.get("/deliveryMethods", cache("deliveryMethods"), methods.read);
 
     router.post(
         "/deliveryMethods",
