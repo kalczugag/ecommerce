@@ -15,26 +15,16 @@ export const getDeliveryMethodsByProviderId = async (
     }
 
     try {
-        const deliveryMethod = await DeliveryMethodModel.findOne({
-            providers: { $elemMatch: { _id: id } },
-        });
+        const deliveryMethod = await DeliveryMethodModel.findOne(
+            { "providers._id": id },
+            { _id: 1, type: 1, metadata: 1, "providers.$": 1 }
+        );
 
         if (!deliveryMethod) {
             return res.status(404).json({ error: "Delivery method not found" });
         }
 
-        const provider = deliveryMethod.providers.find(
-            (provider) => provider._id?.toString() === id
-        );
-
-        if (!provider) {
-            return res.status(404).json({ error: "Provider not found" });
-        }
-
-        return res.status(200).json({
-            _deliveryMethod: deliveryMethod._id,
-            provider,
-        });
+        return res.status(200).json(deliveryMethod);
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: "Internal server error" });
