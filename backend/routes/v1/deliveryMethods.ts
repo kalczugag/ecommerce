@@ -6,6 +6,7 @@ import { hasRole, cache } from "../../middlewares";
 
 const deliveryMethods = (router: express.Router) => {
     router.get("/deliveryMethods", cache("deliveryMethods"), methods.read);
+    router.get("/deliveryMethods/:id", methods.readByProviderId);
 
     router.post(
         "/deliveryMethods",

@@ -18,42 +18,20 @@ interface CartModuleProps {
 const CartModule = ({ data, isLoading }: CartModuleProps) => {
     const navigate = useNavigate();
     const { token } = useAuth();
-    const [loadingProductId, setLoadingProductId] = useState<{
-        loadingQuantityId: string | null;
-        loadingDeleteId: string | null;
-    }>({
-        loadingDeleteId: null,
-        loadingQuantityId: null,
-    });
 
-    const [editCart] = useEditUsersCartMutation();
+    const [editCart, { isLoading: editLoading }] = useEditUsersCartMutation();
     const [addOrder, { isLoading: addLoading }] = useAddOrderMutation();
 
     const handleQuantityChange = async (id: string, quantity: number) => {
-        setLoadingProductId((prev) => ({
-            ...prev,
-            loadingQuantityId: id,
-        }));
-        try {
-            await editCart({
-                cartId: data?._id,
-                action: "changeQuantity",
-                _id: id,
-                quantity,
-            });
-        } finally {
-            setLoadingProductId((prev) => ({
-                ...prev,
-                loadingQuantityId: null,
-            }));
-        }
+        await editCart({
+            cartId: data?._id,
+            action: "changeQuantity",
+            _id: id,
+            quantity,
+        });
     };
 
     const handleDelete = async (id: string) => {
-        setLoadingProductId((prev) => ({
-            ...prev,
-            loadingDeleteId: id,
-        }));
         try {
             await editCart({
                 cartId: data?._id,
@@ -68,11 +46,6 @@ const CartModule = ({ data, isLoading }: CartModuleProps) => {
             enqueueSnackbar("Failed to remove product from cart", {
                 variant: "error",
             });
-        } finally {
-            setLoadingProductId((prev) => ({
-                ...prev,
-                loadingDeleteId: id,
-            }));
         }
     };
 
@@ -113,14 +86,7 @@ const CartModule = ({ data, isLoading }: CartModuleProps) => {
                                 <CartProductItem
                                     key={item._product?._id + "_" + index}
                                     data={item}
-                                    isLoadingQuantity={
-                                        loadingProductId.loadingQuantityId ===
-                                        item._product?._id
-                                    }
-                                    isLoadingDelete={
-                                        loadingProductId.loadingDeleteId ===
-                                        item._product?._id
-                                    }
+                                    isLoading={editLoading}
                                     onQuantityChange={handleQuantityChange}
                                     onDelete={handleDelete}
                                 />

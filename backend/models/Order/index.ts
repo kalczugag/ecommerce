@@ -55,14 +55,9 @@ const orderSchema = new mongoose.Schema<Order>(
             required: false,
         },
         trackingNumber: { type: String, required: false },
-        _shippingMethod: {
+        _deliveryMethod: {
             type: mongoose.Types.ObjectId,
             ref: "DeliveryMethod",
-            required: false,
-        },
-        deliveryMethod: {
-            type: String,
-            enum: ["standard", "express", "expressPlus"],
             required: false,
         },
     },

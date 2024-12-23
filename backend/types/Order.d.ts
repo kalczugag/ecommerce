@@ -3,7 +3,7 @@ import type { User } from "./User";
 import type { Payment } from "./Payment";
 import type { ParsedQs } from "qs";
 import type { CartItem } from "./Cart";
-import deliveryMethods from "routes/v1/deliveryMethods";
+import type { DeliveryMethod } from "./DeliveryMethod";
 
 interface Item {
     _id?: string;
@@ -54,8 +54,7 @@ interface Order {
     total: number;
     _payment?: string | Payment;
     trackingNumber?: string;
-    _shippingMethod: deliveryMethods;
-    deliveryMethod: "home_delivery" | "locker_delivery" | "pickup";
+    _deliveryMethod: string | DeliveryMethod;
     createdAt: Date;
     updatedAt: Date;
 }

@@ -35,7 +35,6 @@ const ReadProductModule = ({ config, data }: ReadProductModuleProps) => {
                         cartId,
                         _product: data?._id || "",
                         action: "add",
-                        _id: data?._id || "",
                         color: data?.color,
                         size,
                         unitPrice: data?.price,

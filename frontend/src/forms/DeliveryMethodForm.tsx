@@ -5,73 +5,45 @@ import {
     Radio,
     RadioGroup,
 } from "@mui/material";
-import type { Order, ShippingAddress } from "@/types/Order";
-import { ReactNode } from "react";
+import type { DeliveryMethod, Provider } from "@/types/DeliveryMethod";
+import type { ShippingAddress } from "@/types/Order";
 
-export interface DeliveryMethodContentProps {
+interface ListItemProps extends Provider {
+    type: DeliveryMethod["type"];
     label: string;
-    items: {
-        _id: string;
-        topLabel?: string;
-        label?: string;
-        price: number;
-        expectedDelivery?: Date;
-        description?: string;
-        address?: ShippingAddress;
-        expendable?: ReactNode;
-    }[];
-}
-
-interface DeliveryMethodFormProps {
-    content: DeliveryMethodContentProps[];
-    isLoading: boolean;
-}
-
-interface ListItemProps {
-    _id: string;
-    topLabel: string;
-    label?: string;
-    price: number;
-    expectedDelivery?: Date;
-    description?: string;
-    address?: ShippingAddress;
-    expendable?: ReactNode;
-}
-
-{
-    /* <div className="flex flex-col">
-    <p>{name}</p>
-    <p>{address?.street}</p>
-    <p>
-        {address?.postalCode} {address?.city}, {address?.country}
-    </p>
-    </div>; */
 }
 
 const ListItem = ({
-    _id,
-    topLabel,
+    type,
     label,
+    name,
     price,
-    expectedDelivery,
-    description,
-    address,
+    estimatedDeliveryTime,
+    additionalNotes,
+    isAvailable,
 }: ListItemProps) => {
+    const address =
+        type === "pickup" && (additionalNotes?.address as ShippingAddress);
+
     return (
         <div className="flex flex-col">
             <p>
-                {topLabel}{" "}
+                {label}{" "}
                 <span className="text-sm text-gray-600">
-                    {label && label}{" "}
-                    {address && `${address.street}, ${address.city}`}
+                    {name} {address && `${address.street}, ${address.city}`}
                 </span>
             </p>
-            {description && (
+            {/* {description && (
                 <p className="text-sm text-gray-600">{description}</p>
-            )}
+            )} */}
         </div>
     );
 };
+
+interface DeliveryMethodFormProps {
+    content: DeliveryMethod[];
+    isLoading: boolean;
+}
 
 const DeliveryMethodForm = ({
     content,
@@ -79,56 +51,78 @@ const DeliveryMethodForm = ({
 }: DeliveryMethodFormProps) => {
     return (
         <FormControl disabled={isLoading}>
-            <Field name="deliveryMethod" type="radio">
-                {({ input }) => (
-                    <div className="space-y-4">
-                        {content.map((wrap) => (
-                            <RadioGroup
-                                key={wrap.label}
-                                value={input.value}
-                                onChange={input.onChange}
-                            >
-                                <h3 className="text-lg font-semibold">
-                                    {wrap.label}
-                                </h3>
-                                {wrap.items.map((item) => {
+            <div className="space-y-4">
+                {content.map((method) => {
+                    const typeToLabel =
+                        method.type === "home_delivery"
+                            ? "Home Delivery"
+                            : method.type === "locker_delivery"
+                            ? "Locker"
+                            : "In Store Pickup";
+
+                    return (
+                        <div key={method._id}>
+                            <h3 className="text-lg font-semibold">
+                                {typeToLabel}
+                            </h3>
+                            <RadioGroup>
+                                {method.providers.map((provider) => {
                                     const titleVariant =
-                                        wrap.value === "homeDelivery" ? (
+                                        method.type === "home_delivery" ? (
                                             <ListItem
-                                                topLabel="Courier"
-                                                {...item}
+                                                type={method.type}
+                                                label="Courier"
+                                                {...provider}
                                             />
-                                        ) : wrap.value === "pickupPoint" ? (
+                                        ) : method.type ===
+                                          "locker_delivery" ? (
                                             <ListItem
-                                                topLabel="Pickup"
-                                                {...item}
+                                                type={method.type}
+                                                label="Pickup"
+                                                {...provider}
                                             />
                                         ) : (
                                             <ListItem
-                                                topLabel="Store"
-                                                {...item}
+                                                type={method.type}
+                                                label="Store"
+                                                {...provider}
                                             />
                                         );
 
                                     return (
-                                        <div className="flex flex-row items-center justify-between">
+                                        <div
+                                            key={provider._id}
+                                            className="flex flex-row items-center justify-between"
+                                        >
                                             <FormControlLabel
-                                                key={item.label}
-                                                value={item.value}
-                                                control={<Radio />}
+                                                key={provider._id}
+                                                control={
+                                                    <Field
+                                                        name="_deliveryMethod"
+                                                        type="radio"
+                                                        value={provider._id}
+                                                    >
+                                                        {({ input }) => (
+                                                            <Radio {...input} />
+                                                        )}
+                                                    </Field>
+                                                }
                                                 label={titleVariant}
                                             />
                                             <span>
-                                                ${item.price.toFixed(2)}
+                                                $
+                                                {provider.price === 0
+                                                    ? "Free"
+                                                    : provider.price}
                                             </span>
                                         </div>
                                     );
                                 })}
                             </RadioGroup>
-                        ))}
-                    </div>
-                )}
-            </Field>
+                        </div>
+                    );
+                })}
+            </div>
         </FormControl>
     );
 };

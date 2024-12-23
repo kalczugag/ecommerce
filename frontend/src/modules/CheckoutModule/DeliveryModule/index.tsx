@@ -3,102 +3,28 @@ import { useUpdateOrderMutation, useUpdateUserMutation } from "@/store";
 import { useOrder } from "@/contexts/OrderContext";
 import DeliveryForm from "@/forms/DeliveryForm";
 import AdditionalInfoForm from "@/forms/AdditionalInfoForm";
-import DeliveryMethodForm, {
-    DeliveryMethodContentProps,
-} from "@/forms/DeliveryMethodForm";
+import DeliveryMethodForm from "@/forms/DeliveryMethodForm";
 import useStep from "./hooks/useStep";
 import { Button, Divider } from "@mui/material";
-import type { Order, ShippingAddress } from "@/types/Order";
-
-const content: DeliveryMethodContentProps[] = [
-    {
-        label: "Home Delivery",
-        value: "homeDelivery",
-        items: [
-            //in future it will be dynamic based on available delivery methods
-            {
-                _id: "1",
-                label: "DPD",
-                value: "dpd",
-                price: 5,
-                expectedDelivery: new Date(),
-            },
-            {
-                _id: "2",
-                label: "DHL",
-                value: "dhl",
-                price: 5,
-                expectedDelivery: new Date(),
-            },
-            {
-                _id: "3",
-                label: "GLS",
-                value: "gls",
-                price: 5,
-                expectedDelivery: new Date(),
-            },
-        ],
-    },
-    {
-        label: "Pickup point",
-        value: "pickupPoint",
-        items: [
-            //in future it will be dynamic based on available delivery methods
-            {
-                _id: "4",
-                label: "DPD",
-                value: "dpd",
-                price: 5,
-                expectedDelivery: new Date(),
-            },
-            {
-                _id: "5",
-                label: "DHL",
-                value: "dhl",
-                price: 5,
-                expectedDelivery: new Date(),
-            },
-            {
-                _id: "6",
-                label: "GLS",
-                value: "gls",
-                price: 5,
-                expectedDelivery: new Date(),
-            },
-        ],
-    },
-    {
-        label: "In store pickup",
-        value: "inStorePickup",
-        items: [
-            //in future it will be dynamic based on available delivery methods
-            {
-                _id: "7",
-                value: "dpd",
-                price: 5,
-                address: {
-                    street: "123 Main St",
-                    city: "New York",
-                    state: "NY",
-                    postalCode: "10001",
-                    country: "USA",
-                },
-            },
-        ],
-    },
-];
+import type { ShippingAddress } from "@/types/Order";
+import { DeliveryMethod, Provider } from "@/types/DeliveryMethod";
 
 interface DeliveryFormProps {
     _id: string;
     firstName: string;
     lastName: string;
     phone: string;
-    deliveryMethod: Order["deliveryMethod"];
+    _deliveryMethod: string;
     address?: ShippingAddress;
     additionalInfo?: string;
 }
 
-const DeliveryModule = () => {
+interface DeliveryModuleProps {
+    data: DeliveryMethod[];
+    isDeliveryLoading: boolean;
+}
+
+const DeliveryModule = ({ data, isDeliveryLoading }: DeliveryModuleProps) => {
     const { order, isLoading } = useOrder();
     const [_, nextStep] = useStep();
     const [updateOrder, { isLoading: isUpdatingOrder }] =
@@ -115,8 +41,7 @@ const DeliveryModule = () => {
 
         await updateOrder({
             _id: order?._id,
-            deliveryMethod: values.deliveryMethod,
-            additionalInfo: values.additionalInfo,
+            _deliveryMethod: values._deliveryMethod,
             shippingAddress: values.address,
             billingAddress: values.address,
         });
@@ -124,7 +49,8 @@ const DeliveryModule = () => {
         if (!isUpdatingOrder && !isUpdatingUser && values.address) nextStep();
     };
 
-    const loading = isLoading || isUpdatingOrder || isUpdatingUser;
+    const loading =
+        isLoading || isUpdatingOrder || isUpdatingUser || isDeliveryLoading;
 
     return (
         <Form
@@ -141,10 +67,8 @@ const DeliveryModule = () => {
                                 />
 
                                 <DeliveryMethodForm
-                                    content={content}
-                                    isLoading={
-                                        isUpdatingOrder || isUpdatingUser
-                                    }
+                                    content={data}
+                                    isLoading={loading}
                                 />
 
                                 <Divider sx={{ mt: 4, mb: 4 }} />

@@ -10,7 +10,7 @@ const Delivery = () => {
 
     if (isError || (!isLoading && !data)) return <NotFound />;
 
-    return <DeliveryModule />;
+    return <DeliveryModule data={data || []} isDeliveryLoading={isLoading} />;
 };
 
 export default Delivery;

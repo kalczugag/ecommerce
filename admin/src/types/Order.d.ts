@@ -1,5 +1,5 @@
-import { User } from "./User";
-import { Product } from "./Product";
+import type { User } from "./User";
+import type { Product } from "./Product";
 import type { DeliveryMethod } from "./DeliveryMethod";
 
 interface Item {
@@ -51,8 +51,7 @@ interface Order {
     total: number;
     _payment?: Payment;
     trackingNumber?: string;
-    _shippingMethod: deliveryMethods;
-    deliveryMethod: "home_delivery" | "locker_delivery" | "pickup";
+    _deliveryMethod: DeliveryMethod;
     createdAt?: Date;
     updatedAt?: Date;
 }

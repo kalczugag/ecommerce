@@ -51,8 +51,7 @@ interface Order {
     total: number;
     _payment?: Payment;
     trackingNumber?: string;
-    _shippingMethod: deliveryMethods;
-    deliveryMethod: "home_delivery" | "locker_delivery" | "pickup";
+    _deliveryMethod?: DeliveryMethod;
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -80,8 +79,7 @@ interface UpdateOrder {
     status?: Order["status"];
     shippingAddress?: Order["shippingAddress"];
     billingAddress?: Order["billingAddress"];
-    deliveryMethod?: Order["deliveryMethod"];
-    additionalInfo?: Order["additionalInfo"];
+    _deliveryMethod?: string;
 }
 
 export {
