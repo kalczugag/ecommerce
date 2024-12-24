@@ -68,6 +68,7 @@ const DeliveryModule = ({ data, isDeliveryLoading }: DeliveryModuleProps) => {
 
                                 <DeliveryMethodForm
                                     content={data}
+                                    orderDeliveryCost={order?.deliveryCost || 0}
                                     isLoading={loading}
                                 />
 

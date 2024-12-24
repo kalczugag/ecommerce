@@ -19,7 +19,7 @@ export const getAllDeliveryMethods = async (
             cacheKey,
             JSON.stringify(deliveryMethods),
             "EX",
-            3600 * 24
+            3600 * 24 * 7
         );
 
         return res.status(200).json(deliveryMethods);

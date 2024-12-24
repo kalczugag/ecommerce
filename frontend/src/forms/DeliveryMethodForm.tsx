@@ -42,11 +42,13 @@ const ListItem = ({
 
 interface DeliveryMethodFormProps {
     content: DeliveryMethod[];
+    orderDeliveryCost: number;
     isLoading: boolean;
 }
 
 const DeliveryMethodForm = ({
     content,
+    orderDeliveryCost,
     isLoading,
 }: DeliveryMethodFormProps) => {
     return (
@@ -94,27 +96,68 @@ const DeliveryMethodForm = ({
                                             key={provider._id}
                                             className="flex flex-row items-center justify-between"
                                         >
-                                            <FormControlLabel
-                                                key={provider._id}
-                                                control={
-                                                    <Field
-                                                        name="_deliveryMethod"
-                                                        type="radio"
-                                                        value={provider._id}
-                                                    >
-                                                        {({ input }) => (
-                                                            <Radio {...input} />
-                                                        )}
-                                                    </Field>
-                                                }
-                                                label={titleVariant}
-                                            />
-                                            <span>
-                                                $
-                                                {provider.price === 0
-                                                    ? "Free"
-                                                    : provider.price}
-                                            </span>
+                                            <div className="flex flex-col py-2">
+                                                <FormControlLabel
+                                                    key={provider._id}
+                                                    control={
+                                                        <Field
+                                                            name="_deliveryMethod"
+                                                            type="radio"
+                                                            value={provider._id}
+                                                        >
+                                                            {({ input }) => (
+                                                                <Radio
+                                                                    sx={{
+                                                                        paddingY: 0,
+                                                                    }}
+                                                                    {...input}
+                                                                />
+                                                            )}
+                                                        </Field>
+                                                    }
+                                                    label={titleVariant}
+                                                />
+                                                <div className="pl-8">
+                                                    <p>
+                                                        {`
+                                                        ${
+                                                            provider.estimatedDeliveryTime
+                                                        } 
+                                                        ${
+                                                            method.type ===
+                                                            "locker_delivery"
+                                                                ? "at point"
+                                                                : method.type ===
+                                                                  "home_delivery"
+                                                                ? "at you"
+                                                                : ""
+                                                        }
+                                                    `}
+                                                    </p>
+                                                    {method.type ===
+                                                        "locker_delivery" && (
+                                                        <p className="text-sm text-gray-600">
+                                                            will be delivered by{" "}
+                                                            {provider.name}
+                                                        </p>
+                                                    )}
+                                                </div>
+                                            </div>
+                                            <p className="flex flex-col">
+                                                {orderDeliveryCost === 0 &&
+                                                method.type === "pickup" ? (
+                                                    "Free"
+                                                ) : orderDeliveryCost === 0 ? (
+                                                    <>
+                                                        <span className="line-through text-gray-600">
+                                                            ${provider.price}
+                                                        </span>
+                                                        Free
+                                                    </>
+                                                ) : (
+                                                    `$${provider.price}`
+                                                )}
+                                            </p>
                                         </div>
                                     );
                                 })}

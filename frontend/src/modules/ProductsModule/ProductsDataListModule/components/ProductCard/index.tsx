@@ -20,8 +20,6 @@ const ProductCard = ({ data, isLoading }: ProductCardProps) => {
               ).toFixed(2);
     }
 
-    console.log(`${data?.imageUrl}/imwidth=450`);
-
     return (
         <>
             {isLoading ? (
