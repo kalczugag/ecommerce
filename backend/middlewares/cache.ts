@@ -1,6 +1,6 @@
 import express from "express";
 import crypto from "crypto";
-import { redisClient } from "../server";
+import { redisClient } from "../config/redis";
 
 export const cache =
     (cacheKeyPrefix: string) =>
