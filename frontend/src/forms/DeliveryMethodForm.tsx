@@ -1,27 +1,21 @@
-import { Field } from "react-final-form";
+import { Field, FormSpy } from "react-final-form";
 import {
     FormControl,
     FormControlLabel,
+    FormHelperText,
     Radio,
     RadioGroup,
 } from "@mui/material";
 import type { DeliveryMethod, Provider } from "@/types/DeliveryMethod";
 import type { ShippingAddress } from "@/types/Order";
+import { required } from "@/utils/validators";
 
 interface ListItemProps extends Provider {
     type: DeliveryMethod["type"];
     label: string;
 }
 
-const ListItem = ({
-    type,
-    label,
-    name,
-    price,
-    estimatedDeliveryTime,
-    additionalNotes,
-    isAvailable,
-}: ListItemProps) => {
+const ListItem = ({ type, label, name, additionalNotes }: ListItemProps) => {
     const address =
         type === "pickup" && (additionalNotes?.address as ShippingAddress);
 
@@ -69,6 +63,8 @@ const DeliveryMethodForm = ({
                             </h3>
                             <RadioGroup>
                                 {method.providers.map((provider) => {
+                                    if (!provider.isAvailable) return;
+
                                     const titleVariant =
                                         method.type === "home_delivery" ? (
                                             <ListItem
@@ -104,6 +100,7 @@ const DeliveryMethodForm = ({
                                                             name="_deliveryMethod"
                                                             type="radio"
                                                             value={provider._id}
+                                                            validate={required}
                                                         >
                                                             {({ input }) => (
                                                                 <Radio
@@ -166,6 +163,18 @@ const DeliveryMethodForm = ({
                     );
                 })}
             </div>
+            <FormSpy subscription={{ errors: true, touched: true }}>
+                {({ errors, touched }) => (
+                    <>
+                        {errors?._deliveryMethod &&
+                            touched?._deliveryMethod && (
+                                <FormHelperText error>
+                                    Please select a delivery method
+                                </FormHelperText>
+                            )}
+                    </>
+                )}
+            </FormSpy>
         </FormControl>
     );
 };

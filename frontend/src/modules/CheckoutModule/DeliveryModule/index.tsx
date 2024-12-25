@@ -7,7 +7,7 @@ import DeliveryMethodForm from "@/forms/DeliveryMethodForm";
 import useStep from "./hooks/useStep";
 import { Button, Divider } from "@mui/material";
 import type { ShippingAddress } from "@/types/Order";
-import { DeliveryMethod, Provider } from "@/types/DeliveryMethod";
+import type { DeliveryMethod, Provider } from "@/types/DeliveryMethod";
 
 interface DeliveryFormProps {
     _id: string;
@@ -15,8 +15,9 @@ interface DeliveryFormProps {
     lastName: string;
     phone: string;
     _deliveryMethod: string;
-    address?: ShippingAddress;
+    address: ShippingAddress;
     additionalInfo?: string;
+    sameAsBilling: any;
 }
 
 interface DeliveryModuleProps {
@@ -55,7 +56,17 @@ const DeliveryModule = ({ data, isDeliveryLoading }: DeliveryModuleProps) => {
     return (
         <Form
             onSubmit={handleSubmit}
-            initialValues={order?._user}
+            initialValues={{
+                ...order?._user,
+                _deliveryMethod: order?._deliveryMethod,
+                sameAsBilling: true,
+            }}
+            subscription={{
+                submitting: true,
+                pristine: true,
+                error: true,
+                touched: true,
+            }}
             render={({ handleSubmit }) => {
                 return (
                     <form onSubmit={handleSubmit} className="py-6">

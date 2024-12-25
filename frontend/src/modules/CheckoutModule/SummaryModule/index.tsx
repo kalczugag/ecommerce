@@ -39,7 +39,7 @@ const SummaryModule = () => {
     };
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-4 py-6">
             <Box>
                 <Contact
                     data={order?._user}
