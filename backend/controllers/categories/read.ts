@@ -3,6 +3,7 @@ import { CategoryModel } from "../../models/Categories";
 import { PaginatedCategories, Category } from "../../types/Category";
 import _ from "lodash";
 import { MongooseQueryParser } from "mongoose-query-parser";
+import { redisClient } from "../../server";
 
 const parser = new MongooseQueryParser();
 
@@ -10,6 +11,8 @@ export const getAllCategories = async (
     req: express.Request<{}, {}, {}, PaginatedCategories>,
     res: express.Response
 ) => {
+    const cacheKey = res.locals.cacheKey;
+
     const { category, sorted, named, ...rest } = req.query;
     const parsedQuery = parser.parse(rest);
 
@@ -73,10 +76,14 @@ export const getAllCategories = async (
             };
         }
 
-        return res.status(200).json({
+        const resultData = {
             data: sorted ? finalCategories : modifiedCategories,
             count: totalDocuments,
-        });
+        };
+
+        await redisClient.set(cacheKey, JSON.stringify(resultData), "EX", 3600);
+
+        return res.status(200).json(resultData);
     } catch (error) {
         console.error(error);
         return res

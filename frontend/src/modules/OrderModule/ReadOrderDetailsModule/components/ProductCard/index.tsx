@@ -20,7 +20,7 @@ const ProductCard = ({ data, isLoading }: ProductCardProps) => {
                 <div className="flex flex-row items-center justify-between">
                     <div className="flex flex-row space-x-4">
                         <img
-                            src={product.imageUrl[0]}
+                            src={`${product.imageUrl[0]}?imwidth=80`}
                             alt={product.title}
                             className="w-20 h-24 object-cover object-top"
                         />

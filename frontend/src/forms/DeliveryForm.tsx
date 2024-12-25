@@ -1,13 +1,19 @@
+import { useState } from "react";
 import { Field } from "react-final-form";
 import { required } from "@/utils/validators";
-import { TextField } from "@mui/material";
+import { Checkbox, FormControlLabel, TextField } from "@mui/material";
 import Row from "@/components/Row";
 
 interface DeliveryFormProps {
     isLoading: boolean;
 }
 
-const DeliveryForm = ({ isLoading }: DeliveryFormProps) => {
+interface LabeledFormProps {
+    name: string;
+    isLoading: boolean;
+}
+
+const LabeledForm = ({ name, isLoading }: LabeledFormProps) => {
     return (
         <div className="space-y-4 w-full">
             <Row>
@@ -24,7 +30,7 @@ const DeliveryForm = ({ isLoading }: DeliveryFormProps) => {
                                     ? props.meta.error
                                     : null
                             }
-                            disabled={isLoading}
+                            disabled
                             fullWidth
                         />
                     )}
@@ -42,7 +48,7 @@ const DeliveryForm = ({ isLoading }: DeliveryFormProps) => {
                                     ? props.meta.error
                                     : null
                             }
-                            disabled={isLoading}
+                            disabled
                             fullWidth
                         />
                     )}
@@ -144,6 +150,37 @@ const DeliveryForm = ({ isLoading }: DeliveryFormProps) => {
                     )}
                 </Field>
             </Row>
+        </div>
+    );
+};
+
+const DeliveryForm = ({ isLoading }: DeliveryFormProps) => {
+    const [showForm, setShowForm] = useState(false);
+
+    return (
+        <div className="space-y-4">
+            <LabeledForm name="shippingAddress" isLoading={isLoading} />
+            <Field name="sameAsBilling" type="checkbox">
+                {({ input }) => (
+                    <FormControlLabel
+                        {...input}
+                        control={<Checkbox />}
+                        label="Same as Shipping Address"
+                        disabled={isLoading}
+                        onChange={(e: any) => {
+                            setShowForm(e.target.checked);
+                            return input.onChange(e);
+                        }}
+                    />
+                )}
+            </Field>
+            {showForm && (
+                <LabeledForm
+                    name="billingAddress"
+                    isLoading={isLoading}
+                    key=""
+                />
+            )}
         </div>
     );
 };

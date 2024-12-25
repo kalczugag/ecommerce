@@ -24,7 +24,7 @@ const Product = ({
 }: ProductProps) => {
     return (
         <div className="flex flex-row items-center space-x-4">
-            <Image src={imageUrl} alt={title} size="xl" variant="square" />
+            <Image src={`${imageUrl}`} alt={title} size="xl" variant="square" />
             <div className="flex flex-col space-y-2">
                 <Link to={`/products/${id}`} className="font-bold">
                     {title}

@@ -1,13 +1,9 @@
 import { Address } from "@/components/TableFields";
 import { Button } from "@mui/material";
+import type { ShippingAddress } from "@/types/Order";
 
 interface AddressProps {
-    address: {
-        street: string;
-        city: string;
-        postalCode: number;
-        country: string;
-    };
+    address: ShippingAddress;
     phone: string;
 }
 

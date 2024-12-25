@@ -13,6 +13,7 @@ import Cart from "@/pages/Cart";
 import Checkout from "@/pages/Checkout";
 import Delivery from "@/pages/Checkout/Delivery";
 import Summary from "@/pages/Checkout/Summary";
+import ProfileSettings from "@/pages/Profile/Settings";
 import NotFound from "@/pages/404";
 
 const App = () => {
@@ -37,6 +38,12 @@ const App = () => {
                     <Route path="/checkout/:orderId/*" element={<Checkout />}>
                         <Route path="delivery" element={<Delivery />} />
                         <Route path="summary" element={<Summary />} />
+                    </Route>
+                    <Route path="/profile">
+                        <Route
+                            path="settings/:settingsKey"
+                            element={<ProfileSettings />}
+                        />
                     </Route>
                 </Route>
             </Route>

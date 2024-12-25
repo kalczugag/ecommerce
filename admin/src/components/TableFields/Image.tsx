@@ -15,7 +15,7 @@ const Image = ({ src, alt, size = "md", variant = "rounded" }: ImageProps) => {
         <div className={sizeMap}>
             <img
                 className={`w-full h-full ${variantMap} object-top object-cover`}
-                src={src}
+                src={`${src}?imwidth=96`}
                 alt={alt}
             />
         </div>

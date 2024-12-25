@@ -55,13 +55,11 @@ const orderSchema = new mongoose.Schema<Order>(
             required: false,
         },
         trackingNumber: { type: String, required: false },
-        shippingMethod: {
-            type: String,
-            enum: ["standard", "express", "same-day"],
+        _deliveryMethod: {
+            type: mongoose.Types.ObjectId,
+            ref: "DeliveryMethod",
             required: false,
         },
-        createdAt: { type: Date, default: Date.now },
-        updatedAt: { type: Date, default: Date.now },
     },
     { timestamps: true }
 );

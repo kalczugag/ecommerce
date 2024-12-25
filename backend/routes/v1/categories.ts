@@ -2,10 +2,10 @@ import express from "express";
 import passport from "passport";
 
 import methods from "../../controllers/categories";
-import { hasRole } from "../../middlewares";
+import { hasRole, cache } from "../../middlewares";
 
 const categories = (router: express.Router) => {
-    router.get("/categories", methods.read);
+    router.get("/categories", cache("categories"), methods.read);
 
     router.get(
         "/categories/byLevel",

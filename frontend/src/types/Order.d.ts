@@ -1,5 +1,6 @@
 import type { User } from "./User";
 import type { Product } from "./Product";
+import type { DeliveryMethod } from "./DeliveryMethod";
 
 interface Item {
     _id?: string;
@@ -50,8 +51,7 @@ interface Order {
     total: number;
     _payment?: Payment;
     trackingNumber?: string;
-    shippingMethod?: "standard" | "express" | "same-day";
-    deliveryMethod?: "pickup" | "delivery";
+    _deliveryMethod?: DeliveryMethod;
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -79,8 +79,7 @@ interface UpdateOrder {
     status?: Order["status"];
     shippingAddress?: Order["shippingAddress"];
     billingAddress?: Order["billingAddress"];
-    deliveryMethod?: Order["deliveryMethod"];
-    additionalInfo?: Order["additionalInfo"];
+    _deliveryMethod?: string;
 }
 
 export {

@@ -3,20 +3,29 @@ import { useUpdateOrderMutation, useUpdateUserMutation } from "@/store";
 import { useOrder } from "@/contexts/OrderContext";
 import DeliveryForm from "@/forms/DeliveryForm";
 import AdditionalInfoForm from "@/forms/AdditionalInfoForm";
+import DeliveryMethodForm from "@/forms/DeliveryMethodForm";
 import useStep from "./hooks/useStep";
-import { Button } from "@mui/material";
+import { Button, Divider } from "@mui/material";
 import type { ShippingAddress } from "@/types/Order";
+import type { DeliveryMethod, Provider } from "@/types/DeliveryMethod";
 
 interface DeliveryFormProps {
     _id: string;
     firstName: string;
     lastName: string;
     phone: string;
-    address?: ShippingAddress;
+    _deliveryMethod: string;
+    address: ShippingAddress;
     additionalInfo?: string;
+    sameAsBilling: any;
 }
 
-const DeliveryModule = () => {
+interface DeliveryModuleProps {
+    data: DeliveryMethod[];
+    isDeliveryLoading: boolean;
+}
+
+const DeliveryModule = ({ data, isDeliveryLoading }: DeliveryModuleProps) => {
     const { order, isLoading } = useOrder();
     const [_, nextStep] = useStep();
     const [updateOrder, { isLoading: isUpdatingOrder }] =
@@ -33,8 +42,7 @@ const DeliveryModule = () => {
 
         await updateOrder({
             _id: order?._id,
-            deliveryMethod: "delivery",
-            additionalInfo: values.additionalInfo,
+            _deliveryMethod: values._deliveryMethod,
             shippingAddress: values.address,
             billingAddress: values.address,
         });
@@ -42,22 +50,57 @@ const DeliveryModule = () => {
         if (!isUpdatingOrder && !isUpdatingUser && values.address) nextStep();
     };
 
-    const loading = isLoading || isUpdatingOrder || isUpdatingUser;
+    const loading =
+        isLoading || isUpdatingOrder || isUpdatingUser || isDeliveryLoading;
 
     return (
         <Form
             onSubmit={handleSubmit}
-            initialValues={order?._user}
+            initialValues={{
+                ...order?._user,
+                _deliveryMethod: order?._deliveryMethod,
+                sameAsBilling: true,
+            }}
+            subscription={{
+                submitting: true,
+                pristine: true,
+                error: true,
+                touched: true,
+            }}
             render={({ handleSubmit }) => {
                 return (
-                    <form
-                        onSubmit={handleSubmit}
-                        className="grid grid-flow-row gap-8 pt-6 md:grid-cols-2"
-                    >
-                        <AdditionalInfoForm isLoading={loading} />
-                        <DeliveryForm isLoading={loading} />
-                        <div className="flex justify-end md:col-span-2">
+                    <form onSubmit={handleSubmit} className="py-6">
+                        <div className="flex flex-col-reverse md:flex-row md:space-x-8">
+                            <div className="flex-1">
+                                <Divider
+                                    className="block md:hidden"
+                                    sx={{ mt: 4, mb: 4 }}
+                                />
+
+                                <DeliveryMethodForm
+                                    content={data}
+                                    orderDeliveryCost={order?.deliveryCost || 0}
+                                    isLoading={loading}
+                                />
+
+                                <Divider sx={{ mt: 4, mb: 4 }} />
+                            </div>
+                            <div className="flex-1 flex flex-col">
+                                <DeliveryForm isLoading={loading} />
+
+                                <Divider
+                                    sx={{
+                                        mt: 4,
+                                        mb: 4,
+                                    }}
+                                />
+
+                                <AdditionalInfoForm isLoading={loading} />
+                            </div>
+                        </div>
+                        <div className="flex justify-end">
                             <Button
+                                sx={{ mt: 4 }}
                                 variant="contained"
                                 type="submit"
                                 disabled={isUpdatingOrder || isUpdatingUser}

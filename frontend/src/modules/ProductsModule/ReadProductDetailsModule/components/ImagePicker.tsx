@@ -28,7 +28,7 @@ const ImagePicker = ({ data }: ImagePickerProps) => {
                     return (
                         <img
                             key={absoluteIndex}
-                            src={image}
+                            src={`${image}?imwidth=128`}
                             alt={`small image ${absoluteIndex}`}
                             onMouseOver={
                                 !isMobile
@@ -68,7 +68,7 @@ const ImagePicker = ({ data }: ImagePickerProps) => {
             )}
             <div className="xl:w-[600px]">
                 <img
-                    src={data[selectedImage]}
+                    src={`${data[selectedImage]}?imwidth=600`}
                     alt="main image"
                     className="w-full h-full object-cover transition-opacity duration-500"
                 />
