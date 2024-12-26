@@ -55,7 +55,7 @@ const LabeledForm = ({ name, isLoading }: LabeledFormProps) => {
                 </Field>
             </Row>
             <Row>
-                <Field name="address.street" validate={required}>
+                <Field name={`${name}.street`} validate={required}>
                     {(props) => (
                         <TextField
                             label="Street"
@@ -75,7 +75,7 @@ const LabeledForm = ({ name, isLoading }: LabeledFormProps) => {
                 </Field>
             </Row>
             <Row>
-                <Field name="address.city" validate={required}>
+                <Field name={`${name}.city`} validate={required}>
                     {(props) => (
                         <TextField
                             label="City"
@@ -93,7 +93,7 @@ const LabeledForm = ({ name, isLoading }: LabeledFormProps) => {
                         />
                     )}
                 </Field>
-                <Field name="address.state" validate={required}>
+                <Field name={`${name}.state`} validate={required}>
                     {(props) => (
                         <TextField
                             label="State"
@@ -113,7 +113,7 @@ const LabeledForm = ({ name, isLoading }: LabeledFormProps) => {
                 </Field>
             </Row>
             <Row>
-                <Field name="address.postalCode" validate={required}>
+                <Field name={`${name}.postalCode`} validate={required}>
                     {(props) => (
                         <TextField
                             label="Postal Code"
@@ -131,7 +131,7 @@ const LabeledForm = ({ name, isLoading }: LabeledFormProps) => {
                         />
                     )}
                 </Field>
-                <Field name="address.country" validate={required}>
+                <Field name={`${name}.country`} validate={required}>
                     {(props) => (
                         <TextField
                             label="Country"
@@ -160,26 +160,22 @@ const DeliveryForm = ({ isLoading }: DeliveryFormProps) => {
     return (
         <div className="space-y-4">
             <LabeledForm name="shippingAddress" isLoading={isLoading} />
-            <Field name="sameAsBilling" type="checkbox">
+            <Field name="sameAsShipping" type="checkbox">
                 {({ input }) => (
                     <FormControlLabel
                         {...input}
                         control={<Checkbox />}
-                        label="Same as Shipping Address"
+                        label="Same as shipping address"
                         disabled={isLoading}
                         onChange={(e: any) => {
-                            setShowForm(e.target.checked);
-                            return input.onChange(e);
+                            setShowForm(!showForm);
+                            input.onChange(e);
                         }}
                     />
                 )}
             </Field>
             {showForm && (
-                <LabeledForm
-                    name="billingAddress"
-                    isLoading={isLoading}
-                    key=""
-                />
+                <LabeledForm name="billingAddress" isLoading={isLoading} />
             )}
         </div>
     );

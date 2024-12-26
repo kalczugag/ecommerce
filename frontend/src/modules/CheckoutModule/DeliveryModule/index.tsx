@@ -7,7 +7,7 @@ import DeliveryMethodForm from "@/forms/DeliveryMethodForm";
 import useStep from "./hooks/useStep";
 import { Button, Divider } from "@mui/material";
 import type { ShippingAddress } from "@/types/Order";
-import type { DeliveryMethod, Provider } from "@/types/DeliveryMethod";
+import type { DeliveryMethod } from "@/types/DeliveryMethod";
 
 interface DeliveryFormProps {
     _id: string;
@@ -15,9 +15,10 @@ interface DeliveryFormProps {
     lastName: string;
     phone: string;
     _deliveryMethod: string;
-    address: ShippingAddress;
+    shippingAddress: ShippingAddress;
+    billingAddress: ShippingAddress;
     additionalInfo?: string;
-    sameAsBilling: any;
+    sameAsShipping: any;
 }
 
 interface DeliveryModuleProps {
@@ -33,21 +34,29 @@ const DeliveryModule = ({ data, isDeliveryLoading }: DeliveryModuleProps) => {
     const [updateUser, { isLoading: isUpdatingUser }] = useUpdateUserMutation();
 
     const handleSubmit = async (values: DeliveryFormProps) => {
-        if (values.address && order?._user?._id) {
+        if (values.shippingAddress && order?._user?._id) {
             await updateUser({
                 _id: order?._user?._id,
-                address: values.address,
+                address: values.shippingAddress,
             });
         }
 
         await updateOrder({
             _id: order?._id,
             _deliveryMethod: values._deliveryMethod,
-            shippingAddress: values.address,
-            billingAddress: values.address,
+            shippingAddress: values.shippingAddress,
+            billingAddress: values.sameAsShipping
+                ? values.shippingAddress
+                : values.billingAddress,
         });
 
-        if (!isUpdatingOrder && !isUpdatingUser && values.address) nextStep();
+        if (
+            !isUpdatingOrder &&
+            !isUpdatingUser &&
+            values.shippingAddress &&
+            values.billingAddress
+        )
+            nextStep();
     };
 
     const loading =
@@ -58,8 +67,9 @@ const DeliveryModule = ({ data, isDeliveryLoading }: DeliveryModuleProps) => {
             onSubmit={handleSubmit}
             initialValues={{
                 ...order?._user,
+                shippingAddress: order?._user?.address,
                 _deliveryMethod: order?._deliveryMethod,
-                sameAsBilling: true,
+                sameAsShipping: true,
             }}
             subscription={{
                 submitting: true,
