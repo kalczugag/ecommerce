@@ -12,7 +12,7 @@ const ReadOrderDetailsModule = ({
     isLoading,
 }: ReadOrderListModuleProps) => {
     return (
-        <DefaultLayout>
+        <DefaultLayout marginY={false}>
             <OrderDetails data={data} isLoading={isLoading} />
         </DefaultLayout>
     );

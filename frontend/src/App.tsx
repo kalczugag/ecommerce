@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import PrivateOutlet from "@/pages/Outlets/PrivateOutlet";
 import VisitorsCounterOutlet from "@/pages/Outlets/VisitorsCounterOutlet";
+import AccountOutlet from "@/pages/Outlets/AccountOutlet";
 import Dashboard from "@/pages/Dashboard";
 import Catalog from "@/pages/Products/List";
 import ProductDetails from "@/pages/Products/Details";
@@ -13,7 +14,8 @@ import Cart from "@/pages/Cart";
 import Checkout from "@/pages/Checkout";
 import Delivery from "@/pages/Checkout/Delivery";
 import Summary from "@/pages/Checkout/Summary";
-import ProfileSettings from "@/pages/Profile/Settings";
+import AccountDetails from "@/pages/Account/Details";
+import AccountOverview from "@/pages/Account/Overview";
 import NotFound from "@/pages/404";
 
 const App = () => {
@@ -29,21 +31,20 @@ const App = () => {
                 />
                 <Route path="/product/:id" element={<ProductDetails />} />
                 <Route element={<PrivateOutlet />}>
-                    <Route path="/orders">
-                        <Route index element={<OrdersList />} />
-                        <Route path=":id" element={<OrderDetails />} />
-                        <Route path=":id/return" element={<OrderReturn />} />
-                    </Route>
                     <Route path="/cart" element={<Cart />} />
                     <Route path="/checkout/:orderId/*" element={<Checkout />}>
                         <Route path="delivery" element={<Delivery />} />
                         <Route path="summary" element={<Summary />} />
                     </Route>
-                    <Route path="/profile">
+                    <Route path="/account" element={<AccountOutlet />}>
+                        <Route path="orders" element={<OrdersList />} />
+                        <Route path="orders/:id" element={<OrderDetails />} />
                         <Route
-                            path="settings/:settingsKey"
-                            element={<ProfileSettings />}
+                            path="orders/:id/return"
+                            element={<OrderReturn />}
                         />
+                        <Route index element={<AccountOverview />} />
+                        <Route path="details" element={<AccountDetails />} />
                     </Route>
                 </Route>
             </Route>

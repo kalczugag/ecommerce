@@ -53,14 +53,18 @@ const ReadOrderListModule = ({
 
     return (
         <Loading isLoading={isLoading}>
-            <DefaultLayout direction="row" className="md:space-x-14">
-                <div className="hidden md:block">
+            <DefaultLayout
+                direction="row"
+                className="md:space-x-14"
+                marginY={false}
+            >
+                {/* <div className="hidden md:block">
                     <Filters
                         onSubmit={handleFilter}
                         formElements={formElements}
                         label="Order Status"
                     />
-                </div>
+                </div> */}
                 <div className="flex flex-col w-full space-y-28">
                     {(isLoading ? placeholderData : data).map(
                         (order, index) => (

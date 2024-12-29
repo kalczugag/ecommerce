@@ -25,7 +25,6 @@ const Header = ({ topLabel }: HeaderProps) => {
                     maxWidth={false}
                     disableGutters
                     sx={{
-                        bgcolor: "#5146E7",
                         color: "white",
                         textAlign: "center",
                         padding: "5px",
@@ -33,6 +32,7 @@ const Header = ({ topLabel }: HeaderProps) => {
                             display: "none",
                         },
                     }}
+                    className="bg-blue-primary"
                 >
                     <Typography
                         variant="subtitle2"

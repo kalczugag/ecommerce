@@ -1,16 +1,33 @@
+import { useState } from "react";
 import DefaultLayout from "@/layouts/DefaultLayout";
-import type { Content } from "@/types/Content";
+import NavLinksMenu, { NavLink } from "../NavLinksMenu";
 
 interface TabsContentProps {
-    content: Content[];
+    content: NavLink[];
+    nav?: boolean;
 }
 
-const TabsContent = ({ content }: TabsContentProps) => {
-    const items = content.map((item) => (
-        <DefaultLayout key={item.key}>{item.children}</DefaultLayout>
-    ));
+const TabsContent = ({ content, nav }: TabsContentProps) => {
+    const [activeTab, setActiveTab] = useState(content[0]?.key || "");
 
-    return items;
+    const activeContent = content.find((item) => item.key === activeTab);
+
+    return (
+        <DefaultLayout direction="row" className="space-x-10">
+            {nav && (
+                <NavLinksMenu
+                    links={content.map((item) => ({
+                        ...item,
+                        onClick: () => setActiveTab(item.key),
+                    }))}
+                    activeKey={activeTab}
+                />
+            )}
+            <div className="flex-1">
+                {activeContent?.children || <p>Select a tab to see content.</p>}
+            </div>
+        </DefaultLayout>
+    );
 };
 
 export default TabsContent;

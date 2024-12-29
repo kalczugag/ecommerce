@@ -27,7 +27,7 @@ const steps = [
 
 const OrderReturnModule = () => {
     return (
-        <DefaultLayout>
+        <DefaultLayout marginY={false}>
             <StepperForm content={steps} />
         </DefaultLayout>
     );

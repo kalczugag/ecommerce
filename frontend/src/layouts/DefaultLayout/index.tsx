@@ -9,6 +9,8 @@ interface DefaultPageProps extends HTMLAttributes<HTMLDivElement> {
     direction?: "row" | "column";
     featuredElement?: JSX.Element;
     isCatalog?: boolean;
+    marginY?: boolean;
+    marginX?: boolean;
 }
 
 const DefaultLayout = ({
@@ -17,6 +19,8 @@ const DefaultLayout = ({
     direction = "column",
     featuredElement,
     isCatalog = false,
+    marginX = true,
+    marginY = true,
     className,
     ...rest
 }: DefaultPageProps) => {
@@ -27,18 +31,18 @@ const DefaultLayout = ({
                     sx={{
                         width: "100%",
                         height: "70vh",
-                        bgcolor: "#80203D",
                         color: "white",
                         marginY: "40px",
                         padding: "20px",
                     }}
+                    className="bg-red-primary"
                 >
                     {featuredElement}
                 </Box>
             )}
             <Container
                 maxWidth="xl"
-                sx={{ display: "flex", marginY: "40px" }}
+                sx={{ display: "flex", marginY: marginY ? "40px" : 0 }}
                 className={`${
                     direction === "column" ? "flex-col" : "flex-row"
                 } ${className}`}

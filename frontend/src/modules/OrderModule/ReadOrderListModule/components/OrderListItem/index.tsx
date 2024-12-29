@@ -26,7 +26,9 @@ const OrderListItem = ({ data, isLoading }: OrderListItemProps) => {
                         </h1>
                         <Button
                             variant="outlined"
-                            onClick={() => navigate(`/orders/${data?._id}`)}
+                            onClick={() =>
+                                navigate(`/account/orders/${data?._id}`)
+                            }
                         >
                             View
                         </Button>
