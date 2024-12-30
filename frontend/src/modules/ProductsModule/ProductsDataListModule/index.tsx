@@ -1,9 +1,30 @@
+import { useGetProductFiltersQuery } from "@/store";
 import DefaultLayout from "@/layouts/DefaultLayout";
 import { Pagination } from "@mui/material";
 import Sidebar from "@/components/Sidebar";
 import ProductsList from "./components/ProductsList";
-import { Product } from "@/types/Product";
-import { useGetProductFiltersQuery } from "@/store";
+import SortBar from "@/components/SortBar";
+import type { Product } from "@/types/Product";
+import RouterBreadcrumbs from "@/components/RouterBreadcrumbs";
+import { categoriesNameMap } from "@/constants/breadcrumbs";
+import Loading from "@/components/Loading";
+
+const categoryLabel = (category: string) => {
+    const categoriesArray = category
+        .split(",")
+        .map((cat) => cat.charAt(0).toUpperCase() + cat.slice(1));
+
+    const result =
+        categoriesArray.length === 1
+            ? `${categoriesArray[0]} Products`
+            : categoriesArray.length === 2
+            ? `${categoriesArray[0]} ${categoriesArray[1]}`
+            : `${categoriesArray[0]} ${
+                  categoriesArray[categoriesArray.length - 1]
+              }`;
+
+    return result;
+};
 
 interface ProductsDataListModuleProps {
     config: {
@@ -13,6 +34,7 @@ interface ProductsDataListModuleProps {
         category: string;
         total: number;
         isLoading: boolean;
+        isFetching: boolean;
         handlePageChange: (
             event: React.ChangeEvent<unknown>,
             value: number
@@ -28,6 +50,7 @@ const ProductsDataListModule = ({ config }: ProductsDataListModuleProps) => {
         page,
         category,
         isLoading,
+        isFetching,
         handlePageChange,
         handleFilters,
     } = config;
@@ -36,32 +59,46 @@ const ProductsDataListModule = ({ config }: ProductsDataListModuleProps) => {
     const count = Math.ceil((config.total ?? 0) / pageSize);
 
     return (
-        <DefaultLayout
-            pagination={
-                <Pagination
-                    count={count}
-                    page={page}
-                    onChange={handlePageChange}
-                    sx={{ marginTop: "60px", alignSelf: "center" }}
+        <Loading isLoading={isFetching}>
+            <DefaultLayout
+                pagination={
+                    <Pagination
+                        count={count}
+                        page={page}
+                        onChange={handlePageChange}
+                        sx={{ marginTop: "60px", alignSelf: "center" }}
+                    />
+                }
+                topContent={
+                    <div className="flex flex-col space-y-4 mb-8">
+                        <div className="flex flex-row justify-between items-center">
+                            <RouterBreadcrumbs
+                                breadcrumbNameMap={categoriesNameMap}
+                            />
+                            <SortBar />
+                        </div>
+                        <h2 className="text-3xl font-bold">
+                            {categoryLabel(category)}
+                        </h2>
+                    </div>
+                }
+            >
+                <Sidebar
+                    config={{
+                        data: productFilters!,
+                        disabled: !data.length,
+                        onSubmit: handleFilters,
+                    }}
                 />
-            }
-            isCatalog
-        >
-            <Sidebar
-                config={{
-                    data: productFilters!,
-                    disabled: !data.length,
-                    onSubmit: handleFilters,
-                }}
-            />
-            {isLoading ? (
-                <ProductsList data={[]} isLoading={true} />
-            ) : data.length > 0 ? (
-                <ProductsList data={data} isLoading={false} />
-            ) : (
-                <div>No products available for this category.</div>
-            )}
-        </DefaultLayout>
+                {isLoading ? (
+                    <ProductsList data={[]} isLoading={true} />
+                ) : data.length > 0 ? (
+                    <ProductsList data={data} isLoading={false} />
+                ) : (
+                    <div>No products available for this category.</div>
+                )}
+            </DefaultLayout>
+        </Loading>
     );
 };
 

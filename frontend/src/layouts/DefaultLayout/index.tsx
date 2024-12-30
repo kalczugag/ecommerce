@@ -8,7 +8,7 @@ interface DefaultPageProps extends HTMLAttributes<HTMLDivElement> {
     pagination?: JSX.Element;
     direction?: "row" | "column";
     featuredElement?: JSX.Element;
-    isCatalog?: boolean;
+    topContent?: ReactNode;
     marginY?: boolean;
     marginX?: boolean;
 }
@@ -18,7 +18,7 @@ const DefaultLayout = ({
     pagination,
     direction = "column",
     featuredElement,
-    isCatalog = false,
+    topContent,
     marginX = true,
     marginY = true,
     className,
@@ -48,7 +48,7 @@ const DefaultLayout = ({
                 } ${className}`}
                 {...rest}
             >
-                {isCatalog && <SortBar />}
+                {topContent}
                 {pagination ? (
                     <div className="flex flex-col">
                         <div className="flex flex-row justify-center md:justify-normal">

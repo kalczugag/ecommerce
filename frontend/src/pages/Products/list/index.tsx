@@ -30,7 +30,7 @@ const Catalog = () => {
         .filter(Boolean)
         .join(",");
 
-    const { data, isFetching } = useGetAllProductsQuery({
+    const { data, isLoading, isFetching } = useGetAllProductsQuery({
         skip: page - 1,
         limit: ROWS_PER_PAGE,
         category,
@@ -49,7 +49,8 @@ const Catalog = () => {
         page,
         category,
         total: data?.count || 0,
-        isLoading: isFetching,
+        isLoading,
+        isFetching,
         handlePageChange,
         handleFilters,
     };

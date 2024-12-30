@@ -50,12 +50,7 @@ const DeliveryModule = ({ data, isDeliveryLoading }: DeliveryModuleProps) => {
                 : values.billingAddress,
         });
 
-        if (
-            !isUpdatingOrder &&
-            !isUpdatingUser &&
-            values.shippingAddress &&
-            values.billingAddress
-        )
+        if (!isUpdatingOrder && !isUpdatingUser && values.shippingAddress)
             nextStep();
     };
 
