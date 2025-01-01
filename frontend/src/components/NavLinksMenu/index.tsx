@@ -29,7 +29,7 @@ const NavLinksMenu = ({ links }: NavLinksMenuProps) => {
     };
 
     return (
-        <ul>
+        <ul className="space-y-4">
             {links.map((link) => (
                 <li
                     key={link.key}

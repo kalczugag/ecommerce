@@ -5,6 +5,7 @@ import { getOrdersByUserId } from "./readByUserId";
 import { updateOrder } from "./update";
 import { deleteOrder } from "./delete";
 import { summary } from "./summary";
+import { updateToCron } from "./updateToCron";
 
 const methods = {
     read: getAllOrders,
@@ -12,6 +13,7 @@ const methods = {
     readByUserId: getOrdersByUserId,
     create: createOrder,
     update: updateOrder,
+    updateToCron,
     delete: deleteOrder,
     summary,
 };

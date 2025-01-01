@@ -41,7 +41,13 @@ interface Order {
     _id?: string;
     _user?: User;
     items: Item[];
-    status?: "placed" | "confirmed" | "shipped" | "delivered" | "canceled";
+    status?:
+        | "placed"
+        | "confirmed"
+        | "shipped"
+        | "delivered"
+        | "canceled"
+        | "pending payment";
     shippingAddress?: ShippingAddress;
     billingAddress?: ShippingAddress;
     subTotal: number;

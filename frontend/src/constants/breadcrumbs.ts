@@ -18,5 +18,5 @@ export const categoriesNameMap = {
     "/women/footwear/flats": "Flats",
     "/women/accessories": "Accessories",
     "/women/accessories/handbags": "Handbags",
-    "/women/accessories/jewelry": "Jewelry",
+    "/women/accessories/jewelery": "Jewelery",
 };

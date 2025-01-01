@@ -16,6 +16,7 @@ import Delivery from "@/pages/Checkout/Delivery";
 import Summary from "@/pages/Checkout/Summary";
 import AccountDetails from "@/pages/Account/Details";
 import AccountOverview from "@/pages/Account/Overview";
+import AccountPreferences from "@/pages/Account/Preferences";
 import NotFound from "@/pages/404";
 
 const App = () => {
@@ -45,6 +46,10 @@ const App = () => {
                         />
                         <Route index element={<AccountOverview />} />
                         <Route path="details" element={<AccountDetails />} />
+                        <Route
+                            path="preferences"
+                            element={<AccountPreferences />}
+                        />
                     </Route>
                 </Route>
             </Route>

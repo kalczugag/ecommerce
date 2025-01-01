@@ -19,6 +19,13 @@ const orders = (router: express.Router) => {
         methods.summary
     );
 
+    router.get(
+        "/orders/cron",
+        passport.authenticate("jwt", { session: false }),
+        hasRole("admin"),
+        methods.updateToCron
+    );
+
     router.get("/orders/id/:id", methods.readById);
 
     router.get(
