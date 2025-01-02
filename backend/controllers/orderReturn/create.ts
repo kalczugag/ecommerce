@@ -21,7 +21,7 @@ export const createReturn = async (
     try {
         const order = await OrderModel.findById(orderReturn._order);
 
-        if (!order?._payment) {
+        if (!order?._payment || order.status === "returned") {
             return res.status(400).json({ error: "Order cannot be returned" });
         }
 

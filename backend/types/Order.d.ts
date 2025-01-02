@@ -50,7 +50,8 @@ interface Order {
         | "shipped"
         | "delivered"
         | "canceled"
-        | "pending payment";
+        | "pending payment"
+        | "returned";
     shippingAddress: ShippingAddress;
     billingAddress: ShippingAddress;
     subTotal: number;

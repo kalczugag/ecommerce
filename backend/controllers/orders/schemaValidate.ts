@@ -29,7 +29,8 @@ const schema = Joi.object({
         "shipped",
         "delivered",
         "canceled",
-        "pending payment"
+        "pending payment",
+        "returned"
     ),
     shippingAddress: shippingAddressSchema,
     billingAddress: shippingAddressSchema,
