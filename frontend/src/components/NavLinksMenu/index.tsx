@@ -1,4 +1,8 @@
+import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import useIsMobile from "@/hooks/useIsMobile";
+import { Drawer, IconButton } from "@mui/material";
+import { Menu } from "@mui/icons-material";
 
 export interface NavLink {
     key: string;
@@ -13,8 +17,11 @@ interface NavLinksMenuProps {
 }
 
 const NavLinksMenu = ({ links }: NavLinksMenuProps) => {
+    const [isOpen, setIsOpen] = useState(false);
+
     const navigate = useNavigate();
     const { pathname } = useLocation();
+    const isMobile = useIsMobile();
 
     const isActive = (link: NavLink) => {
         return pathname === link.to;
@@ -28,7 +35,7 @@ const NavLinksMenu = ({ links }: NavLinksMenuProps) => {
         }
     };
 
-    return (
+    const content = (
         <ul className="space-y-4">
             {links.map((link) => (
                 <li
@@ -59,6 +66,27 @@ const NavLinksMenu = ({ links }: NavLinksMenuProps) => {
                 </li>
             ))}
         </ul>
+    );
+
+    return (
+        <>
+            {isMobile ? (
+                <>
+                    <IconButton onClick={() => setIsOpen(true)}>
+                        <Menu />
+                    </IconButton>
+                    <Drawer
+                        anchor="left"
+                        open={isOpen}
+                        onClose={() => setIsOpen(false)}
+                    >
+                        <div className="p-4">{content}</div>
+                    </Drawer>
+                </>
+            ) : (
+                content
+            )}
+        </>
     );
 };
 

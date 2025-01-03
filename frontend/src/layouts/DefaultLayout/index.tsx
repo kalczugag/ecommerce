@@ -1,7 +1,5 @@
 import { HTMLAttributes, ReactNode } from "react";
-import clsx from "clsx";
 import { Container, Box } from "@mui/material";
-import SortBar from "@/components/SortBar";
 
 interface DefaultPageProps extends HTMLAttributes<HTMLDivElement> {
     children: ReactNode;

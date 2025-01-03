@@ -8,7 +8,7 @@ import {
     Typography,
 } from "@mui/material";
 import { Form } from "react-final-form";
-import type { StepProps } from "@/modules/OrderModule/OrderReturnModule/types/Step";
+import type { StepProps } from "@/types/Step";
 
 interface StepperFormProps {
     content: {
@@ -65,10 +65,6 @@ const StepperForm = ({ content }: StepperFormProps) => {
         handleReset,
         formValues,
     };
-
-    useEffect(() => {
-        console.log(formValues);
-    }, [formValues]);
 
     return (
         <div>

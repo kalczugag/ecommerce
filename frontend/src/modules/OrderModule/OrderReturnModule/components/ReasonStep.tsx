@@ -10,7 +10,7 @@ import {
     RadioGroup,
     TextField,
 } from "@mui/material";
-import type { StepProps } from "../types/Step";
+import type { StepProps } from "../../../../types/Step";
 
 const ReasonStep = ({ formValues }: StepProps) => {
     const [isOther, setIsOther] = useState(false);

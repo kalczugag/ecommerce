@@ -13,6 +13,7 @@ interface SidebarProps {
     };
 }
 
+// to remove
 const Sidebar = ({ config }: SidebarProps) => {
     const { onSubmit, data } = config;
     const { filters, clearFilters } = useFilters();
