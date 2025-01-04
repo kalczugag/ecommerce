@@ -72,7 +72,7 @@ interface ReturnOrder {
     returnStatus: "initiated" | "approved" | "rejected" | "completed";
     refundAmount: number;
     refundMethod: "credit_card" | "paypal" | "bank_transfer";
-    returnDate: Date;
+    _deliveryMethod: DeliveryMethod;
     createdAt?: Date;
     updatedAt?: Date;
 }

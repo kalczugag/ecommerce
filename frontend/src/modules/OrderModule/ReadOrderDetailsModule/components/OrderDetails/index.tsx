@@ -52,7 +52,7 @@ const OrderDetails = ({ data, isLoading }: OrderDetailsProps) => {
                         data?._id
                     )}
                 </h1>
-                {data?.status !== "canceled" && (
+                {data?.status !== "canceled" && data?.status !== "returned" && (
                     <Button
                         variant="outlined"
                         onClick={() => navigate(`return`)}

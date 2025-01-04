@@ -68,13 +68,14 @@ interface Order {
 
 interface ReturnOrder {
     _id?: string;
-    _order: string | Order;
-    _user: string | User;
-    returnedItems: string | Item[];
+    _order: Order;
+    _user?: User;
+    returnedItems: Item[];
     returnReason: string;
     returnStatus: "initiated" | "approved" | "rejected" | "completed";
     refundAmount: number;
     refundMethod: "credit_card" | "paypal" | "bank_transfer";
+    _deliveryMethod?: DeliveryMethod;
     createdAt?: Date;
     updatedAt?: Date;
 }

@@ -10,9 +10,6 @@ const AccountOutlet = () => {
                 <NavLinksMenu links={config} />
             </div>
             <div className="flex-1">
-                <p className="font-semibold text-gray-400 italic">
-                    this page is not responsible for now due to sidebar
-                </p>
                 <Outlet />
             </div>
         </DefaultLayout>

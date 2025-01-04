@@ -5,9 +5,11 @@ import AccountOutlet from "@/pages/Outlets/AccountOutlet";
 import Dashboard from "@/pages/Dashboard";
 import Catalog from "@/pages/Products/List";
 import ProductDetails from "@/pages/Products/Details";
-import OrderDetails from "@/pages/Orders/Details";
-import OrdersList from "@/pages/Orders/List";
-import OrderReturn from "@/pages/Orders/Return";
+import OrderDetails from "@/pages/Account/Orders/Details";
+import OrdersList from "@/pages/Account/Orders/List";
+import OrderReturn from "@/pages/Account/Returns/Add";
+import ReturnsList from "@/pages/Account/Returns/List";
+import ReturnDetails from "@/pages/Account/Returns/Details";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Cart from "@/pages/Cart";
@@ -44,6 +46,8 @@ const App = () => {
                             path="orders/:id/return"
                             element={<OrderReturn />}
                         />
+                        <Route path="returns" element={<ReturnsList />} />
+                        <Route path="returns/:id" element={<ReturnDetails />} />
                         <Route index element={<AccountOverview />} />
                         <Route path="details" element={<AccountDetails />} />
                         <Route

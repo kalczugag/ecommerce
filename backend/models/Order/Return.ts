@@ -32,6 +32,11 @@ const returnSchema = new mongoose.Schema<ReturnOrder>(
             enum: ["credit_card", "paypal", "bank_transfer"],
             required: true,
         },
+        _deliveryMethod: {
+            type: mongoose.Types.ObjectId,
+            ref: "DeliveryMethod",
+            required: false,
+        },
     },
     { timestamps: true }
 );

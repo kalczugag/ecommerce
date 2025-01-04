@@ -18,12 +18,12 @@ export const config: NavLink[] = [
             {
                 key: "return_article",
                 label: "Return Article",
-                to: "/returns",
+                to: "/account/orders",
             },
             {
                 key: "returns",
                 label: "Returns",
-                to: "/returns/list",
+                to: "/account/returns",
             },
             {
                 key: "my_data",
