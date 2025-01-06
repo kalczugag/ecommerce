@@ -1,7 +1,7 @@
-import OrderReturnModule from "@/modules/OrderModule/OrderReturnModule";
+import CreateReturnModule from "@/modules/ReturnModule/CreateReturnModule";
 
 const OrderReturn = () => {
-    return <OrderReturnModule />;
+    return <CreateReturnModule />;
 };
 
 export default OrderReturn;

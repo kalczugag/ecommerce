@@ -16,7 +16,7 @@ interface ReturnFormValues {
     selectedProducts: string[];
 }
 
-const OrderReturnModule = () => {
+const CreateReturnModule = () => {
     const { id } = useParams();
     const { data } = useGetOrderByIdQuery(id || "");
     const [addReturn] = useAddReturnMutation();
@@ -64,4 +64,4 @@ const OrderReturnModule = () => {
     );
 };
 
-export default OrderReturnModule;
+export default CreateReturnModule;
