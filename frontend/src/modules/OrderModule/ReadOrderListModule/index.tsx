@@ -2,7 +2,7 @@ import { Field } from "react-final-form";
 import { Checkbox, FormControlLabel } from "@mui/material";
 import { orderStatuses } from "@/constants/orderStatuses";
 import { placeholderArray } from "@/utils/helpers";
-import DefaultLayout from "@/layouts/DefaultLayout";
+import AccountLayout from "@/layouts/AccountLayout";
 import Filters from "@/components/Filters";
 import OrderListItem from "./components/OrderListItem";
 import type { Order } from "@/types/Order";
@@ -53,11 +53,7 @@ const ReadOrderListModule = ({
 
     return (
         <Loading isLoading={isLoading}>
-            <DefaultLayout
-                direction="row"
-                className="md:space-x-14"
-                marginY={false}
-            >
+            <AccountLayout label="Orders">
                 {/* <div className="hidden md:block">
                     <Filters
                         onSubmit={handleFilter}
@@ -76,7 +72,7 @@ const ReadOrderListModule = ({
                         )
                     )}
                 </div>
-            </DefaultLayout>
+            </AccountLayout>
         </Loading>
     );
 };

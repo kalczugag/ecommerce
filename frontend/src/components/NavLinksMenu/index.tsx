@@ -18,20 +18,19 @@ interface NavLinksMenuProps {
 
 const NavLinksMenu = ({ links }: NavLinksMenuProps) => {
     const [isOpen, setIsOpen] = useState(false);
+    const [activeKey, setActiveKey] = useState<string | null>(null);
 
     const navigate = useNavigate();
-    const { pathname } = useLocation();
     const isMobile = useIsMobile();
 
-    const isActive = (link: NavLink) => {
-        return pathname === link.to;
-    };
+    const isActive = (link: NavLink) => link.key === activeKey;
 
-    const handleClick = (to?: string, onClick?: () => void) => {
-        if (to) {
-            navigate(to);
-        } else if (onClick) {
-            onClick();
+    const handleClick = (link: NavLink) => {
+        setActiveKey(link.key);
+        if (link.to) {
+            navigate(link.to);
+        } else if (link.onClick) {
+            link.onClick();
         }
     };
 
@@ -41,7 +40,9 @@ const NavLinksMenu = ({ links }: NavLinksMenuProps) => {
                 <li
                     key={link.key}
                     className="space-y-2"
-                    onClick={() => handleClick(link.to, link.onClick)}
+                    onClick={
+                        !link.subLinks ? () => handleClick(link) : undefined
+                    }
                 >
                     <span className="text-xl font-bold">{link.label}</span>
                     {link.subLinks && (
@@ -54,9 +55,7 @@ const NavLinksMenu = ({ links }: NavLinksMenuProps) => {
                                             ? "font-bold text-[#5146E7]"
                                             : ""
                                     } hover:underline`}
-                                    onClick={() =>
-                                        handleClick(subLink.to, subLink.onClick)
-                                    }
+                                    onClick={() => handleClick(subLink)}
                                 >
                                     {subLink.label}
                                 </li>

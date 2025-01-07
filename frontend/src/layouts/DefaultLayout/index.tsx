@@ -1,7 +1,7 @@
 import { HTMLAttributes, ReactNode } from "react";
 import { Container, Box } from "@mui/material";
 
-interface DefaultPageProps extends HTMLAttributes<HTMLDivElement> {
+export interface DefaultLayoutProps extends HTMLAttributes<HTMLDivElement> {
     children: ReactNode;
     pagination?: JSX.Element;
     direction?: "row" | "column";
@@ -21,7 +21,7 @@ const DefaultLayout = ({
     marginY = true,
     className,
     ...rest
-}: DefaultPageProps) => {
+}: DefaultLayoutProps) => {
     return (
         <>
             {featuredElement && (

@@ -47,7 +47,7 @@ const OrderListItem = ({ data, isLoading }: OrderListItemProps) => {
                             />
                             <SummaryCard
                                 label="Total cost"
-                                value={`$${data?.total}`}
+                                value={`$${data?.total.toFixed(2)}`}
                                 isLoading={isLoading}
                             />
                             <SummaryCard
