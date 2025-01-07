@@ -1,24 +1,17 @@
 import express from "express";
-import { isValidObjectId } from "mongoose";
-import { UserModel } from "../../models/User";
 import { User } from "../../types/User";
+import { redisClient } from "../../config/redis";
 
 export const getCurrentUser = async (
     req: express.Request,
     res: express.Response
 ) => {
-    const { _id } = req.user as User;
+    const cacheKey = res.locals.cacheKey;
 
-    // if (!isValidObjectId(_id)) {
-    //     return res.status(400).json({ error: "User ID is required" });
-    // }
+    const user = req.user as User;
 
     try {
-        const user = await UserModel.findById(_id).exec();
-
-        if (!user) {
-            return res.status(404).json({ error: "User not found" });
-        }
+        await redisClient.set(cacheKey, JSON.stringify(user), "EX", 3600);
 
         return res.status(200).json(user);
     } catch (error) {

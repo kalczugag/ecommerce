@@ -11,7 +11,7 @@ const Featured = ({ id, imageUrl, title, description }: FeaturedProps) => {
     return (
         <div className="flex flex-col space-y-2 md:space-x-2 md:space-y-0 md:flex-row">
             <img
-                src={imageUrl}
+                src={`${imageUrl}?imwidth=384`}
                 alt="featured product"
                 className="w-96 h-96 object-contain"
             />

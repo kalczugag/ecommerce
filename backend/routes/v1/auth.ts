@@ -2,17 +2,13 @@ import express from "express";
 import passport from "passport";
 
 import methods from "../../controllers/userAuth";
+import { cache } from "../../middlewares";
 
 const auth = (router: express.Router) => {
     router.get(
         "/auth/current_user",
         passport.authenticate("jwt", { session: false }),
-        (req, res) => res.json(req.user)
-    );
-
-    router.get(
-        "/auth/current_user",
-        passport.authenticate("jwt", { session: false }),
+        cache("current_user"),
         methods.readCurrentUser
     );
 
