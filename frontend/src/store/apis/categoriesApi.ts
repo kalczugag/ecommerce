@@ -1,5 +1,5 @@
 import { apiSlice } from "./apiSlice";
-import type { GroupedCategories } from "@/types/Category";
+import type { GroupedCategories, Category } from "@/types/Category";
 
 export const categoryApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
@@ -19,7 +19,16 @@ export const categoryApi = apiSlice.injectEndpoints({
                 };
             },
         }),
+
+        getCategoriesByLevel: builder.query<Category[], string>({
+            query: (level) => ({
+                url: "/categories/byLevel",
+                method: "GET",
+                params: { level },
+            }),
+        }),
     }),
 });
 
-export const { useGetGroupedCategoriesQuery } = categoryApi;
+export const { useGetGroupedCategoriesQuery, useGetCategoriesByLevelQuery } =
+    categoryApi;

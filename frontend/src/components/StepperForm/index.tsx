@@ -8,16 +8,17 @@ import {
     Typography,
 } from "@mui/material";
 import { Form } from "react-final-form";
-import type { StepProps } from "@/modules/OrderModule/OrderReturnModule/types/Step";
+import type { StepProps } from "@/types/Step";
 
 interface StepperFormProps {
     content: {
         label: string;
         element: (props: StepProps) => JSX.Element;
     }[];
+    onSubmit?: (values: any) => void;
 }
 
-const StepperForm = ({ content }: StepperFormProps) => {
+const StepperForm = ({ content, onSubmit }: StepperFormProps) => {
     const [formValues, setFormValues] = useState<any>({});
     const [activeStep, setActiveStep] = useState(0);
     const [completed, setCompleted] = useState<{ [key: number]: boolean }>({});
@@ -42,6 +43,11 @@ const StepperForm = ({ content }: StepperFormProps) => {
     };
 
     const handleComplete = (stepValues: any) => {
+        if (allStepsCompleted() && onSubmit) {
+            onSubmit(formValues);
+            return;
+        }
+
         setFormValues((prev: any) => ({
             ...prev,
             ...stepValues,
@@ -66,10 +72,6 @@ const StepperForm = ({ content }: StepperFormProps) => {
         formValues,
     };
 
-    useEffect(() => {
-        console.log(formValues);
-    }, [formValues]);
-
     return (
         <div>
             <Stepper activeStep={activeStep}>
@@ -88,6 +90,7 @@ const StepperForm = ({ content }: StepperFormProps) => {
                                 <Typography sx={{ mt: 2, mb: 1 }}>
                                     All steps completed - you&apos;re finished
                                 </Typography>
+                                <Button type="submit">submit</Button>
                                 <Box
                                     sx={{
                                         display: "flex",

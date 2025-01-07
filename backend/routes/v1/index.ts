@@ -12,6 +12,7 @@ import cart from "./cart";
 import featuredCampaigns from "./featuredCampaigns";
 import payment from "./payment";
 import deliveryMethods from "./deliveryMethods";
+import returns from "./returns";
 
 const router = express.Router();
 
@@ -28,6 +29,7 @@ export default (): express.Router => {
     featuredCampaigns(router);
     payment(router);
     deliveryMethods(router);
+    returns(router);
 
     return router;
 };

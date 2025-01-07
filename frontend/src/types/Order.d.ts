@@ -41,7 +41,14 @@ interface Order {
     _id?: string;
     _user?: User;
     items: Item[];
-    status?: "placed" | "confirmed" | "shipped" | "delivered" | "canceled";
+    status?:
+        | "placed"
+        | "confirmed"
+        | "shipped"
+        | "delivered"
+        | "canceled"
+        | "pending payment"
+        | "returned";
     shippingAddress?: ShippingAddress;
     billingAddress?: ShippingAddress;
     subTotal: number;
@@ -60,20 +67,6 @@ interface AddOrder extends Omit<Order, "items"> {
     items: string[];
 }
 
-interface ReturnOrder {
-    _id?: string;
-    _order: Order;
-    _user: User;
-    returnedItems: Item[];
-    returnReason: string;
-    returnStatus: "initiated" | "approved" | "rejected" | "completed";
-    refundAmount: number;
-    refundMethod: "credit_card" | "paypal" | "bank_transfer";
-    returnDate: Date;
-    createdAt?: Date;
-    updatedAt?: Date;
-}
-
 interface UpdateOrder {
     _id?: string;
     status?: Order["status"];
@@ -82,12 +75,4 @@ interface UpdateOrder {
     _deliveryMethod?: string;
 }
 
-export {
-    Item,
-    ShippingAddress,
-    Payment,
-    Order,
-    ReturnOrder,
-    AddOrder,
-    UpdateOrder,
-};
+export { Item, ShippingAddress, Payment, Order, AddOrder, UpdateOrder };

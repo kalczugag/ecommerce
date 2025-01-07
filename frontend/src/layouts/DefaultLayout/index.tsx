@@ -1,14 +1,14 @@
 import { HTMLAttributes, ReactNode } from "react";
-import clsx from "clsx";
 import { Container, Box } from "@mui/material";
-import SortBar from "@/components/SortBar";
 
-interface DefaultPageProps extends HTMLAttributes<HTMLDivElement> {
+export interface DefaultLayoutProps extends HTMLAttributes<HTMLDivElement> {
     children: ReactNode;
     pagination?: JSX.Element;
     direction?: "row" | "column";
     featuredElement?: JSX.Element;
-    isCatalog?: boolean;
+    topContent?: ReactNode;
+    marginY?: boolean;
+    marginX?: boolean;
 }
 
 const DefaultLayout = ({
@@ -16,10 +16,12 @@ const DefaultLayout = ({
     pagination,
     direction = "column",
     featuredElement,
-    isCatalog = false,
+    topContent,
+    marginX = true,
+    marginY = true,
     className,
     ...rest
-}: DefaultPageProps) => {
+}: DefaultLayoutProps) => {
     return (
         <>
             {featuredElement && (
@@ -27,24 +29,24 @@ const DefaultLayout = ({
                     sx={{
                         width: "100%",
                         height: "70vh",
-                        bgcolor: "#80203D",
                         color: "white",
                         marginY: "40px",
                         padding: "20px",
                     }}
+                    className="bg-red-primary"
                 >
                     {featuredElement}
                 </Box>
             )}
             <Container
                 maxWidth="xl"
-                sx={{ display: "flex", marginY: "40px" }}
+                sx={{ display: "flex", marginY: marginY ? "40px" : 0 }}
                 className={`${
                     direction === "column" ? "flex-col" : "flex-row"
                 } ${className}`}
                 {...rest}
             >
-                {isCatalog && <SortBar />}
+                {topContent}
                 {pagination ? (
                     <div className="flex flex-col">
                         <div className="flex flex-row justify-center md:justify-normal">

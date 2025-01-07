@@ -1,6 +1,6 @@
 import express from "express";
 import { DeliveryMethodModel } from "../../models/DeliveryMethod";
-import { redisClient } from "../../server";
+import { redisClient } from "../../config/redis";
 
 export const getAllDeliveryMethods = async (
     req: express.Request,

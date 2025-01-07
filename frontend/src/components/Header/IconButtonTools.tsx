@@ -61,28 +61,27 @@ const AccountTools = () => {
         {
             visible: Boolean(token),
             customElement: (
-                <MenuItem>
+                <MenuItem onClick={() => handleNavigate("/account")}>
                     <Avatar /> Profile
                 </MenuItem>
             ),
             divider: true,
-            onClick: () => handleNavigate("/account"),
         },
         {
             label: "Orders",
             icon: <Inbox />,
             visible: Boolean(token),
-            onClick: () => handleNavigate("/orders"),
+            onClick: () => handleNavigate("/account/orders"),
         },
         {
             label: "Settings",
             icon: <Settings />,
-            onClick: () => handleNavigate("/profile/settings/general"),
+            onClick: () => handleNavigate("/account/details"),
         },
         {
             label: "Returns",
             icon: <AssignmentReturned />,
-            onClick: () => handleNavigate("/returns"),
+            onClick: () => handleNavigate("/account/returns"),
         },
         {
             label: "Logout",

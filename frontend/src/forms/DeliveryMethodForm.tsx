@@ -36,7 +36,7 @@ const ListItem = ({ type, label, name, additionalNotes }: ListItemProps) => {
 
 interface DeliveryMethodFormProps {
     content: DeliveryMethod[];
-    orderDeliveryCost: number;
+    orderDeliveryCost?: number;
     isLoading: boolean;
 }
 

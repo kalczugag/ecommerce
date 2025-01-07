@@ -2,7 +2,7 @@ import { Field } from "react-final-form";
 import { Checkbox, FormControlLabel } from "@mui/material";
 import { orderStatuses } from "@/constants/orderStatuses";
 import { placeholderArray } from "@/utils/helpers";
-import DefaultLayout from "@/layouts/DefaultLayout";
+import AccountLayout from "@/layouts/AccountLayout";
 import Filters from "@/components/Filters";
 import OrderListItem from "./components/OrderListItem";
 import type { Order } from "@/types/Order";
@@ -53,14 +53,14 @@ const ReadOrderListModule = ({
 
     return (
         <Loading isLoading={isLoading}>
-            <DefaultLayout direction="row" className="md:space-x-14">
-                <div className="hidden md:block">
+            <AccountLayout label="Orders">
+                {/* <div className="hidden md:block">
                     <Filters
                         onSubmit={handleFilter}
                         formElements={formElements}
                         label="Order Status"
                     />
-                </div>
+                </div> */}
                 <div className="flex flex-col w-full space-y-28">
                     {(isLoading ? placeholderData : data).map(
                         (order, index) => (
@@ -72,7 +72,7 @@ const ReadOrderListModule = ({
                         )
                     )}
                 </div>
-            </DefaultLayout>
+            </AccountLayout>
         </Loading>
     );
 };

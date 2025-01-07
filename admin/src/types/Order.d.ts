@@ -41,7 +41,14 @@ interface Order {
     _id?: string;
     _user: User;
     items: Item[];
-    status?: "placed" | "confirmed" | "shipped" | "delivered" | "canceled";
+    status?:
+        | "placed"
+        | "confirmed"
+        | "shipped"
+        | "delivered"
+        | "canceled"
+        | "pending payment"
+        | "returned";
     shippingAddress: ShippingAddress;
     billingAddress: ShippingAddress;
     subTotal: number;
@@ -65,7 +72,7 @@ interface ReturnOrder {
     returnStatus: "initiated" | "approved" | "rejected" | "completed";
     refundAmount: number;
     refundMethod: "credit_card" | "paypal" | "bank_transfer";
-    returnDate: Date;
+    _deliveryMethod: DeliveryMethod;
     createdAt?: Date;
     updatedAt?: Date;
 }

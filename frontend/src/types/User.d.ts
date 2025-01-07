@@ -11,6 +11,7 @@ export interface User {
     address?: ShippingAddress;
     phone?: string;
     email: string;
+    preferences?: string[];
     password?: string;
     createdAt?: Date;
     updatedAt?: Date;
@@ -18,5 +19,6 @@ export interface User {
 
 export interface UpdateUser {
     _id: string;
-    address: ShippingAddress;
+    address?: ShippingAddress;
+    preferences?: string[];
 }

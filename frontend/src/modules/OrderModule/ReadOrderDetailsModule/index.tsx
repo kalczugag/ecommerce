@@ -1,4 +1,4 @@
-import DefaultLayout from "@/layouts/DefaultLayout";
+import AccountLayout from "@/layouts/AccountLayout";
 import OrderDetails from "./components/OrderDetails";
 import type { Order } from "@/types/Order";
 
@@ -12,9 +12,9 @@ const ReadOrderDetailsModule = ({
     isLoading,
 }: ReadOrderListModuleProps) => {
     return (
-        <DefaultLayout>
+        <AccountLayout>
             <OrderDetails data={data} isLoading={isLoading} />
-        </DefaultLayout>
+        </AccountLayout>
     );
 };
 

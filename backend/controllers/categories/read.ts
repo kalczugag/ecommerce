@@ -3,7 +3,7 @@ import { CategoryModel } from "../../models/Categories";
 import { PaginatedCategories, Category } from "../../types/Category";
 import _ from "lodash";
 import { MongooseQueryParser } from "mongoose-query-parser";
-import { redisClient } from "../../server";
+import { redisClient } from "../../config/redis";
 
 const parser = new MongooseQueryParser();
 

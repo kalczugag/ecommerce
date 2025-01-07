@@ -1,5 +1,6 @@
 import express from "express";
 import { UserModel } from "../../models/User";
+import { redisClient } from "../../config/redis";
 
 export const logout = async (req: express.Request, res: express.Response) => {
     const cookies = req.cookies;
@@ -23,6 +24,8 @@ export const logout = async (req: express.Request, res: express.Response) => {
                 secure: true,
                 sameSite: "none",
             });
+
+            await redisClient.del("current_user:no-query");
 
             return res.status(401).json({ error: "Invalid refresh token" });
         }

@@ -1,6 +1,6 @@
-import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { apiSlice } from "../apis/apiSlice";
 import { logOut, setCredentials } from "./authSlice";
+import type { User } from "@/types/User";
 
 type AuthResult = {
     expires: string;
@@ -119,6 +119,13 @@ export const authApiSlice = apiSlice.injectEndpoints({
                 }
             },
         }),
+
+        currentUser: builder.query<User, void>({
+            query: () => ({
+                url: "/auth/current_user",
+                method: "GET",
+            }),
+        }),
     }),
 });
 
@@ -127,4 +134,5 @@ export const {
     useRefreshTokenQuery,
     useRegisterMutation,
     useLogoutMutation,
+    useCurrentUserQuery,
 } = authApiSlice;
