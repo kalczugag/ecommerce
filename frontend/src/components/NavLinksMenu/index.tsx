@@ -18,10 +18,31 @@ interface NavLinksMenuProps {
 
 const NavLinksMenu = ({ links }: NavLinksMenuProps) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [activeKey, setActiveKey] = useState<string | null>(null);
 
+    const location = useLocation();
     const navigate = useNavigate();
     const isMobile = useIsMobile();
+
+    const findActiveLink = (
+        links: NavLink[],
+        path: string
+    ): NavLink | undefined => {
+        for (const link of links) {
+            if (link.to === path) return link;
+            if (link.subLinks) {
+                const activeSubLink = findActiveLink(link.subLinks, path);
+                if (activeSubLink) return activeSubLink;
+            }
+        }
+        return undefined;
+    };
+
+    const [activeKey, setActiveKey] = useState<string | null>(() => {
+        const currentPath = location.pathname;
+        const defaultActiveLink =
+            findActiveLink(links, currentPath) || links[0];
+        return defaultActiveLink ? defaultActiveLink.key : null;
+    });
 
     const isActive = (link: NavLink) => link.key === activeKey;
 
