@@ -127,7 +127,9 @@ const DetailsProductCard = ({
                                 name="half-rating"
                                 defaultValue={rating.value}
                                 precision={0.5}
-                                readOnly
+                                sx={{
+                                    color: "inherit",
+                                }}
                             />
                             <span className="text-sm text-gray-500">
                                 {rating.value * 5} Ratings

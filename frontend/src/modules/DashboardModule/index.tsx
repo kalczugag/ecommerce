@@ -2,7 +2,7 @@ import { useGetFeaturedCampaignQuery } from "@/store";
 import useAuth from "@/hooks/useAuth";
 import DefaultLayout from "@/layouts/DefaultLayout";
 import CustomCarousel from "@/components/Carousel";
-import Featured from "./components/Featured";
+import Product from "@/components/ProductCard";
 
 const DashboardModule = () => {
     const { token } = useAuth();
@@ -17,13 +17,8 @@ const DashboardModule = () => {
     });
 
     const content = data?.data[0].products.map((product) => (
-        <Featured
-            key={product._id}
-            id={product._id || ""}
-            imageUrl={product.imageUrl[0]}
-            title={product.title}
-            description={product.description || ""}
-        />
+        // <Product key={product._id} data={product} />
+        <div className="text-center">{product.title || ""}</div>
     ));
 
     return (

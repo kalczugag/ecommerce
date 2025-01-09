@@ -18,12 +18,12 @@ const ImagePicker = ({ data }: ImagePickerProps) => {
     return (
         <div className="flex flex-col-reverse xl:space-x-10 xl:flex-row">
             <div className="flex flex-row justify-center space-x-2 xl:justify-normal xl:mt-0 xl:space-y-2 xl:space-x-0 xl:flex-col">
-                {visibleImages.map((image, idx) => {
+                {visibleImages.map((image, index) => {
                     const absoluteIndex = isMobile
                         ? selectedImage < 2
-                            ? idx
-                            : idx + 1
-                        : idx;
+                            ? index
+                            : index + 1
+                        : index;
 
                     return (
                         <img
@@ -52,12 +52,12 @@ const ImagePicker = ({ data }: ImagePickerProps) => {
             {isMobile && (
                 <div className="flex flex-col items-center my-4">
                     <div className="flex space-x-2 mt-2">
-                        {data.map((_, idx) => (
+                        {data.map((_, index) => (
                             <div
-                                key={idx}
-                                onClick={() => setSelectedImage(idx)}
+                                key={index}
+                                onClick={() => setSelectedImage(index)}
                                 className={`w-3 h-3 rounded-full cursor-pointer transition-all ${
-                                    selectedImage === idx
+                                    selectedImage === index
                                         ? "bg-blue-500 scale-125"
                                         : "bg-gray-300"
                                 }`}

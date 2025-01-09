@@ -1,13 +1,13 @@
 import { useGetProductFiltersQuery } from "@/store";
-import DefaultLayout from "@/layouts/DefaultLayout";
 import { Pagination } from "@mui/material";
-import Sidebar from "@/components/Sidebar";
-import ProductsList from "./components/ProductsList";
-import SortBar from "@/components/SortBar";
-import type { Product } from "@/types/Product";
-import RouterBreadcrumbs from "@/components/RouterBreadcrumbs";
+import DefaultLayout from "@/layouts/DefaultLayout";
 import { categoriesNameMap } from "@/constants/breadcrumbs";
+import Sidebar from "@/components/Sidebar";
+import SortBar from "@/components/SortBar";
 import Loading from "@/components/Loading";
+import RouterBreadcrumbs from "@/components/RouterBreadcrumbs";
+import ProductsList from "./components/ProductsList";
+import type { Product } from "@/types/Product";
 
 const categoryLabel = (category: string) => {
     const categoriesArray = category
