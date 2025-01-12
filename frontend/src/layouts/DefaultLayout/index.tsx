@@ -9,6 +9,7 @@ export interface DefaultLayoutProps extends HTMLAttributes<HTMLDivElement> {
     topContent?: ReactNode;
     marginY?: boolean;
     marginX?: boolean;
+    centered?: boolean;
 }
 
 const DefaultLayout = ({
@@ -19,6 +20,7 @@ const DefaultLayout = ({
     topContent,
     marginX = true,
     marginY = true,
+    centered = false,
     className,
     ...rest
 }: DefaultLayoutProps) => {
@@ -53,6 +55,10 @@ const DefaultLayout = ({
                             {children}
                         </div>
                         {pagination}
+                    </div>
+                ) : centered ? (
+                    <div className="flex flex-row justify-center md:justify-normal">
+                        {children}
                     </div>
                 ) : (
                     children

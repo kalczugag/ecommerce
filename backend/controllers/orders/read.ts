@@ -35,7 +35,10 @@ export const getAllOrders = async (
             return res.status(404).json({ error: "No orders found" });
         }
 
-        return res.status(200).json({ data: orders, count: totalDocuments });
+        return res.status(200).json({
+            data: orders,
+            count: totalDocuments,
+        });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: "Internal server error" });

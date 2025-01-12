@@ -18,7 +18,9 @@ const DashboardModule = () => {
 
     const content = data?.data[0].products.map((product) => (
         // <Product key={product._id} data={product} />
-        <div className="text-center">{product.title || ""}</div>
+        <div className="text-center" key={product._id}>
+            {product.title || ""}
+        </div>
     ));
 
     return (

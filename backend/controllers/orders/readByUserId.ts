@@ -62,7 +62,14 @@ export const getOrdersByUserId = async (
                 .json({ data: [], error: "Orders not found" });
         }
 
-        return res.status(200).json({ data: orders, count: totalDocuments });
+        const hasMore = (page + 1) * pageSize < totalDocuments;
+
+        return res.status(200).json({
+            data: orders,
+            count: totalDocuments,
+            hasMore,
+            nextCursor: page + 1,
+        });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: "Internal server error" });

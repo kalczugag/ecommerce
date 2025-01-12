@@ -1,24 +1,26 @@
+import { useState } from "react";
 import { Field } from "react-final-form";
 import { Checkbox, FormControlLabel } from "@mui/material";
 import { orderStatuses } from "@/constants/orderStatuses";
 import { placeholderArray } from "@/utils/helpers";
 import AccountLayout from "@/layouts/AccountLayout";
 import Filters from "@/components/Filters";
-import OrderListItem from "./components/OrderListItem";
-import type { Order } from "@/types/Order";
 import Loading from "@/components/Loading";
+import OrdersList from "./components/OrdersList";
 
 interface ReadOrderListModuleProps {
-    data: Order[];
-    isLoading: boolean;
+    userId: string;
+    status: string;
     handleFilter: (value: { status: string }) => void;
 }
 
 const ReadOrderListModule = ({
-    data,
-    isLoading,
+    userId,
+    status,
     handleFilter,
 }: ReadOrderListModuleProps) => {
+    const [isFetching, setIsFetching] = useState(false);
+
     const orderValues = Object.values(orderStatuses);
     const placeholderData = placeholderArray(2);
 
@@ -43,7 +45,7 @@ const ReadOrderListModule = ({
                             name={input.name}
                             value={input.value}
                             label={status}
-                            disabled={isLoading}
+                            disabled={isFetching}
                         />
                     ))}
                 </div>
@@ -52,7 +54,7 @@ const ReadOrderListModule = ({
     );
 
     return (
-        <Loading isLoading={isLoading}>
+        <Loading isLoading={isFetching}>
             <AccountLayout label="Orders">
                 {/* <div className="hidden md:block">
                     <Filters
@@ -61,17 +63,12 @@ const ReadOrderListModule = ({
                         label="Order Status"
                     />
                 </div> */}
-                <div className="flex flex-col w-full space-y-28">
-                    {(isLoading ? placeholderData : data).map(
-                        (order, index) => (
-                            <OrderListItem
-                                key={order?._id || "skeleton" + "_" + index}
-                                data={order}
-                                isLoading={isLoading}
-                            />
-                        )
-                    )}
-                </div>
+                <OrdersList
+                    userId={userId}
+                    status={status}
+                    sort="-createdAt"
+                    setIsFetching={setIsFetching}
+                />
             </AccountLayout>
         </Loading>
     );

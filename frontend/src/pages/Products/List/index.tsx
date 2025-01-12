@@ -1,7 +1,5 @@
 import { useParams } from "react-router-dom";
-import { useGetAllProductsQuery } from "@/store";
 import { useTitle } from "@/hooks/useTitle";
-import usePagination from "@/hooks/usePagination";
 import ProductsDataListModule from "@/modules/ProductsModule/ProductsDataListModule";
 import useFilters from "@/hooks/useFilters";
 
@@ -20,7 +18,6 @@ const Catalog = () => {
         secondLevel = "",
         thirdLevel = "",
     } = useParams<Record<string, string>>();
-    const [handlePageChange, page] = usePagination();
     const { filters, updateFilters } = useFilters();
 
     const title = generateTitle({ topLevel, secondLevel, thirdLevel });
@@ -30,13 +27,6 @@ const Catalog = () => {
         .filter(Boolean)
         .join(",");
 
-    const { data, isLoading, isFetching } = useGetAllProductsQuery({
-        skip: page - 1,
-        limit: ROWS_PER_PAGE,
-        category,
-        ...filters,
-    });
-
     const handleFilters = (value: { sort: string; [key: string]: any }) => {
         const { sort, ...rest } = value;
 
@@ -44,14 +34,8 @@ const Catalog = () => {
     };
 
     const config = {
-        data: data?.data || [],
         pageSize: ROWS_PER_PAGE,
-        page,
         category,
-        total: data?.count || 0,
-        isLoading,
-        isFetching,
-        handlePageChange,
         handleFilters,
     };
 

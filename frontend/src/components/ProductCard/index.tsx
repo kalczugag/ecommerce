@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Box, Rating } from "@mui/material";
 import { TColors, colors } from "@/constants/colors";
 import type { Product } from "@/types/Product";
+import type { Virtualizer, VirtualItem } from "@tanstack/react-virtual";
 
 interface ProductCardProps {
     data: Product;
@@ -14,6 +15,8 @@ interface ProductCardProps {
         textColor?: TColors;
     }[];
     showRating?: boolean;
+    virtualizer?: Virtualizer<Window, Element>;
+    item?: VirtualItem;
 }
 
 // in pixels
@@ -36,6 +39,8 @@ const ProductCard = ({
     size = "md",
     badges,
     showRating = false,
+    virtualizer,
+    item,
 }: ProductCardProps) => {
     const {
         _id,
