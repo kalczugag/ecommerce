@@ -28,9 +28,6 @@ export const handleChangeQuantity = async (
             };
         }
 
-        console.log("product: ", product);
-        console.log("\n\n\n\nbaseItem: ", baseItem);
-
         const sizeIndex = product.size.findIndex(
             (s) => s.name === baseItem.size
         );

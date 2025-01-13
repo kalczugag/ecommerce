@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useGetUsersCartQuery, useLogoutMutation } from "@/store";
+import { useGetUsersCartCountQuery, useLogoutMutation } from "@/store";
 import { enqueueSnackbar } from "notistack";
 import useAuth from "@/hooks/useAuth";
 import { Box, MenuItem, Avatar } from "@mui/material";
@@ -18,9 +18,12 @@ import AvatarMenu from "./AvatarMenu";
 const AccountTools = () => {
     const navigate = useNavigate();
     const { token } = useAuth();
-    const { data } = useGetUsersCartQuery(undefined, {
-        skip: !token,
-    });
+    const { data } = useGetUsersCartCountQuery(
+        { onlyCount: true },
+        {
+            skip: !token,
+        }
+    );
 
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
@@ -43,6 +46,7 @@ const AccountTools = () => {
         try {
             handleCloseUserMenu();
             await logout();
+            navigate("/");
             enqueueSnackbar("Logged out successfully", {
                 variant: "success",
             });
@@ -100,7 +104,7 @@ const AccountTools = () => {
                 handleCloseUserMenu={handleCloseUserMenu}
             />
             <Search />
-            <CartIcon data={data} />
+            <CartIcon count={data?.count || 0} />
         </Box>
     );
 };

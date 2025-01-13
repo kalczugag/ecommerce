@@ -3,10 +3,11 @@ import { CartModel } from "../../models/Cart";
 import type { User } from "../../types/User";
 
 export const getCartItems = async (
-    req: express.Request,
+    req: express.Request<{}, {}, {}, { onlyCount: string }>,
     res: express.Response
 ) => {
     const user = req.user as User;
+    const onlyCount = req.query.onlyCount === "true";
 
     if (!user) {
         return res.status(400).json({ error: "User not found" });
@@ -17,21 +18,31 @@ export const getCartItems = async (
     }
 
     try {
-        const cart = await CartModel.findById(user._cart)
-            .populate({
+        let cartQuery = CartModel.findById(user._cart);
+
+        if (onlyCount) {
+            cartQuery = cartQuery.select("items");
+        } else {
+            cartQuery = cartQuery.populate({
                 path: "items",
                 populate: {
                     path: "_product",
                     model: "Product",
                 },
-            })
-            .exec();
+            });
+        }
 
-        if (!cart) {
+        const cart = await cartQuery.exec();
+
+        if (!cartQuery) {
             return res.status(404).json({ error: "No cart data found" });
         }
 
-        return res.status(200).json(cart);
+        const result = onlyCount
+            ? { _id: cart?._id, count: cart?.items.length }
+            : cart;
+
+        return res.status(200).json(result);
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: "Internal server error" });
