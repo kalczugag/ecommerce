@@ -52,6 +52,7 @@ Checkout live demo:
     -   [Node.js](https://nodejs.org/)
     -   [Express](https://expressjs.com/) for API and server management
     -   [MongoDB](https://www.mongodb.com/) as the NoSQL database
+    -   [Redis](https://redis.io/) for caching and session management
     -   [JWT](https://jwt.io/) for token-based authentication
 
 -   **Other Technologies**:
