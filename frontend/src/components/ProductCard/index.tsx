@@ -2,12 +2,12 @@ import { Link } from "react-router-dom";
 import { Box, Rating } from "@mui/material";
 import { TColors, colors } from "@/constants/colors";
 import type { Product } from "@/types/Product";
-import type { Virtualizer, VirtualItem } from "@tanstack/react-virtual";
+import { useState } from "react";
 
 interface ProductCardProps {
     data: Product;
     isLoading: boolean;
-    // variant?: string;
+    variant?: "default" | "highlighted";
     size?: "sm" | "md" | "lg";
     badges?: {
         title: string;
@@ -15,32 +15,28 @@ interface ProductCardProps {
         textColor?: TColors;
     }[];
     showRating?: boolean;
-    virtualizer?: Virtualizer<Window, Element>;
-    item?: VirtualItem;
 }
 
 // in pixels
 const sizes = {
     sm: {
-        height: "150",
+        width: "160",
     },
     md: {
-        height: "450",
+        width: "450",
     },
     lg: {
-        height: "600",
+        width: "600",
     },
 };
 
 const ProductCard = ({
     data,
     isLoading,
-    // variant, // TODO
+    variant = "default", // TODO
     size = "md",
     badges,
     showRating = false,
-    virtualizer,
-    item,
 }: ProductCardProps) => {
     const {
         _id,
@@ -53,17 +49,25 @@ const ProductCard = ({
         description,
     } = data;
 
+    const [isHovered, setIsHovered] = useState(false);
+
     return (
         <Link
             to={`/product/${_id}`}
-            className={`flex flex-col ${isLoading && "pointer-events-none"}`}
+            className={`flex ${
+                variant === "default"
+                    ? "flex-col"
+                    : "max-w-96 flex-row space-x-4 mx-2"
+            } ${isLoading && "pointer-events-none"}`}
+            onMouseOver={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
         >
-            <div className="relative">
+            <div className={`relative ${size === "sm" && "text-center"}`}>
                 <img
-                    src={`${imageUrl[0]}?imwidth=${sizes[size].height}`}
+                    src={`${imageUrl[0]}?imwidth=${sizes[size].width}`}
                     alt={title}
                     loading="lazy"
-                    className={`max-h-[${sizes[size].height}px]`}
+                    className={`max-h-[${sizes[size].width}px]`}
                 />
                 {badges && (
                     <div className="absolute bottom-2 left-2 z-10 flex space-x-1">
@@ -87,8 +91,24 @@ const ProductCard = ({
                 )}
             </div>
             <div className="flex flex-col py-4 w-full">
-                <h3 className="text-gray-600 font-bold">{title}</h3>
-                <p className="text-sm">{description?.slice(0, 50) + "..."}</p>
+                <h3
+                    className={`${
+                        variant === "default"
+                            ? "text-gray-600"
+                            : isHovered
+                            ? "text-gray-400"
+                            : ""
+                    } font-bold`}
+                >
+                    {title}
+                </h3>
+                <p
+                    className={`text-sm ${
+                        variant === "default" ? "" : "text-gray-300"
+                    }`}
+                >
+                    {description?.slice(0, size === "sm" ? 35 : 50) + "..."}
+                </p>
                 <div className="text-sm text-gray-600">{color}</div>
                 {showRating && (
                     <Box

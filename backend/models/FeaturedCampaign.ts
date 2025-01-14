@@ -14,6 +14,10 @@ const featuredCampaignSchema = new mongoose.Schema<FeaturedCampaign>({
     image: { type: String, required: false },
     products: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
     status: { type: String, required: true, default: "active" },
+    colors: {
+        primary: { type: String, default: "#ffffff" },
+        secondary: { type: String, default: "#000000" },
+    },
 });
 
 export const FeaturedCampaignModel = mongoose.model(

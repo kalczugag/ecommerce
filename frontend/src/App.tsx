@@ -1,3 +1,5 @@
+import "@/styles/app.css";
+
 import { Route, Routes } from "react-router-dom";
 import PrivateOutlet from "@/pages/Outlets/PrivateOutlet";
 import VisitorsCounterOutlet from "@/pages/Outlets/VisitorsCounterOutlet";

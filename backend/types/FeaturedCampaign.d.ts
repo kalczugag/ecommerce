@@ -10,4 +10,8 @@ export interface FeaturedCampaign {
     image?: string;
     products: string[] | Product[];
     status: "active" | "inactive";
+    colors: {
+        primary: string;
+        secondary: string;
+    };
 }
