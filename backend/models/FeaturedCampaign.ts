@@ -9,12 +9,17 @@ const featuredCampaignSchema = new mongoose.Schema<FeaturedCampaign>({
         ref: "Category",
         required: true,
     },
+    imageUrl: { type: String, required: false },
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
     image: { type: String, required: false },
     products: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
     status: { type: String, required: true, default: "active" },
-    colors: {
+    textColor: {
+        primary: { type: String, default: "#000000" },
+        secondary: { type: String, default: "#ffffff" },
+    },
+    bgColor: {
         primary: { type: String, default: "#ffffff" },
         secondary: { type: String, default: "#000000" },
     },

@@ -10,7 +10,11 @@ export interface FeaturedCampaign {
     image?: string;
     products: Product[];
     status: "active" | "inactive";
-    colors: {
+    textColor: {
+        primary: string;
+        secondary: string;
+    };
+    bgColor: {
         primary: string;
         secondary: string;
     };

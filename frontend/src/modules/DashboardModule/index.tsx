@@ -1,7 +1,7 @@
 import { useGetFeaturedCampaignQuery } from "@/store";
 import useAuth from "@/hooks/useAuth";
-import ProductCard from "@/components/ProductCard";
 import { Skeleton } from "@mui/material";
+import ProductCard from "@/components/ProductCard";
 import InfiniteCarousel from "@/components/InfiniteCarousel";
 
 const DashboardModule = () => {
@@ -25,6 +25,7 @@ const DashboardModule = () => {
             data={product}
             variant="highlighted"
             isLoading={isLoading}
+            showRating
         />
     ));
 
@@ -39,9 +40,12 @@ const DashboardModule = () => {
                 </div>
             ) : (
                 <InfiniteCarousel
+                    name={data.data[0].name}
+                    description={data.data[0].description}
                     content={content || []}
                     isLoading={isFetching}
-                    colors={data.data[0].colors}
+                    bgColor={data.data[0].bgColor}
+                    textColor={data.data[0].textColor}
                 />
             )}
         </div>
