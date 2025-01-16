@@ -1,24 +1,66 @@
-import { placeholderArray } from "@/utils/helpers";
-import ProductCard from "./ProductCard";
-import type { Product } from "@/types/Product";
+import { useEffect } from "react";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInView } from "react-intersection-observer";
+import { useLazyGetAllProductsQuery } from "@/store";
+import ProductCard from "@/components/ProductCard";
 
 interface ProductsListProps {
-    data: Product[];
-    isLoading: boolean;
+    category: string;
+    setIsFetching: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ProductsList = ({ data, isLoading }: ProductsListProps) => {
-    const placeholderData = placeholderArray(8);
+const ProductsList = ({ category, setIsFetching }: ProductsListProps) => {
+    const { ref, inView } = useInView({
+        threshold: 0,
+        rootMargin: "200px",
+    });
+
+    const [triggerFetch] = useLazyGetAllProductsQuery();
+
+    const fetchProducts = async ({ pageParam }: { pageParam: number }) => {
+        const { data } = await triggerFetch({
+            skip: pageParam,
+            limit: 8,
+            category,
+        });
+        return data;
+    };
+
+    const { data, fetchNextPage, isFetching, refetch } = useInfiniteQuery({
+        queryKey: ["Products"],
+        queryFn: fetchProducts,
+        initialPageParam: 0,
+        getNextPageParam: (lastPage, pages) =>
+            lastPage?.hasMore ? lastPage?.nextCursor : undefined,
+    });
+
+    useEffect(() => {
+        if (inView) {
+            fetchNextPage();
+        }
+    }, [fetchNextPage, inView]);
+
+    useEffect(() => {
+        setIsFetching(isFetching);
+    }, [isFetching]);
+
+    useEffect(() => {
+        refetch();
+    }, [category]);
 
     return (
         <div className="grid justify-items-center grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {(isLoading ? placeholderData : data).map((product, index) => (
-                <ProductCard
-                    key={(product?.title || "skeleton") + "_" + index}
-                    data={product}
-                    isLoading={isLoading}
-                />
-            ))}
+            {data?.pages.map((page) =>
+                page?.data.map((product) => (
+                    <ProductCard
+                        key={product._id}
+                        data={product}
+                        isLoading={isFetching}
+                        size="lg"
+                    />
+                ))
+            )}
+            <div ref={ref}></div>
         </div>
     );
 };

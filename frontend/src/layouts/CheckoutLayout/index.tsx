@@ -1,7 +1,13 @@
 import { ReactNode } from "react";
 import { useOrder } from "@/contexts/OrderContext";
-import { Skeleton, Container, Step, StepLabel, Stepper } from "@mui/material";
-import useIsMobile from "@/hooks/useIsMobile";
+import {
+    Skeleton,
+    Container,
+    Step,
+    StepLabel,
+    Stepper,
+    useMediaQuery,
+} from "@mui/material";
 import useStep from "@/modules/CheckoutModule/DeliveryModule/hooks/useStep";
 import { orderStatuses } from "@/constants/orderStatuses";
 
@@ -10,9 +16,9 @@ interface CheckoutLayoutProps {
 }
 
 const CheckoutLayout = ({ children }: CheckoutLayoutProps) => {
-    const isMobile = useIsMobile();
     const { steps, order, isLoading } = useOrder();
     const [activeStep] = useStep();
+    const isMobile = useMediaQuery("(max-width: 1024px)");
 
     const orderSteps = Object.values(orderStatuses);
 

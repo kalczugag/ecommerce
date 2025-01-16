@@ -31,7 +31,7 @@ const Login = () => {
     const FormContainer = () => (
         <Form
             onSubmit={handleLogin}
-            render={({ handleSubmit }) => (
+            render={({ handleSubmit, form }) => (
                 <form onSubmit={handleSubmit} className="space-y-8">
                     <div className="text-gray-400">
                         <p className="font-bold">Demo credentials</p>
@@ -48,6 +48,7 @@ const Login = () => {
                         type="submit"
                         variant="contained"
                         loading={isLoading}
+                        disabled={!form.getFieldState("recaptcha")?.value}
                         fullWidth
                     >
                         Sign In

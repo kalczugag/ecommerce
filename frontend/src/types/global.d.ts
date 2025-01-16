@@ -1,8 +1,10 @@
 interface ApiResponseArray<T> {
     count: number;
     data: T[];
+    hasMore?: boolean;
     message?: string;
     error?: string;
+    nextCursor?: number;
 }
 
 interface ApiResponseObject<T> {

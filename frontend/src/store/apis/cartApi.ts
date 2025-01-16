@@ -23,6 +23,19 @@ export const cartApi = apiSlice.injectEndpoints({
                 result ? [{ type: "Cart", id: result._id }] : [],
         }),
 
+        getUsersCartCount: builder.query<
+            { _id: string; count: number },
+            { onlyCount?: boolean }
+        >({
+            query: (onlyCount) => ({
+                url: "/cart",
+                method: "GET",
+                params: onlyCount,
+            }),
+            providesTags: (result) =>
+                result ? [{ type: "Cart", id: result._id }] : [],
+        }),
+
         editUsersCart: builder.mutation<ApiResponseObject<Cart>, BodyProps>({
             query: (cart) => ({
                 url: `/cart/${cart.cartId}`,
@@ -36,4 +49,8 @@ export const cartApi = apiSlice.injectEndpoints({
     }),
 });
 
-export const { useGetUsersCartQuery, useEditUsersCartMutation } = cartApi;
+export const {
+    useGetUsersCartQuery,
+    useGetUsersCartCountQuery,
+    useEditUsersCartMutation,
+} = cartApi;

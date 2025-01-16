@@ -58,15 +58,15 @@ const Header = ({ topLabel }: HeaderProps) => {
                 <Container maxWidth="xl">
                     <Toolbar disableGutters>
                         <div className="flex items-center md:flex-none md:flex">
-                            <div className="flex items-center mr-2 flex-grow ">
+                            <Link
+                                to="/"
+                                className="flex items-center mr-2 flex-grow"
+                            >
                                 <Adb className="mr-1 text-black" />
-                                <Link
-                                    to="/"
-                                    className="hidden font-mono font-bold text-xl tracking-[.3rem] text-black no-underline md:block"
-                                >
+                                <span className="hidden font-mono font-bold text-xl tracking-[.3rem] text-black no-underline md:block">
                                     LOGO
-                                </Link>
-                            </div>
+                                </span>
+                            </Link>
                         </div>
                         <CategoryContainer
                             data={data?.data}

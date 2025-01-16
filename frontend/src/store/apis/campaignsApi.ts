@@ -34,4 +34,5 @@ export const campaignsApi = apiSlice.injectEndpoints({
     }),
 });
 
-export const { useGetFeaturedCampaignQuery } = campaignsApi;
+export const { useGetFeaturedCampaignQuery, useLazyGetFeaturedCampaignQuery } =
+    campaignsApi;

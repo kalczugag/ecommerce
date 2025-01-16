@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Field } from "react-final-form";
 import { validateEmail, required, compose } from "@/utils/validators";
+import ReCAPTCHA from "react-google-recaptcha";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
     FormControl,
@@ -128,6 +129,14 @@ const RegisterForm = ({ isLoading }: RegisterFormProps) => {
                             </FormHelperText>
                         )}
                     </FormControl>
+                )}
+            </Field>
+            <Field name="recaptcha" validate={required}>
+                {(props) => (
+                    <ReCAPTCHA
+                        sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                        onChange={props.input.onChange}
+                    />
                 )}
             </Field>
         </div>

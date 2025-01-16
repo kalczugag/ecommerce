@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Field } from "react-final-form";
 import { required, validateEmail, compose } from "@/utils/validators";
+import ReCAPTCHA from "react-google-recaptcha";
 import {
     FormControl,
     IconButton,
@@ -18,6 +19,7 @@ interface LoginFormProps {
 
 const LoginForm = ({ isLoading }: LoginFormProps) => {
     const [showPassword, setShowPassword] = useState(false);
+    const [recaptchaValue, setRecaptchaValue] = useState<string | null>(null);
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -91,6 +93,14 @@ const LoginForm = ({ isLoading }: LoginFormProps) => {
                             </FormHelperText>
                         )}
                     </FormControl>
+                )}
+            </Field>
+            <Field name="recaptcha" validate={required}>
+                {(props) => (
+                    <ReCAPTCHA
+                        sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                        onChange={props.input.onChange}
+                    />
                 )}
             </Field>
         </div>

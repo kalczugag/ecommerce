@@ -1,13 +1,12 @@
 import { useGetProductFiltersQuery } from "@/store";
 import DefaultLayout from "@/layouts/DefaultLayout";
-import { Pagination } from "@mui/material";
-import Sidebar from "@/components/Sidebar";
-import ProductsList from "./components/ProductsList";
-import SortBar from "@/components/SortBar";
-import type { Product } from "@/types/Product";
-import RouterBreadcrumbs from "@/components/RouterBreadcrumbs";
 import { categoriesNameMap } from "@/constants/breadcrumbs";
+import Sidebar from "@/components/Sidebar";
+import SortBar from "@/components/SortBar";
 import Loading from "@/components/Loading";
+import RouterBreadcrumbs from "@/components/RouterBreadcrumbs";
+import ProductsList from "./components/ProductsList";
+import { useState } from "react";
 
 const categoryLabel = (category: string) => {
     const categoriesArray = category
@@ -28,47 +27,21 @@ const categoryLabel = (category: string) => {
 
 interface ProductsDataListModuleProps {
     config: {
-        data: Product[];
         pageSize: number;
-        page: number;
         category: string;
-        total: number;
-        isLoading: boolean;
-        isFetching: boolean;
-        handlePageChange: (
-            event: React.ChangeEvent<unknown>,
-            value: number
-        ) => void;
         handleFilters: (value: any) => void;
     };
 }
 
 const ProductsDataListModule = ({ config }: ProductsDataListModuleProps) => {
-    const {
-        data,
-        pageSize,
-        page,
-        category,
-        isLoading,
-        isFetching,
-        handlePageChange,
-        handleFilters,
-    } = config;
+    const { category, handleFilters } = config;
     const { data: productFilters } = useGetProductFiltersQuery(category);
 
-    const count = Math.ceil((config.total ?? 0) / pageSize);
+    const [isFetching, setIsFetching] = useState(false);
 
     return (
         <Loading isLoading={isFetching}>
             <DefaultLayout
-                pagination={
-                    <Pagination
-                        count={count}
-                        page={page}
-                        onChange={handlePageChange}
-                        sx={{ marginTop: "60px", alignSelf: "center" }}
-                    />
-                }
                 topContent={
                     <div className="flex flex-col space-y-4 mb-8">
                         <div className="flex flex-row justify-between items-center">
@@ -82,21 +55,20 @@ const ProductsDataListModule = ({ config }: ProductsDataListModuleProps) => {
                         </h2>
                     </div>
                 }
+                centered
             >
                 <Sidebar
                     config={{
                         data: productFilters!,
-                        disabled: !data.length,
+                        // disabled: !data.length,
                         onSubmit: handleFilters,
                     }}
                 />
-                {isLoading ? (
-                    <ProductsList data={[]} isLoading={true} />
-                ) : data.length > 0 ? (
-                    <ProductsList data={data} isLoading={false} />
-                ) : (
-                    <div>No products available for this category.</div>
-                )}
+
+                <ProductsList
+                    category={category}
+                    setIsFetching={setIsFetching}
+                />
             </DefaultLayout>
         </Loading>
     );

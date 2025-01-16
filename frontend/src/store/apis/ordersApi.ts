@@ -74,6 +74,7 @@ export const ordersApi = apiSlice.injectEndpoints({
 
 export const {
     useGetOrderByIdQuery,
+    useLazyGetOrdersByUserIdQuery,
     useGetOrdersByUserIdQuery,
     useAddOrderMutation,
     useUpdateOrderMutation,

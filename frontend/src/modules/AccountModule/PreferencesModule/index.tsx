@@ -46,7 +46,7 @@ const PreferencesModule = ({ config }: PreferencesModuleProps) => {
             <Form
                 initialValues={{ preferences: currentPreferences }}
                 onSubmit={handleSubmit}
-                render={({ handleSubmit }) => (
+                render={({ handleSubmit, form }) => (
                     <form onSubmit={handleSubmit}>
                         <div className="flex flex-col items-start space-y-4">
                             <MultiSelect
@@ -58,7 +58,11 @@ const PreferencesModule = ({ config }: PreferencesModuleProps) => {
                                 type="submit"
                                 variant="contained"
                                 loading={isLoading}
-                                disabled={isInitialLoading}
+                                disabled={
+                                    isInitialLoading ||
+                                    form.getFieldState("preferences")?.value ===
+                                        currentPreferences
+                                }
                             >
                                 Save
                             </LoadingButton>
