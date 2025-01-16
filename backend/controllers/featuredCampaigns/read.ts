@@ -51,7 +51,16 @@ export const getAllCampaigns = async (
                 .json({ error: "No campaigns found for your preferences" });
         }
 
-        return res.status(200).json({ data: campaigns, count: totalDocuments });
+        const hasMore = (page + 1) * pageSize < totalDocuments;
+
+        return res
+            .status(200)
+            .json({
+                data: campaigns,
+                count: totalDocuments,
+                hasMore,
+                nextCursor: page + 1,
+            });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: "Internal server error" });

@@ -1,5 +1,4 @@
 import { useGetProductFiltersQuery } from "@/store";
-import { Pagination } from "@mui/material";
 import DefaultLayout from "@/layouts/DefaultLayout";
 import { categoriesNameMap } from "@/constants/breadcrumbs";
 import Sidebar from "@/components/Sidebar";

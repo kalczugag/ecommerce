@@ -92,22 +92,10 @@ const ProductCard = ({
                 )}
             </div>
             <div className="flex flex-col py-4 w-full">
-                <h3
-                    className={`${
-                        variant === "default"
-                            ? "text-gray-600"
-                            : isHovered
-                            ? "text-gray-400"
-                            : ""
-                    } font-bold`}
-                >
+                <h3 className={`font-bold ${isHovered && "opacity-80"}`}>
                     {title}
                 </h3>
-                <p
-                    className={`text-sm ${
-                        variant === "default" ? "" : "text-gray-300"
-                    }`}
-                >
+                <p className="text-sm">
                     {description?.slice(0, size === "sm" ? 35 : 50) + "..."}
                 </p>
                 <div className="text-sm text-gray-600">{color}</div>
