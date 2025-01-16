@@ -1,15 +1,15 @@
 import { useState } from "react";
-import useIsMobile from "@/hooks/useIsMobile";
+import { useMediaQuery } from "@mui/material";
 
 interface ImagePickerProps {
     data: string[];
 }
 
 const ImagePicker = ({ data }: ImagePickerProps) => {
-    const isMobile = useIsMobile(1280);
     const [selectedImage, setSelectedImage] = useState(0);
+    const isMobileOrTablet = useMediaQuery("(max-width: 1280px)");
 
-    const visibleImages = isMobile
+    const visibleImages = isMobileOrTablet
         ? selectedImage < 2
             ? data.slice(0, 3)
             : data.slice(1, 4)
@@ -19,7 +19,7 @@ const ImagePicker = ({ data }: ImagePickerProps) => {
         <div className="flex flex-col-reverse xl:space-x-10 xl:flex-row">
             <div className="flex flex-row justify-center space-x-2 xl:justify-normal xl:mt-0 xl:space-y-2 xl:space-x-0 xl:flex-col">
                 {visibleImages.map((image, index) => {
-                    const absoluteIndex = isMobile
+                    const absoluteIndex = isMobileOrTablet
                         ? selectedImage < 2
                             ? index
                             : index + 1
@@ -31,12 +31,12 @@ const ImagePicker = ({ data }: ImagePickerProps) => {
                             src={`${image}?imwidth=128`}
                             alt={`small image ${absoluteIndex}`}
                             onMouseOver={
-                                !isMobile
+                                !isMobileOrTablet
                                     ? () => setSelectedImage(absoluteIndex)
                                     : undefined
                             }
                             onClick={
-                                isMobile
+                                isMobileOrTablet
                                     ? () => setSelectedImage(absoluteIndex)
                                     : undefined
                             }
@@ -49,7 +49,7 @@ const ImagePicker = ({ data }: ImagePickerProps) => {
                     );
                 })}
             </div>
-            {isMobile && (
+            {isMobileOrTablet && (
                 <div className="flex flex-col items-center my-4">
                     <div className="flex space-x-2 mt-2">
                         {data.map((_, index) => (

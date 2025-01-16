@@ -2,7 +2,7 @@ import { useGetFeaturedCampaignQuery } from "@/store";
 import useAuth from "@/hooks/useAuth";
 import ProductCard from "@/components/ProductCard";
 import { Skeleton } from "@mui/material";
-import Carousel from "@/components/Carousel";
+import InfiniteCarousel from "@/components/InfiniteCarousel";
 
 const DashboardModule = () => {
     const { token } = useAuth();
@@ -23,7 +23,6 @@ const DashboardModule = () => {
         <ProductCard
             key={product._id}
             data={product}
-            size="sm"
             variant="highlighted"
             isLoading={isLoading}
         />
@@ -39,7 +38,7 @@ const DashboardModule = () => {
                     <Skeleton variant="rectangular" height={150} width={300} />
                 </div>
             ) : (
-                <Carousel
+                <InfiniteCarousel
                     content={content || []}
                     isLoading={isFetching}
                     colors={data.data[0].colors}

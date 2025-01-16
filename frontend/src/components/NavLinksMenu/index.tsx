@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import useIsMobile from "@/hooks/useIsMobile";
-import { Drawer, IconButton } from "@mui/material";
+import { Drawer, IconButton, useMediaQuery } from "@mui/material";
 import { Menu } from "@mui/icons-material";
 
 export interface NavLink {
@@ -19,9 +18,9 @@ interface NavLinksMenuProps {
 const NavLinksMenu = ({ links }: NavLinksMenuProps) => {
     const [isOpen, setIsOpen] = useState(false);
 
+    const isMobile = useMediaQuery("(max-width: 1024px)");
     const location = useLocation();
     const navigate = useNavigate();
-    const isMobile = useIsMobile();
 
     const findActiveLink = (
         links: NavLink[],

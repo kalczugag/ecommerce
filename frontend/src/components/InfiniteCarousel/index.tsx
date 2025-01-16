@@ -8,7 +8,7 @@ import { Container } from "@mui/material";
 
 const config: Settings = {
     dots: false,
-    infinite: true,
+    infinite: false,
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 1,
@@ -81,7 +81,7 @@ interface CarouselProps {
     };
 }
 
-const Carousel = ({ content, isLoading, colors }: CarouselProps) => {
+const InfiniteCarousel = ({ content, isLoading, colors }: CarouselProps) => {
     const { primary, secondary } = colors;
 
     return (
@@ -110,4 +110,4 @@ const Carousel = ({ content, isLoading, colors }: CarouselProps) => {
     );
 };
 
-export default Carousel;
+export default InfiniteCarousel;

@@ -10,7 +10,10 @@ interface ProductsListProps {
 }
 
 const ProductsList = ({ category, setIsFetching }: ProductsListProps) => {
-    const { ref, inView } = useInView();
+    const { ref, inView } = useInView({
+        threshold: 0,
+        rootMargin: "200px",
+    });
 
     const [triggerFetch] = useLazyGetAllProductsQuery();
 
@@ -53,6 +56,7 @@ const ProductsList = ({ category, setIsFetching }: ProductsListProps) => {
                         key={product._id}
                         data={product}
                         isLoading={isFetching}
+                        size="lg"
                     />
                 ))
             )}

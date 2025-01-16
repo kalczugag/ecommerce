@@ -23,10 +23,10 @@ const sizes = {
         width: "160",
     },
     md: {
-        width: "450",
+        width: "250",
     },
     lg: {
-        width: "600",
+        width: "450",
     },
 };
 
@@ -54,11 +54,12 @@ const ProductCard = ({
     return (
         <Link
             to={`/product/${_id}`}
-            className={`flex ${
-                variant === "default"
-                    ? "flex-col"
-                    : "max-w-96 flex-row space-x-4 mx-2"
+            className={`flex flex-col ${
+                variant === "default" ? "" : "items-center justify-center"
             } ${isLoading && "pointer-events-none"}`}
+            style={{
+                maxWidth: `${sizes[size].width}px`,
+            }}
             onMouseOver={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
