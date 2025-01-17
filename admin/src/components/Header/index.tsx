@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "@/hooks/useStore";
-import useIsMobile from "@/hooks/useIsMobile";
 import { toggleSidebar, useLogoutMutation } from "@/store";
 import {
     AppBar,
@@ -14,6 +13,7 @@ import {
     MenuItem,
     Divider,
     ListItemIcon,
+    useMediaQuery,
 } from "@mui/material";
 import { Logout, Settings, Menu as MenuIcon } from "@mui/icons-material";
 import { enqueueSnackbar } from "notistack";
@@ -23,7 +23,7 @@ const Header = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
-    const isMobile = useIsMobile();
+    const isMobile = useMediaQuery("(max-width: 1024px)");
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);

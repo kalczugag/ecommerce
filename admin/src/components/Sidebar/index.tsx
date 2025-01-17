@@ -1,8 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
-import useIsMobile from "@/hooks/useIsMobile";
 import { useAppSelector, useAppDispatch } from "@/hooks/useStore";
 import { toggleSidebar } from "@/store";
-import { Drawer } from "@mui/material";
+import { Drawer, useMediaQuery } from "@mui/material";
 import { Adb } from "@mui/icons-material";
 import TitledIconButton from "../TitledIconButton";
 
@@ -11,7 +10,7 @@ const Sidebar = () => {
     const { pathname } = useLocation();
     const { content, isOpen } = useAppSelector((state) => state.sidebar);
 
-    const isMobile = useIsMobile();
+    const isMobile = useMediaQuery("(max-width: 1024px)");
 
     const handleClick = () => {
         if (isMobile) {

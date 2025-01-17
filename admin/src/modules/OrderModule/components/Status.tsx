@@ -1,40 +1,35 @@
-import { Stepper, Step, StepLabel } from "@mui/material";
-import useIsMobile from "@/hooks/useIsMobile";
+import { Stepper, Step, StepLabel, useMediaQuery } from "@mui/material";
+import { orderStatuses } from "@/constants/orderStatuses";
 import type { Order } from "@/types/Order";
 
 interface StatusProps {
     status: Order["status"];
 }
 
-const steps = {
-    placed: "Placed",
-    confirmed: "Order Confirmed",
-    shipped: "Shipped",
-    in_delivery: "Out for Delivery",
-    delivered: "Delivered",
-    cancelled: "Cancelled",
-};
-
-type StepKey = keyof typeof steps;
+type StepKey = keyof typeof orderStatuses;
 
 const Status = ({ status }: StatusProps) => {
-    const stepKeys = Object.keys(steps) as StepKey[];
-    const isMobile = useIsMobile(768);
+    const stepKeys = Object.keys(orderStatuses) as StepKey[];
+    const isMobile = useMediaQuery("(max-width: 768px)");
+
+    if (!status) return null;
+
+    const ignore = ["canceled", "returned", "pending payment"];
 
     return (
         <Stepper activeStep={stepKeys.indexOf(status)}>
             {isMobile ? (
                 <Step>
-                    <StepLabel>Status: {steps[status]}</StepLabel>
+                    <StepLabel>Status: {orderStatuses[status]}</StepLabel>
                 </Step>
             ) : (
                 stepKeys.map((key, index) => {
-                    if (key !== "cancelled")
-                        return (
-                            <Step key={key + index}>
-                                <StepLabel>{steps[key]}</StepLabel>
-                            </Step>
-                        );
+                    if (ignore.includes(key)) return null;
+                    return (
+                        <Step key={key + index}>
+                            <StepLabel>{orderStatuses[key]}</StepLabel>
+                        </Step>
+                    );
                 })
             )}
         </Stepper>

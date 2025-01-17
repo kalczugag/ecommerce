@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 
 type Pagination = {
     skip?: number;
@@ -10,37 +10,30 @@ const usePagination = (): [
     { skip: number; limit: number },
     (value: Pagination) => void
 ] => {
-    const location = useLocation();
-    const navigate = useNavigate();
+    const [searchParams, setSearchParams] = useSearchParams();
 
-    const getPaginationFromUrl = () => {
-        const queryParams = new URLSearchParams(location.search);
-        const skip = parseInt(queryParams.get("page")!) || 0;
-        const limit = parseInt(queryParams.get("pageSize")!) || 5;
-        return { skip, limit };
-    };
-
-    const [pagination, setPagination] = useState(getPaginationFromUrl);
+    const skip = parseInt(searchParams.get("page")!) || 0;
+    const limit = parseInt(searchParams.get("pageSize")!) || 5;
 
     useEffect(() => {
-        setPagination(getPaginationFromUrl());
-    }, [location.search]);
-
-    useEffect(() => {
-        navigate(`?page=${pagination.skip}&pageSize=${pagination.limit}`, {
-            replace: true,
+        setSearchParams({
+            page: skip.toString(),
+            pageSize: limit.toString(),
         });
         window.scrollTo(0, 0);
-    }, [pagination, navigate]);
+    }, [limit, setSearchParams, skip]);
 
     const handleSetPagination = (value: Pagination) => {
-        setPagination((prev) => ({
-            skip: value.skip ?? prev.skip,
-            limit: value.limit ?? prev.limit,
-        }));
+        const newSkip = value.skip !== undefined ? value.skip : skip;
+        const newLimit = value.limit !== undefined ? value.limit : limit;
+
+        setSearchParams({
+            page: newSkip.toString(),
+            pageSize: newLimit.toString(),
+        });
     };
 
-    return [pagination, handleSetPagination];
+    return [{ skip, limit }, handleSetPagination];
 };
 
 export default usePagination;

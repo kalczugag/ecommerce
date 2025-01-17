@@ -21,6 +21,7 @@ interface Paginate {
     skip?: number;
     limit?: number;
     roleName?: string;
+    populate?: string;
     search?: string;
 }
 
