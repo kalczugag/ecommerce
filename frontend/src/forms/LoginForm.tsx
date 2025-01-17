@@ -19,7 +19,6 @@ interface LoginFormProps {
 
 const LoginForm = ({ isLoading }: LoginFormProps) => {
     const [showPassword, setShowPassword] = useState(false);
-    const [recaptchaValue, setRecaptchaValue] = useState<string | null>(null);
 
     const handleClickShowPassword = () => setShowPassword((show) => !show);
 
