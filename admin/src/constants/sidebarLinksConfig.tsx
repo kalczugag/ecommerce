@@ -1,16 +1,112 @@
-import { Email, MoveToInbox } from "@mui/icons-material";
+import {
+    Dashboard,
+    ShoppingCart,
+    Category,
+    People,
+    BarChart,
+    Layers,
+} from "@mui/icons-material";
+import type { NavLink } from "@/components/NavLinksMenu";
 
-export const sidebarLinksConfig = [
-    { label: "Dashboard", to: "/", icon: <MoveToInbox /> },
-    { label: "Products", to: "/products", icon: <Email /> },
-    { label: "Customers", to: "/customers", icon: <MoveToInbox /> },
-    { label: "Orders", to: "/orders", icon: <Email /> },
-    { label: "Categories", to: "/categories", icon: <MoveToInbox /> },
-    { label: "Weekly Overview", to: "/overview?type=weekly", icon: <Email /> },
+interface LinksProps {
+    sectionLabel: string;
+    elements: NavLink[];
+}
+
+export const navLinks: LinksProps[] = [
     {
-        label: "Monthly Overview",
-        to: "/overview?type=monthly",
-        icon: <MoveToInbox />,
+        sectionLabel: "Main Items",
+        elements: [
+            {
+                key: "dashboard",
+                label: "Dashboard",
+                to: "/",
+                icon: <Dashboard />,
+            },
+            {
+                key: "products",
+                label: "Products",
+                subLinks: [
+                    {
+                        key: "products_list",
+                        label: "List",
+                        to: "/products",
+                    },
+                    {
+                        key: "product_add",
+                        label: "Add",
+                        to: "/products/add",
+                    },
+                ],
+            },
+            {
+                key: "customers",
+                label: "Customers",
+                icon: <People />,
+                subLinks: [
+                    {
+                        key: "customers_list",
+                        label: "List",
+                        to: "/customers",
+                    },
+                    {
+                        key: "customers_add",
+                        label: "Add",
+                        to: "/customers/add",
+                    },
+                ],
+            },
+            {
+                key: "orders_list",
+                label: "Orders",
+                to: "/orders",
+                icon: <ShoppingCart />,
+            },
+            {
+                key: "categories",
+                label: "Categories",
+                icon: <Category />,
+                subLinks: [
+                    {
+                        key: "categories_list",
+                        label: "List",
+                        to: "/categories",
+                    },
+                    {
+                        key: "categories_add",
+                        label: "Add",
+                        to: "/categories/add",
+                    },
+                ],
+            },
+        ],
     },
-    { label: "Add Product", to: "/products/add", icon: <Email /> },
+    {
+        sectionLabel: "Analytics",
+        elements: [
+            {
+                key: "reports",
+                label: "Reports",
+                icon: <BarChart />,
+                subLinks: [
+                    {
+                        key: "overview_weekly",
+                        label: "Weekly Overview",
+                        to: "/overview?type=weekly",
+                    },
+                    {
+                        key: "overview_monthly",
+                        label: "Monthly Overview",
+                        to: "/overview?type=monthly",
+                    },
+                ],
+            },
+            {
+                key: "integrations",
+                label: "Integrations",
+                to: "/integrations",
+                icon: <Layers />,
+            },
+        ],
+    },
 ];

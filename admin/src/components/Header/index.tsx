@@ -53,10 +53,11 @@ const Header = () => {
 
     return (
         <AppBar
-            position="static"
+            position={isMobile ? "sticky" : "static"}
             sx={{
                 boxShadow: "none",
-                background: "transparent",
+                background: isMobile ? "#f5f7fb" : "transparent",
+                zIndex: 100,
             }}
         >
             <Toolbar
