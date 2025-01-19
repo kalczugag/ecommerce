@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    environment:
+      - MONGO_URI=${MONGO_URI}
+      - NODE_ENV=development
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_BACKEND_SERVER=http://localhost:8080/
+
+  admin:
+    build:
+      context: ./admin
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./admin:/app
+      - /app/node_modules
+    environment:
+      - VITE_BACKEND_SERVER=http://localhost:8080/
