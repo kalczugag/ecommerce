@@ -12,6 +12,7 @@ const featuredCampaignSchema = new mongoose.Schema<FeaturedCampaign>({
     imageUrl: { type: String, required: false },
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
+    promoCode: { type: String, required: false },
     image: { type: String, required: false },
     products: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
     status: { type: String, required: true, default: "active" },

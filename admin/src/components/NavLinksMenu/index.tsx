@@ -1,5 +1,5 @@
 import { Fragment, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toggleSidebar } from "@/store";
 import { useAppDispatch, useAppSelector } from "@/hooks/useStore";
 import {
@@ -15,7 +15,6 @@ import {
     useMediaQuery,
 } from "@mui/material";
 import { Inbox, Mail, ExpandLess, ExpandMore, Adb } from "@mui/icons-material";
-import TitledIconButton from "../TitledIconButton";
 import Copyright from "../Copyright";
 
 export interface NavLink {
@@ -37,6 +36,7 @@ interface NavLinksMenuProps {
 const NavLinksMenu = ({ links }: NavLinksMenuProps) => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+    const { pathname } = useLocation();
     const isMobile = useMediaQuery("(max-width: 1024px)");
     const { isOpen: showDrawer } = useAppSelector((state) => state.sidebar);
 
@@ -47,7 +47,7 @@ const NavLinksMenu = ({ links }: NavLinksMenuProps) => {
     const handleClick = (link: NavLink, isSubLink: boolean = false) => {
         if (link.to) {
             dispatch(toggleSidebar(false));
-            navigate(link.to);
+            if (link.to !== pathname) navigate(link.to);
 
             if (!isSubLink && (!link.subLinks || link.subLinks.length === 0)) {
                 collapseAll();
@@ -185,9 +185,7 @@ const NavLinksMenu = ({ links }: NavLinksMenuProps) => {
                                                             }}
                                                         >
                                                             <ListItemButton
-                                                                sx={{
-                                                                    pl: 4,
-                                                                }}
+                                                                sx={{}}
                                                                 onClick={() =>
                                                                     handleClick(
                                                                         subLink,

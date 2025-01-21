@@ -12,6 +12,7 @@ const schema = Joi.object({
     imageUrl: Joi.string().uri().optional(),
     startDate: Joi.date().iso().required(),
     endDate: Joi.date().iso().required(),
+    promoCode: Joi.string().optional(),
     image: Joi.string().uri().optional(),
     products: Joi.array().items(Joi.string()).required(),
     textColor: colorSchema.optional(),

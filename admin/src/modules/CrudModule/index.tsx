@@ -12,6 +12,7 @@ interface CrudModuleProps {
         tableData: any[];
         action?: (arg: string) => void;
         total?: number;
+        bolder?: string;
         isLoading: boolean;
     };
     actionForm: JSX.Element;
@@ -24,6 +25,7 @@ const CrudModule = ({ config, actionForm }: CrudModuleProps) => {
         config?.tableData && config?.action
             ? config.tableData.map((row) => ({
                   ...row,
+                  bolder: config.bolder || false,
                   handleDelete: () => config.action!(row._id),
               }))
             : config?.tableData;

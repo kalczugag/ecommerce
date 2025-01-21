@@ -29,6 +29,7 @@ const Login = () => {
 
     const FormContainer = () => (
         <Form
+            keepDirtyOnReinitialize
             onSubmit={handleLogin}
             render={({ handleSubmit, form }) => (
                 <form onSubmit={handleSubmit} className="space-y-8">

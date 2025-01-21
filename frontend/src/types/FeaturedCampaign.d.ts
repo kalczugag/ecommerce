@@ -7,6 +7,7 @@ export interface FeaturedCampaign {
     _category: string | Category;
     startDate: Date;
     endDate: Date;
+    promoCode?: string;
     image?: string;
     products: Product[];
     status: "active" | "inactive";

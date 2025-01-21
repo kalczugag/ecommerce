@@ -5,6 +5,7 @@ import {
     People,
     BarChart,
     Layers,
+    Storage,
 } from "@mui/icons-material";
 import type { NavLink } from "@/components/NavLinksMenu";
 
@@ -22,6 +23,38 @@ export const navLinks: LinksProps[] = [
                 label: "Dashboard",
                 to: "/",
                 icon: <Dashboard />,
+            },
+            {
+                key: "manage",
+                label: "Manage",
+                icon: <Storage />,
+                subLinks: [
+                    {
+                        key: "orders_list",
+                        label: "Orders",
+                        to: "/orders",
+                    },
+                    {
+                        key: "payments_list",
+                        label: "Payments",
+                        to: "/payments",
+                    },
+                    {
+                        key: "product_reviews",
+                        label: "Product Reviews",
+                        to: "/reviews",
+                    },
+                    {
+                        key: "capmaigns",
+                        label: "Campaigns",
+                        to: "/campaigns",
+                    },
+                    {
+                        key: "categories",
+                        label: "Categories",
+                        to: "/categories",
+                    },
+                ],
             },
             {
                 key: "products",
@@ -53,29 +86,6 @@ export const navLinks: LinksProps[] = [
                         key: "customers_add",
                         label: "Add",
                         to: "/customers/add",
-                    },
-                ],
-            },
-            {
-                key: "orders_list",
-                label: "Orders",
-                to: "/orders",
-                icon: <ShoppingCart />,
-            },
-            {
-                key: "categories",
-                label: "Categories",
-                icon: <Category />,
-                subLinks: [
-                    {
-                        key: "categories_list",
-                        label: "List",
-                        to: "/categories",
-                    },
-                    {
-                        key: "categories_add",
-                        label: "Add",
-                        to: "/categories/add",
                     },
                 ],
             },

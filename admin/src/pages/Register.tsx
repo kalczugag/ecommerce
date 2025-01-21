@@ -32,6 +32,7 @@ const Register = () => {
 
     const FormContainer = () => (
         <Form
+            keepDirtyOnReinitialize
             onSubmit={handleRegister}
             render={({ handleSubmit, form }) => (
                 <form onSubmit={handleSubmit} className="space-y-8">
