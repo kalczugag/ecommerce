@@ -2,21 +2,22 @@ import { useParams } from "react-router-dom";
 import { useGetOrderByIdQuery } from "@/store";
 import { useTitle } from "@/hooks/useTitle";
 import NotFound from "@/components/NotFound";
-import CrudModule from "@/modules/CrudModule";
-import ReadOrder from "@/modules/OrderModule/ReadOrderModule";
+import ManageModule from "@/modules/ManageModule";
+import { config } from "./config";
 
 const OrdersDetails = () => {
     const { id } = useParams();
-    useTitle("Order - Details");
+    useTitle("Order - Manage");
 
     const { data, isError, isLoading } = useGetOrderByIdQuery(id || "");
 
     if (isError || (!isLoading && !data)) return <NotFound />;
 
     return (
-        <CrudModule
-            actionForm={<ReadOrder data={data} isLoading={isLoading} />}
-        />
+        <ManageModule config={config} data={data} />
+        // <CrudModule
+        //     actionForm={<ReadOrder data={data} isLoading={isLoading} />}
+        // />
     );
 };
 
