@@ -8,41 +8,42 @@ import {
     AddressesPage,
 } from "@/modules/ManageModule/pages";
 import type { Manage } from "@/modules/ManageModule/types/Manage";
+import type { Order } from "@/types/Order";
 
 export const config: Manage[] = [
     {
         key: "order_summary",
         label: "Summary",
-        element: <SummaryPage />,
+        element: (props: Order) => <SummaryPage data={props} />,
     },
     {
         key: "order_payments",
         label: "Payments",
-        element: <PaymentsPage />,
+        element: (props: Order) => <PaymentsPage data={props} />,
     },
     {
         key: "order_shipments",
         label: "Shipments",
-        element: <ShipmentsPage />,
+        element: (props: Order) => <ShipmentsPage data={props} />,
     },
     {
         key: "order_items",
         label: "Items",
-        element: <ItemsPage />,
+        element: (props: Order) => <ItemsPage data={props} />,
     },
     {
         key: "order_returns",
         label: "Returns",
-        element: <ReturnsPage />,
+        element: (props: Order) => <ReturnsPage data={props} />,
     },
     {
         key: "order_notes",
         label: "Notes",
-        element: <NotesPage />,
+        element: (props: Order) => <NotesPage data={props} />,
     },
     {
         key: "order_addresses",
         label: "Addresses",
-        element: <AddressesPage />,
+        element: (props: Order) => <AddressesPage data={props} />,
     },
 ];

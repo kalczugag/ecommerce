@@ -1,8 +1,8 @@
-import type { Order } from "@/types/Order";
+import moment from "moment";
+import { Link } from "@mui/material";
 import { Status } from "@/components/TableFields";
 import ActionButtons from "@/components/Table/ActionButtons";
-import { Link } from "react-router-dom";
-import moment from "moment";
+import type { Order } from "@/types/Order";
 
 interface RowProps extends Order {
     bolder: string;
@@ -35,12 +35,7 @@ export const tableConfig = [
     {
         label: "Order",
         render: (row: RowProps) => (
-            <Link
-                to={`/orders/${row._id}`}
-                className="text-text-blue hover:underline"
-            >
-                {row._id}
-            </Link>
+            <Link href={`/orders/${row._id}`}>{row._id}</Link>
         ),
     },
     {

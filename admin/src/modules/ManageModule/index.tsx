@@ -1,8 +1,9 @@
 import { useSearchParams } from "react-router-dom";
-import { Box, Tab, Tabs } from "@mui/material";
+import { Box, Tab, Tabs, Typography } from "@mui/material";
 import { Manage } from "./types/Manage";
 import { Order } from "@/types/Order";
 import Loading from "@/components/Loading";
+import { cloneElement } from "react";
 
 const a11Props = (index: number) => ({
     id: `tab-${index}`,
@@ -45,7 +46,9 @@ const ManageModule = ({ config, data, isLoading }: ManageModuleProps) => {
                         hidden={currentTab !== index}
                     >
                         {currentTab === index && (
-                            <Box sx={{ p: 3 }}>{tab.element}</Box>
+                            <Box sx={{ p: 3 }}>
+                                {data ? cloneElement(tab.element(data)) : null}
+                            </Box>
                         )}
                     </div>
                 ))}

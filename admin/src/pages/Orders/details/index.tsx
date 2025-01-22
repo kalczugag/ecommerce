@@ -13,12 +13,7 @@ const OrdersDetails = () => {
 
     if (isError || (!isLoading && !data)) return <NotFound />;
 
-    return (
-        <ManageModule config={config} data={data} />
-        // <CrudModule
-        //     actionForm={<ReadOrder data={data} isLoading={isLoading} />}
-        // />
-    );
+    return <ManageModule config={config} data={data} isLoading={isLoading} />;
 };
 
 export default OrdersDetails;
