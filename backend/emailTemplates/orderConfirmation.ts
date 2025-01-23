@@ -1,5 +1,5 @@
 import { Product } from "../types/Product";
-import type { Order } from "../types/Order";
+import type { Order, Shipment } from "../types/Order";
 import type { User } from "../types/User";
 
 export const orderConfirmation = (order: Order) => {
@@ -8,7 +8,7 @@ export const orderConfirmation = (order: Order) => {
         total: order.total.toFixed(2) || "",
         subTotal: order.subTotal.toFixed(2) || "",
         discount: order.discount.toFixed(2) || "",
-        delivery: order.deliveryCost.toFixed(2) || "",
+        delivery: (order._shipment as Shipment).shippingCost.toFixed(2) || "",
     };
 
     return `

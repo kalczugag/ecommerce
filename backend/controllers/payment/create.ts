@@ -1,5 +1,5 @@
 import express from "express";
-import type { Item, Order } from "../../types/Order";
+import type { Item, Order, Shipment } from "../../types/Order";
 import type { Product } from "../../types/Product";
 import type { User } from "../../types/User";
 
@@ -65,7 +65,9 @@ export const createCheckoutSession = async (
                     shipping_rate_data: {
                         type: "fixed_amount",
                         fixed_amount: {
-                            amount: order.deliveryCost * 100,
+                            amount:
+                                (order._shipment as Shipment).shippingCost *
+                                100,
                             currency: "usd",
                         },
                         display_name: "Free Shipping",

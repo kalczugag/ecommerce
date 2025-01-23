@@ -15,7 +15,14 @@ export const getOrderById = async (
     try {
         const order = await OrderModel.findById(id)
             .populate("_user", "firstName lastName email phone address")
-            .populate("_payment _deliveryMethod")
+            .populate("_payment")
+            .populate({
+                path: "_shipment",
+                populate: {
+                    path: "_deliveryMethod",
+                    model: "DeliveryMethod",
+                },
+            })
             .populate({
                 path: "items",
                 populate: {

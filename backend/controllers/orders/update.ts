@@ -3,6 +3,7 @@ import { isValidObjectId } from "mongoose";
 import { OrderModel } from "../../models/Order";
 import type { Order } from "../../types/Order";
 import { PaymentModel } from "../../models/Order/Payment";
+import { ShipmentModel } from "../../models/Order/Shipment";
 
 export const updateOrder = async (
     req: express.Request<{ id: string }, {}, Order>,
@@ -42,6 +43,13 @@ export const updateOrder = async (
                     data: updatedOrder,
                 });
             }
+        }
+
+        if (updates._shipment) {
+            const shipment = new ShipmentModel(updates._shipment);
+            await shipment.save();
+
+            updates._shipment = shipment._id.toString();
         }
 
         const updatedOrder = await OrderModel.findByIdAndUpdate(id, updates, {

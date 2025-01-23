@@ -46,17 +46,15 @@ const orderSchema = new mongoose.Schema<Order>(
         subTotal: { type: Number, required: true },
         tax: { type: Number, required: false, default: 0 },
         discount: { type: Number, required: true },
-        deliveryCost: { type: Number, required: true },
         total: { type: Number, required: true },
         _payment: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Payment",
             required: false,
         },
-        trackingNumber: { type: String, required: false },
-        _deliveryMethod: {
-            type: mongoose.Types.ObjectId,
-            ref: "DeliveryMethod",
+        _shipment: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Shipment",
             required: false,
         },
     },

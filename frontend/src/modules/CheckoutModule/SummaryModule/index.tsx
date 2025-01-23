@@ -6,6 +6,8 @@ import CheckoutSummary from "@/modules/CartModule/components/CheckoutSummary";
 import Contact from "./components/Contact";
 import Box from "@/components/Box";
 import type { Cart } from "@/types/Cart";
+import type { Item, Shipment } from "@/types/Order";
+import { User } from "@/types/User";
 
 const stripePromise = loadStripe(
     "pk_test_51QAVfFCeAQbmOrQrs7FGHSpQGIkEEVEVHULiWMWYAIoBy1cGNYlmVSvQxy648SjYHG5JcDD01J3YIz5tuJCoeyoV003GfOyfFz"
@@ -17,11 +19,11 @@ const SummaryModule = () => {
         useCreatePaymentMutation();
 
     const cartProps: Cart = {
-        _user: order?._user?._id || "",
-        items: order?.items || [],
+        _user: (order?._user as User)?._id || "",
+        items: (order?.items as Item[]) || [],
         subTotal: order?.subTotal || 0,
         discount: order?.discount || 0,
-        deliveryCost: order?.deliveryCost || 0,
+        deliveryCost: (order?._shipment as Shipment).shippingCost || 0,
         total: order?.total || 0,
     };
 
@@ -42,7 +44,7 @@ const SummaryModule = () => {
         <div className="space-y-4 py-6">
             <Box>
                 <Contact
-                    data={order?._user}
+                    data={order?._user as User}
                     addressData={{
                         shippingAddress: order?.shippingAddress,
                         billingAddress: order?.billingAddress,
@@ -51,12 +53,11 @@ const SummaryModule = () => {
             </Box>
             <div className="flex flex-col items-center space-y-10 md:flex-row md:justify-between md:items-start md:space-x-10 md:space-y-0">
                 <div className="w-full space-y-4 max-h-[500px] overflow-auto">
-                    {order?.items.map((item, index) => (
+                    {(order?.items as Item[]).map((item, index) => (
                         <CartProductItem
                             key={index}
                             data={item}
-                            isLoadingDelete={false}
-                            isLoadingQuantity={false}
+                            isLoading={isLoading}
                             editable={false}
                         />
                     ))}

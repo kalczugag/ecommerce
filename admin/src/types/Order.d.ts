@@ -37,10 +37,26 @@ interface Payment {
     updatedAt?: Date;
 }
 
+interface Shipment {
+    _order: string | Order;
+    shipFrom: ShippingAddress;
+    shipTo: ShippingAddress;
+    status: "pending" | "shipped" | "delivered";
+    _deliveryMethod: string | DeliveryMethod;
+    itemsDelivered: number;
+    actualDeliveryDate?: Date;
+    trackingNumber?: string;
+    shippingCost: number;
+    deliverySignature?: boolean;
+    deliveryNotes?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+}
+
 interface Order {
     _id?: string;
-    _user: User;
-    items: Item[];
+    _user: string | User;
+    items: string[] | Item[];
     status?:
         | "placed"
         | "confirmed"
@@ -54,13 +70,11 @@ interface Order {
     subTotal: number;
     tax: number;
     discount: number;
-    deliveryCost: number;
     total: number;
-    _payment?: Payment;
-    trackingNumber?: string;
-    _deliveryMethod: DeliveryMethod;
-    createdAt?: Date;
-    updatedAt?: Date;
+    _payment?: string | Payment;
+    _shipment: string | Shipment;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 interface ReturnOrder {
