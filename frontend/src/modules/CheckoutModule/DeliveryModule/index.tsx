@@ -6,8 +6,8 @@ import AdditionalInfoForm from "@/forms/AdditionalInfoForm";
 import DeliveryMethodForm from "@/forms/DeliveryMethodForm";
 import useStep from "./hooks/useStep";
 import { Button, Divider } from "@mui/material";
-import type { Shipment, ShippingAddress } from "@/types/Order";
-import type { DeliveryMethod } from "@/types/DeliveryMethod";
+import type { ShippingAddress } from "@/types/Order";
+import type { DeliveryMethod, Provider } from "@/types/DeliveryMethod";
 
 interface DeliveryFormProps {
     _id: string;
@@ -26,6 +26,19 @@ interface DeliveryModuleProps {
     isDeliveryLoading: boolean;
 }
 
+const findProviderById = (
+    content: DeliveryMethod[],
+    providerId: string | undefined
+): Provider | undefined => {
+    for (const method of content) {
+        const provider = method.providers.find(
+            (provider) => provider._id === providerId
+        );
+        if (provider) return provider;
+    }
+    return undefined;
+};
+
 const DeliveryModule = ({ data, isDeliveryLoading }: DeliveryModuleProps) => {
     const { order, isLoading } = useOrder();
     const [_, nextStep] = useStep();
@@ -37,6 +50,7 @@ const DeliveryModule = ({ data, isDeliveryLoading }: DeliveryModuleProps) => {
         if (!order) return;
 
         const userId = order._user._id;
+        const selectedProvider = findProviderById(data, values._deliveryMethod);
 
         if (values.shippingAddress && userId) {
             await updateUser({
@@ -49,12 +63,18 @@ const DeliveryModule = ({ data, isDeliveryLoading }: DeliveryModuleProps) => {
             _id: order._id,
             _shipment: {
                 _order: order._id!,
-                shipFrom: values.shippingAddress,
+                shipFrom: {
+                    street: "Człuchowska 92",
+                    city: "Warsaw",
+                    state: "Masovian",
+                    postalCode: "01-360",
+                    country: "Poland",
+                },
                 shipTo: values.shippingAddress,
                 _deliveryMethod: values._deliveryMethod,
+                shippingCost:
+                    (order?.total || 0) > 100 ? 0 : selectedProvider?.price,
                 itemsDelivered: 0,
-                createdAt: new Date(),
-                updatedAt: new Date(),
             },
             shippingAddress: values.shippingAddress,
             billingAddress: values.sameAsShipping
@@ -75,7 +95,7 @@ const DeliveryModule = ({ data, isDeliveryLoading }: DeliveryModuleProps) => {
             initialValues={{
                 ...order?._user,
                 shippingAddress: order?._user?.address,
-                _deliveryMethod: order?._shipment._deliveryMethod,
+                _deliveryMethod: order?._shipment?._deliveryMethod || "",
                 sameAsShipping: true,
             }}
             subscription={{
@@ -97,8 +117,9 @@ const DeliveryModule = ({ data, isDeliveryLoading }: DeliveryModuleProps) => {
                                 <DeliveryMethodForm
                                     content={data}
                                     orderDeliveryCost={
-                                        order?._shipment._deliveryMethod
-                                            .providers[0].price || 0
+                                        (order?.total || 0) > 100
+                                            ? 0
+                                            : undefined
                                     }
                                     isLoading={loading}
                                 />

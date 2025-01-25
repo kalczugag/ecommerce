@@ -42,15 +42,15 @@ interface Shipment {
     shipFrom: ShippingAddress;
     shipTo: ShippingAddress;
     status: "pending" | "shipped" | "delivered";
-    _deliveryMethod: DeliveryMethod;
+    _deliveryMethod: DeliveryMethod | string;
     itemsDelivered: number;
     actualDeliveryDate?: Date;
     trackingNumber?: string;
     shippingCost?: number;
     deliverySignature?: boolean;
     deliveryNotes?: string;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
 interface Order {

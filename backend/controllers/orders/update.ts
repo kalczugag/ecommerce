@@ -1,15 +1,18 @@
 import express from "express";
 import { isValidObjectId } from "mongoose";
 import { OrderModel } from "../../models/Order";
-import type { Order } from "../../types/Order";
+import { CartModel } from "../../models/Cart";
 import { PaymentModel } from "../../models/Order/Payment";
 import { ShipmentModel } from "../../models/Order/Shipment";
+import type { Order } from "../../types/Order";
+import type { User } from "../../types/User";
 
 export const updateOrder = async (
     req: express.Request<{ id: string }, {}, Order>,
     res: express.Response
 ) => {
     const { id } = req.params;
+    const user = req.user as User;
 
     if (!isValidObjectId(id)) {
         return res.status(400).json({ error: "Invalid order ID format" });
@@ -45,17 +48,39 @@ export const updateOrder = async (
             }
         }
 
+        let shipment;
         if (updates._shipment) {
-            const shipment = new ShipmentModel(updates._shipment);
+            shipment = new ShipmentModel(updates._shipment);
             await shipment.save();
 
             updates._shipment = shipment._id.toString();
         }
 
-        const updatedOrder = await OrderModel.findByIdAndUpdate(id, updates, {
-            new: true,
-            runValidators: true,
-        });
+        const order = await OrderModel.findById(id);
+
+        if (!order) {
+            return res.status(404).json({ error: "Order not found" });
+        }
+
+        const updatedOrder = await OrderModel.findByIdAndUpdate(
+            id,
+            {
+                $set: {
+                    ...updates,
+                    ...(!updates.status && {
+                        total:
+                            order.subTotal -
+                            order.discount +
+                            order.tax +
+                            shipment?.shippingCost!,
+                    }),
+                },
+            },
+            {
+                new: true,
+                runValidators: true,
+            }
+        );
 
         if (!updatedOrder) {
             return res.status(404).json({ error: "Order not found" });

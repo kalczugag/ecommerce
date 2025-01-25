@@ -9,12 +9,18 @@ const shipmentSchema = new mongoose.Schema<Shipment>(
             required: true,
         },
         shipFrom: {
-            type: String,
-            required: true,
+            street: { type: String, required: false },
+            city: { type: String, required: false },
+            state: { type: String, required: false },
+            postalCode: { type: String, required: false },
+            country: { type: String, required: false },
         },
         shipTo: {
-            type: String,
-            required: true,
+            street: { type: String, required: false },
+            city: { type: String, required: false },
+            state: { type: String, required: false },
+            postalCode: { type: String, required: false },
+            country: { type: String, required: false },
         },
         status: {
             type: String,

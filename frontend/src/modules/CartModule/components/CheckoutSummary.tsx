@@ -47,21 +47,29 @@ const CheckoutSummary = ({
             <div className="flex flex-col space-y-2">
                 <Box
                     title={`Price (${itemsLabel})`}
-                    value={`$${data.subTotal}`}
+                    value={`$${data.subTotal.toFixed(2)}`}
                 />
                 <Box
                     title="Discount"
                     value={
-                        data.discount > 0 ? `-$${data.discount}` : "No discount"
+                        data.discount > 0
+                            ? `-$${data.discount.toFixed(2)}`
+                            : "No discount"
                     }
                     color="green"
                 />
+                {isSummary && (
+                    <Box
+                        title="Delivery Charges"
+                        value={deliveryCost}
+                        color="green"
+                    />
+                )}
                 <Box
-                    title="Delivery Charges"
-                    value={deliveryCost}
-                    color="green"
+                    title="Total Amount"
+                    value={`$${totalAmount.toFixed(2)}`}
+                    bold
                 />
-                <Box title="Total Amount" value={`$${totalAmount}`} bold />
             </div>
             <Divider />
             <LoadingButton
