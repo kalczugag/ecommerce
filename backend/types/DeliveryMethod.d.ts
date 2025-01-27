@@ -2,7 +2,8 @@ export interface Provider {
     _id?: string;
     name: string;
     price: number;
-    estimatedDeliveryTime?: string;
+    estimatedDeliveryTimeMin: number;
+    estimatedDeliveryTimeMax: number;
     additionalNotes?: any;
     isAvailable?: boolean;
 }

@@ -34,7 +34,7 @@ const OrderDetails = ({ data, isLoading }: OrderDetailsProps) => {
         total: data?.total.toFixed(2) || "",
         subTotal: data?.subTotal.toFixed(2) || "",
         discount: data?.discount?.toFixed(2) || "",
-        delivery: data?._shipment?.shippingCost?.toFixed(2) || "",
+        delivery: data?._shipment[0].shippingCost?.toFixed(2) || "",
     };
 
     return (

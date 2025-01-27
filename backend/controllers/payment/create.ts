@@ -1,9 +1,11 @@
 import express from "express";
+import { processShipments } from "../../utils/processShipments";
 import type { Item, Order, Shipment } from "../../types/Order";
 import type { Product } from "../../types/Product";
 import type { User } from "../../types/User";
 
 import Stripe from "stripe";
+import { DeliveryMethod } from "types/DeliveryMethod";
 const stripe = new Stripe(process.env.STRIPE_SECRET!);
 
 export const createCheckoutSession = async (
@@ -42,6 +44,69 @@ export const createCheckoutSession = async (
         };
     });
 
+    const { shipments, shipment, shipmentCount, shipmentTotal } =
+        processShipments(order._shipment as Shipment[]);
+
+    console.log(order);
+
+    const createShippingOptions = (): any[] => {
+        if (shipmentCount === 1 && shipment) {
+            const deliveryMethod = shipment._deliveryMethod as DeliveryMethod;
+
+            return [
+                {
+                    shipping_rate_data: {
+                        type: "fixed_amount",
+                        fixed_amount: {
+                            amount: shipmentTotal * 100,
+                            currency: "usd",
+                        },
+                        display_name: deliveryMethod.providers[0].name,
+                        delivery_estimate: {
+                            minimum: {
+                                unit: "business_day",
+                                value: deliveryMethod.providers[0]
+                                    .estimatedDeliveryTimeMin,
+                            },
+                            maximum: {
+                                unit: "business_day",
+                                value: deliveryMethod.providers[0]
+                                    .estimatedDeliveryTimeMax,
+                            },
+                        },
+                    },
+                },
+            ];
+        }
+
+        return (shipments || []).map((shipment) => {
+            const deliveryMethod = shipment._deliveryMethod as DeliveryMethod;
+
+            return {
+                shipping_rate_data: {
+                    type: "fixed_amount",
+                    fixed_amount: {
+                        amount: shipment.shippingCost * 100,
+                        currency: "usd",
+                    },
+                    display_name: deliveryMethod.providers[0].name,
+                    delivery_estimate: {
+                        minimum: {
+                            unit: "business_day",
+                            value: deliveryMethod.providers[0]
+                                .estimatedDeliveryTimeMin,
+                        },
+                        maximum: {
+                            unit: "business_day",
+                            value: deliveryMethod.providers[0]
+                                .estimatedDeliveryTimeMax,
+                        },
+                    },
+                },
+            };
+        });
+    };
+
     try {
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ["card", "paypal"],
@@ -59,31 +124,7 @@ export const createCheckoutSession = async (
                     orderId: order._id!,
                 },
             },
-
-            shipping_options: [
-                {
-                    shipping_rate_data: {
-                        type: "fixed_amount",
-                        fixed_amount: {
-                            amount:
-                                (order._shipment as Shipment).shippingCost *
-                                100,
-                            currency: "usd",
-                        },
-                        display_name: "Free Shipping",
-                        delivery_estimate: {
-                            minimum: {
-                                unit: "business_day",
-                                value: 1,
-                            },
-                            maximum: {
-                                unit: "business_day",
-                                value: 3,
-                            },
-                        },
-                    },
-                },
-            ],
+            shipping_options: createShippingOptions(),
             success_url: `${url}/account/orders/${order._id}?status=confirmed`,
             cancel_url: `${url}/account/orders/${order._id}?status=canceled`,
         });

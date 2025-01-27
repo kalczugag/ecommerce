@@ -8,7 +8,7 @@ interface SummaryPageProps {
 
 const SummaryPage = ({ data }: SummaryPageProps) => {
     return (
-        <div className="flex justify-between space-x-8">
+        <div className="grid grid-flow-row grid-cols-2 md:grid-cols-3 gap-4">
             <DetailCard
                 label="Billing"
                 address={data.billingAddress}
@@ -62,9 +62,9 @@ const SummaryPage = ({ data }: SummaryPageProps) => {
                 <div>
                     <span className="font-bold">Shipping Cost: </span>
                     <span>
-                        {data.deliveryCost === 0
+                        {data._shipment.shippingCost === 0
                             ? "Free shipping"
-                            : `$${data.deliveryCost.toFixed(2)}`}
+                            : `$${data._shipment.shippingCost.toFixed(2)}`}
                     </span>
                 </div>
             </DetailCard>

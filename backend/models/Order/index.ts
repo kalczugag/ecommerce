@@ -52,11 +52,13 @@ const orderSchema = new mongoose.Schema<Order>(
             ref: "Payment",
             required: false,
         },
-        _shipment: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Shipment",
-            required: false,
-        },
+        _shipment: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Shipment",
+                required: false,
+            },
+        ],
     },
     { timestamps: true }
 );

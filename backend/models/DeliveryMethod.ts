@@ -4,10 +4,13 @@ import type { DeliveryMethod, Provider } from "../types/DeliveryMethod";
 const providerSchema = new mongoose.Schema<Provider>({
     name: { type: String, required: true },
     price: { type: Number, required: true },
-    estimatedDeliveryTime: {
-        type: String,
-        required: false,
-        default: "N/A",
+    estimatedDeliveryTimeMin: {
+        type: Number,
+        required: true,
+    },
+    estimatedDeliveryTimeMax: {
+        type: Number,
+        required: true,
     },
     additionalNotes: { type: mongoose.Schema.Types.Mixed },
     isAvailable: { type: Boolean, default: true },

@@ -72,7 +72,7 @@ interface Order {
     discount?: number;
     total: number;
     _payment?: Payment;
-    _shipment: Shipment;
+    _shipment: Shipment[];
     createdAt?: Date;
     updatedAt?: Date;
 }

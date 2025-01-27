@@ -16,7 +16,7 @@ interface DetailCardProps {
 
 const DetailCard = ({ label, children, address, contact }: DetailCardProps) => {
     return (
-        <div className="flex flex-col space-y-4 w-full">
+        <div className="flex flex-col space-y-4">
             <h3 className="text-lg bg-gray-200 p-3">{label}</h3>
             {children}
             {address && contact && (

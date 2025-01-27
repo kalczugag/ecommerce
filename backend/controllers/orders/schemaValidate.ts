@@ -41,7 +41,7 @@ const schema = Joi.object({
     discount: Joi.number().min(0).max(100),
     total: Joi.number().positive().required(),
     _payment: Joi.string(),
-    _shipment: shipmentSchema.optional(),
+    _shipment: Joi.array().items(shipmentSchema).optional(),
 });
 
 export default schema;

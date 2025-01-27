@@ -4,6 +4,7 @@ import type { Payment } from "./Payment";
 import type { ParsedQs } from "qs";
 import type { CartItem } from "./Cart";
 import type { DeliveryMethod } from "./DeliveryMethod";
+import type { Document } from "mongoose";
 
 interface Item {
     _id?: string;
@@ -40,7 +41,8 @@ interface Payment {
     updatedAt?: Date;
 }
 
-interface Shipment {
+interface Shipment extends Document {
+    _id: string;
     _order: string | Order;
     shipFrom: ShippingAddress;
     shipTo: ShippingAddress;
@@ -75,7 +77,7 @@ interface Order {
     discount: number;
     total: number;
     _payment?: string | Payment;
-    _shipment: string | Shipment;
+    _shipment: string[] | Shipment[];
     createdAt: Date;
     updatedAt: Date;
 }

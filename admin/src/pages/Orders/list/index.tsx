@@ -31,6 +31,7 @@ const OrdersList = () => {
 
         setSortCriteria({ filter });
     }, 250);
+
     const config = {
         tableConfig,
         tableData: data?.data || [],

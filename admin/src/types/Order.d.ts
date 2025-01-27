@@ -55,8 +55,8 @@ interface Shipment {
 
 interface Order {
     _id?: string;
-    _user: string | User;
-    items: string[] | Item[];
+    _user: User;
+    items: Item[];
     status?:
         | "placed"
         | "confirmed"
@@ -71,8 +71,8 @@ interface Order {
     tax: number;
     discount: number;
     total: number;
-    _payment?: string | Payment;
-    _shipment: string | Shipment;
+    _payment?: Payment;
+    _shipment: Shipment;
     createdAt: Date;
     updatedAt: Date;
 }

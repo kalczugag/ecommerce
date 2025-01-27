@@ -8,6 +8,7 @@ import useStep from "./hooks/useStep";
 import { Button, Divider } from "@mui/material";
 import type { ShippingAddress } from "@/types/Order";
 import type { DeliveryMethod, Provider } from "@/types/DeliveryMethod";
+import { processShipments } from "@/utils/processShipments";
 
 interface DeliveryFormProps {
     _id: string;
@@ -45,6 +46,9 @@ const DeliveryModule = ({ data, isDeliveryLoading }: DeliveryModuleProps) => {
     const [updateOrder, { isLoading: isUpdatingOrder }] =
         useUpdateOrderMutation();
     const [updateUser, { isLoading: isUpdatingUser }] = useUpdateUserMutation();
+    const { shipmentCount, shipment, shipments } = processShipments(
+        order?._shipment || []
+    );
 
     const handleSubmit = async (values: DeliveryFormProps) => {
         if (!order) return;
@@ -95,7 +99,10 @@ const DeliveryModule = ({ data, isDeliveryLoading }: DeliveryModuleProps) => {
             initialValues={{
                 ...order?._user,
                 shippingAddress: order?._user?.address,
-                _deliveryMethod: order?._shipment?._deliveryMethod || "",
+                _deliveryMethod:
+                    shipmentCount === 1
+                        ? shipment?._deliveryMethod
+                        : shipments?.[0]?._deliveryMethod || null,
                 sameAsShipping: true,
             }}
             subscription={{

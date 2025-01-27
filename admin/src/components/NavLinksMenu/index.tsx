@@ -37,7 +37,7 @@ const NavLinksMenu = ({ links }: NavLinksMenuProps) => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const { pathname } = useLocation();
-    const isMobile = useMediaQuery("(max-width: 1280px)");
+    const isMobile = useMediaQuery("(max-width: 1024px)");
     const { isOpen: showDrawer } = useAppSelector((state) => state.sidebar);
 
     const [activeKeys, setActiveKeys] = useState<string[]>([]);

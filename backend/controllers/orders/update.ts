@@ -12,7 +12,6 @@ export const updateOrder = async (
     res: express.Response
 ) => {
     const { id } = req.params;
-    const user = req.user as User;
 
     if (!isValidObjectId(id)) {
         return res.status(400).json({ error: "Invalid order ID format" });
@@ -50,10 +49,15 @@ export const updateOrder = async (
 
         let shipment;
         if (updates._shipment) {
+            console.log(updates);
             shipment = new ShipmentModel(updates._shipment);
             await shipment.save();
 
-            updates._shipment = shipment._id.toString();
+            if (!Array.isArray(updates._shipment)) {
+                updates._shipment = [];
+            }
+
+            (updates._shipment as string[]).push(shipment._id.toString());
         }
 
         const order = await OrderModel.findById(id);
