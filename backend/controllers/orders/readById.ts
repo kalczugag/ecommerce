@@ -34,35 +34,7 @@ export const getOrderById = async (
             return res.status(404).json({ error: "Order not found" });
         }
 
-        let enhancedShipments: any[];
-
-        if (order._shipment && order._shipment.length > 0) {
-            console.log("Order shipments:", order._shipment);
-
-            const deliveryMethod = await DeliveryMethodModel.findOne(
-                {
-                    "providers._id": (order._shipment[0] as Shipment)
-                        ._deliveryMethod,
-                },
-                { _id: 1, type: 1, metadata: 1, "providers.$": 1 }
-            );
-
-            enhancedShipments = Array.isArray(order._shipment)
-                ? order._shipment.map((shipment) => {
-                      if (typeof shipment === "object") {
-                          return {
-                              ...shipment.toObject(),
-                              _deliveryMethod: deliveryMethod,
-                          };
-                      } else if (typeof shipment === "string") {
-                          return shipment;
-                      }
-                      return shipment;
-                  })
-                : [];
-        } else {
-            enhancedShipments = [];
-        }
+        const enhancedShipments = await enhanceShipments(order._shipment);
 
         const enhancedOrder = {
             ...order.toObject(),
@@ -74,4 +46,22 @@ export const getOrderById = async (
         console.error(error);
         return res.status(500).json({ error: "Internal server error" });
     }
+};
+
+const enhanceShipments = async (
+    shipments: any[] | undefined
+): Promise<any[]> => {
+    if (!shipments || shipments.length === 0) return [];
+
+    const firstShipment = shipments[0] as Shipment;
+    const deliveryMethod = await DeliveryMethodModel.findOne(
+        { "providers._id": firstShipment._deliveryMethod },
+        { _id: 1, type: 1, metadata: 1, "providers.$": 1 }
+    );
+
+    return shipments.map((shipment) =>
+        typeof shipment === "object"
+            ? { ...shipment.toObject(), _deliveryMethod: deliveryMethod }
+            : shipment
+    );
 };
