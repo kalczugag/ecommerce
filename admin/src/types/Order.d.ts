@@ -38,11 +38,12 @@ interface Payment {
 }
 
 interface Shipment {
+    _id?: string;
     _order: string | Order;
     shipFrom: ShippingAddress;
     shipTo: ShippingAddress;
     status: "pending" | "shipped" | "delivered";
-    _deliveryMethod: string | DeliveryMethod;
+    _deliveryMethod: DeliveryMethod;
     itemsDelivered: number;
     actualDeliveryDate?: Date;
     trackingNumber?: string;
@@ -72,7 +73,7 @@ interface Order {
     discount: number;
     total: number;
     _payment?: Payment;
-    _shipment: Shipment;
+    _shipment: Shipment[];
     createdAt: Date;
     updatedAt: Date;
 }
@@ -91,4 +92,4 @@ interface ReturnOrder {
     updatedAt?: Date;
 }
 
-export { Item, ShippingAddress, Payment, Order, ReturnOrder };
+export { Item, ShippingAddress, Shipment, Payment, Order, ReturnOrder };

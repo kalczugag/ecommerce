@@ -1,53 +1,40 @@
-import { ReactNode } from "react";
-import { Mail, Phone } from "@mui/icons-material";
-import type { ShippingAddress } from "@/types/Order";
-import { Link } from "@mui/material";
+import { ReactNode, useState } from "react";
+import { Collapse } from "@mui/material";
+import { ExpandLess, ExpandMore } from "@mui/icons-material";
 
 interface DetailCardProps {
+    variant?: "standard" | "accordion";
+    index?: number;
     label: string;
     children: ReactNode;
-    address?: ShippingAddress;
-    contact?: {
-        fullName?: string;
-        email?: string;
-        phone?: string;
-    };
 }
 
-const DetailCard = ({ label, children, address, contact }: DetailCardProps) => {
+const DetailCard = ({
+    variant = "standard",
+    label,
+    index,
+    children,
+}: DetailCardProps) => {
+    const [expanded, setExpanded] = useState(index === 0 ? true : false);
+
     return (
         <div className="flex flex-col space-y-4">
-            <h3 className="text-lg bg-gray-200 p-3">{label}</h3>
-            {children}
-            {address && contact && (
-                <div>
-                    <p>{contact.fullName}</p>
-                    <p>st. {address.street}</p>
-                    <p>
-                        {address.postalCode}, {address?.city}
-                    </p>
-                    <p>{address.country}</p>
-                </div>
+            {variant === "standard" && (
+                <h3 className="text-lg bg-gray-200 p-3">{label}</h3>
             )}
-            {contact && (
-                <div className="space-y-1">
-                    {contact.email && (
-                        <p className="flex items-center space-x-1">
-                            <Mail />
-                            <Link href={`mailto:${contact?.email}`}>
-                                {contact.email}
-                            </Link>
-                        </p>
-                    )}
-                    {contact.phone && (
-                        <p className="flex items-center space-x-1">
-                            <Phone />
-                            <Link href={`tel:${contact.phone}`}>
-                                {contact.phone}
-                            </Link>
-                        </p>
-                    )}
-                </div>
+            {variant === "accordion" ? (
+                <>
+                    <button
+                        className="flex justify-between items-center text-lg bg-gray-200 p-3"
+                        onClick={() => setExpanded(!expanded)}
+                    >
+                        {label}
+                        {expanded ? <ExpandLess /> : <ExpandMore />}
+                    </button>
+                    <Collapse in={expanded}>{children}</Collapse>
+                </>
+            ) : (
+                children
             )}
         </div>
     );

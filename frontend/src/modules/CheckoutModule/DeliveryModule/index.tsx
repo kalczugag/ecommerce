@@ -46,7 +46,7 @@ const DeliveryModule = ({ data, isDeliveryLoading }: DeliveryModuleProps) => {
     const [updateOrder, { isLoading: isUpdatingOrder }] =
         useUpdateOrderMutation();
     const [updateUser, { isLoading: isUpdatingUser }] = useUpdateUserMutation();
-    const { shipmentCount, shipment, shipments } = processShipments(
+    const { shipmentCount, isMoreThanOne, shipments } = processShipments(
         order?._shipment || []
     );
 
@@ -99,10 +99,9 @@ const DeliveryModule = ({ data, isDeliveryLoading }: DeliveryModuleProps) => {
             initialValues={{
                 ...order?._user,
                 shippingAddress: order?._user?.address,
-                _deliveryMethod:
-                    shipmentCount === 1
-                        ? shipment?._deliveryMethod
-                        : shipments?.[0]?._deliveryMethod || null,
+                _deliveryMethod: isMoreThanOne
+                    ? shipments[0]?._deliveryMethod
+                    : shipments[0]?._deliveryMethod,
                 sameAsShipping: true,
             }}
             subscription={{

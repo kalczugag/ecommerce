@@ -1,24 +1,34 @@
-import type { Order } from "@/types/Order";
-import DetailCard from "../components/DetailCard";
 import moment from "moment";
+import { processShipments } from "@/utils/processShipments";
+import DetailCard from "../components/DetailCard";
+import Contact from "../components/Contact";
+import type { Order } from "@/types/Order";
+import { Divider, useMediaQuery } from "@mui/material";
 
 interface SummaryPageProps {
     data: Order;
 }
 
 const SummaryPage = ({ data }: SummaryPageProps) => {
+    const isMobile = useMediaQuery("(max-width: 768px)");
+
+    const { shipmentTotal } = processShipments(data._shipment);
+
+    const divider = isMobile && (
+        <Divider
+            orientation={isMobile ? "horizontal" : "vertical"}
+            flexItem
+            sx={isMobile ? { marginY: 4 } : { marginX: 4 }}
+        />
+    );
+
     return (
-        <div className="grid grid-flow-row grid-cols-2 md:grid-cols-3 gap-4">
-            <DetailCard
-                label="Billing"
-                address={data.billingAddress}
-                contact={{
-                    fullName:
-                        data._user?.firstName + " " + data._user?.lastName,
-                    email: data._user?.email,
-                    phone: data._user?.phone,
-                }}
-            >
+        <div
+            className={`grid grid-flow-row grid-cols-1 md:grid-cols-3 ${
+                !isMobile && "gap-4"
+            }`}
+        >
+            <DetailCard label="Billing">
                 <div>
                     <span className="font-bold">Order Date: </span>
                     <span>
@@ -29,17 +39,20 @@ const SummaryPage = ({ data }: SummaryPageProps) => {
                     <span className="font-bold">Order Status: </span>
                     <span>{data.status}</span>
                 </div>
+                <Contact
+                    address={data.billingAddress}
+                    contact={{
+                        fullName:
+                            data._user?.firstName + " " + data._user?.lastName,
+                        email: data._user?.email,
+                        phone: data._user?.phone,
+                    }}
+                />
             </DetailCard>
 
-            <DetailCard
-                label="Shipping"
-                address={data.billingAddress}
-                contact={{
-                    fullName:
-                        data._user?.firstName + " " + data._user?.lastName,
-                    phone: data._user?.phone,
-                }}
-            >
+            {divider}
+
+            <DetailCard label="Shipping">
                 <div>
                     <span className="font-bold">Order Date: </span>
                     <span>
@@ -62,12 +75,22 @@ const SummaryPage = ({ data }: SummaryPageProps) => {
                 <div>
                     <span className="font-bold">Shipping Cost: </span>
                     <span>
-                        {data._shipment.shippingCost === 0
+                        {shipmentTotal === 0
                             ? "Free shipping"
-                            : `$${data._shipment.shippingCost.toFixed(2)}`}
+                            : `$${shipmentTotal}`}
                     </span>
                 </div>
+                <Contact
+                    address={data.billingAddress}
+                    contact={{
+                        fullName:
+                            data._user?.firstName + " " + data._user?.lastName,
+                        phone: data._user?.phone,
+                    }}
+                />
             </DetailCard>
+
+            {divider}
 
             <DetailCard label="Payments">
                 <div>
