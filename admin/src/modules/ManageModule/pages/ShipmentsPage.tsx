@@ -42,7 +42,8 @@ const config: PaperCardProps[] = [
 ];
 
 const ShipmentsPage = ({ data }: ShipmentsPageProps) => {
-    const isMobile = useMediaQuery("(max-width: 768px)");
+    const isMobile = useMediaQuery("(max-width: 1024px)");
+    const isTablet = useMediaQuery("(max-width: 1280px)");
 
     const { shipmentCount, isMoreThanOne, shipments } = processShipments(
         data._shipment
@@ -56,14 +57,6 @@ const ShipmentsPage = ({ data }: ShipmentsPageProps) => {
             : "1"
     } of ${shipmentCount}`;
 
-    const divider = (
-        <Divider
-            orientation={isMobile ? "horizontal" : "vertical"}
-            flexItem
-            sx={isMobile ? { marginY: 4 } : { marginX: 4 }}
-        />
-    );
-
     return (
         <div className="flex flex-col space-y-4">
             {shipments.map((shipment, index) => (
@@ -73,7 +66,7 @@ const ShipmentsPage = ({ data }: ShipmentsPageProps) => {
                     label={shipmentLabel}
                     variant="accordion"
                 >
-                    <div className="flex flex-col space-y-6 md:space-y-0 md:flex-row md:justify-between">
+                    <div className="flex flex-col space-y-6 lg:space-y-0 lg:flex-row lg:justify-between">
                         <div className="flex-1 flex justify-between">
                             <Contact
                                 label="Ship From"
@@ -99,9 +92,13 @@ const ShipmentsPage = ({ data }: ShipmentsPageProps) => {
                             />
                         </div>
 
-                        {divider}
+                        <Divider
+                            orientation={isMobile ? "horizontal" : "vertical"}
+                            flexItem
+                            sx={isMobile ? { marginY: 4 } : { marginX: 4 }}
+                        />
 
-                        <div className="flex-1 flex flex-col md:flex-row md:justify-between">
+                        <div className="flex-1 flex flex-col xl:flex-row xl:justify-between">
                             <div className="flex flex-col space-y-6">
                                 <div className="space-y-4">
                                     <div>
@@ -110,14 +107,23 @@ const ShipmentsPage = ({ data }: ShipmentsPageProps) => {
                                         </span>
                                         <span>{shipments[index].status}</span>
                                     </div>
-                                    <Button variant="contained" fullWidth>
+                                    <Button
+                                        variant="contained"
+                                        fullWidth={!isMobile}
+                                    >
                                         Ship Items
                                     </Button>
                                     <div className="flex space-x-1">
-                                        <Button variant="outlined" fullWidth>
+                                        <Button
+                                            variant="outlined"
+                                            fullWidth={!isMobile}
+                                        >
                                             Edit
                                         </Button>
-                                        <Button variant="outlined" fullWidth>
+                                        <Button
+                                            variant="outlined"
+                                            fullWidth={!isMobile}
+                                        >
                                             Split
                                         </Button>
                                     </div>
@@ -145,9 +151,15 @@ const ShipmentsPage = ({ data }: ShipmentsPageProps) => {
                                 </div>
                             </div>
 
-                            {divider}
+                            <Divider
+                                orientation={
+                                    isTablet ? "horizontal" : "vertical"
+                                }
+                                flexItem
+                                sx={isTablet ? { marginY: 4 } : { marginX: 4 }}
+                            />
 
-                            <div className="flex flex-col space-y-6">
+                            <div className="flex flex-row space-x-6 lg:flex-col lg:space-x-0 lg:space-y-6">
                                 {config.map((item) => (
                                     <PaperCard
                                         key={item.label}

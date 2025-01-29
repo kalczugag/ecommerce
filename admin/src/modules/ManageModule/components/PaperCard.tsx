@@ -12,7 +12,7 @@ export interface PaperCardProps {
 
 const PaperCard = ({ label, elements }: PaperCardProps) => {
     return (
-        <div className="bg-gray-200 p-4 space-y-4">
+        <div className="w-full bg-gray-200 p-4 space-y-4">
             <h4>{label}</h4>
             <div className="flex flex-col space-y-2">
                 {elements.map((element) => (
