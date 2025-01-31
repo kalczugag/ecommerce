@@ -5,7 +5,7 @@ import NotFound from "@/components/NotFound";
 import ManageModule from "@/modules/ManageModule";
 import { config } from "./config";
 
-const OrdersDetails = () => {
+const OrdersManage = () => {
     const { id } = useParams();
     useTitle("Order - Manage");
 
@@ -16,4 +16,4 @@ const OrdersDetails = () => {
     return <ManageModule config={config} data={data} isLoading={isLoading} />;
 };
 
-export default OrdersDetails;
+export default OrdersManage;

@@ -1,7 +1,6 @@
 import { useSearchParams } from "react-router-dom";
-import { Box, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Tab, Tabs } from "@mui/material";
 import { Manage } from "./types/Manage";
-import { Order } from "@/types/Order";
 import Loading from "@/components/Loading";
 import { cloneElement } from "react";
 
@@ -12,7 +11,7 @@ const a11Props = (index: number) => ({
 
 interface ManageModuleProps {
     config: Manage[];
-    data?: Order;
+    data?: any;
     isLoading: boolean;
 }
 

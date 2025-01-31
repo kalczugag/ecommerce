@@ -1,10 +1,14 @@
 import type { Order } from "@/types/Order";
 import { processShipments } from "@/utils/processShipments";
-import { Button, Divider, useMediaQuery } from "@mui/material";
+import { Divider, useMediaQuery } from "@mui/material";
 import { InsertPageBreak } from "@mui/icons-material";
-import DetailCard from "../components/DetailCard";
-import Contact from "../components/Contact";
-import PaperCard, { PaperCardProps } from "../components/PaperCard";
+import Table from "@/components/Table";
+import DetailCard from "../SummaryPageModule/components/DetailCard";
+import PaperCard, { PaperCardProps } from "./components/PaperCard";
+import ShipmentActions from "./components/ShipmentActions";
+import ShipmentMethod from "./components/ShipmentMethod";
+import ShipmentContacts from "./components/ShipmentContacts";
+import { tableConfig } from "./tableConfig";
 
 interface ShipmentsPageProps {
     data: Order;
@@ -44,7 +48,6 @@ const config: PaperCardProps[] = [
 const ShipmentsPage = ({ data }: ShipmentsPageProps) => {
     const isMobile = useMediaQuery("(max-width: 1024px)");
     const isTablet = useMediaQuery("(max-width: 1280px)");
-
     const { shipmentCount, isMoreThanOne, shipments } = processShipments(
         data._shipment
     );
@@ -57,6 +60,17 @@ const ShipmentsPage = ({ data }: ShipmentsPageProps) => {
             : "1"
     } of ${shipmentCount}`;
 
+    const handler = () => {
+        console.log("click");
+    };
+
+    const enhancedTableData = data.items
+        ? data.items.map((row) => ({
+              ...row,
+              handleDelete: () => console.log("x"),
+          }))
+        : data.items;
+
     return (
         <div className="flex flex-col space-y-4">
             {shipments.map((shipment, index) => (
@@ -67,30 +81,18 @@ const ShipmentsPage = ({ data }: ShipmentsPageProps) => {
                     variant="accordion"
                 >
                     <div className="flex flex-col space-y-6 lg:space-y-0 lg:flex-row lg:justify-between">
-                        <div className="flex-1 flex justify-between">
-                            <Contact
-                                label="Ship From"
-                                address={shipments[index].shipFrom}
-                                className="w-full"
-                            />
-                            <Contact
-                                label="Ship To"
-                                address={shipments[index].shipTo}
-                                contact={{
-                                    fullName:
-                                        data._user?.firstName +
-                                        " " +
-                                        data._user?.lastName,
-                                    phone: data._user?.phone,
-                                }}
-                                actionButton={
-                                    <Button variant="outlined">
-                                        Edit Address
-                                    </Button>
-                                }
-                                className="w-full"
-                            />
-                        </div>
+                        <ShipmentContacts
+                            shipFrom={shipments[index].shipFrom}
+                            shipTo={shipments[index].shipTo}
+                            user={{
+                                fullName:
+                                    data._user?.firstName +
+                                    " " +
+                                    data._user?.lastName,
+                                phone: data._user?.phone,
+                            }}
+                            onEditAddress={handler}
+                        />
 
                         <Divider
                             orientation={isMobile ? "horizontal" : "vertical"}
@@ -107,48 +109,21 @@ const ShipmentsPage = ({ data }: ShipmentsPageProps) => {
                                         </span>
                                         <span>{shipments[index].status}</span>
                                     </div>
-                                    <Button
-                                        variant="contained"
-                                        fullWidth={!isMobile}
-                                    >
-                                        Ship Items
-                                    </Button>
-                                    <div className="flex space-x-1">
-                                        <Button
-                                            variant="outlined"
-                                            fullWidth={!isMobile}
-                                        >
-                                            Edit
-                                        </Button>
-                                        <Button
-                                            variant="outlined"
-                                            fullWidth={!isMobile}
-                                        >
-                                            Split
-                                        </Button>
-                                    </div>
+                                    <ShipmentActions
+                                        isMobile={isMobile}
+                                        onShipItems={handler}
+                                        onEdit={handler}
+                                        onSplit={handler}
+                                    />
                                 </div>
-                                <div className="space-y-4">
-                                    <div>
-                                        <span className="font-bold">
-                                            Method:{" "}
-                                        </span>
-                                        <span>
-                                            {
-                                                shipments[index]._deliveryMethod
-                                                    .providers[0].name
-                                            }
-                                        </span>
-                                    </div>
-                                    <div className="flex space-x-1">
-                                        <Button variant="outlined">
-                                            Change Method
-                                        </Button>
-                                        <Button variant="outlined">
-                                            Recalculate
-                                        </Button>
-                                    </div>
-                                </div>
+                                <ShipmentMethod
+                                    methodName={
+                                        shipments[index]._deliveryMethod
+                                            .providers[0].name
+                                    }
+                                    onChangeMethod={handler}
+                                    onRecalculate={handler}
+                                />
                             </div>
 
                             <Divider
@@ -170,6 +145,19 @@ const ShipmentsPage = ({ data }: ShipmentsPageProps) => {
                             </div>
                         </div>
                     </div>
+
+                    <Divider
+                        orientation="horizontal"
+                        flexItem
+                        sx={{ marginY: 4 }}
+                    />
+
+                    <Table
+                        headerOptions={tableConfig}
+                        totalItems={data.items.length}
+                        rowData={enhancedTableData}
+                        isLoading={false}
+                    />
                 </DetailCard>
             ))}
         </div>

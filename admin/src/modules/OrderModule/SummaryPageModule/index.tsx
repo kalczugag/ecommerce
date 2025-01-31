@@ -1,16 +1,16 @@
 import moment from "moment";
-import { processShipments } from "@/utils/processShipments";
-import DetailCard from "../components/DetailCard";
-import Contact from "../components/Contact";
-import type { Order } from "@/types/Order";
 import { Divider, useMediaQuery } from "@mui/material";
+import { processShipments } from "@/utils/processShipments";
+import DetailCard from "./components/DetailCard";
+import Contact from "./components/Contact";
+import type { Order } from "@/types/Order";
 
 interface SummaryPageProps {
     data: Order;
 }
 
 const SummaryPage = ({ data }: SummaryPageProps) => {
-    const isMobile = useMediaQuery("(max-width: 768px)");
+    const isMobile = useMediaQuery("(max-width: 1024px)");
 
     const { shipmentTotal } = processShipments(data._shipment);
 

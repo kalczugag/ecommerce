@@ -6,7 +6,7 @@ import {
     ReturnsPage,
     NotesPage,
     AddressesPage,
-} from "@/modules/ManageModule/pages";
+} from "@/modules/OrderModule";
 import type { Manage } from "@/modules/ManageModule/types/Manage";
 import type { Order } from "@/types/Order";
 

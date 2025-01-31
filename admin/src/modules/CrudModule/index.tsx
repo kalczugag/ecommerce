@@ -1,9 +1,10 @@
+import { ReactNode } from "react";
 import CrudLayout from "@/layouts/CrudLayout";
 import Table from "@/components/Table";
 
-export interface TableColumnProps {
+export interface TableColumnProps<T = any> {
     label: string;
-    render: (row: any) => JSX.Element | string;
+    render: (row: T) => ReactNode;
 }
 
 interface CrudModuleProps {

@@ -16,21 +16,26 @@ const usePagination = (): [
     const limit = parseInt(searchParams.get("pageSize")!) || 5;
 
     useEffect(() => {
-        setSearchParams({
-            page: skip.toString(),
-            pageSize: limit.toString(),
-        });
-        window.scrollTo(0, 0);
-    }, [limit, setSearchParams, skip]);
+        if (
+            searchParams.get("page") !== skip.toString() ||
+            searchParams.get("pageSize") !== limit.toString()
+        ) {
+            const newSearchParams = new URLSearchParams(searchParams);
+            newSearchParams.set("page", skip.toString());
+            newSearchParams.set("pageSize", limit.toString());
+            setSearchParams(newSearchParams);
+            window.scrollTo(0, 0);
+        }
+    }, [skip, limit, searchParams, setSearchParams]);
 
     const handleSetPagination = (value: Pagination) => {
         const newSkip = value.skip !== undefined ? value.skip : skip;
         const newLimit = value.limit !== undefined ? value.limit : limit;
 
-        setSearchParams({
-            page: newSkip.toString(),
-            pageSize: newLimit.toString(),
-        });
+        const newSearchParams = new URLSearchParams(searchParams);
+        newSearchParams.set("page", newSkip.toString());
+        newSearchParams.set("pageSize", newLimit.toString());
+        setSearchParams(newSearchParams);
     };
 
     return [{ skip, limit }, handleSetPagination];

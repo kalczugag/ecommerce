@@ -1,7 +1,8 @@
 import moment from "moment";
-import { Link } from "@mui/material";
 import ActionButtons from "@/components/Table/ActionButtons";
 import type { Order } from "@/types/Order";
+import UnderlineLink from "@/components/UnderlineLink";
+import { TableColumnProps } from "@/modules/CrudModule";
 
 interface RowProps extends Order {
     bolder: string;
@@ -30,25 +31,24 @@ export const sortConfig: SortConfigProps[] = [
     },
 ];
 
-export const tableConfig = [
+export const tableConfig: TableColumnProps<RowProps>[] = [
     {
         label: "Order",
-        render: (row: RowProps) => (
-            <Link href={`/orders/${row._id}`}>{row._id}</Link>
+        render: (row) => (
+            <UnderlineLink to={`/orders/${row._id}`}>{row._id}</UnderlineLink>
         ),
     },
     {
         label: "Customer",
-        render: (row: RowProps) =>
-            row._user.firstName + " " + row._user.lastName,
+        render: (row) => row._user.firstName + " " + row._user.lastName,
     },
     {
         label: "Amount",
-        render: (row: RowProps) => `$${row.total.toFixed(2)}`,
+        render: (row) => `$${row.total.toFixed(2)}`,
     },
     {
         label: "Order Status",
-        render: (row: RowProps) => (
+        render: (row) => (
             <div className="bg-gray-300 text-center rounded truncate px-2">
                 {row.status}
             </div>
@@ -56,7 +56,7 @@ export const tableConfig = [
     },
     {
         label: "Payment",
-        render: (row: RowProps) => (
+        render: (row) => (
             <div
                 className={`bg-gray-300 text-center rounded truncate px-2 ${
                     row._payment?.paymentStatus === "completed"
@@ -72,14 +72,14 @@ export const tableConfig = [
     },
     {
         label: "Date",
-        render: (row: RowProps) => {
+        render: (row) => {
             const date = moment(row.createdAt).format("DD/MM/YYYY");
             return <div>{date}</div>;
         },
     },
     {
         label: "Actions",
-        render: (row: RowProps) => (
+        render: (row) => (
             <ActionButtons
                 id={row._id || ""}
                 disabled={row.isLoading}
@@ -88,35 +88,4 @@ export const tableConfig = [
             />
         ),
     },
-    // {
-    //     label: "Number of items",
-    //     render: (row: RowProps) =>
-    //         row.items.reduce((a, b) => a + b.quantity, 0).toString(),
-    // },
-    // {
-    //     label: "Payment Method",
-    //     render: (row: RowProps) => row._payment?.paymentMethod || "",
-    // },
-    // {
-    //     label: "Price",
-    //     render: (row: RowProps) => `$${row.total}`,
-    // },
-    // {
-    //     label: "Id",
-    //     render: (row: RowProps) => (
-    //         <div className={row.bolder ? "font-bold" : ""}>{row._id}</div>
-    //     ),
-    // },
-    // {
-    //     label: "Status",
-    //     render: (row: RowProps) => (
-    //         <div className="flex justify-end">
-    //             <Status status={row.status} />
-    //         </div>
-    //     ),
-    // },
-    // {
-    //     label: "Actions",
-    //     render: (row: RowProps) => <ActionButtons id={row._id || ""} info />,
-    // },
 ];
