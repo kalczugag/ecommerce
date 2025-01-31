@@ -8,7 +8,8 @@ type Pagination = {
 
 const usePagination = (): [
     { skip: number; limit: number },
-    (value: Pagination) => void
+    (value: Pagination) => void,
+    () => void
 ] => {
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -20,10 +21,13 @@ const usePagination = (): [
             searchParams.get("page") !== skip.toString() ||
             searchParams.get("pageSize") !== limit.toString()
         ) {
-            const newSearchParams = new URLSearchParams(searchParams);
-            newSearchParams.set("page", skip.toString());
-            newSearchParams.set("pageSize", limit.toString());
-            setSearchParams(newSearchParams);
+            setSearchParams((prev) => {
+                const newParams = new URLSearchParams(prev);
+                newParams.set("page", skip.toString());
+                newParams.set("pageSize", limit.toString());
+                return newParams;
+            });
+
             window.scrollTo(0, 0);
         }
     }, [skip, limit, searchParams, setSearchParams]);
@@ -32,13 +36,24 @@ const usePagination = (): [
         const newSkip = value.skip !== undefined ? value.skip : skip;
         const newLimit = value.limit !== undefined ? value.limit : limit;
 
-        const newSearchParams = new URLSearchParams(searchParams);
-        newSearchParams.set("page", newSkip.toString());
-        newSearchParams.set("pageSize", newLimit.toString());
-        setSearchParams(newSearchParams);
+        setSearchParams((prev) => {
+            const newParams = new URLSearchParams(prev);
+            newParams.set("page", newSkip.toString());
+            newParams.set("pageSize", newLimit.toString());
+            return newParams;
+        });
     };
 
-    return [{ skip, limit }, handleSetPagination];
+    const resetValues = () => {
+        setSearchParams((prev) => {
+            const newParams = new URLSearchParams(prev);
+            newParams.set("page", "0");
+            newParams.set("pageSize", "5");
+            return newParams;
+        });
+    };
+
+    return [{ skip, limit }, handleSetPagination, resetValues];
 };
 
 export default usePagination;

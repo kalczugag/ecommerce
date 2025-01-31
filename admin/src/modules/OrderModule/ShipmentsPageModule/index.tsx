@@ -1,4 +1,3 @@
-import type { Order } from "@/types/Order";
 import { processShipments } from "@/utils/processShipments";
 import { Divider, useMediaQuery } from "@mui/material";
 import { InsertPageBreak } from "@mui/icons-material";
@@ -9,8 +8,10 @@ import ShipmentActions from "./components/ShipmentActions";
 import ShipmentMethod from "./components/ShipmentMethod";
 import ShipmentContacts from "./components/ShipmentContacts";
 import { tableConfig } from "./tableConfig";
+import type { Order } from "@/types/Order";
+import type { ManageAction } from "@/modules/ManageModule/types/Manage";
 
-interface ShipmentsPageProps {
+interface ShipmentsPageProps extends ManageAction {
     data: Order;
 }
 
@@ -45,7 +46,7 @@ const config: PaperCardProps[] = [
     },
 ];
 
-const ShipmentsPage = ({ data }: ShipmentsPageProps) => {
+const ShipmentsPage = ({ data, handleSubTabChange }: ShipmentsPageProps) => {
     const isMobile = useMediaQuery("(max-width: 1024px)");
     const isTablet = useMediaQuery("(max-width: 1280px)");
     const { shipmentCount, isMoreThanOne, shipments } = processShipments(
@@ -113,7 +114,7 @@ const ShipmentsPage = ({ data }: ShipmentsPageProps) => {
                                         isMobile={isMobile}
                                         onShipItems={handler}
                                         onEdit={handler}
-                                        onSplit={handler}
+                                        onSplit={() => handleSubTabChange(1)}
                                     />
                                 </div>
                                 <ShipmentMethod

@@ -2,7 +2,7 @@ import { useSearchParams } from "react-router-dom";
 import { Box, Tab, Tabs } from "@mui/material";
 import { Manage } from "./types/Manage";
 import Loading from "@/components/Loading";
-import { cloneElement } from "react";
+import React, { cloneElement } from "react";
 
 const a11Props = (index: number) => ({
     id: `tab-${index}`,
@@ -19,9 +19,26 @@ const ManageModule = ({ config, data, isLoading }: ManageModuleProps) => {
     const [searchParams, setSearchParams] = useSearchParams();
 
     const currentTab = parseInt(searchParams.get("tab") || "0");
+    const currentSubTab = parseInt(searchParams.get("subTab") || "0");
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
-        setSearchParams({ tab: newValue });
+        setSearchParams({ tab: newValue, subTab: "0" });
+    };
+
+    const handleSubTabChange = (newValue: number) => {
+        setSearchParams((prev) => {
+            const newParams = new URLSearchParams(prev);
+            newParams.set("page", "0");
+            newParams.set("pageSize", "5");
+            newParams.set("subTab", newValue.toString());
+            return newParams;
+        });
+    };
+
+    const renderWithCustomArg = (tab: Manage, arg?: Record<string, any>) => {
+        if (!data) return null;
+
+        return <>{cloneElement(tab.element(data), { ...arg })}</>;
     };
 
     return (
@@ -46,7 +63,20 @@ const ManageModule = ({ config, data, isLoading }: ManageModuleProps) => {
                     >
                         {currentTab === index && (
                             <Box sx={{ p: 3 }}>
-                                {data ? cloneElement(tab.element(data)) : null}
+                                {tab.subTabs
+                                    ? currentSubTab === 0
+                                        ? renderWithCustomArg(tab, {
+                                              currentSubTab,
+                                              handleSubTabChange,
+                                          })
+                                        : renderWithCustomArg(
+                                              tab.subTabs[currentSubTab - 1],
+                                              {
+                                                  currentSubTab,
+                                                  handleSubTabChange,
+                                              }
+                                          )
+                                    : renderWithCustomArg(tab)}
                             </Box>
                         )}
                     </div>

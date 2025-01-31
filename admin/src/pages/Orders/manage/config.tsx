@@ -7,7 +7,8 @@ import {
     NotesPage,
     AddressesPage,
 } from "@/modules/OrderModule";
-import type { Manage } from "@/modules/ManageModule/types/Manage";
+import SplitShipment from "@/modules/OrderModule/ShipmentsPageModule/tabs/SplitShipment";
+import type { Manage, ManageAction } from "@/modules/ManageModule/types/Manage";
 import type { Order } from "@/types/Order";
 
 export const config: Manage[] = [
@@ -24,7 +25,27 @@ export const config: Manage[] = [
     {
         key: "order_shipments",
         label: "Shipments",
-        element: (props: Order) => <ShipmentsPage data={props} />,
+        element: ({ handleSubTabChange, ...rest }: Order & ManageAction) => (
+            <ShipmentsPage
+                data={rest}
+                handleSubTabChange={handleSubTabChange}
+            />
+        ),
+        subTabs: [
+            {
+                key: "shipments_split",
+                label: "Split Shipment",
+                element: ({
+                    handleSubTabChange,
+                    ...rest
+                }: Order & ManageAction) => (
+                    <SplitShipment
+                        data={rest}
+                        handleSubTabChange={handleSubTabChange}
+                    />
+                ),
+            },
+        ],
     },
     {
         key: "order_items",

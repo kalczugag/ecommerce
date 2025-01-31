@@ -15,8 +15,8 @@ const PaperCard = ({ label, elements }: PaperCardProps) => {
         <div className="w-full bg-gray-200 p-4 space-y-4">
             <h4>{label}</h4>
             <div className="flex flex-col space-y-2">
-                {elements.map((element) => (
-                    <div>
+                {elements.map((element, index) => (
+                    <div key={element.label + "_" + index}>
                         <Button
                             variant="contained"
                             startIcon={element.icon}

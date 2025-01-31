@@ -1,8 +1,9 @@
-import { ReactNode, useState } from "react";
+import { HTMLAttributes, ReactNode, useState } from "react";
 import { Collapse } from "@mui/material";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
+import { useSearchParams } from "react-router-dom";
 
-interface DetailCardProps {
+interface DetailCardProps extends HTMLAttributes<HTMLDivElement> {
     variant?: "standard" | "accordion";
     index?: number;
     label: string;
@@ -14,11 +15,26 @@ const DetailCard = ({
     label,
     index,
     children,
+    className,
 }: DetailCardProps) => {
+    const [_, setSearchParams] = useSearchParams();
     const [expanded, setExpanded] = useState(index === 0 ? true : false);
 
+    const handleClick = () => {
+        if (!expanded) {
+            setSearchParams((prev) => {
+                const newParams = new URLSearchParams(prev);
+                newParams.set("page", "0");
+                newParams.set("pageSize", "5");
+                return newParams;
+            });
+        }
+
+        setExpanded(!expanded);
+    };
+
     return (
-        <div className="flex flex-col space-y-4">
+        <div className={`flex flex-col space-y-4 ${className}`}>
             {variant === "standard" && (
                 <h3 className="text-lg bg-gray-200 p-3">{label}</h3>
             )}
@@ -26,12 +42,14 @@ const DetailCard = ({
                 <>
                     <button
                         className="flex justify-between items-center text-lg bg-gray-200 p-3"
-                        onClick={() => setExpanded(!expanded)}
+                        onClick={handleClick}
                     >
                         {label}
                         {expanded ? <ExpandLess /> : <ExpandMore />}
                     </button>
-                    <Collapse in={expanded}>{children}</Collapse>
+                    <Collapse in={expanded} timeout="auto" unmountOnExit>
+                        {children}
+                    </Collapse>
                 </>
             ) : (
                 children
