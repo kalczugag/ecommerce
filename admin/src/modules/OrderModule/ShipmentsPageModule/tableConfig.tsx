@@ -1,7 +1,8 @@
 import UnderlineLink from "@/components/UnderlineLink";
 import type { Item } from "@/types/Order";
 import type { TableColumnProps } from "@/modules/CrudModule";
-import ActionButtons from "@/components/Table/ActionButtons";
+import { IconButton } from "@mui/material";
+import { Delete, Edit } from "@mui/icons-material";
 
 interface RowProps extends Item {
     isLoading: boolean;
@@ -35,14 +36,17 @@ export const tableConfig: TableColumnProps<RowProps>[] = [
         render: (row) => `$${row.total.toFixed(2)}`,
     },
     {
-        label: "Total",
+        label: "Actions",
 
         render: (row) => (
-            <ActionButtons
-                id={row._product._id || ""}
-                disabled={row.isLoading}
-                handleDelete={row.handleDelete}
-            />
+            <div className="flex">
+                <IconButton>
+                    <Edit />
+                </IconButton>
+                <IconButton>
+                    <Delete />
+                </IconButton>
+            </div>
         ),
     },
 ];

@@ -118,9 +118,8 @@ const ShipmentsPage = ({ data, handleSubTabChange }: ShipmentsPageProps) => {
                                     />
                                 </div>
                                 <ShipmentMethod
-                                    methodName={
+                                    deliveryMethod={
                                         shipments[index]._deliveryMethod
-                                            .providers[0].name
                                     }
                                     onChangeMethod={handler}
                                     onRecalculate={handler}

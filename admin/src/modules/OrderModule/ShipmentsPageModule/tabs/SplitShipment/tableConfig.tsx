@@ -2,7 +2,13 @@ import UnderlineLink from "@/components/UnderlineLink";
 import type { Item, Shipment } from "@/types/Order";
 import type { TableColumnProps } from "@/modules/CrudModule";
 import { Field } from "react-final-form";
-import { FormControl, MenuItem, Select, TextField } from "@mui/material";
+import {
+    Divider,
+    FormControl,
+    MenuItem,
+    Select,
+    TextField,
+} from "@mui/material";
 
 interface RowProps extends Item {
     shipments: Shipment[];
@@ -39,6 +45,8 @@ export const tableConfig: TableColumnProps<RowProps>[] = [
                     <TextField
                         {...input}
                         type="number"
+                        variant="standard"
+                        slotProps={{ htmlInput: { max: row.quantity, min: 0 } }}
                         disabled={row.isLoading}
                         fullWidth
                     />
@@ -52,7 +60,9 @@ export const tableConfig: TableColumnProps<RowProps>[] = [
             <Field name="moveToShipment" type="select">
                 {({ input }) => (
                     <FormControl disabled={row.isLoading} fullWidth>
-                        <Select {...input}>
+                        <Select {...input} variant="standard">
+                            <MenuItem value="">None</MenuItem>
+                            <Divider />
                             {row.shipments.map((shipment, index) => (
                                 <MenuItem
                                     key={shipment._id}
@@ -61,6 +71,7 @@ export const tableConfig: TableColumnProps<RowProps>[] = [
                                     {index}
                                 </MenuItem>
                             ))}
+                            <MenuItem value="new">New Shipment</MenuItem>
                         </Select>
                     </FormControl>
                 )}

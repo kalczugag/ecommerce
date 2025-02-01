@@ -27,7 +27,7 @@ const SplitShipment = ({ data, handleSubTabChange }: SplitShipmentProps) => {
                 onSubmit={handleSubmit}
                 render={({ handleSubmit, form }) => (
                     <form onSubmit={handleSubmit}>
-                        <div className="flex flex-col justify-between pb-4 space-y-4 xl:space-y-0 xl:flex-row">
+                        <div className="flex flex-col justify-between pb-8 space-y-4 xl:space-y-0 xl:flex-row">
                             <p className="text-sm">
                                 To split a shipment, enter the quantity of
                                 item(s) to move, and then select a new or
