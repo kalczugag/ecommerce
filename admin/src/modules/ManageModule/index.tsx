@@ -25,12 +25,20 @@ const ManageModule = ({ config, data, isLoading }: ManageModuleProps) => {
         setSearchParams({ tab: newValue, subTab: "0" });
     };
 
-    const handleSubTabChange = (newValue: number) => {
+    const handleSubTabChange = (
+        newValue: number,
+        additionalData?: { [key: string]: string }
+    ) => {
         setSearchParams((prev) => {
             const newParams = new URLSearchParams(prev);
             newParams.set("page", "0");
             newParams.set("pageSize", "5");
             newParams.set("subTab", newValue.toString());
+            if (additionalData) {
+                Object.entries(additionalData).forEach(([key, value]) => {
+                    newParams.set(key, value);
+                });
+            }
             return newParams;
         });
     };

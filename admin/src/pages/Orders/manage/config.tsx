@@ -10,6 +10,7 @@ import {
 import SplitShipment from "@/modules/OrderModule/ShipmentsPageModule/tabs/SplitShipment";
 import type { Manage, ManageAction } from "@/modules/ManageModule/types/Manage";
 import type { Order } from "@/types/Order";
+import ShipItems from "@/modules/OrderModule/ShipmentsPageModule/tabs/ShipItems";
 
 export const config: Manage[] = [
     {
@@ -40,6 +41,19 @@ export const config: Manage[] = [
                     ...rest
                 }: Order & ManageAction) => (
                     <SplitShipment
+                        data={rest}
+                        handleSubTabChange={handleSubTabChange}
+                    />
+                ),
+            },
+            {
+                key: "shipments_ship",
+                label: "Ship Items",
+                element: ({
+                    handleSubTabChange,
+                    ...rest
+                }: Order & ManageAction) => (
+                    <ShipItems
                         data={rest}
                         handleSubTabChange={handleSubTabChange}
                     />

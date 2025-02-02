@@ -53,6 +53,13 @@ const ShipmentsPage = ({ data, handleSubTabChange }: ShipmentsPageProps) => {
         data._shipment
     );
 
+    const enhancedTableData = data.items
+        ? data.items.map((row) => ({
+              ...row,
+              handleDelete: () => console.log("x"),
+          }))
+        : data.items;
+
     const shipmentLabel = `Shipment #${
         isMoreThanOne
             ? shipments?.findIndex(
@@ -64,13 +71,6 @@ const ShipmentsPage = ({ data, handleSubTabChange }: ShipmentsPageProps) => {
     const handler = () => {
         console.log("click");
     };
-
-    const enhancedTableData = data.items
-        ? data.items.map((row) => ({
-              ...row,
-              handleDelete: () => console.log("x"),
-          }))
-        : data.items;
 
     return (
         <div className="flex flex-col space-y-4">
@@ -112,7 +112,11 @@ const ShipmentsPage = ({ data, handleSubTabChange }: ShipmentsPageProps) => {
                                     </div>
                                     <ShipmentActions
                                         isMobile={isMobile}
-                                        onShipItems={handler}
+                                        onShipItems={() =>
+                                            handleSubTabChange(2, {
+                                                shipmentIndex: index.toString(),
+                                            })
+                                        }
                                         onEdit={handler}
                                         onSplit={() => handleSubTabChange(1)}
                                     />
@@ -121,8 +125,6 @@ const ShipmentsPage = ({ data, handleSubTabChange }: ShipmentsPageProps) => {
                                     deliveryMethod={
                                         shipments[index]._deliveryMethod
                                     }
-                                    onChangeMethod={handler}
-                                    onRecalculate={handler}
                                 />
                             </div>
 

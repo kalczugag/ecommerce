@@ -1,3 +1,4 @@
+import CapturePaymentDialog from "./CapturePaymentDialog";
 import DetailCard from "./DetailCard";
 import type { Order } from "@/types/Order";
 
@@ -28,6 +29,9 @@ const PaymentsCard = ({ data }: PaymentsCardProps) => {
             <div>
                 <span className="font-bold">Last Payment: </span>
                 <span>Visa ***9</span>
+            </div>
+            <div>
+                {data._payment && <CapturePaymentDialog data={data._payment} />}
             </div>
         </DetailCard>
     );

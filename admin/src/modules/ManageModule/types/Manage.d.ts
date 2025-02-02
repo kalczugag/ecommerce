@@ -19,6 +19,10 @@ export interface ManageAction {
     /**
      * Function to handle sub-tab index change.
      * @param {number} newValue - The index of the new sub-tab.
+     * @param {[key: string]: string} additionalData - Additional data associated with the new sub-tab.
      */
-    handleSubTabChange: (newValue: number) => void;
+    handleSubTabChange: (
+        newValue: number,
+        additionalData?: { [key: string]: string }
+    ) => void;
 }

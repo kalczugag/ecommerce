@@ -9,7 +9,7 @@ interface SummaryPageProps {
 }
 
 const SummaryPage = ({ data }: SummaryPageProps) => {
-    const isMobile = useMediaQuery("(max-width: 1024px)");
+    const isMobile = useMediaQuery("(max-width: 768px)");
 
     const divider = isMobile && (
         <Divider
@@ -21,7 +21,7 @@ const SummaryPage = ({ data }: SummaryPageProps) => {
 
     return (
         <div
-            className={`grid grid-flow-row grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 ${
+            className={`grid grid-flow-row grid-cols-1 md:grid-cols-3  ${
                 !isMobile && "gap-4"
             }`}
         >

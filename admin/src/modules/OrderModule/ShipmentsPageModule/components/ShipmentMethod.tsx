@@ -2,19 +2,12 @@ import { Button } from "@mui/material";
 import ChangeShippingMethodDialog from "./ChangeShippingMethodDialog";
 import { deliveryMethods } from "@/constants/deliveryMethods";
 import type { DeliveryMethod } from "@/types/DeliveryMethod";
-import { Form } from "react-final-form";
 
 interface ShipmentMethodProps {
     deliveryMethod: DeliveryMethod;
-    onChangeMethod: () => void;
-    onRecalculate: () => void;
 }
 
-const ShipmentMethod = ({
-    deliveryMethod,
-    onChangeMethod,
-    onRecalculate,
-}: ShipmentMethodProps) => {
+const ShipmentMethod = ({ deliveryMethod }: ShipmentMethodProps) => {
     const methodName =
         deliveryMethods[deliveryMethod.type] +
         " - " +
@@ -27,20 +20,11 @@ const ShipmentMethod = ({
                 <span>{methodName}</span>
             </div>
             <div className="flex space-x-1">
-                <Form
-                    onSubmit={() => {}}
-                    render={({ handleSubmit }) => (
-                        <form onSubmit={handleSubmit}>
-                            <ChangeShippingMethodDialog
-                                methodName={methodName}
-                                onChangeMethod={onChangeMethod}
-                            />
-                        </form>
-                    )}
+                <ChangeShippingMethodDialog
+                    currentDeliveryMethod={deliveryMethod.providers[0]._id}
+                    methodName={methodName}
                 />
-                <Button variant="outlined" onClick={onRecalculate}>
-                    Recalculate
-                </Button>
+                <Button variant="outlined">Recalculate</Button>
             </div>
         </div>
     );
