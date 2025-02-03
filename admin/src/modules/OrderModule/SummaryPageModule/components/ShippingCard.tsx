@@ -1,6 +1,6 @@
 import moment from "moment";
 import { processShipments } from "@/utils/processShipments";
-import DetailCard from "./DetailCard";
+import DetailCard from "@/components/DetailCard";
 import Contact from "./Contact";
 import type { Order } from "@/types/Order";
 

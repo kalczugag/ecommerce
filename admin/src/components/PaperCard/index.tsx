@@ -2,7 +2,7 @@ import { Button } from "@mui/material";
 import { ReactNode } from "react";
 
 export interface PaperCardProps {
-    label?: string;
+    description?: string;
     elements: {
         label: ReactNode;
         icon?: JSX.Element;
@@ -10,10 +10,10 @@ export interface PaperCardProps {
     }[];
 }
 
-const PaperCard = ({ label, elements }: PaperCardProps) => {
+const PaperCard = ({ description, elements }: PaperCardProps) => {
     return (
-        <div className="w-full bg-gray-200 p-4 space-y-4">
-            <h4>{label}</h4>
+        <div className="flex-1 bg-gray-200 p-4 space-y-4">
+            <p>{description}</p>
             <div className="flex flex-col space-y-2">
                 {elements.map((element, index) => (
                     <div key={element.label + "_" + index}>

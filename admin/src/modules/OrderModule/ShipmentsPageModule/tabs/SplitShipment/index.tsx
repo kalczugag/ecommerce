@@ -1,7 +1,7 @@
 import { Button } from "@mui/material";
 import Table from "@/components/Table";
 import AlertDialog from "@/components/AlertDialog";
-import DetailCard from "../../../SummaryPageModule/components/DetailCard";
+import DetailCard from "@/components/DetailCard";
 import { tableConfig } from "./tableConfig";
 import type { Order } from "@/types/Order";
 import type { ManageAction } from "@/modules/ManageModule/types/Manage";

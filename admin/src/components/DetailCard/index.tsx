@@ -5,7 +5,7 @@ import { useSearchParams } from "react-router-dom";
 
 interface DetailCardProps extends HTMLAttributes<HTMLDivElement> {
     variant?: "standard" | "accordion";
-    index?: number;
+    defaultExpanded?: boolean;
     label: string;
     children: ReactNode;
 }
@@ -13,12 +13,12 @@ interface DetailCardProps extends HTMLAttributes<HTMLDivElement> {
 const DetailCard = ({
     variant = "standard",
     label,
-    index,
+    defaultExpanded = false,
     children,
     className,
 }: DetailCardProps) => {
     const [_, setSearchParams] = useSearchParams();
-    const [expanded, setExpanded] = useState(index === 0 ? true : false);
+    const [expanded, setExpanded] = useState(defaultExpanded);
 
     const handleClick = () => {
         if (!expanded) {

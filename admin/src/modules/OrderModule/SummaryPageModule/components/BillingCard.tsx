@@ -1,6 +1,6 @@
 import moment from "moment";
 import { orderStatuses } from "@/constants/orderStatuses";
-import DetailCard from "./DetailCard";
+import DetailCard from "@/components/DetailCard";
 import Contact from "./Contact";
 import { Field, Form } from "react-final-form";
 import { FormControl, MenuItem, Select } from "@mui/material";
@@ -30,7 +30,7 @@ const BillingCard = ({ data }: BillingCardProps) => {
                     onSubmit={handleSubmit}
                     render={({ handleSubmit }) => (
                         <form onSubmit={handleSubmit}>
-                            <Field name="status">
+                            <Field name="status" type="select">
                                 {({ input }) => (
                                     <FormControl fullWidth>
                                         <Select {...input}>

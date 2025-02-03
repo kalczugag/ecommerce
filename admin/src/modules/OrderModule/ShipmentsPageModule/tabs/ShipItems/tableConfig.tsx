@@ -1,15 +1,9 @@
+import { Field } from "react-final-form";
+import { required, minValue, maxValue, compose } from "@/utils/validators";
 import UnderlineLink from "@/components/UnderlineLink";
 import type { Item, Shipment } from "@/types/Order";
 import type { TableColumnProps } from "@/modules/CrudModule";
-import { Field } from "react-final-form";
-import {
-    Divider,
-    FormControl,
-    MenuItem,
-    Select,
-    TextField,
-} from "@mui/material";
-import { compose, maxValue, minValue, required } from "@/utils/validators";
+import { TextField } from "@mui/material";
 
 interface RowProps extends Item {
     shipments: Shipment[];
@@ -39,13 +33,13 @@ export const tableConfig: TableColumnProps<RowProps>[] = [
         render: (row) => row.quantity,
     },
     {
-        label: "Quantity To Move",
+        label: "Quantity To Ship",
         render: (row) => (
             <Field
-                name="quantityToMove"
+                name="quantityToShip"
                 validate={compose(
                     required,
-                    minValue(1),
+                    minValue(0),
                     maxValue(row.quantity)
                 )}
             >
@@ -54,7 +48,7 @@ export const tableConfig: TableColumnProps<RowProps>[] = [
                         {...props.input}
                         type="number"
                         variant="standard"
-                        slotProps={{ htmlInput: { max: row.quantity, min: 1 } }}
+                        slotProps={{ htmlInput: { max: row.quantity, min: 0 } }}
                         error={props.meta.error && props.meta.touched}
                         helperText={
                             props.meta.error && props.meta.touched
@@ -64,30 +58,6 @@ export const tableConfig: TableColumnProps<RowProps>[] = [
                         disabled={row.isLoading}
                         fullWidth
                     />
-                )}
-            </Field>
-        ),
-    },
-    {
-        label: "Move To Shipment",
-        render: (row) => (
-            <Field name="moveToShipment" type="select">
-                {({ input }) => (
-                    <FormControl disabled={row.isLoading} fullWidth>
-                        <Select {...input} variant="standard">
-                            <MenuItem value="">None</MenuItem>
-                            <Divider />
-                            {row.shipments.map((shipment, index) => (
-                                <MenuItem
-                                    key={shipment._id}
-                                    value={shipment._id}
-                                >
-                                    {index}
-                                </MenuItem>
-                            ))}
-                            <MenuItem value="new">New Shipment</MenuItem>
-                        </Select>
-                    </FormControl>
                 )}
             </Field>
         ),

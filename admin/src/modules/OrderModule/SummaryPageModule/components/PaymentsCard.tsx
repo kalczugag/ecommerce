@@ -1,5 +1,5 @@
 import CapturePaymentDialog from "./CapturePaymentDialog";
-import DetailCard from "./DetailCard";
+import DetailCard from "@/components/DetailCard";
 import type { Order } from "@/types/Order";
 
 interface PaymentsCardProps {

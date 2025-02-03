@@ -12,6 +12,7 @@ interface ContactProps extends HTMLAttributes<HTMLDivElement> {
         phone?: string;
     };
     actionButton?: ReactNode;
+    additionalInfo?: ReactNode;
 }
 
 const Contact = ({
@@ -19,6 +20,7 @@ const Contact = ({
     address,
     contact,
     actionButton,
+    additionalInfo,
     ...rest
 }: ContactProps) => {
     const formattedLabel = label && <h4 className="font-semibold">{label}</h4>;
@@ -78,6 +80,7 @@ const Contact = ({
                     </div>
                 </div>
             )}
+            {additionalInfo && <div className="mt-4">{additionalInfo}</div>}
             {actionButton && <div className="mt-4">{actionButton}</div>}
         </div>
     );

@@ -11,6 +11,9 @@ import SplitShipment from "@/modules/OrderModule/ShipmentsPageModule/tabs/SplitS
 import type { Manage, ManageAction } from "@/modules/ManageModule/types/Manage";
 import type { Order } from "@/types/Order";
 import ShipItems from "@/modules/OrderModule/ShipmentsPageModule/tabs/ShipItems";
+import AddProduct from "@/modules/OrderModule/ItemsPageModule/tabs/AddProduct";
+
+type EnhancedData = Order & ManageAction;
 
 export const config: Manage[] = [
     {
@@ -26,7 +29,7 @@ export const config: Manage[] = [
     {
         key: "order_shipments",
         label: "Shipments",
-        element: ({ handleSubTabChange, ...rest }: Order & ManageAction) => (
+        element: ({ handleSubTabChange, ...rest }: EnhancedData) => (
             <ShipmentsPage
                 data={rest}
                 handleSubTabChange={handleSubTabChange}
@@ -36,10 +39,7 @@ export const config: Manage[] = [
             {
                 key: "shipments_split",
                 label: "Split Shipment",
-                element: ({
-                    handleSubTabChange,
-                    ...rest
-                }: Order & ManageAction) => (
+                element: ({ handleSubTabChange, ...rest }: EnhancedData) => (
                     <SplitShipment
                         data={rest}
                         handleSubTabChange={handleSubTabChange}
@@ -49,10 +49,7 @@ export const config: Manage[] = [
             {
                 key: "shipments_ship",
                 label: "Ship Items",
-                element: ({
-                    handleSubTabChange,
-                    ...rest
-                }: Order & ManageAction) => (
+                element: ({ handleSubTabChange, ...rest }: EnhancedData) => (
                     <ShipItems
                         data={rest}
                         handleSubTabChange={handleSubTabChange}
@@ -64,7 +61,21 @@ export const config: Manage[] = [
     {
         key: "order_items",
         label: "Items",
-        element: (props: Order) => <ItemsPage data={props} />,
+        element: ({ handleSubTabChange, ...rest }: EnhancedData) => (
+            <ItemsPage data={rest} handleSubTabChange={handleSubTabChange} />
+        ),
+        subTabs: [
+            {
+                key: "items_add",
+                label: "Add Product",
+                element: ({ handleSubTabChange, ...rest }: EnhancedData) => (
+                    <AddProduct
+                        data={rest}
+                        handleSubTabChange={handleSubTabChange}
+                    />
+                ),
+            },
+        ],
     },
     {
         key: "order_returns",

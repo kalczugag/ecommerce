@@ -73,6 +73,7 @@ const CapturePaymentDialog = ({ data }: CapturePaymentDialogProps) => {
                                 </DialogContentText>
                                 <Field
                                     name="amount"
+                                    type="select"
                                     validate={compose(
                                         required,
                                         minValue(0),

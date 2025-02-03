@@ -2,8 +2,8 @@ import { processShipments } from "@/utils/processShipments";
 import { Divider, useMediaQuery } from "@mui/material";
 import { InsertPageBreak } from "@mui/icons-material";
 import Table from "@/components/Table";
-import DetailCard from "../SummaryPageModule/components/DetailCard";
-import PaperCard, { PaperCardProps } from "./components/PaperCard";
+import DetailCard from "@/components/DetailCard";
+import PaperCard, { PaperCardProps } from "@/components/PaperCard";
 import ShipmentActions from "./components/ShipmentActions";
 import ShipmentMethod from "./components/ShipmentMethod";
 import ShipmentContacts from "./components/ShipmentContacts";
@@ -17,7 +17,7 @@ interface ShipmentsPageProps extends ManageAction {
 
 const config: PaperCardProps[] = [
     {
-        label: "Print for this shipment",
+        description: "Print for this shipment",
         elements: [
             {
                 label: "Packing Slip",
@@ -32,7 +32,7 @@ const config: PaperCardProps[] = [
         ],
     },
     {
-        label: "Make changes to this shipment",
+        description: "Make changes to this shipment",
         elements: [
             {
                 label: "Add Product",
@@ -77,7 +77,7 @@ const ShipmentsPage = ({ data, handleSubTabChange }: ShipmentsPageProps) => {
             {shipments.map((shipment, index) => (
                 <DetailCard
                     key={shipment._id}
-                    index={index}
+                    defaultExpanded={index === 0 && true}
                     label={shipmentLabel}
                     variant="accordion"
                 >
@@ -139,8 +139,8 @@ const ShipmentsPage = ({ data, handleSubTabChange }: ShipmentsPageProps) => {
                             <div className="flex flex-row space-x-6 lg:flex-col lg:space-x-0 lg:space-y-6">
                                 {config.map((item) => (
                                     <PaperCard
-                                        key={item.label}
-                                        label={item.label}
+                                        key={item.description}
+                                        description={item.description}
                                         elements={item.elements}
                                     />
                                 ))}
