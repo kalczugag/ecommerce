@@ -41,6 +41,7 @@ const DetailCard = ({
             {variant === "accordion" ? (
                 <>
                     <button
+                        type="button"
                         className="flex justify-between items-center text-lg bg-gray-200 p-3"
                         onClick={handleClick}
                     >

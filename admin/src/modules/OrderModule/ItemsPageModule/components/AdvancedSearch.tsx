@@ -1,14 +1,30 @@
-import { ExpandMore } from "@mui/icons-material";
+import PopperButton, { PopperButtonProps } from "@/components/PopperButton";
 import { Button } from "@mui/material";
 
-const AdvancedSearch = () => {
+interface AdvancedSearchProps {
+    form: any;
+    handleBack: () => void;
+}
+
+const config: PopperButtonProps["elements"] = [
+    {
+        label: "All Products",
+    },
+    {
+        label: "Products with public visibility",
+    },
+];
+
+const AdvancedSearch = ({ form, handleBack }: AdvancedSearchProps) => {
     return (
-        <div className="flex justify-center space-x-1">
-            <Button variant="outlined">Cancel</Button>
-            <Button variant="contained" endIcon={<ExpandMore />}>
-                Search
+        <div className="flex justify-end space-x-1">
+            <Button variant="outlined" onClick={handleBack}>
+                Cancel
             </Button>
-            <Button variant="outlined">Reset</Button>
+            <PopperButton elements={config}>Search</PopperButton>
+            <Button variant="outlined" onClick={form.reset}>
+                Reset
+            </Button>
         </div>
     );
 };

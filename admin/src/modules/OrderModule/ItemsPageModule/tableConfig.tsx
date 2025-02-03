@@ -37,7 +37,6 @@ export const tableConfig: TableColumnProps<RowProps>[] = [
     },
     {
         label: "Actions",
-
         render: (row) => (
             <div className="flex justify-end">
                 <IconButton>
