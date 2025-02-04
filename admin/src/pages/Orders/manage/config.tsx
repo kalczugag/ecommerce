@@ -70,7 +70,7 @@ export const config: Manage[] = [
                 label: "Add Product",
                 element: ({ handleSubTabChange, ...rest }: EnhancedData) => (
                     <AddProduct
-                        data={rest}
+                        orderData={rest}
                         handleSubTabChange={handleSubTabChange}
                     />
                 ),

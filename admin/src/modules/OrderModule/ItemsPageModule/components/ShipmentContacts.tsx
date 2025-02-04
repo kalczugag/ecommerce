@@ -9,7 +9,7 @@ interface ShipmentContactsProps {
 
 const ShipmentContacts = ({ billTo, shipTo, user }: ShipmentContactsProps) => {
     return (
-        <div className="flex-1 flex justify-between">
+        <div className="flex-1 flex space-x-2 justify-between">
             <Contact
                 label="Bill To"
                 address={billTo}

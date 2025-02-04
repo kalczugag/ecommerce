@@ -1,14 +1,11 @@
+import AddProductDialog from "../../components/AddProductDialog";
 import type { TableColumnProps } from "@/modules/CrudModule";
-import { IconButton, TextField } from "@mui/material";
-import { Add } from "@mui/icons-material";
-import { Field, Form } from "react-final-form";
-import { compose, maxValue, minValue, required } from "@/utils/validators";
 import type { Product } from "@/types/Product";
+import type { Shipment } from "@/types/Order";
 
 interface RowProps extends Product {
-    handleAddProduct: (values: any) => void;
-    submitForm: any;
     isLoading: boolean;
+    shipments: Shipment[];
 }
 
 export const tableConfig: TableColumnProps<RowProps>[] = [
@@ -26,63 +23,12 @@ export const tableConfig: TableColumnProps<RowProps>[] = [
     },
     {
         label: "Quantity",
-        render: (row) => (
-            <Form
-                onSubmit={row.handleAddProduct}
-                render={({ handleSubmit, form }) => {
-                    row.submitForm = form.submit;
-
-                    return (
-                        <form onSubmit={handleSubmit}>
-                            <Field
-                                name={`${row._id}.quantity`}
-                                validate={compose(
-                                    required,
-                                    minValue(1),
-                                    maxValue(row.quantity || 1)
-                                )}
-                            >
-                                {(props) => (
-                                    <TextField
-                                        {...props.input}
-                                        type="number"
-                                        variant="standard"
-                                        slotProps={{
-                                            htmlInput: {
-                                                max: row.quantity,
-                                                min: 1,
-                                            },
-                                        }}
-                                        error={
-                                            props.meta.error &&
-                                            props.meta.touched
-                                        }
-                                        helperText={
-                                            props.meta.error &&
-                                            props.meta.touched
-                                                ? props.meta.error
-                                                : null
-                                        }
-                                        disabled={row.isLoading}
-                                        fullWidth
-                                    />
-                                )}
-                            </Field>
-                        </form>
-                    );
-                }}
-            />
-        ),
+        render: (row) => `${row.quantity} pcs.`,
     },
     {
         label: "Add Item",
-        render: (row) => (
-            <IconButton
-                onClick={() => row.submitForm?.()}
-                disabled={row.isLoading}
-            >
-                <Add />
-            </IconButton>
+        render: ({ shipments, ...rest }) => (
+            <AddProductDialog data={rest} shipments={shipments} />
         ),
     },
 ];

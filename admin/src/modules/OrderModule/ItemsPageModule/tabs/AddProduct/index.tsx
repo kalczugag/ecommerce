@@ -10,26 +10,22 @@ import usePagination from "@/hooks/usePagination";
 import { useGetAllProductsQuery } from "@/store";
 
 interface AddProductProps extends ManageAction {
-    data: Order;
+    orderData: Order;
 }
 
-const AddProduct = ({ handleSubTabChange }: AddProductProps) => {
+const AddProduct = ({ orderData, handleSubTabChange }: AddProductProps) => {
     const [pagination] = usePagination();
 
     const { data, isFetching } = useGetAllProductsQuery(pagination);
-
-    const handleAddProduct = (values: any) => {
-        console.log(values);
-    };
 
     const handleSearch = (values: any) => {
         console.log(values);
     };
 
     const enhancedTableData = data?.data
-        ? data.data.map((row) => ({
+        ? data?.data.map((row) => ({
               ...row,
-              handleAddProduct,
+              shipments: orderData._shipment,
           }))
         : data?.data;
 

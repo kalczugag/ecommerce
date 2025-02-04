@@ -10,6 +10,7 @@ import {
     DialogTitle,
     FormControl,
     FormControlLabel,
+    InputAdornment,
     Radio,
     RadioGroup,
     TextField,
@@ -85,6 +86,15 @@ const CapturePaymentDialog = ({ data }: CapturePaymentDialogProps) => {
                                             {...props.input}
                                             type="number"
                                             label="Capture amount"
+                                            slotProps={{
+                                                input: {
+                                                    startAdornment: (
+                                                        <InputAdornment position="start">
+                                                            $
+                                                        </InputAdornment>
+                                                    ),
+                                                },
+                                            }}
                                             error={
                                                 props.meta.error &&
                                                 props.meta.touched

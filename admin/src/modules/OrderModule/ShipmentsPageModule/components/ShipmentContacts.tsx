@@ -16,7 +16,7 @@ const ShipmentContacts = ({
     onEditAddress,
 }: ShipmentContactsProps) => {
     return (
-        <div className="flex-1 flex justify-between">
+        <div className="flex-1 space-x-2 flex justify-between">
             <Contact label="Ship From" address={shipFrom} className="w-full" />
             <Contact
                 label="Ship To"
