@@ -19,8 +19,8 @@ interface RowProps extends Item {
 
 export const tableConfig: TableColumnProps<RowProps>[] = [
     {
-        label: "id",
-        render: (row) => row._id,
+        label: "SKU",
+        render: (row) => row._product.sku,
     },
     {
         label: "item",

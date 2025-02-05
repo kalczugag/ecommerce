@@ -1,17 +1,15 @@
 import AddProductDialog from "../../components/AddProductDialog";
 import type { TableColumnProps } from "@/modules/CrudModule";
 import type { Product } from "@/types/Product";
-import type { Shipment } from "@/types/Order";
 
 interface RowProps extends Product {
     isLoading: boolean;
-    shipments: Shipment[];
 }
 
 export const tableConfig: TableColumnProps<RowProps>[] = [
     {
-        label: "id",
-        render: (row) => row._id,
+        label: "SKU",
+        render: (row) => row.sku,
     },
     {
         label: "item",
@@ -27,8 +25,6 @@ export const tableConfig: TableColumnProps<RowProps>[] = [
     },
     {
         label: "Add Item",
-        render: ({ shipments, ...rest }) => (
-            <AddProductDialog data={rest} shipments={shipments} />
-        ),
+        render: (row) => <AddProductDialog data={row} />,
     },
 ];

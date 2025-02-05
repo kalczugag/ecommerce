@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Field, Form } from "react-final-form";
 import { compose, maxValue, minValue, required } from "@/utils/validators";
 import { useGetDeliveryMethodsQuery } from "@/store/apis/deliveryMethods";
+import { deliveryMethods } from "@/constants/deliveryMethods";
 import {
     Button,
     Dialog,
@@ -22,8 +23,6 @@ import {
 } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import type { Product } from "@/types/Product";
-import type { Shipment } from "@/types/Order";
-import { deliveryMethods } from "@/constants/deliveryMethods";
 
 interface AddProductDialogProps {
     data: Product;
@@ -253,10 +252,18 @@ const AddProductDialog = ({ data }: AddProductDialogProps) => {
                                 </div>
                             </DialogContent>
                             <DialogActions>
-                                <Button onClick={handleClose} color="info">
+                                <Button
+                                    onClick={handleClose}
+                                    color="info"
+                                    disabled={isLoading}
+                                >
                                     Cancel
                                 </Button>
-                                <Button type="submit" color="info">
+                                <Button
+                                    type="submit"
+                                    color="info"
+                                    disabled={isLoading}
+                                >
                                     Add Product
                                 </Button>
                             </DialogActions>

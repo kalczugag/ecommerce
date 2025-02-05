@@ -7,7 +7,6 @@ interface Item {
     _order?: string | Order;
     _product: Product;
     name: string;
-    sku?: string;
     color?: string;
     size?: string;
     unitPrice: number;

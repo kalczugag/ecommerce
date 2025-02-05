@@ -4,49 +4,48 @@ import {
     InputLabel,
     MenuItem,
     Select,
+    TextField,
 } from "@mui/material";
 import { Field } from "react-final-form";
 
-const config = [
-    {
-        key: "title",
-        label: "Name",
-    },
-    {
-        key: "category",
-        label: "Category",
-    },
-    {
-        key: "id",
-        label: "ID",
-    },
-    {
-        key: "brand",
-        label: "Brand",
-    },
-];
-
 const SearchProducts = () => {
     return (
-        <div className="grid grid-cols-2 gap-4">
-            {config.map(({ key, label }) => (
-                <Field key={key} name={key} type="select">
+        <div className="flex flex-row justify-between">
+            <div className="flex-1 flex flex-col space-y-4">
+                <Field name="title">
+                    {({ input }) => <TextField {...input} label="Title" />}
+                </Field>
+                <Field name="sku">
+                    {({ input }) => <TextField {...input} label="SKU" />}
+                </Field>
+            </div>
+
+            <Divider orientation="vertical" sx={{ marginX: 4 }} flexItem />
+
+            <div className="flex-1 flex flex-col space-y-4">
+                <Field name="category" type="select">
                     {({ input }) => (
                         <FormControl fullWidth>
-                            <InputLabel>{label}</InputLabel>
-                            <Select label={label} {...input}>
+                            <InputLabel>Category</InputLabel>
+                            <Select label="Category" {...input}>
                                 <MenuItem value="">None</MenuItem>
                                 <Divider />
-                                <MenuItem value={1}>1</MenuItem>
-                                <MenuItem value={2}>2</MenuItem>
-                                <MenuItem value={3}>3</MenuItem>
-                                <MenuItem value={4}>4</MenuItem>
-                                <MenuItem value={5}>5</MenuItem>
                             </Select>
                         </FormControl>
                     )}
                 </Field>
-            ))}
+                <Field name="brand" type="select">
+                    {({ input }) => (
+                        <FormControl fullWidth>
+                            <InputLabel>Category</InputLabel>
+                            <Select label="Category" {...input}>
+                                <MenuItem value="">None</MenuItem>
+                                <Divider />
+                            </Select>
+                        </FormControl>
+                    )}
+                </Field>
+            </div>
         </div>
     );
 };
