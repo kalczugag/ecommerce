@@ -18,7 +18,7 @@ const SplitShipment = ({ data, handleSubTabChange }: SplitShipmentProps) => {
     }));
 
     const handleSubmit = (values: any) => {
-        console.log(values);
+        console.log(values); // values.price need to be parsed to float
     };
 
     return (
