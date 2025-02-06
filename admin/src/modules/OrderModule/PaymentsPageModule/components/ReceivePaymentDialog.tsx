@@ -1,21 +1,20 @@
 import { useState } from "react";
 import { Field, Form } from "react-final-form";
-import { required, minValue, maxValue, compose } from "@/utils/validators";
 import {
     Button,
+    Checkbox,
     Dialog,
     DialogActions,
     DialogContent,
     DialogContentText,
     DialogTitle,
-    FormControl,
     FormControlLabel,
     InputAdornment,
-    Radio,
-    RadioGroup,
     TextField,
 } from "@mui/material";
 import type { Payment } from "@/types/Order";
+import { CalendarMonth } from "@mui/icons-material";
+import moment from "moment";
 
 interface ReceivePaymentDialogProps {
     data: Payment;
@@ -47,7 +46,11 @@ const ReceivePaymentDialog = ({ data }: ReceivePaymentDialogProps) => {
                 <Form
                     initialValues={{
                         amount: data.amount.toFixed(2),
+                        paymentDate: moment(data.createdAt).format(
+                            "YYYY-MM-DD"
+                        ),
                         leaveAuthorizationOpen: true,
+                        privateNote: true,
                     }}
                     onSubmit={handleSubmit}
                     render={({ handleSubmit }) => (
@@ -59,100 +62,45 @@ const ReceivePaymentDialog = ({ data }: ReceivePaymentDialogProps) => {
                                 </DialogContentText>
                             </DialogContent>
                             <DialogContent className="space-y-4">
-                                <DialogContentText>
-                                    <span className="font-semibold">
-                                        Authorization for:{" "}
-                                    </span>
-                                    <span>${data.amount.toFixed(2)}</span>
-                                </DialogContentText>
-                                <DialogContentText>
-                                    <span className="font-semibold">
-                                        Order balance:{" "}
-                                    </span>
-                                    <span>${data.amount.toFixed(2)}</span>
-                                </DialogContentText>
-                                <Field
-                                    name="amount"
-                                    type="select"
-                                    validate={compose(
-                                        required,
-                                        minValue(0),
-                                        maxValue(data.amount)
-                                    )}
-                                >
+                                <Field name="paymentDate" type="date">
                                     {(props) => (
                                         <TextField
                                             {...props.input}
-                                            type="number"
-                                            label="Capture amount"
+                                            type="date"
+                                            label="Date of Payment"
                                             slotProps={{
+                                                inputLabel: {
+                                                    shrink: true,
+                                                },
                                                 input: {
+                                                    readOnly: true,
                                                     startAdornment: (
                                                         <InputAdornment position="start">
-                                                            $
+                                                            <CalendarMonth />
                                                         </InputAdornment>
                                                     ),
                                                 },
                                             }}
-                                            error={
-                                                props.meta.error &&
-                                                props.meta.touched
-                                            }
-                                            helperText={
-                                                props.meta.error &&
-                                                props.meta.touched
-                                                    ? props.meta.error
-                                                    : null
-                                            }
+                                            fullWidth
                                         />
                                     )}
                                 </Field>
                                 <DialogContentText>
-                                    <span className="font-semibold">
-                                        Additional Capture Option:
-                                    </span>
+                                    <div>
+                                        <span className="font-semibold">
+                                            Payment Method:{" "}
+                                        </span>
+                                        <span>Visa ***9</span>
+                                    </div>
                                 </DialogContentText>
-                                <FormControl component="fieldset">
-                                    <Field name="leaveAuthorizationOpen">
-                                        {({ input }) => (
-                                            <RadioGroup
-                                                value={input.value}
-                                                onChange={(event) => {
-                                                    const value =
-                                                        event.target.value ===
-                                                        "true";
-                                                    input.onChange(value);
-                                                }}
-                                                className="space-y-2"
-                                            >
-                                                <div>
-                                                    <FormControlLabel
-                                                        value="true"
-                                                        control={<Radio />}
-                                                        label="Yes, leave authorization open"
-                                                    />
-                                                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                                                        Option to capture
-                                                        additional funds on this
-                                                        authorization.
-                                                    </p>
-                                                </div>
-                                                <div>
-                                                    <FormControlLabel
-                                                        value="false"
-                                                        control={<Radio />}
-                                                        label="No, do not leave authorization open"
-                                                    />
-                                                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                                                        No additional capture is
-                                                        needed from this
-                                                        authorization
-                                                    </p>
-                                                </div>
-                                            </RadioGroup>
-                                        )}
-                                    </Field>
-                                </FormControl>
+                                <DialogContentText>
+                                    <div>
+                                        <span className="font-semibold">
+                                            Amount:{" "}
+                                        </span>
+                                        <span>${data.amount.toFixed(2)}</span>
+                                    </div>
+                                </DialogContentText>
                                 <DialogContentText>
                                     <span className="font-semibold">
                                         Payment Note
@@ -162,10 +110,19 @@ const ReceivePaymentDialog = ({ data }: ReceivePaymentDialogProps) => {
                                     {({ input }) => (
                                         <TextField
                                             {...input}
-                                            placeholder="Enter a private note about this transaction."
+                                            placeholder="Enter a note about this transaction."
                                             rows={3}
                                             multiline
                                             fullWidth
+                                        />
+                                    )}
+                                </Field>
+                                <Field name="privateNote" type="checkbox">
+                                    {({ input }) => (
+                                        <FormControlLabel
+                                            {...input}
+                                            label="Make this comment private"
+                                            control={<Checkbox />}
                                         />
                                     )}
                                 </Field>

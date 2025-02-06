@@ -1,5 +1,5 @@
 import moment from "moment";
-import { Button, Divider } from "@mui/material";
+import { Button, Divider, useMediaQuery } from "@mui/material";
 import DetailCard from "@/components/DetailCard";
 import ReceivePaymentDialog from "./components/ReceivePaymentDialog";
 import type { Order } from "@/types/Order";
@@ -11,13 +11,15 @@ interface PaymentsPageProps {
 const PaymentsPage = ({ data }: PaymentsPageProps) => {
     const numOfPayments = 1; // in future this will be dynamic
 
+    const isMobile = useMediaQuery("(max-width: 768px)");
+
     return (
         <DetailCard
             variant="accordion"
             label={`Payment #${numOfPayments}`}
             defaultExpanded
         >
-            <div className="flex flex-row justify-between">
+            <div className="flex flex-col space-y-6 md:space-y-0 md:flex-row md:justify-between">
                 <div className="flex-1 flex flex-col space-y-4">
                     <div>
                         <span className="font-bold">Date: </span>
@@ -39,7 +41,11 @@ const PaymentsPage = ({ data }: PaymentsPageProps) => {
                     </div>
                 </div>
 
-                <Divider orientation="vertical" sx={{ marginX: 4 }} flexItem />
+                <Divider
+                    orientation={isMobile ? "horizontal" : "vertical"}
+                    flexItem
+                    sx={isMobile ? { marginY: 4 } : { marginX: 4 }}
+                />
 
                 <div className="flex-1 flex flex-col space-y-4">
                     <div>
