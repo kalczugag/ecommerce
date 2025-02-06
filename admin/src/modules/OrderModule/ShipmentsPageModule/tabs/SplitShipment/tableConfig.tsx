@@ -9,7 +9,6 @@ import {
     Select,
     TextField,
 } from "@mui/material";
-import { compose, maxValue, minValue, required } from "@/utils/validators";
 
 interface RowProps extends Item {
     shipments: Shipment[];
@@ -41,26 +40,13 @@ export const tableConfig: TableColumnProps<RowProps>[] = [
     {
         label: "Quantity To Move",
         render: (row) => (
-            <Field
-                name="quantityToMove"
-                validate={compose(
-                    required,
-                    minValue(1),
-                    maxValue(row.quantity)
-                )}
-            >
+            <Field name={`${row._id}.quantityToMove`}>
                 {(props) => (
                     <TextField
                         {...props.input}
                         type="number"
                         variant="standard"
                         slotProps={{ htmlInput: { max: row.quantity, min: 1 } }}
-                        error={props.meta.error && props.meta.touched}
-                        helperText={
-                            props.meta.error && props.meta.touched
-                                ? props.meta.error
-                                : null
-                        }
                         disabled={row.isLoading}
                         fullWidth
                     />
@@ -71,7 +57,7 @@ export const tableConfig: TableColumnProps<RowProps>[] = [
     {
         label: "Move To Shipment",
         render: (row) => (
-            <Field name="moveToShipment" type="select">
+            <Field name={`${row._id}.moveToShipment`} type="select">
                 {({ input }) => (
                     <FormControl disabled={row.isLoading} fullWidth>
                         <Select {...input} variant="standard">

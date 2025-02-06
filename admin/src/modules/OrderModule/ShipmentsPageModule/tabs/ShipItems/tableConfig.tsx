@@ -35,26 +35,13 @@ export const tableConfig: TableColumnProps<RowProps>[] = [
     {
         label: "Quantity To Ship",
         render: (row) => (
-            <Field
-                name="quantityToShip"
-                validate={compose(
-                    required,
-                    minValue(0),
-                    maxValue(row.quantity)
-                )}
-            >
+            <Field name={`${row._id}.quantityToShip`}>
                 {(props) => (
                     <TextField
                         {...props.input}
                         type="number"
                         variant="standard"
                         slotProps={{ htmlInput: { max: row.quantity, min: 0 } }}
-                        error={props.meta.error && props.meta.touched}
-                        helperText={
-                            props.meta.error && props.meta.touched
-                                ? props.meta.error
-                                : null
-                        }
                         disabled={row.isLoading}
                         fullWidth
                     />
