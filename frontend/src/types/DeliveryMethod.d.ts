@@ -29,7 +29,8 @@ export interface Provider {
     _id?: stiring;
     name: string;
     price: number;
-    estimatedDeliveryTime?: string;
+    estimatedDeliveryTimeMin: number;
+    estimatedDeliveryTimeMax: number;
     additionalNotes?: any;
     isAvailable?: boolean;
 }

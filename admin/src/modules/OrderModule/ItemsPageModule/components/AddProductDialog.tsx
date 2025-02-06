@@ -76,8 +76,8 @@ const AddProductDialog = ({ data }: AddProductDialogProps) => {
                                     <span>{data.title}</span>
                                 </div>
                                 <div>
-                                    <span className="font-semibold">ID: </span>
-                                    <span>{data._id}</span>
+                                    <span className="font-semibold">SKU: </span>
+                                    <span>{data.sku}</span>
                                 </div>
                             </DialogContent>
                             <DialogContent className="flex flex-row justify-between">

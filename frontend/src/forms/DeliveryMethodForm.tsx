@@ -45,6 +45,8 @@ const DeliveryMethodForm = ({
     orderDeliveryCost,
     isLoading,
 }: DeliveryMethodFormProps) => {
+    console.log(content);
+
     return (
         <FormControl disabled={isLoading}>
             <div className="space-y-4">
@@ -118,9 +120,10 @@ const DeliveryMethodForm = ({
                                                     <p>
                                                         {`
                                                         ${
-                                                            provider.estimatedDeliveryTime
-                                                        } 
-                                                        ${
+                                                            provider.estimatedDeliveryTimeMin
+                                                        } - ${
+                                                            provider.estimatedDeliveryTimeMax
+                                                        } days ${
                                                             method.type ===
                                                             "locker_delivery"
                                                                 ? "at point"
