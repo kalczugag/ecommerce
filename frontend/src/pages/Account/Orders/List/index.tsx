@@ -23,11 +23,7 @@ const OrdersList = () => {
 
     return (
         <>
-            <ReadOrderListModule
-                userId={userId || ""}
-                status={status}
-                handleFilter={handleFilter}
-            />
+            <ReadOrderListModule userId={userId || ""} status={status} />
         </>
     );
 };

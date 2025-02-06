@@ -17,6 +17,7 @@ export default {
 
                 "text-dark": "#e5e5e5",
                 "text-light": "#28292b",
+                "text-blue": "#115293",
 
                 "hover-light-primary": "#272727",
                 "hover-light-secondary": "#3D3D3D",

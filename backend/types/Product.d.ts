@@ -4,6 +4,7 @@ import type { FeaturedCampaign } from "./FeaturedCampaign";
 
 export interface Product {
     _id?: string;
+    sku: string;
     imageUrl: string[];
     brand: string;
     title: string;

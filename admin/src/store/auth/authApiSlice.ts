@@ -11,6 +11,7 @@ type AuthResult = {
 export type LoginInput = {
     email: string;
     password: string;
+    recaptcha?: string;
 };
 
 export type RegisterInput = {
@@ -18,6 +19,7 @@ export type RegisterInput = {
     lastName: string;
     email: string;
     password: string;
+    recaptcha?: string;
 };
 
 export const authApiSlice = apiSlice.injectEndpoints({

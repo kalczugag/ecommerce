@@ -62,6 +62,7 @@ const CampaignsList = ({ isToken }: CampaignsListProps) => {
 
                     return (
                         <InfiniteCarousel
+                            key={campaign._id}
                             name={campaign?.name}
                             description={campaign?.description}
                             content={products || []}

@@ -1,17 +1,5 @@
 import Joi from "joi";
 
-const itemSchema = Joi.object({
-    _order: Joi.string().optional(),
-    _product: Joi.string().required(),
-    name: Joi.string().required(),
-    sku: Joi.string().optional(),
-    color: Joi.string().optional(),
-    size: Joi.string().optional(),
-    unitPrice: Joi.number().positive().required(),
-    quantity: Joi.number().integer().positive().required(),
-    total: Joi.number().positive().required(),
-});
-
 const shippingAddressSchema = Joi.object({
     street: Joi.string().required(),
     city: Joi.string().required(),
@@ -19,6 +7,20 @@ const shippingAddressSchema = Joi.object({
     postalCode: Joi.string().required(),
     country: Joi.string().required(),
 }).optional();
+
+const shipmentSchema = Joi.object({
+    _order: Joi.string().required(),
+    shipFrom: shippingAddressSchema,
+    shipTo: shippingAddressSchema,
+    status: Joi.string().valid("pending", "shipped", "delivered"),
+    _deliveryMethod: Joi.string().required(),
+    itemsDelivered: Joi.number().integer().min(0).max(100),
+    actualDeliveryDate: Joi.date().optional(),
+    trackingNumber: Joi.string().optional(),
+    shippingCost: Joi.number().required(),
+    deliverySignature: Joi.boolean().optional(),
+    deliveryNotes: Joi.string().optional(),
+});
 
 const schema = Joi.object({
     _user: Joi.string().required(),
@@ -37,11 +39,9 @@ const schema = Joi.object({
     subTotal: Joi.number().positive().required(),
     tax: Joi.number().min(0).max(100),
     discount: Joi.number().min(0).max(100),
-    deliveryCost: Joi.number().min(0).required(),
     total: Joi.number().positive().required(),
     _payment: Joi.string(),
-    trackingNumber: Joi.string().optional(),
-    _deliveryMethod: Joi.string().optional(),
+    _shipment: Joi.array().items(shipmentSchema).optional(),
 });
 
 export default schema;

@@ -7,7 +7,6 @@ interface Item {
     _order?: string | Order;
     _product: Product;
     name: string;
-    sku?: string;
     color?: string;
     size?: string;
     unitPrice: number;
@@ -37,6 +36,23 @@ interface Payment {
     updatedAt?: Date;
 }
 
+interface Shipment {
+    _id?: string;
+    _order: string | Order;
+    shipFrom: ShippingAddress;
+    shipTo: ShippingAddress;
+    status: "pending" | "shipped" | "delivered";
+    _deliveryMethod: DeliveryMethod;
+    itemsDelivered: number;
+    actualDeliveryDate?: Date;
+    trackingNumber?: string;
+    shippingCost: number;
+    deliverySignature?: boolean;
+    deliveryNotes?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+}
+
 interface Order {
     _id?: string;
     _user: User;
@@ -54,13 +70,11 @@ interface Order {
     subTotal: number;
     tax: number;
     discount: number;
-    deliveryCost: number;
     total: number;
     _payment?: Payment;
-    trackingNumber?: string;
-    _deliveryMethod: DeliveryMethod;
-    createdAt?: Date;
-    updatedAt?: Date;
+    _shipment: Shipment[];
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 interface ReturnOrder {
@@ -77,4 +91,4 @@ interface ReturnOrder {
     updatedAt?: Date;
 }
 
-export { Item, ShippingAddress, Payment, Order, ReturnOrder };
+export { Item, ShippingAddress, Shipment, Payment, Order, ReturnOrder };

@@ -11,13 +11,13 @@ interface RowProps extends Product {
 export const sortConfig: SortConfigProps[] = [
     {
         label: "Category",
-        criteria: "secondLevelCategory.name",
+        criteria: "topLevelCategory.name",
         items: [
             {
-                label: "Dresses",
-                value: "Dresses",
+                label: "Men",
+                value: "Men",
             },
-            { label: "Boots", value: "Boots" },
+            { label: "Women", value: "Women" },
         ],
     },
     {

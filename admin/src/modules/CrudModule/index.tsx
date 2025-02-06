@@ -1,9 +1,10 @@
+import { ReactNode } from "react";
 import CrudLayout from "@/layouts/CrudLayout";
 import Table from "@/components/Table";
 
-export interface TableColumnProps {
+export interface TableColumnProps<T = any> {
     label: string;
-    render: (row: any) => JSX.Element | string;
+    render: (row: T) => ReactNode;
 }
 
 interface CrudModuleProps {
@@ -12,6 +13,7 @@ interface CrudModuleProps {
         tableData: any[];
         action?: (arg: string) => void;
         total?: number;
+        bolder?: string;
         isLoading: boolean;
     };
     actionForm: JSX.Element;
@@ -24,6 +26,7 @@ const CrudModule = ({ config, actionForm }: CrudModuleProps) => {
         config?.tableData && config?.action
             ? config.tableData.map((row) => ({
                   ...row,
+                  bolder: config.bolder || false,
                   handleDelete: () => config.action!(row._id),
               }))
             : config?.tableData;

@@ -127,8 +127,7 @@ const CustomPaginationActionsTable = ({
     totalItems = rowData.length,
     isLoading,
 }: CustomPaginationActionsTableProps) => {
-    const [pagination, setPagination] = usePagination();
-    const { skip, limit } = pagination;
+    const [{ skip, limit }, setPagination] = usePagination();
 
     const handleChangePage = (
         event: React.MouseEvent<HTMLButtonElement> | null,

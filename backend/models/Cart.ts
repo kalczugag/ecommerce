@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import { ProductModel } from "./Product";
 import type { Cart } from "../types/Cart";
-import type { Item } from "../types/Order";
+import { ProductModel } from "./Product";
+import { Item } from "../types/Order";
 
 const cartSchema = new mongoose.Schema<Cart>({
     _user: {
@@ -18,7 +18,7 @@ const cartSchema = new mongoose.Schema<Cart>({
     ],
     subTotal: { type: Number, default: 0 },
     discount: { type: Number, default: 0 },
-    deliveryCost: { type: Number, required: true },
+    deliveryCost: { type: Number, required: false, default: 0 },
     total: { type: Number, default: 0 },
 });
 
@@ -27,6 +27,7 @@ cartSchema.pre("save", async function (next) {
 
     cart.subTotal = 0;
     cart.discount = 0;
+    cart.deliveryCost = 0;
 
     for (const item of cart.items as Item[]) {
         const product = await ProductModel.findById(item._product);
@@ -45,12 +46,6 @@ cartSchema.pre("save", async function (next) {
     }
 
     cart.total = cart.subTotal - cart.discount + cart.deliveryCost;
-
-    if (cart.total < 100) {
-        cart.deliveryCost = 5;
-    } else {
-        cart.deliveryCost = 0;
-    }
 
     next();
 });

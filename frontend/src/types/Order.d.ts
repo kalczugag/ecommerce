@@ -37,9 +37,25 @@ interface Payment {
     updatedAt?: Date;
 }
 
+interface Shipment {
+    _order: string | Order;
+    shipFrom: ShippingAddress;
+    shipTo: ShippingAddress;
+    status: "pending" | "shipped" | "delivered";
+    _deliveryMethod: DeliveryMethod | string;
+    itemsDelivered: number;
+    actualDeliveryDate?: Date;
+    trackingNumber?: string;
+    shippingCost?: number;
+    deliverySignature?: boolean;
+    deliveryNotes?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
+}
+
 interface Order {
     _id?: string;
-    _user?: User;
+    _user: User;
     items: Item[];
     status?:
         | "placed"
@@ -49,21 +65,23 @@ interface Order {
         | "canceled"
         | "pending payment"
         | "returned";
-    shippingAddress?: ShippingAddress;
-    billingAddress?: ShippingAddress;
+    shippingAddress: ShippingAddress;
+    billingAddress: ShippingAddress;
     subTotal: number;
-    tax?: number;
+    tax: number;
     discount?: number;
-    deliveryCost?: number;
     total: number;
     _payment?: Payment;
-    trackingNumber?: string;
-    _deliveryMethod?: DeliveryMethod;
+    _shipment: Shipment[];
     createdAt?: Date;
     updatedAt?: Date;
 }
 
-interface AddOrder extends Omit<Order, "items"> {
+interface AddOrder
+    extends Omit<
+        Order,
+        "_user" | "shippingAddress" | "billingAddress" | "tax" | "_shipment"
+    > {
     items: string[];
 }
 
@@ -72,7 +90,17 @@ interface UpdateOrder {
     status?: Order["status"];
     shippingAddress?: Order["shippingAddress"];
     billingAddress?: Order["billingAddress"];
-    _deliveryMethod?: string;
+    _shipment?: Omit<Shipment, "_deliveryMethod" | "status"> & {
+        _deliveryMethod?: string;
+    };
 }
 
-export { Item, ShippingAddress, Payment, Order, AddOrder, UpdateOrder };
+export {
+    Item,
+    Shipment,
+    ShippingAddress,
+    Payment,
+    Order,
+    AddOrder,
+    UpdateOrder,
+};

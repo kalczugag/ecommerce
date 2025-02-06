@@ -17,10 +17,11 @@ import Row from "@/components/Row";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 interface CustomerFormProps {
+    isUpdateForm?: boolean;
     isLoading: boolean;
 }
 
-const CustomerForm = ({ isLoading }: CustomerFormProps) => {
+const CustomerForm = ({ isUpdateForm, isLoading }: CustomerFormProps) => {
     const { data, isSuccess } = useGetRolesQuery();
 
     const [showPassword, setShowPassword] = useState(false);
@@ -170,7 +171,7 @@ const CustomerForm = ({ isLoading }: CustomerFormProps) => {
                 )}
             </Field>
             <Row label="Contact">
-                <Field name="phone" validate={required}>
+                <Field name="phone">
                     {(props) => (
                         <TextField
                             label="Phone"
@@ -208,7 +209,10 @@ const CustomerForm = ({ isLoading }: CustomerFormProps) => {
                 </Field>
             </Row>
             <Row label="Security">
-                <Field name="password" validate={required}>
+                <Field
+                    name="password"
+                    validate={isUpdateForm ? undefined : required}
+                >
                     {(props) => (
                         <FormControl variant="outlined" fullWidth>
                             <InputLabel

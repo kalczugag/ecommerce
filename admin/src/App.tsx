@@ -11,7 +11,7 @@ import CustomersList from "@/pages/Customers/list";
 import CustomersEdit from "@/pages/Customers/edit";
 import CustomersAdd from "@/pages/Customers/add";
 import OrdersList from "@/pages/Orders/list";
-import OrderDetails from "@/pages/Orders/details";
+import OrdersManage from "@/pages/Orders/manage";
 import CategoriesList from "@/pages/Categories/list";
 import CategoriesEdit from "@/pages/Categories/edit";
 import CategoriesAdd from "@/pages/Categories/add";
@@ -44,7 +44,7 @@ const App = () => {
                     </Route>
                     <Route path="/orders">
                         <Route index element={<OrdersList />} />
-                        <Route path=":id" element={<OrderDetails />} />
+                        <Route path=":id" element={<OrdersManage />} />
                     </Route>
                     <Route path="/categories">
                         <Route index element={<CategoriesList />} />

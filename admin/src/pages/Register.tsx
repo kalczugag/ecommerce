@@ -32,14 +32,16 @@ const Register = () => {
 
     const FormContainer = () => (
         <Form
+            keepDirtyOnReinitialize
             onSubmit={handleRegister}
-            render={({ handleSubmit }) => (
+            render={({ handleSubmit, form }) => (
                 <form onSubmit={handleSubmit} className="space-y-8">
                     <RegisterForm isLoading={isLoading} />
                     <LoadingButton
                         type="submit"
                         variant="contained"
                         loading={isLoading}
+                        disabled={!form.getFieldState("recaptcha")?.value}
                         fullWidth
                     >
                         Sign Up

@@ -2,6 +2,7 @@ import { Category } from "./Category";
 
 export interface Product {
     _id?: string;
+    sku: string;
     imageUrl: string[] | string;
     brand: string;
     title: string;

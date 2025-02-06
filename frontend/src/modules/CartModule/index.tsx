@@ -58,7 +58,6 @@ const CartModule = ({ data, isLoading }: CartModuleProps) => {
 
         const orderPayload = {
             items: productIds!,
-            deliveryCost: data!.deliveryCost,
             subTotal: data!.subTotal,
             discount: data?.discount,
             total: data!.total,

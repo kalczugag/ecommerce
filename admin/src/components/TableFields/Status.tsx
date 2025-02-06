@@ -12,7 +12,7 @@ const Status = ({ status }: StatusProps) => {
             ? "bg-green-700"
             : status === "delivered"
             ? "bg-yellow-700"
-            : status === "cancelled"
+            : status === "canceled"
             ? "bg-red-700"
             : "bg-cyan-700";
 

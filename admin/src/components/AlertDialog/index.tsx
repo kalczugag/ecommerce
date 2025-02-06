@@ -10,7 +10,7 @@ import {
 
 interface AlertDialogProps {
     title: string;
-    content: string | JSX.Element;
+    content: ReactNode;
     confirm: string;
     cancel: string;
     onConfirm: () => void;

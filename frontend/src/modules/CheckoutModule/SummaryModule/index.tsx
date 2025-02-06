@@ -1,6 +1,7 @@
 import { loadStripe } from "@stripe/stripe-js";
 import { useCreatePaymentMutation } from "@/store";
 import { useOrder } from "@/contexts/OrderContext";
+import { processShipments } from "@/utils/processShipments";
 import CartProductItem from "@/modules/CartModule/components/CartProductItem";
 import CheckoutSummary from "@/modules/CartModule/components/CheckoutSummary";
 import Contact from "./components/Contact";
@@ -13,15 +14,18 @@ const stripePromise = loadStripe(
 
 const SummaryModule = () => {
     const { order, isLoading } = useOrder();
+    const { shipmentTotal } = processShipments(order?._shipment || []);
     const [createPayment, { isLoading: paymentLoading }] =
         useCreatePaymentMutation();
+
+    console.log(order);
 
     const cartProps: Cart = {
         _user: order?._user?._id || "",
         items: order?.items || [],
         subTotal: order?.subTotal || 0,
         discount: order?.discount || 0,
-        deliveryCost: order?.deliveryCost || 0,
+        deliveryCost: shipmentTotal,
         total: order?.total || 0,
     };
 
@@ -55,8 +59,7 @@ const SummaryModule = () => {
                         <CartProductItem
                             key={index}
                             data={item}
-                            isLoadingDelete={false}
-                            isLoadingQuantity={false}
+                            isLoading={isLoading}
                             editable={false}
                         />
                     ))}

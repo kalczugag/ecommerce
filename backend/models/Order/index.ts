@@ -1,8 +1,6 @@
 import mongoose from "mongoose";
 import _ from "lodash";
-import { SummaryModel } from "../Summary";
-import { getStartOfThisWeek } from "../../utils/helpers";
-import type { Order, Item } from "../../types/Order";
+import type { Order } from "../../types/Order";
 
 const orderSchema = new mongoose.Schema<Order>(
     {
@@ -48,50 +46,53 @@ const orderSchema = new mongoose.Schema<Order>(
         subTotal: { type: Number, required: true },
         tax: { type: Number, required: false, default: 0 },
         discount: { type: Number, required: true },
-        deliveryCost: { type: Number, required: true },
         total: { type: Number, required: true },
         _payment: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Payment",
             required: false,
         },
-        trackingNumber: { type: String, required: false },
-        _deliveryMethod: {
-            type: mongoose.Types.ObjectId,
-            ref: "DeliveryMethod",
-            required: false,
-        },
+        _shipment: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Shipment",
+                required: false,
+            },
+        ],
     },
     { timestamps: true }
 );
 
 //not actual
-orderSchema.post("save", async (doc) => {
-    try {
-        // const orderTotal =
-        //     doc.subTotal + doc.tax - doc.discount + doc.deliveryCost;
-        // const orderDate = new Date(new Date(doc.get("createdAt")));
-        // const startOfWeek = getStartOfThisWeek();
-        // const totalItems = _.sumBy(doc.items as Item[], "quantity");
-        // const summary = await SummaryModel.findOneAndUpdate(
-        //     {},
-        //     { $setOnInsert: { createdAt: new Date() } },
-        //     { upsert: true, new: true }
-        // );
-        // const isThisWeek = orderDate >= startOfWeek;
-        // summary.orders.total += orderTotal;
-        // summary.orders.count += 1;
-        // summary.orders.itemsCount += totalItems;
-        // // if (doc.paymentStatus === "paid") {
-        // //     summary.orders.paid += orderTotal;
-        // // }
-        // if (isThisWeek) {
-        //     summary.orders.thisWeek += orderTotal;
-        // }
-        // await summary.save();
-    } catch (error) {
-        console.error("Error updating summary after order save:", error);
-    }
-});
+// orderSchema.post("save", async (doc) => {
+//     try {
+//         const orderTotal =
+//             doc.subTotal +
+//             doc.tax -
+//             doc.discount +
+//             (doc._shipment as Shipment).shippingCost;
+//         const orderDate = new Date(new Date(doc.get("createdAt")));
+//         const startOfWeek = getStartOfThisWeek();
+//         const totalItems = _.sumBy(doc.items as Item[], "quantity");
+//         const summary = await SummaryModel.findOneAndUpdate(
+//             {},
+//             { $setOnInsert: { createdAt: new Date() } },
+//             { upsert: true, new: true }
+//         );
+//         const isThisWeek = orderDate >= startOfWeek;
+//         summary.orders.total += orderTotal;
+//         summary.orders.count += 1;
+//         summary.orders.itemsCount += totalItems;
+//         // if (doc.paymentStatus === "paid") {
+//         //     summary.orders.paid += orderTotal;
+//         // }
+//         if (isThisWeek) {
+//             summary.orders.thisWeek += orderTotal;
+//         }
+//         await summary.save();
+//     } catch (error) {
+//         console.error("Error updating summary after order save:", error);
+//     }
+// });
 
 export const OrderModel = mongoose.model("Order", orderSchema);

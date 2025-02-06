@@ -1,10 +1,9 @@
 import { Link } from "react-router-dom";
 import { footerLinks } from "@/constants/footerLinks";
 import { Container, Divider } from "@mui/material";
+import Copyright from "../Copyright";
 
 const Footer = () => {
-    const currYear = new Date().getFullYear();
-
     return (
         <footer className="text-center bg-[#1A1A1A] text-white text-lg mt-auto print:hidden">
             <Container maxWidth="xl" disableGutters>
@@ -26,9 +25,7 @@ const Footer = () => {
                     ))}
                 </div>
                 <Divider sx={{ bgcolor: "gray" }} />
-                <div className="text-sm text-start p-4">
-                    <p>{currYear} &copy; Ecommerce</p>
-                </div>
+                <Copyright />
             </Container>
         </footer>
     );
