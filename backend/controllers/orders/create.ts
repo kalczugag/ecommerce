@@ -1,6 +1,7 @@
 import express from "express";
 import schema from "./schemaValidate";
 import { OrderModel } from "../../models/Order";
+import { NoteModel } from "../../models/Order/Notes";
 import type { Order } from "../../types/Order";
 import type { User } from "../../types/User";
 
@@ -24,6 +25,12 @@ export const createOrder = async (
     }
 
     try {
+        if (order.orderNotes && order.orderNotes.length > 0) {
+            const notes = await NoteModel.insertMany(order.orderNotes);
+
+            order.orderNotes = notes.map((note) => note._id.toString());
+        }
+
         const newOrder = new OrderModel(order);
 
         await newOrder.save();

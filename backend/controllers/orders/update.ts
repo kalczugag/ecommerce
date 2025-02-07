@@ -1,11 +1,10 @@
 import express from "express";
 import { isValidObjectId } from "mongoose";
 import { OrderModel } from "../../models/Order";
-import { CartModel } from "../../models/Cart";
 import { PaymentModel } from "../../models/Order/Payment";
 import { ShipmentModel } from "../../models/Order/Shipment";
+import { processShipments } from "../../utils/processFunctions";
 import type { Order } from "../../types/Order";
-import type { User } from "../../types/User";
 
 export const updateOrder = async (
     req: express.Request<{ id: string }, {}, Order>,
@@ -47,17 +46,13 @@ export const updateOrder = async (
             }
         }
 
-        let shipment;
-        if (updates._shipment) {
-            console.log(updates);
-            shipment = new ShipmentModel(updates._shipment);
-            await shipment.save();
+        let shipmentCost = 0;
+        if (updates.shipments) {
+            const shipments = await ShipmentModel.insertMany(updates.shipments);
+            updates.shipments = shipments;
 
-            if (!Array.isArray(updates._shipment)) {
-                updates._shipment = [];
-            }
-
-            (updates._shipment as string[]).push(shipment._id.toString());
+            const { shipmentTotal } = processShipments(shipments);
+            shipmentCost = shipmentTotal;
         }
 
         const order = await OrderModel.findById(id);
@@ -76,7 +71,7 @@ export const updateOrder = async (
                             order.subTotal -
                             order.discount +
                             order.tax +
-                            shipment?.shippingCost!,
+                            shipmentCost,
                     }),
                 },
             },

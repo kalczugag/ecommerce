@@ -1,6 +1,14 @@
 import mongoose from "mongoose";
 import _ from "lodash";
-import type { Order } from "../../types/Order";
+import type { Order, ShippingAddress } from "../../types/Order";
+
+export const shippingAddressSchema = new mongoose.Schema<ShippingAddress>({
+    street: { type: String, required: false },
+    city: { type: String, required: false },
+    state: { type: String, required: false },
+    postalCode: { type: String, required: false },
+    country: { type: String, required: false },
+});
 
 const orderSchema = new mongoose.Schema<Order>(
     {
@@ -29,33 +37,40 @@ const orderSchema = new mongoose.Schema<Order>(
             ],
             default: "placed",
         },
-        shippingAddress: {
-            street: { type: String, required: false },
-            city: { type: String, required: false },
-            state: { type: String, required: false },
-            postalCode: { type: String, required: false },
-            country: { type: String, required: false },
-        },
-        billingAddress: {
-            street: { type: String, required: false },
-            city: { type: String, required: false },
-            state: { type: String, required: false },
-            postalCode: { type: String, required: false },
-            country: { type: String, required: false },
-        },
+        shippingAddress: shippingAddressSchema,
+        billingAddress: shippingAddressSchema,
         subTotal: { type: Number, required: true },
         tax: { type: Number, required: false, default: 0 },
         discount: { type: Number, required: true },
         total: { type: Number, required: true },
-        _payment: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Payment",
-            required: false,
-        },
-        _shipment: [
+        payments: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Payment",
+                required: false,
+            },
+        ],
+        shipments: [
             {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: "Shipment",
+                required: false,
+            },
+        ],
+        _parentOrder: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Order",
+            required: false,
+        },
+        splitOrders: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Order",
+            required: false,
+        },
+        orderNotes: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Note",
                 required: false,
             },
         ],

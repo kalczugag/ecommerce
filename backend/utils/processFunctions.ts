@@ -1,4 +1,4 @@
-import { Shipment } from "../types/Order";
+import { Payment, Shipment } from "../types/Order";
 
 export const processShipments = (shipments: Shipment[]) => {
     if (!Array.isArray(shipments)) {
@@ -24,4 +24,8 @@ export const processShipments = (shipments: Shipment[]) => {
         shipmentTotal,
         shipmentCount,
     };
+};
+
+export const processPayments = (payments: Payment[]) => {
+    return {};
 };

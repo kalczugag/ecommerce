@@ -10,7 +10,7 @@ import {
 } from "./caseFunctions";
 import { sendEmail } from "../../config/nodemailer";
 import { orderConfirmation } from "../../emailTemplates/orderConfirmation";
-import type { Order } from "../../types/Order";
+import type { Order, Payment } from "../../types/Order";
 import type { Product } from "../../types/Product";
 
 import Stripe from "stripe";
@@ -77,7 +77,7 @@ export const stripeWebhook = async (
 const updateOrder = async (
     orderId: string,
     status: Order["status"],
-    paymentStatus: Order["_payment"]
+    paymentStatus: Payment["paymentStatus"]
 ) => {
     try {
         await OrderModel.findByIdAndUpdate(

@@ -1,11 +1,11 @@
-import { processShipments } from "../utils/processShipments";
+import { processShipments } from "../utils/processFunctions";
 import type { Product } from "../types/Product";
 import type { Order, Shipment } from "../types/Order";
 import type { User } from "../types/User";
 
 export const orderConfirmation = (order: Order) => {
     const user = order._user as User;
-    const { shipmentCount } = processShipments(order._shipment as Shipment[]);
+    const { shipmentCount } = processShipments(order.shipments as Shipment[]);
 
     const priceData = {
         total: order.total.toFixed(2) || "",

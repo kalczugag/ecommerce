@@ -17,9 +17,9 @@ export const getOrderById = async (
     try {
         const order = await OrderModel.findById(id)
             .populate("_user", "firstName lastName email phone address")
-            .populate("_payment")
+            .populate("payments")
             .populate({
-                path: "_shipment",
+                path: "shipments",
             })
             .populate({
                 path: "items",
@@ -34,11 +34,11 @@ export const getOrderById = async (
             return res.status(404).json({ error: "Order not found" });
         }
 
-        const enhancedShipments = await enhanceShipments(order._shipment);
+        const enhancedShipments = await enhanceShipments(order.shipments);
 
         const enhancedOrder = {
             ...order.toObject(),
-            _shipment: enhancedShipments,
+            shipments: enhancedShipments,
         };
 
         return res.status(200).json(enhancedOrder);

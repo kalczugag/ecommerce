@@ -6,6 +6,13 @@ import type { CartItem } from "./Cart";
 import type { DeliveryMethod } from "./DeliveryMethod";
 import type { Document } from "mongoose";
 
+interface OrderNote {
+    text: string;
+    private: boolean;
+    createdAt?: Date;
+    updatedAt?: Date;
+}
+
 interface Item {
     _id?: string;
     _order?: string | Order;
@@ -37,6 +44,7 @@ interface Payment {
     amount: number;
     transactionId?: string;
     paymentDate?: Date;
+    paymentNotes?: string[] | OrderNote[];
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -46,14 +54,22 @@ interface Shipment extends Document {
     _order: string | Order;
     shipFrom: ShippingAddress;
     shipTo: ShippingAddress;
-    status: "pending" | "shipped" | "delivered";
+    status:
+        | "pending"
+        | "shipped"
+        | "delivered"
+        | "returned"
+        | "failed"
+        | "canceled";
     _deliveryMethod: string | DeliveryMethod;
     itemsDelivered: number;
     actualDeliveryDate?: Date;
     trackingNumber?: string;
     shippingCost: number;
     deliverySignature?: boolean;
-    deliveryNotes?: string;
+    _parentShipment?: string | Shipment; // If shipment was split
+    splitShipments?: string[] | Shipment[]; // IDs of split child shipments
+    deliveryNotes?: string[] | OrderNote[];
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -76,8 +92,11 @@ interface Order {
     tax: number;
     discount: number;
     total: number;
-    _payment?: string | Payment;
-    _shipment: string[] | Shipment[];
+    payments: string[] | Payment[];
+    shipments: string[] | Shipment[];
+    _parentOrder?: string | Order; // If order was split from another order
+    splitOrders?: string[] | Order[]; // IDs of split child orders
+    orderNotes?: string[] | OrderNote[];
     createdAt: Date;
     updatedAt: Date;
 }
@@ -92,18 +111,18 @@ interface ReturnOrder {
     refundAmount: number;
     refundMethod: "credit_card" | "paypal" | "bank_transfer";
     _deliveryMethod?: DeliveryMethod;
+    refundPayments?: string[] | Payment[];
+    refundNotes?: string[] | OrderNote[];
     createdAt?: Date;
     updatedAt?: Date;
 }
 
-interface UpdateOrder {
-    _id?: string;
+interface UpdateOrder extends Omit<Order, "_user" | "shipments"> {
     _user?: string;
-    status: Order["status"];
-    paymentMethod: Order["paymentMethod"];
-    paymentStatus: Order["paymentStatus"];
-    deliveryMethod: Order["deliveryMethod"];
-    additionalInfo: Order["additionalInfo"];
+    shipment: string;
+    paymentMethod: Order[];
+    paymentStatus: Payment["paymentStatus"];
+    deliveryMethod: DeliveryMethod;
 }
 
 interface PaginatedOrders extends ParsedQs {
@@ -117,6 +136,7 @@ export {
     Payment,
     Shipment,
     Order,
+    OrderNote,
     ReturnOrder,
     UpdateOrder,
     PaginatedOrders,

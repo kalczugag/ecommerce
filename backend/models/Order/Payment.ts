@@ -20,11 +20,19 @@ const paymentSchema = new mongoose.Schema<Payment>(
         },
         paymentStatus: {
             type: String,
-            enum: ["pending", "completed", "failed", "refunded"],
+            enum: ["unpaid", "pending", "completed", "failed", "refunded"],
             default: "pending",
         },
         amount: { type: Number, required: true },
         transactionId: { type: String, required: false },
+        paymentDate: { type: Date, required: false },
+        paymentNotes: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Note",
+                required: false,
+            },
+        ],
     },
     { timestamps: true }
 );

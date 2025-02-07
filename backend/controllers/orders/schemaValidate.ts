@@ -19,7 +19,8 @@ const shipmentSchema = Joi.object({
     trackingNumber: Joi.string().optional(),
     shippingCost: Joi.number().required(),
     deliverySignature: Joi.boolean().optional(),
-    deliveryNotes: Joi.string().optional(),
+    _parentShipment: Joi.string().optional(),
+    deliveryNotes: Joi.array().items(Joi.string()).optional(),
 });
 
 const schema = Joi.object({
@@ -40,8 +41,11 @@ const schema = Joi.object({
     tax: Joi.number().min(0).max(100),
     discount: Joi.number().min(0).max(100),
     total: Joi.number().positive().required(),
-    _payment: Joi.string(),
-    _shipment: Joi.array().items(shipmentSchema).optional(),
+    payments: Joi.string(),
+    shipments: Joi.array().items(shipmentSchema).optional(),
+    _parentOrder: Joi.array().items(Joi.string()).optional(),
+    splitOrders: Joi.array().items(Joi.string()).optional(),
+    orderNotes: Joi.array().items(Joi.string()).optional(),
 });
 
 export default schema;

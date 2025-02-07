@@ -1,5 +1,5 @@
 import express from "express";
-import { processShipments } from "../../utils/processShipments";
+import { processShipments } from "../../utils/processFunctions";
 import type { Item, Order, Shipment } from "../../types/Order";
 import type { Product } from "../../types/Product";
 import type { User } from "../../types/User";
@@ -45,9 +45,7 @@ export const createCheckoutSession = async (
     });
 
     const { shipments, shipment, shipmentCount, shipmentTotal } =
-        processShipments(order._shipment as Shipment[]);
-
-    console.log(order);
+        processShipments(order.shipments as Shipment[]);
 
     const createShippingOptions = (): any[] => {
         if (shipmentCount === 1 && shipment) {

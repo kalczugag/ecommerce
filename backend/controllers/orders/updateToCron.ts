@@ -30,11 +30,21 @@ export const updateToCron = async (
 
         const updates = await Promise.all(
             orders.map(async (order) => {
-                if (order._payment) {
-                    const payment = await PaymentModel.findById(order._payment);
-                    if (payment?.paymentStatus === "failed") {
+                if (order.payments.length > 0) {
+                    const payments = await PaymentModel.find({
+                        _id: { $in: order.payments },
+                    });
+
+                    const hasFailedPayment = payments.some(
+                        (payment) => payment.paymentStatus === "failed"
+                    );
+                    const hasPendingPayment = payments.some(
+                        (payment) => payment.paymentStatus === "pending"
+                    );
+
+                    if (hasFailedPayment) {
                         order.status = "canceled";
-                    } else if (payment?.paymentStatus === "pending") {
+                    } else if (hasPendingPayment) {
                         order.status = "placed";
                     }
                 } else {

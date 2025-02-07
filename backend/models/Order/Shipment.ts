@@ -24,7 +24,14 @@ const shipmentSchema = new mongoose.Schema<Shipment>(
         },
         status: {
             type: String,
-            enum: ["pending", "shipped", "delivered"],
+            enum: [
+                "pending",
+                "shipped",
+                "delivered",
+                "returned",
+                "failed",
+                "canceled",
+            ],
             default: "pending",
         },
         _deliveryMethod: {
@@ -53,10 +60,25 @@ const shipmentSchema = new mongoose.Schema<Shipment>(
             type: Boolean,
             required: false,
         },
-        deliveryNotes: {
-            type: String,
+        _parentShipment: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Shipment",
             required: false,
         },
+        splitShipments: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Shipment",
+                required: false,
+            },
+        ],
+        deliveryNotes: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Note",
+                required: false,
+            },
+        ],
     },
     { timestamps: true }
 );
