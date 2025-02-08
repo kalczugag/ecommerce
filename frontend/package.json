@@ -20,6 +20,7 @@
         "@tanstack/react-query": "^5.64.0",
         "lodash": "^4.17.21",
         "moment": "^2.30.1",
+        "moment-business-days": "github:eduolalo/moment-business-days#master",
         "notistack": "^3.0.1",
         "react": "^18.3.1",
         "react-copy-to-clipboard": "^5.1.0",

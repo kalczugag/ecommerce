@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
+import "moment-business-days";
 import { processPayments, processShipments } from "@/utils/processFunctions";
 import { deliveryMethods } from "@/constants/deliveryMethods";
 import { Button, Divider, Skeleton } from "@mui/material";
@@ -18,18 +19,29 @@ interface OrderDetailsProps {
 const OrderDetails = ({ data, isLoading }: OrderDetailsProps) => {
     const navigate = useNavigate();
     const { payments } = processPayments(data?.payments || []);
-    const { shipments, isMoreThanOne, shipmentTotal } = processShipments(
-        data?.shipments || []
-    );
+    const { shipmentTotal } = processShipments(data?.shipments || []);
 
-    const deliveryMethod = shipments[0]?._deliveryMethod as DeliveryMethod;
+    const deliveryMethod = data?.shipments[0]
+        ?._deliveryMethod as DeliveryMethod;
 
-    // const methodName =
-    //     deliveryMethods[deliveryMethod.type] +
-    //     " - " +
-    //     deliveryMethod.providers[0].name;
+    const methodName = deliveryMethod?.providers?.[0]?.name
+        ? `${deliveryMethod.providers[0].name} - ${
+              deliveryMethods[deliveryMethod.type]
+          }`
+        : "Unknown Method";
 
-    console.log(data);
+    const expectedDeliveryLabel = deliveryMethod?.providers?.[0]
+        ? `${methodName} delivery within ${deliveryMethod.providers[0].estimatedDeliveryTimeMin} - ${deliveryMethod.providers[0].estimatedDeliveryTimeMax} business days`
+        : "Estimated delivery time not available";
+
+    const expectedDeliveryDate = deliveryMethod?.providers?.[0]
+        ? moment(data?.createdAt)
+              .businessAdd(
+                  deliveryMethod.providers[0].estimatedDeliveryTimeMin || 1,
+                  "days"
+              )
+              .format("dd, DD.MM.YYYY")
+        : "N/A";
 
     const summaryCardsData = [
         {
@@ -101,12 +113,9 @@ const OrderDetails = ({ data, isLoading }: OrderDetailsProps) => {
                     <div className="flex flex-col">
                         <div className="flex flex-col font-semibold space-y-2">
                             <h2 className="text-2xl">
-                                Expected delivery:{" "}
-                                {moment(data?.createdAt)
-                                    .add(2, "days")
-                                    .format("dd, DD.MM.YYYY")}
+                                Expected delivery: {expectedDeliveryDate}
                             </h2>
-                            <p>Standard delivery within 1-3 business days</p>
+                            <p>{expectedDeliveryLabel}</p>
                         </div>
                     </div>
                 ) : (

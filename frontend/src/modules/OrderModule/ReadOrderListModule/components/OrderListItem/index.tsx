@@ -1,10 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
 import moment from "moment";
+import "moment-business-days";
 import { Button, Divider } from "@mui/material";
 import SummaryCard from "../SummaryCard";
 import OrderListItemSkeleton from "./OrderListItemSkeleton";
 import type { Order } from "@/types/Order";
 import type { DeliveryMethod } from "@/types/DeliveryMethod";
+import { deliveryMethods } from "@/constants/deliveryMethods";
 
 interface OrderListItemProps {
     data?: Order;
@@ -14,8 +16,17 @@ interface OrderListItemProps {
 const OrderListItem = ({ data, isLoading }: OrderListItemProps) => {
     const navigate = useNavigate();
 
-    const deliveryMethod = data?.shipments[0]._deliveryMethod as DeliveryMethod;
-    const expectedDelivery = data?.shipments[0]._deliveryMethod;
+    const deliveryMethod = data?.shipments[0]
+        ?._deliveryMethod as DeliveryMethod;
+
+    const expectedDeliveryDate = deliveryMethod?.providers?.[0]
+        ? moment(data?.createdAt)
+              .businessAdd(
+                  deliveryMethod.providers[0].estimatedDeliveryTimeMin || 1,
+                  "days"
+              )
+              .format("dd, DD.MM.YYYY")
+        : "N/A";
 
     return (
         <>
@@ -62,9 +73,7 @@ const OrderListItem = ({ data, isLoading }: OrderListItemProps) => {
                         <div className="flex flex-col space-y-4 md:flex-row md:space-x-8 md:space-y-0">
                             <SummaryCard
                                 label="Expected delivery"
-                                value={moment(data?.createdAt)
-                                    .add(2, "days")
-                                    .format("dd, DD.MM.YYYY")}
+                                value={expectedDeliveryDate}
                                 isLoading={isLoading}
                                 width={150}
                             />
