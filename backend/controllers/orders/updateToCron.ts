@@ -1,6 +1,8 @@
 import express from "express";
 import { OrderModel } from "../../models/Order";
 import { PaymentModel } from "../../models/Order/Payment";
+import { processPayments } from "../../utils/processFunctions";
+import type { Payment } from "../../types/Order";
 
 export const updateToCron = async (
     req: express.Request,
@@ -9,12 +11,12 @@ export const updateToCron = async (
     try {
         const orders = await OrderModel.find({
             $or: [
-                { _payment: { $exists: false } },
+                { payments: { $exists: false } },
                 {
-                    _payment: { $exists: true },
+                    payments: { $exists: true },
                     $expr: {
                         $in: [
-                            "$_payment",
+                            "$payments",
                             await PaymentModel.distinct("_id", {
                                 paymentStatus: { $in: ["pending", "failed"] },
                             }),
@@ -30,7 +32,10 @@ export const updateToCron = async (
 
         const updates = await Promise.all(
             orders.map(async (order) => {
-                if (order.payments.length > 0) {
+                const { paymentCount } = processPayments(
+                    order.payments as Payment[]
+                );
+                if (paymentCount > 0) {
                     const payments = await PaymentModel.find({
                         _id: { $in: order.payments },
                     });

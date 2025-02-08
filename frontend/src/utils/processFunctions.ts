@@ -1,4 +1,4 @@
-import { Payment, Shipment } from "../types/Order";
+import { Payment, Shipment } from "@/types/Order";
 
 export const processShipments = (shipments: Shipment[]) => {
     if (!Array.isArray(shipments)) {

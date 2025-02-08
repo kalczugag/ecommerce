@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { orderStatuses } from "@/constants/orderStatuses";
 import AccountLayout from "@/layouts/AccountLayout";
 import Loading from "@/components/Loading";
 import OrdersList from "./components/OrdersList";

@@ -45,6 +45,9 @@ interface Payment {
     transactionId?: string;
     paymentDate?: Date;
     paymentNotes?: string[] | OrderNote[];
+    authorized?: boolean;
+    voided?: boolean;
+    capturedAmount?: number;
     createdAt?: Date;
     updatedAt?: Date;
 }

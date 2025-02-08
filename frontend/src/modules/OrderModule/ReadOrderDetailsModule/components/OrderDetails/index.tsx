@@ -1,11 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
+import { processPayments, processShipments } from "@/utils/processFunctions";
+import { deliveryMethods } from "@/constants/deliveryMethods";
 import { Button, Divider, Skeleton } from "@mui/material";
-import type { Item, Order } from "@/types/Order";
 import SummaryCard from "../../../ReadOrderListModule/components/SummaryCard";
 import ProductCard from "../ProductCard";
 import OrderTotal from "../OrderTotal";
 import OrderAddress from "../OrderAddress";
+import type { Item, Order } from "@/types/Order";
+import type { DeliveryMethod } from "@/types/DeliveryMethod";
 
 interface OrderDetailsProps {
     data?: Order;
@@ -14,6 +17,19 @@ interface OrderDetailsProps {
 
 const OrderDetails = ({ data, isLoading }: OrderDetailsProps) => {
     const navigate = useNavigate();
+    const { payments } = processPayments(data?.payments || []);
+    const { shipments, isMoreThanOne, shipmentTotal } = processShipments(
+        data?.shipments || []
+    );
+
+    const deliveryMethod = shipments[0]?._deliveryMethod as DeliveryMethod;
+
+    // const methodName =
+    //     deliveryMethods[deliveryMethod.type] +
+    //     " - " +
+    //     deliveryMethod.providers[0].name;
+
+    console.log(data);
 
     const summaryCardsData = [
         {
@@ -22,7 +38,7 @@ const OrderDetails = ({ data, isLoading }: OrderDetailsProps) => {
         },
         {
             label: "Payment Method",
-            value: data?._payment?.paymentMethod,
+            value: payments[0]?.paymentMethod,
         },
         {
             label: "Status",
@@ -34,7 +50,7 @@ const OrderDetails = ({ data, isLoading }: OrderDetailsProps) => {
         total: data?.total.toFixed(2) || "",
         subTotal: data?.subTotal.toFixed(2) || "",
         discount: data?.discount?.toFixed(2) || "",
-        delivery: data?._shipment[0].shippingCost?.toFixed(2) || "",
+        delivery: shipmentTotal.toFixed(2) || "",
     };
 
     return (

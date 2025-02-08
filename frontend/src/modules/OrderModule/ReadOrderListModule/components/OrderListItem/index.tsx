@@ -2,9 +2,9 @@ import { Link, useNavigate } from "react-router-dom";
 import moment from "moment";
 import { Button, Divider } from "@mui/material";
 import SummaryCard from "../SummaryCard";
-import type { Order } from "@/types/Order";
-import type { Product } from "@/types/Product";
 import OrderListItemSkeleton from "./OrderListItemSkeleton";
+import type { Order } from "@/types/Order";
+import type { DeliveryMethod } from "@/types/DeliveryMethod";
 
 interface OrderListItemProps {
     data?: Order;
@@ -13,6 +13,9 @@ interface OrderListItemProps {
 
 const OrderListItem = ({ data, isLoading }: OrderListItemProps) => {
     const navigate = useNavigate();
+
+    const deliveryMethod = data?.shipments[0]._deliveryMethod as DeliveryMethod;
+    const expectedDelivery = data?.shipments[0]._deliveryMethod;
 
     return (
         <>

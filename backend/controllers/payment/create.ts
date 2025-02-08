@@ -44,12 +44,14 @@ export const createCheckoutSession = async (
         };
     });
 
-    const { shipments, shipment, shipmentCount, shipmentTotal } =
-        processShipments(order.shipments as Shipment[]);
+    const { shipments, isMoreThanOne, shipmentTotal } = processShipments(
+        order.shipments as Shipment[]
+    );
 
     const createShippingOptions = (): any[] => {
-        if (shipmentCount === 1 && shipment) {
-            const deliveryMethod = shipment._deliveryMethod as DeliveryMethod;
+        if (!isMoreThanOne) {
+            const deliveryMethod = shipments[0]
+                ._deliveryMethod as DeliveryMethod;
 
             return [
                 {
@@ -77,7 +79,7 @@ export const createCheckoutSession = async (
             ];
         }
 
-        return (shipments || []).map((shipment) => {
+        return shipments.map((shipment) => {
             const deliveryMethod = shipment._deliveryMethod as DeliveryMethod;
 
             return {

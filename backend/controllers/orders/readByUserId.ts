@@ -1,8 +1,9 @@
 import express from "express";
 import { isValidObjectId } from "mongoose";
-import { OrderModel } from "../../models/Order";
-import type { PaginatedOrders } from "../../types/Order";
 import { MongooseQueryParser } from "mongoose-query-parser";
+import { OrderModel } from "../../models/Order";
+import { enhanceShipments } from "../../utils/enhanceShipments";
+import type { PaginatedOrders } from "../../types/Order";
 
 const parser = new MongooseQueryParser();
 
@@ -35,21 +36,24 @@ export const getOrdersByUserId = async (
             ...parsedQuery.filter,
             _user: userId,
         })
-            .populate(
-                parsedQuery.populate || [
-                    {
-                        path: "_user",
-                        select: "firstName lastName phone address",
+            .populate([
+                ...(parsedQuery.populate || []),
+                {
+                    path: "_user",
+                    select: "firstName lastName phone address",
+                },
+                {
+                    path: "items",
+                    populate: {
+                        path: "_product",
+                        model: "Product",
                     },
-                    {
-                        path: "items",
-                        populate: {
-                            path: "_product",
-                            model: "Product",
-                        },
-                    },
-                ]
-            )
+                },
+                {
+                    path: "shipments",
+                },
+            ])
+
             .select(parsedQuery.select)
             .sort(parsedQuery.sort || { createdAt: -1 })
             .skip(page * pageSize)
@@ -63,9 +67,15 @@ export const getOrdersByUserId = async (
         }
 
         const hasMore = (page + 1) * pageSize < totalDocuments;
+        const enhancedOrders = await Promise.all(
+            orders.map(async (order) => ({
+                ...order.toObject(),
+                shipments: await enhanceShipments(order.shipments),
+            }))
+        );
 
         return res.status(200).json({
-            data: orders,
+            data: enhancedOrders,
             count: totalDocuments,
             hasMore,
             nextCursor: page + 1,

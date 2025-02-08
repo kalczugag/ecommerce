@@ -6,6 +6,7 @@ export interface Product {
     brand: string;
     title: string;
     color: string;
+    sku: string;
     discountedPrice?: number;
     price: number;
     discountPercent?: number;
