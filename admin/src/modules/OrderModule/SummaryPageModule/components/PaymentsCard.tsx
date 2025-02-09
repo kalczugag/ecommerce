@@ -7,11 +7,13 @@ interface PaymentsCardProps {
 }
 
 const PaymentsCard = ({ data }: PaymentsCardProps) => {
+    const payment = data.payments?.[0];
+
     return (
         <DetailCard label="Payments">
             <div>
                 <span className="font-bold">Payment Status: </span>
-                <span>{data._payment?.paymentStatus}</span>
+                <span>{payment?.paymentStatus}</span>
             </div>
             <div>
                 <span className="font-bold">Order Total: </span>
@@ -19,20 +21,18 @@ const PaymentsCard = ({ data }: PaymentsCardProps) => {
             </div>
             <div
                 className={`p-1 rounded text-center text-white font-semibold ${
-                    data._payment?.paymentStatus === "completed"
+                    payment?.paymentStatus === "completed"
                         ? "bg-green-600"
                         : "bg-orange-500"
                 }`}
             >
-                {data._payment?.paymentStatus}
+                {payment?.paymentStatus}
             </div>
             <div>
                 <span className="font-bold">Last Payment: </span>
                 <span>Visa ***9</span>
             </div>
-            <div>
-                {data._payment && <CapturePaymentDialog data={data._payment} />}
-            </div>
+            <div>{payment && <CapturePaymentDialog data={payment} />}</div>
         </DetailCard>
     );
 };

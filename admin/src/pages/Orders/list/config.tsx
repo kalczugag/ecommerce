@@ -56,19 +56,24 @@ export const tableConfig: TableColumnProps<RowProps>[] = [
     },
     {
         label: "Payment",
-        render: (row) => (
-            <div
-                className={`bg-gray-300 text-center rounded truncate px-2 ${
-                    row._payment?.paymentStatus === "completed"
-                        ? "bg-orange-500 text-white"
-                        : !row._payment?.paymentStatus
-                        ? ""
-                        : "bg-green-400 text-white"
-                }`}
-            >
-                {row._payment?.paymentStatus || "no data"}
-            </div>
-        ),
+        render: (row) => {
+            const paymentStatus = row.payments?.[0]?.paymentStatus || "no data";
+
+            const statusClasses =
+                paymentStatus === "completed"
+                    ? "bg-orange-500 text-white"
+                    : paymentStatus === "no data"
+                    ? "bg-gray-300"
+                    : "bg-green-400 text-white";
+
+            return (
+                <div
+                    className={`text-center rounded truncate px-2 ${statusClasses}`}
+                >
+                    {paymentStatus}
+                </div>
+            );
+        },
     },
     {
         label: "Date",

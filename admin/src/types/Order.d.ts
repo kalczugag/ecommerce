@@ -2,6 +2,13 @@ import type { User } from "./User";
 import type { Product } from "./Product";
 import type { DeliveryMethod } from "./DeliveryMethod";
 
+interface OrderNote {
+    text: string;
+    private: boolean;
+    createdAt?: Date;
+    updatedAt?: Date;
+}
+
 interface Item {
     _id?: string;
     _order?: string | Order;
@@ -32,6 +39,10 @@ interface Payment {
     amount: number;
     transactionId?: string;
     paymentDate?: Date;
+    paymentNotes?: string[] | OrderNote[];
+    authorized?: boolean;
+    voided?: boolean;
+    capturedAmount?: number;
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -41,14 +52,22 @@ interface Shipment {
     _order: string | Order;
     shipFrom: ShippingAddress;
     shipTo: ShippingAddress;
-    status: "pending" | "shipped" | "delivered";
+    status:
+        | "pending"
+        | "shipped"
+        | "delivered"
+        | "returned"
+        | "failed"
+        | "canceled";
     _deliveryMethod: DeliveryMethod;
     itemsDelivered: number;
     actualDeliveryDate?: Date;
     trackingNumber?: string;
     shippingCost: number;
     deliverySignature?: boolean;
-    deliveryNotes?: string;
+    _parentShipment?: Shipment;
+    splitShipments?: Shipment[];
+    deliveryNotes?: OrderNote[];
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -71,8 +90,11 @@ interface Order {
     tax: number;
     discount: number;
     total: number;
-    _payment?: Payment;
-    _shipment: Shipment[];
+    payments?: Payment[];
+    shipments: Shipment[];
+    _parentOrder?: Order;
+    splitOrders?: Order[];
+    orderNotes?: OrderNote[];
     createdAt: Date;
     updatedAt: Date;
 }
@@ -87,6 +109,8 @@ interface ReturnOrder {
     refundAmount: number;
     refundMethod: "credit_card" | "paypal" | "bank_transfer";
     _deliveryMethod: DeliveryMethod;
+    refundPayments?: Payment[];
+    refundNotes?: OrderNote[];
     createdAt?: Date;
     updatedAt?: Date;
 }

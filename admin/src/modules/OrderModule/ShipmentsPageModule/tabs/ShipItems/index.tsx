@@ -25,7 +25,7 @@ const ShipItems = ({ data, handleSubTabChange }: ShipItemsProps) => {
 
     const shipmentIndex = parseInt(searchParams.get("shipmentIndex") || "0");
 
-    const shipment = data._shipment[shipmentIndex];
+    const shipment = data.shipments[shipmentIndex];
     const shipFrom = shipment.shipFrom;
     const shipTo = shipment.shipTo;
     const user = {
@@ -78,7 +78,7 @@ const ShipItems = ({ data, handleSubTabChange }: ShipItemsProps) => {
                             />
 
                             <EnterTrackingNumber
-                                data={data._shipment[shipmentIndex]}
+                                data={data.shipments[shipmentIndex]}
                                 handleBack={() => handleSubTabChange(0)}
                                 form={form}
                             />
