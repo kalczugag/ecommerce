@@ -18,6 +18,7 @@ const PaymentsPage = ({ data }: PaymentsPageProps) => {
         <>
             {payments?.map((payment, index) => (
                 <DetailCard
+                    key={payment._id}
                     variant="accordion"
                     label={`Payment #${index + 1} of ${paymentCount}`}
                     defaultExpanded

@@ -185,7 +185,6 @@ const NavLinksMenu = ({ links }: NavLinksMenuProps) => {
                                                             }}
                                                         >
                                                             <ListItemButton
-                                                                sx={{}}
                                                                 onClick={() =>
                                                                     handleClick(
                                                                         subLink,

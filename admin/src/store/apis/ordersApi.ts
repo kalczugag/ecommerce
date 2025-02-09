@@ -1,6 +1,6 @@
 import { apiSlice } from "./apiSlice";
 import { serialize } from "@/utils/helpers";
-import type { Order } from "@/types/Order";
+import type { Order, UpdateOrder } from "@/types/Order";
 
 export type summaryType = "yearly" | "monthly" | "weekly";
 type orderSummary = {
@@ -59,6 +59,17 @@ export const orderApi = apiSlice.injectEndpoints({
                 params: { type },
             }),
         }),
+
+        updateOrder: builder.mutation<ApiResponseObject<Order>, UpdateOrder>({
+            query: (order) => ({
+                url: `/orders/${order._id}`,
+                method: "PATCH",
+                body: order,
+            }),
+            invalidatesTags: (result, error, values) => [
+                { type: "Orders", id: values._id },
+            ],
+        }),
     }),
 });
 
@@ -66,4 +77,5 @@ export const {
     useGetAllOrdersQuery,
     useGetOrderByIdQuery,
     useGetOrdersSummaryQuery,
+    useUpdateOrderMutation,
 } = orderApi;

@@ -115,4 +115,17 @@ interface ReturnOrder {
     updatedAt?: Date;
 }
 
-export { Item, ShippingAddress, Shipment, Payment, Order, ReturnOrder };
+interface UpdateOrder {
+    _id: string;
+    status?: Order["status"];
+}
+
+export {
+    Item,
+    ShippingAddress,
+    Shipment,
+    Payment,
+    Order,
+    ReturnOrder,
+    UpdateOrder,
+};
