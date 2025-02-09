@@ -63,7 +63,11 @@ const OrdersList = ({
             <div className="flex flex-col w-full space-y-28">
                 {data?.pages.map((page) =>
                     page?.data.map((order) => (
-                        <OrderListItem data={order} isLoading={isFetching} />
+                        <OrderListItem
+                            key={order._id}
+                            data={order}
+                            isLoading={isFetching}
+                        />
                     ))
                 )}
             </div>

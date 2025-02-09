@@ -15,7 +15,7 @@ export const getReturnById = async (
     try {
         const returnedOrder = await ReturnModel.findById(id)
             .populate("_user", "firstName lastName email phone address")
-            .populate("_payment")
+            .populate("refundPayments")
             .populate("_order", "items")
             .exec();
 

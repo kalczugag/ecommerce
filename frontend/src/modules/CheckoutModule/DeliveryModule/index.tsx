@@ -8,7 +8,7 @@ import useStep from "./hooks/useStep";
 import { Button, Divider } from "@mui/material";
 import type { ShippingAddress } from "@/types/Order";
 import type { DeliveryMethod, Provider } from "@/types/DeliveryMethod";
-import { processShipments } from "@/utils/processShipments";
+import { processShipments } from "@/utils/processFunctions";
 
 interface DeliveryFormProps {
     _id: string;
@@ -46,8 +46,8 @@ const DeliveryModule = ({ data, isDeliveryLoading }: DeliveryModuleProps) => {
     const [updateOrder, { isLoading: isUpdatingOrder }] =
         useUpdateOrderMutation();
     const [updateUser, { isLoading: isUpdatingUser }] = useUpdateUserMutation();
-    const { shipmentCount, isMoreThanOne, shipments } = processShipments(
-        order?._shipment || []
+    const { isMoreThanOne, shipments } = processShipments(
+        order?.shipments || []
     );
 
     const handleSubmit = async (values: DeliveryFormProps) => {
@@ -65,21 +65,23 @@ const DeliveryModule = ({ data, isDeliveryLoading }: DeliveryModuleProps) => {
 
         await updateOrder({
             _id: order._id,
-            _shipment: {
-                _order: order._id!,
-                shipFrom: {
-                    street: "Człuchowska 92",
-                    city: "Warsaw",
-                    state: "Masovian",
-                    postalCode: "01-360",
-                    country: "Poland",
+            shipments: [
+                {
+                    _order: order._id!,
+                    shipFrom: {
+                        street: "Człuchowska 92",
+                        city: "Warsaw",
+                        state: "Masovian",
+                        postalCode: "01-360",
+                        country: "Poland",
+                    },
+                    shipTo: values.shippingAddress,
+                    _deliveryMethod: values._deliveryMethod,
+                    shippingCost:
+                        (order?.total || 0) > 100 ? 0 : selectedProvider?.price,
+                    itemsDelivered: 0,
                 },
-                shipTo: values.shippingAddress,
-                _deliveryMethod: values._deliveryMethod,
-                shippingCost:
-                    (order?.total || 0) > 100 ? 0 : selectedProvider?.price,
-                itemsDelivered: 0,
-            },
+            ],
             shippingAddress: values.shippingAddress,
             billingAddress: values.sameAsShipping
                 ? values.shippingAddress

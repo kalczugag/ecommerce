@@ -1,8 +1,7 @@
 import express from "express";
 import { isValidObjectId } from "mongoose";
 import { OrderModel } from "../../models/Order";
-import { DeliveryMethodModel } from "../../models/DeliveryMethod";
-import { Shipment } from "../../types/Order";
+import { enhanceShipments } from "../../utils/enhanceShipments";
 
 export const getOrderById = async (
     req: express.Request<{ id: string }>,
@@ -17,9 +16,9 @@ export const getOrderById = async (
     try {
         const order = await OrderModel.findById(id)
             .populate("_user", "firstName lastName email phone address")
-            .populate("_payment")
+            .populate("payments")
             .populate({
-                path: "_shipment",
+                path: "shipments",
             })
             .populate({
                 path: "items",
@@ -34,11 +33,11 @@ export const getOrderById = async (
             return res.status(404).json({ error: "Order not found" });
         }
 
-        const enhancedShipments = await enhanceShipments(order._shipment);
+        const enhancedShipments = await enhanceShipments(order.shipments);
 
         const enhancedOrder = {
             ...order.toObject(),
-            _shipment: enhancedShipments,
+            shipments: enhancedShipments,
         };
 
         return res.status(200).json(enhancedOrder);
@@ -46,22 +45,4 @@ export const getOrderById = async (
         console.error(error);
         return res.status(500).json({ error: "Internal server error" });
     }
-};
-
-const enhanceShipments = async (
-    shipments: any[] | undefined
-): Promise<any[]> => {
-    if (!shipments || shipments.length === 0) return [];
-
-    const firstShipment = shipments[0] as Shipment;
-    const deliveryMethod = await DeliveryMethodModel.findOne(
-        { "providers._id": firstShipment._deliveryMethod },
-        { _id: 1, type: 1, metadata: 1, "providers.$": 1 }
-    );
-
-    return shipments.map((shipment) =>
-        typeof shipment === "object"
-            ? { ...shipment.toObject(), _deliveryMethod: deliveryMethod }
-            : shipment
-    );
 };

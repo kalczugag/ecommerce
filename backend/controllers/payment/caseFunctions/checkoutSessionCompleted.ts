@@ -26,7 +26,7 @@ export const handleCheckoutSessionCompleted = async (
             { new: true }
         )
             .populate("_user", "firstName lastName phone address")
-            .populate("_shipment")
+            .populate("shipments")
             .populate({
                 path: "items",
                 populate: {

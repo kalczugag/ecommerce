@@ -1,5 +1,5 @@
 import express from "express";
-import { processShipments } from "../../utils/processShipments";
+import { processShipments } from "../../utils/processFunctions";
 import type { Item, Order, Shipment } from "../../types/Order";
 import type { Product } from "../../types/Product";
 import type { User } from "../../types/User";
@@ -44,14 +44,14 @@ export const createCheckoutSession = async (
         };
     });
 
-    const { shipments, shipment, shipmentCount, shipmentTotal } =
-        processShipments(order._shipment as Shipment[]);
-
-    console.log(order);
+    const { shipments, isMoreThanOne, shipmentTotal } = processShipments(
+        order.shipments as Shipment[]
+    );
 
     const createShippingOptions = (): any[] => {
-        if (shipmentCount === 1 && shipment) {
-            const deliveryMethod = shipment._deliveryMethod as DeliveryMethod;
+        if (!isMoreThanOne) {
+            const deliveryMethod = shipments[0]
+                ._deliveryMethod as DeliveryMethod;
 
             return [
                 {
@@ -79,7 +79,7 @@ export const createCheckoutSession = async (
             ];
         }
 
-        return (shipments || []).map((shipment) => {
+        return shipments.map((shipment) => {
             const deliveryMethod = shipment._deliveryMethod as DeliveryMethod;
 
             return {

@@ -37,6 +37,20 @@ const returnSchema = new mongoose.Schema<ReturnOrder>(
             ref: "DeliveryMethod",
             required: false,
         },
+        refundPayments: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Payment",
+                required: true,
+            },
+        ],
+        refundNotes: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Note",
+                required: false,
+            },
+        ],
     },
     { timestamps: true }
 );

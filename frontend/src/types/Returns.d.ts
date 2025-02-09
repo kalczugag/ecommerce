@@ -1,3 +1,7 @@
+import type { Item, Payment, OrderNote, Order } from "./Order";
+import type { DeliveryMethod } from "./DeliveryMethod";
+import type { User } from "./User";
+
 export interface ReturnOrder {
     _id?: string;
     _order: Order | string;
@@ -8,6 +12,8 @@ export interface ReturnOrder {
     refundAmount?: number;
     refundMethod: "credit_card" | "paypal" | "bank_transfer";
     _deliveryMethod?: DeliveryMethod;
+    refundPayments?: Payment[];
+    refundNotes?: OrderNote[];
     createdAt?: Date;
     updatedAt?: Date;
 }

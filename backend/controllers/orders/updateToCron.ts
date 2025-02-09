@@ -1,6 +1,8 @@
 import express from "express";
 import { OrderModel } from "../../models/Order";
 import { PaymentModel } from "../../models/Order/Payment";
+import { processPayments } from "../../utils/processFunctions";
+import type { Payment } from "../../types/Order";
 
 export const updateToCron = async (
     req: express.Request,
@@ -9,12 +11,12 @@ export const updateToCron = async (
     try {
         const orders = await OrderModel.find({
             $or: [
-                { _payment: { $exists: false } },
+                { payments: { $exists: false } },
                 {
-                    _payment: { $exists: true },
+                    payments: { $exists: true },
                     $expr: {
                         $in: [
-                            "$_payment",
+                            "$payments",
                             await PaymentModel.distinct("_id", {
                                 paymentStatus: { $in: ["pending", "failed"] },
                             }),
@@ -30,11 +32,24 @@ export const updateToCron = async (
 
         const updates = await Promise.all(
             orders.map(async (order) => {
-                if (order._payment) {
-                    const payment = await PaymentModel.findById(order._payment);
-                    if (payment?.paymentStatus === "failed") {
+                const { paymentCount } = processPayments(
+                    order.payments as Payment[]
+                );
+                if (paymentCount > 0) {
+                    const payments = await PaymentModel.find({
+                        _id: { $in: order.payments },
+                    });
+
+                    const hasFailedPayment = payments.some(
+                        (payment) => payment.paymentStatus === "failed"
+                    );
+                    const hasPendingPayment = payments.some(
+                        (payment) => payment.paymentStatus === "pending"
+                    );
+
+                    if (hasFailedPayment) {
                         order.status = "canceled";
-                    } else if (payment?.paymentStatus === "pending") {
+                    } else if (hasPendingPayment) {
                         order.status = "placed";
                     }
                 } else {

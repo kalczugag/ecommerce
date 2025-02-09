@@ -27,7 +27,7 @@ export const handlePaymentIntentSucceeded = async (
 
         await OrderModel.findByIdAndUpdate(orderId, {
             status: "placed",
-            _payment: payment._id,
+            payments: [payment._id],
         });
 
         await CartModel.findOneAndUpdate(

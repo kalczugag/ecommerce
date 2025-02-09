@@ -9,13 +9,14 @@ export const createReturn = async (
     req: express.Request<{}, {}, ReturnOrder>,
     res: express.Response
 ) => {
-    const { error } = schema.validate(req.body);
     const { _id } = req.user as User;
 
     const orderReturn = {
         _user: _id,
         ...req.body,
     };
+
+    const { error } = schema.validate(orderReturn);
 
     if (error) {
         return res.status(400).json({
@@ -25,11 +26,15 @@ export const createReturn = async (
 
     try {
         const order = await OrderModel.findById(orderReturn._order)
-            .populate("_payment", "paymentMethod")
+            .populate("payments", "paymentMethod")
             .populate("items", "total")
             .exec();
 
-        if (!order?._payment || order.status === "returned") {
+        if (
+            !order?.payments ||
+            order?.payments?.length === 0 ||
+            order.status === "returned"
+        ) {
             return res.status(400).json({ error: "Order cannot be returned" });
         }
 
@@ -37,12 +42,10 @@ export const createReturn = async (
             return acc + (item?.total || 0);
         }, 0);
 
-        console.log(refundAmount);
-
         const newReturn = new ReturnModel({
             ...orderReturn,
             refundAmount,
-            refundMethod: (order._payment as Payment).paymentMethod,
+            refundMethod: (order.payments as Payment[])[0].paymentMethod, // change to selected method
         });
 
         await newReturn.save();

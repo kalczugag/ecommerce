@@ -32,7 +32,7 @@ const ProductCard = ({ data, isLoading }: ProductCardProps) => {
                             <div className="text-sm">
                                 <p>Color: {data.color}</p>
                                 <p>Size: {data.size}</p>
-                                <p>Product id: {product._id}</p>
+                                <p>SKU: {product.sku}</p>
                             </div>
                         </div>
                     </div>

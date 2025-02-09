@@ -30,7 +30,9 @@ export const updateSummaryStatistics = async () => {
         const paidEarnings = _.sumBy(
             orders.filter(
                 (order) =>
-                    (order._payment as Payment).paymentStatus === "completed"
+                    (order.payments as Payment[]).length > 0 &&
+                    (order.payments as Payment[])[0].paymentStatus ===
+                        "completed"
             ),
             "total"
         );
