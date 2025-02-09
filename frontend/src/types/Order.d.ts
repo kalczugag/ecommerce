@@ -107,7 +107,7 @@ interface AddOrder
 }
 
 interface UpdateOrder {
-    _id?: string;
+    _id: string;
     status?: Order["status"];
     shippingAddress?: Order["shippingAddress"];
     billingAddress?: Order["billingAddress"];

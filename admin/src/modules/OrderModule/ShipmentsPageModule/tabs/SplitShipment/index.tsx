@@ -14,7 +14,7 @@ interface SplitShipmentProps extends ManageAction {
 const SplitShipment = ({ data, handleSubTabChange }: SplitShipmentProps) => {
     const enhancedData = data.items.map((item) => ({
         ...item,
-        shipments: data._shipment,
+        shipments: data.shipments,
     }));
 
     const handleSubmit = (values: any) => {

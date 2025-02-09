@@ -19,7 +19,7 @@ const CustomTooltip = ({ active, payload, label }: CustomTooltipProps) => {
                 <p className="label font-bold">{`Date: ${label}`}</p>
                 {payload.map((item, index) => (
                     <p key={index} className="intro">
-                        {`${item.name}: $${item.value}`}
+                        {`${item.name}: $${item.value?.toFixed(2)}`}
                     </p>
                 ))}
             </div>

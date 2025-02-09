@@ -1,4 +1,4 @@
-import { processShipments } from "@/utils/processShipments";
+import { processShipments } from "@/utils/processFunctions";
 import { Divider, useMediaQuery } from "@mui/material";
 import { InsertPageBreak } from "@mui/icons-material";
 import Table from "@/components/Table";
@@ -50,7 +50,7 @@ const ShipmentsPage = ({ data, handleSubTabChange }: ShipmentsPageProps) => {
     const isMobile = useMediaQuery("(max-width: 1024px)");
     const isTablet = useMediaQuery("(max-width: 1280px)");
     const { shipmentCount, isMoreThanOne, shipments } = processShipments(
-        data._shipment
+        data.shipments
     );
 
     const enhancedTableData = data.items
@@ -59,14 +59,6 @@ const ShipmentsPage = ({ data, handleSubTabChange }: ShipmentsPageProps) => {
               handleDelete: () => console.log("x"),
           }))
         : data.items;
-
-    const shipmentLabel = `Shipment #${
-        isMoreThanOne
-            ? shipments?.findIndex(
-                  (shipment) => shipment._id === data._shipment[0]._id
-              )
-            : "1"
-    } of ${shipmentCount}`;
 
     const handler = () => {
         console.log("click");
@@ -78,7 +70,7 @@ const ShipmentsPage = ({ data, handleSubTabChange }: ShipmentsPageProps) => {
                 <DetailCard
                     key={shipment._id}
                     defaultExpanded={index === 0 && true}
-                    label={shipmentLabel}
+                    label={`Shipment #${index + 1} of ${shipmentCount}`}
                     variant="accordion"
                 >
                     <div className="flex flex-col space-y-6 lg:space-y-0 lg:flex-row lg:justify-between">

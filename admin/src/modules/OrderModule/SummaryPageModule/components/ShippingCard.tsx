@@ -1,5 +1,5 @@
 import moment from "moment";
-import { processShipments } from "@/utils/processShipments";
+import { processShipments } from "@/utils/processFunctions";
 import DetailCard from "@/components/DetailCard";
 import Contact from "./Contact";
 import type { Order } from "@/types/Order";
@@ -9,7 +9,7 @@ interface ShippingCardProps {
 }
 
 const ShippingCard = ({ data }: ShippingCardProps) => {
-    const { shipmentTotal } = processShipments(data._shipment);
+    const { shipmentTotal } = processShipments(data.shipments);
 
     return (
         <DetailCard label="Shipping">

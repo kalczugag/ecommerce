@@ -1,18 +1,34 @@
 import moment from "moment";
+import { useUpdateOrderMutation } from "@/store";
+import { enqueueSnackbar } from "notistack";
 import { orderStatuses } from "@/constants/orderStatuses";
 import DetailCard from "@/components/DetailCard";
 import Contact from "./Contact";
 import { Field, Form } from "react-final-form";
 import { FormControl, MenuItem, Select } from "@mui/material";
-import type { Order } from "@/types/Order";
+import type { Order, UpdateOrder } from "@/types/Order";
 
 interface BillingCardProps {
     data: Order;
 }
 
 const BillingCard = ({ data }: BillingCardProps) => {
-    const handleSubmit = (values: any) => {
-        console.log(values);
+    const [updateOrder, { isLoading }] = useUpdateOrderMutation();
+
+    const handleSubmit = async (values: UpdateOrder) => {
+        try {
+            await updateOrder({
+                _id: data._id || "",
+                status: values.status,
+            }).unwrap();
+            enqueueSnackbar("Order status updated successfully", {
+                variant: "success",
+            });
+        } catch (error) {
+            enqueueSnackbar("Failed to update order status", {
+                variant: "error",
+            });
+        }
     };
 
     return (
@@ -28,12 +44,16 @@ const BillingCard = ({ data }: BillingCardProps) => {
                 <Form
                     initialValues={{ status: data.status }}
                     onSubmit={handleSubmit}
-                    render={({ handleSubmit }) => (
+                    render={({ handleSubmit, form }) => (
                         <form onSubmit={handleSubmit}>
                             <Field name="status" type="select">
                                 {({ input }) => (
                                     <FormControl fullWidth>
-                                        <Select {...input}>
+                                        <Select
+                                            {...input}
+                                            onChange={form.submit}
+                                            disabled={isLoading}
+                                        >
                                             {Object.entries(orderStatuses).map(
                                                 ([key, value]) => (
                                                     <MenuItem

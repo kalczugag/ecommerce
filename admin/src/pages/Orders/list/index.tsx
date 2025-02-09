@@ -16,8 +16,7 @@ const OrdersList = () => {
     const { data, isFetching } = useGetAllOrdersQuery({
         ...pagination,
         ...sortCriteria,
-        populate:
-            "items,_payment,_user.firstName,_user.lastName,_payment.paymentStatus",
+        populate: "items,payments.paymentStatus,_user.firstName,_user.lastName",
     });
 
     const handleSort = (sortValues: any) => {
