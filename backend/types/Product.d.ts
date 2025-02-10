@@ -28,6 +28,7 @@ export interface Product {
 export interface PaginatedProducts extends ParsedQs {
     random?: boolean;
     search?: { search: string };
+    sort?: string;
     category?: string;
     page: number;
     pageSize: number;

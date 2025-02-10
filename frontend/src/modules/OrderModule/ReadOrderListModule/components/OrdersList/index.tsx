@@ -36,8 +36,8 @@ const OrdersList = ({
         return data;
     };
 
-    const { data, fetchNextPage, isFetching, refetch } = useInfiniteQuery({
-        queryKey: ["Orders"],
+    const { data, fetchNextPage, isFetching } = useInfiniteQuery({
+        queryKey: ["Orders", status],
         queryFn: fetchOrders,
         initialPageParam: 0,
         getNextPageParam: (lastPage, pages) =>
@@ -53,10 +53,6 @@ const OrdersList = ({
     useEffect(() => {
         setIsFetching(isFetching);
     }, [isFetching]);
-
-    useEffect(() => {
-        refetch();
-    }, [status]);
 
     return (
         <div>

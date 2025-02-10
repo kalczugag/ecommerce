@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
 import { useLazyGetAllProductsQuery } from "@/store";
@@ -14,20 +15,23 @@ const ProductsList = ({ category, setIsFetching }: ProductsListProps) => {
         threshold: 0,
         rootMargin: "200px",
     });
-
+    const [searchParams] = useSearchParams();
     const [triggerFetch] = useLazyGetAllProductsQuery();
+
+    const filters = Object.fromEntries(searchParams.entries());
 
     const fetchProducts = async ({ pageParam }: { pageParam: number }) => {
         const { data } = await triggerFetch({
             skip: pageParam,
             limit: 8,
             category,
+            ...filters,
         });
         return data;
     };
 
-    const { data, fetchNextPage, isFetching, refetch } = useInfiniteQuery({
-        queryKey: ["Products"],
+    const { data, fetchNextPage, isFetching } = useInfiniteQuery({
+        queryKey: ["Products", category, filters],
         queryFn: fetchProducts,
         initialPageParam: 0,
         getNextPageParam: (lastPage, pages) =>
@@ -43,10 +47,6 @@ const ProductsList = ({ category, setIsFetching }: ProductsListProps) => {
     useEffect(() => {
         setIsFetching(isFetching);
     }, [isFetching]);
-
-    useEffect(() => {
-        refetch();
-    }, [category]);
 
     return (
         <div className="grid justify-items-center grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">

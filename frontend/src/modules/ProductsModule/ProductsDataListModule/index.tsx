@@ -1,12 +1,12 @@
+import { useState } from "react";
 import { useGetProductFiltersQuery } from "@/store";
 import DefaultLayout from "@/layouts/DefaultLayout";
 import { categoriesNameMap } from "@/constants/breadcrumbs";
 import Sidebar from "@/components/Sidebar";
-import SortBar from "@/components/SortBar";
+import SortBar, { SortBarProps } from "@/components/SortBar";
 import Loading from "@/components/Loading";
 import RouterBreadcrumbs from "@/components/RouterBreadcrumbs";
 import ProductsList from "./components/ProductsList";
-import { useState } from "react";
 
 const categoryLabel = (category: string) => {
     const categoriesArray = category
@@ -33,6 +33,16 @@ interface ProductsDataListModuleProps {
     };
 }
 
+const sortConfig = [
+    {
+        listLabel: "Price",
+        elements: [
+            { label: "Low to High", value: "price" },
+            { label: "High to Low", value: "-price" },
+        ],
+    },
+];
+
 const ProductsDataListModule = ({ config }: ProductsDataListModuleProps) => {
     const { category, handleFilters } = config;
     const { data: productFilters } = useGetProductFiltersQuery(category);
@@ -48,7 +58,7 @@ const ProductsDataListModule = ({ config }: ProductsDataListModuleProps) => {
                             <RouterBreadcrumbs
                                 breadcrumbNameMap={categoriesNameMap}
                             />
-                            <SortBar />
+                            <SortBar config={sortConfig} />
                         </div>
                         <h2 className="text-3xl font-bold">
                             {categoryLabel(category)}
