@@ -5,10 +5,10 @@ import { LoginInput, useLoginMutation } from "@/store";
 import { enqueueSnackbar } from "notistack";
 import CopyToClipboard from "react-copy-to-clipboard";
 import { useTitle } from "@/hooks/useTitle";
-import { LoadingButton } from "@mui/lab";
 import AuthModule from "@/modules/AuthModule";
 import LoginForm from "@/forms/LoginForm";
 import { ContentCopy } from "@mui/icons-material";
+import { Button } from "@mui/material";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -19,19 +19,21 @@ const Login = () => {
         if (isSuccess) navigate("/");
     }, [isSuccess]);
 
-    const handleLogin = async (values: LoginInput) => {
+    const handleLogin = async (values: LoginInput, form: any) => {
         try {
             await login(values).unwrap();
         } catch (error: any) {
             const errorMessage =
                 error.data?.error || "An unexpected error occurred.";
             enqueueSnackbar(errorMessage, { variant: "error" });
+            return;
         }
+
+        form.restart();
     };
 
     const FormContainer = () => (
         <Form
-            keepDirtyOnReinitialize
             onSubmit={handleLogin}
             render={({ handleSubmit, form }) => (
                 <form onSubmit={handleSubmit} className="space-y-8">
@@ -70,15 +72,14 @@ const Login = () => {
                         </p>
                     </div>
                     <LoginForm isLoading={isLoading} />
-                    <LoadingButton
+                    <Button
                         type="submit"
                         variant="contained"
-                        loading={isLoading}
                         disabled={!form.getFieldState("recaptcha")?.value}
                         fullWidth
                     >
                         Sign In
-                    </LoadingButton>
+                    </Button>
                 </form>
             )}
         />

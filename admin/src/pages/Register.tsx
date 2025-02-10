@@ -4,9 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { RegisterInput, useRegisterMutation } from "@/store";
 import { enqueueSnackbar } from "notistack";
 import { useTitle } from "@/hooks/useTitle";
-import { LoadingButton } from "@mui/lab";
 import AuthModule from "@/modules/AuthModule";
 import RegisterForm from "@/forms/RegisterForm";
+import { Button } from "@mui/material";
 
 const Register = () => {
     const navigate = useNavigate();
@@ -32,20 +32,18 @@ const Register = () => {
 
     const FormContainer = () => (
         <Form
-            keepDirtyOnReinitialize
             onSubmit={handleRegister}
             render={({ handleSubmit, form }) => (
                 <form onSubmit={handleSubmit} className="space-y-8">
                     <RegisterForm isLoading={isLoading} />
-                    <LoadingButton
+                    <Button
                         type="submit"
                         variant="contained"
-                        loading={isLoading}
                         disabled={!form.getFieldState("recaptcha")?.value}
                         fullWidth
                     >
                         Sign Up
-                    </LoadingButton>
+                    </Button>
                 </form>
             )}
         />
