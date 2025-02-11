@@ -1,5 +1,5 @@
 import moment from "moment";
-import { useUpdateOrderMutation } from "@/store";
+import { useEditOrderMutation } from "@/store";
 import { enqueueSnackbar } from "notistack";
 import { orderStatuses } from "@/constants/orderStatuses";
 import DetailCard from "@/components/DetailCard";
@@ -13,11 +13,11 @@ interface BillingCardProps {
 }
 
 const BillingCard = ({ data }: BillingCardProps) => {
-    const [updateOrder, { isLoading }] = useUpdateOrderMutation();
+    const [editOrder, { isLoading }] = useEditOrderMutation();
 
     const handleSubmit = async (values: UpdateOrder) => {
         try {
-            await updateOrder({
+            await editOrder({
                 _id: data._id || "",
                 status: values.status,
             }).unwrap();

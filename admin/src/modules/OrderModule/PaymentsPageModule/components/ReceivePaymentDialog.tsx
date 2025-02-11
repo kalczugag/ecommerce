@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { Field, Form } from "react-final-form";
+import { enqueueSnackbar } from "notistack";
+import moment from "moment";
+import { useEditPaymentMutation } from "@/store/apis/paymentsApi";
 import {
     Button,
     Checkbox,
@@ -14,7 +17,7 @@ import {
 } from "@mui/material";
 import type { Payment } from "@/types/Order";
 import { CalendarMonth } from "@mui/icons-material";
-import moment from "moment";
+import TooltipButton from "@/components/TooltipButton";
 
 interface ReceivePaymentDialogProps {
     data: Payment;
@@ -22,26 +25,53 @@ interface ReceivePaymentDialogProps {
 
 interface FormProps {
     amount: number;
-    leaveAuthorizationOpen: boolean;
+    authorizationStatus: "open" | "closed";
     paymentNote?: string;
 }
 
 const ReceivePaymentDialog = ({ data }: ReceivePaymentDialogProps) => {
     const [isOpen, setIsOpen] = useState(false);
+    const [editPayment, { isLoading }] = useEditPaymentMutation();
 
     const handleOpen = () => setIsOpen(true);
     const handleClose = () => setIsOpen(false);
 
-    const handleSubmit = (values: FormProps) => {
-        console.log(values);
+    const handleSubmit = async (values: FormProps) => {
+        try {
+            await editPayment({
+                _id: data._id || "",
+                capturedAmount: values.amount,
+                authorizationStatus: values.authorizationStatus,
+                paymentNotes: Array.isArray(data.paymentNotes)
+                    ? [
+                          ...data.paymentNotes,
+                          { text: values.paymentNote || "", private: true },
+                      ]
+                    : [{ text: values.paymentNote || "", private: true }],
+            }).unwrap();
+            enqueueSnackbar("Order status updated successfully", {
+                variant: "success",
+            });
+        } catch (error) {
+            enqueueSnackbar("Failed to update order status", {
+                variant: "error",
+            });
+        }
+
         handleClose();
     };
 
+    const isDisabled = Boolean(data.capturedAmount) || isLoading;
+
     return (
         <>
-            <Button variant="contained" onClick={handleOpen}>
-                Receive Payment
-            </Button>
+            <TooltipButton
+                title="Receive Payment"
+                tooltipText="Payment already received"
+                isDisabled={isDisabled}
+                onClick={handleOpen}
+                variant="contained"
+            />
             <Dialog open={isOpen} onClose={handleClose}>
                 <Form
                     initialValues={{

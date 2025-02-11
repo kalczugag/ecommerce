@@ -94,7 +94,7 @@ export const userApi = apiSlice.injectEndpoints({
             ],
         }),
 
-        editUser: builder.mutation<User, User>({
+        editUser: builder.mutation<User, Partial<User>>({
             query: (values) => ({
                 url: `/users/${values._id}`,
                 method: "PATCH",

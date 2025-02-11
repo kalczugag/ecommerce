@@ -39,7 +39,7 @@ interface Payment {
     amount: number;
     transactionId?: string;
     paymentDate?: Date;
-    paymentNotes?: string[] | OrderNote[];
+    paymentNotes?: OrderNote[];
     authorized?: boolean;
     voided?: boolean;
     capturedAmount?: number;
@@ -128,6 +128,7 @@ export {
     Shipment,
     Payment,
     Order,
+    OrderNote,
     ReturnOrder,
     UpdateOrder,
 };

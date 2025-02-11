@@ -63,7 +63,7 @@ export const productApi = apiSlice.injectEndpoints({
             ],
         }),
 
-        editProduct: builder.mutation<Product, Product>({
+        editProduct: builder.mutation<Product, Partial<Product>>({
             query: (values) => ({
                 url: `/products/${values._id}`,
                 method: "PATCH",

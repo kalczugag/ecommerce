@@ -60,7 +60,7 @@ export const orderApi = apiSlice.injectEndpoints({
             }),
         }),
 
-        updateOrder: builder.mutation<ApiResponseObject<Order>, UpdateOrder>({
+        editOrder: builder.mutation<ApiResponseObject<Order>, Partial<Order>>({
             query: (order) => ({
                 url: `/admin/orders/${order._id}`,
                 method: "PATCH",
@@ -77,5 +77,5 @@ export const {
     useGetAllOrdersQuery,
     useGetOrderByIdQuery,
     useGetOrdersSummaryQuery,
-    useUpdateOrderMutation,
+    useEditOrderMutation,
 } = orderApi;
