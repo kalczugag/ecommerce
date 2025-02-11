@@ -4,7 +4,7 @@ import { TaxModel } from "../../../models/Tax";
 import type { Tax } from "../../../types/Tax";
 
 export const updateTax = async (
-    req: express.Request<{ id: string }, {}, Tax>,
+    req: express.Request<{ id: string }, {}, Partial<Tax>>,
     res: express.Response
 ) => {
     const { id } = req.params;

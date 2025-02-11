@@ -5,7 +5,7 @@ import { isValidObjectId } from "mongoose";
 
 //only role update for now
 export const updateUser = async (
-    req: express.Request<{ id: string }, {}, User>,
+    req: express.Request<{ id: string }, {}, Partial<User>>,
     res: express.Response
 ) => {
     const { id } = req.params;

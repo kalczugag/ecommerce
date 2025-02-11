@@ -7,7 +7,7 @@ import { processShipments } from "../../../utils/processFunctions";
 import type { Order } from "../../../types/Order";
 
 export const updateOrder = async (
-    req: express.Request<{ id: string }, {}, Order>,
+    req: express.Request<{ id: string }, {}, Partial<Order>>,
     res: express.Response
 ) => {
     const { id } = req.params;

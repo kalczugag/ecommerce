@@ -4,7 +4,7 @@ import { CategoryModel } from "../../../models/Categories";
 import { Category } from "../../../types/Category";
 
 export const updateCategory = async (
-    req: express.Request<{ id: string }, {}, Category>,
+    req: express.Request<{ id: string }, {}, Partial<Category>>,
     res: express.Response
 ) => {
     const { id } = req.params;

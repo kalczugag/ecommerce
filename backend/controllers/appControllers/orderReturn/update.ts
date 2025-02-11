@@ -4,7 +4,7 @@ import { ReturnModel } from "../../../models/Order/Return";
 import type { ReturnOrder } from "../../../types/Order";
 
 export const updateReturn = async (
-    req: express.Request<{ id: string }, {}, ReturnOrder>,
+    req: express.Request<{ id: string }, {}, Partial<ReturnOrder>>,
     res: express.Response
 ) => {
     const { id } = req.params;

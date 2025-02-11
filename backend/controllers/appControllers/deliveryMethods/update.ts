@@ -4,7 +4,7 @@ import { DeliveryMethodModel } from "../../../models/DeliveryMethod";
 import type { DeliveryMethod } from "../../../types/DeliveryMethod";
 
 export const updateDeliveryMethod = async (
-    req: express.Request<{ id: string }, {}, DeliveryMethod>,
+    req: express.Request<{ id: string }, {}, Partial<DeliveryMethod>>,
     res: express.Response
 ) => {
     const { id } = req.params;

@@ -4,7 +4,7 @@ import { ProductModel } from "../../../models/Product";
 import type { Product } from "../../../types/Product";
 
 export const updateProduct = async (
-    req: express.Request<{ id: string }, {}, Product>,
+    req: express.Request<{ id: string }, {}, Partial<Product>>,
     res: express.Response
 ) => {
     const { id } = req.params;
