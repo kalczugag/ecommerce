@@ -4,7 +4,8 @@ export interface Provider {
     price: number;
     estimatedDeliveryTimeMin: number;
     estimatedDeliveryTimeMax: number;
-    additionalNotes?: any;
+    trackingUrl?: string;
+    additionalNotes?: string;
     isAvailable?: boolean;
 }
 

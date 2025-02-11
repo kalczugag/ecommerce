@@ -3,7 +3,9 @@ import Joi from "joi";
 const providerSchema = Joi.object({
     name: Joi.string().min(2).required(),
     price: Joi.number().min(0).required(),
-    estimatedDeliveryTime: Joi.string().optional(),
+    estimatedDeliveryTimeMin: Joi.number().required(),
+    estimatedDeliveryTimeMax: Joi.number().required(),
+    trackingUrl: Joi.string().optional(),
     additionalNotes: Joi.any().optional(),
     isAvailable: Joi.boolean().optional(),
 });

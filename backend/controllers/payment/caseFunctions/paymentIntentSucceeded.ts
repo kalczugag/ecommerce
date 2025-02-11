@@ -21,6 +21,8 @@ export const handlePaymentIntentSucceeded = async (
             amount: paymentIntent.amount / 100,
             transactionId: paymentIntent.id,
             paymentDate: new Date(),
+            authorizationStatus: "closed",
+            allowAdditionalCapture: false,
         });
 
         if (!payment) throw new Error("Error creating payment");

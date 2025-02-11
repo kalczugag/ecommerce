@@ -12,6 +12,7 @@ const providerSchema = new mongoose.Schema<Provider>({
         type: Number,
         required: true,
     },
+    trackingUrl: { type: String },
     additionalNotes: { type: mongoose.Schema.Types.Mixed },
     isAvailable: { type: Boolean, default: true },
 });
