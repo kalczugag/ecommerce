@@ -5,7 +5,7 @@ interface TooltipButtonProps {
     variant?: "text" | "contained" | "outlined";
     title: string;
     tooltipText: string;
-    isDisabled: boolean;
+    disabled: boolean;
     onClick: () => void;
 }
 
@@ -13,14 +13,14 @@ const TooltipButton = ({
     variant,
     title,
     tooltipText,
-    isDisabled,
+    disabled,
     onClick,
 }: TooltipButtonProps) => {
     return (
         <Button
             variant={variant}
             onClick={onClick}
-            disabled={isDisabled}
+            disabled={disabled}
             sx={{
                 "&.Mui-disabled": {
                     pointerEvents: "auto",
@@ -28,7 +28,7 @@ const TooltipButton = ({
             }}
         >
             {title}
-            {isDisabled && (
+            {disabled && (
                 <Tooltip title={tooltipText}>
                     <span style={{ display: "inline-block", marginLeft: 8 }}>
                         <HelpOutline fontSize="small" />

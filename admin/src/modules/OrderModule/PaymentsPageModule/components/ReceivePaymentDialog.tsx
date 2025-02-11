@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Field, Form } from "react-final-form";
 import { enqueueSnackbar } from "notistack";
 import moment from "moment";
-import { useEditPaymentMutation } from "@/store/apis/paymentsApi";
+import { useEditPaymentMutation } from "@/store";
 import {
     Button,
     Checkbox,
@@ -68,7 +68,7 @@ const ReceivePaymentDialog = ({ data }: ReceivePaymentDialogProps) => {
             <TooltipButton
                 title="Receive Payment"
                 tooltipText="Payment already received"
-                isDisabled={isDisabled}
+                disabled={isDisabled}
                 onClick={handleOpen}
                 variant="contained"
             />

@@ -50,11 +50,11 @@ const CapturePaymentDialog = ({ data }: CapturePaymentDialogProps) => {
                       ]
                     : [{ text: values.paymentNote || "", private: true }],
             }).unwrap();
-            enqueueSnackbar("Order status updated successfully", {
+            enqueueSnackbar("Payment captured successfully", {
                 variant: "success",
             });
         } catch (error) {
-            enqueueSnackbar("Failed to update order status", {
+            enqueueSnackbar("Failed to capture payment", {
                 variant: "error",
             });
         }
@@ -69,7 +69,7 @@ const CapturePaymentDialog = ({ data }: CapturePaymentDialogProps) => {
             <TooltipButton
                 title="Capture"
                 tooltipText="Payment already captured"
-                isDisabled={isDisabled}
+                disabled={isDisabled}
                 onClick={handleOpen}
                 variant="outlined"
             />

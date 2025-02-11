@@ -49,9 +49,7 @@ const config: PaperCardProps[] = [
 const ShipmentsPage = ({ data, handleSubTabChange }: ShipmentsPageProps) => {
     const isMobile = useMediaQuery("(max-width: 1024px)");
     const isTablet = useMediaQuery("(max-width: 1280px)");
-    const { shipmentCount, isMoreThanOne, shipments } = processShipments(
-        data.shipments
-    );
+    const { shipmentCount, shipments } = processShipments(data.shipments);
 
     const enhancedTableData = data.items
         ? data.items.map((row) => ({
@@ -75,8 +73,7 @@ const ShipmentsPage = ({ data, handleSubTabChange }: ShipmentsPageProps) => {
                 >
                     <div className="flex flex-col space-y-6 lg:space-y-0 lg:flex-row lg:justify-between">
                         <ShipmentContacts
-                            shipFrom={shipments[index].shipFrom}
-                            shipTo={shipments[index].shipTo}
+                            shipment={shipment}
                             user={{
                                 fullName:
                                     data._user?.firstName +
@@ -84,7 +81,6 @@ const ShipmentsPage = ({ data, handleSubTabChange }: ShipmentsPageProps) => {
                                     data._user?.lastName,
                                 phone: data._user?.phone,
                             }}
-                            onEditAddress={handler}
                         />
 
                         <Divider

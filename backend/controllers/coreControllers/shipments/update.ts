@@ -1,18 +1,18 @@
 import express from "express";
 import { isValidObjectId } from "mongoose";
 import _ from "lodash";
-import { PaymentModel } from "../../../models/Order/Payment";
+import { ShipmentModel } from "../../../models/Order/Shipment";
 import { NoteModel } from "../../../models/Order/Notes";
-import type { Payment } from "../../../types/Order";
+import type { Shipment } from "../../../types/Order";
 
-export const updatePayment = async (
-    req: express.Request<{ id: string }, {}, Partial<Payment>>,
+export const updateShipment = async (
+    req: express.Request<{ id: string }, {}, Partial<Shipment>>,
     res: express.Response
 ) => {
     const { id } = req.params;
 
     if (!isValidObjectId(id)) {
-        return res.status(400).json({ error: "Invalid payment ID format" });
+        return res.status(400).json({ error: "Invalid shipment ID format" });
     }
 
     const updates = _.omit(req.body, "_id");
@@ -22,17 +22,17 @@ export const updatePayment = async (
     }
 
     try {
-        if (updates.paymentNotes && updates.paymentNotes.length > 0) {
-            const paymentNotes = await NoteModel.insertMany(
-                updates.paymentNotes
+        if (updates.deliveryNotes && updates.deliveryNotes.length > 0) {
+            const deliveryNotes = await NoteModel.insertMany(
+                updates.deliveryNotes
             );
 
-            updates.paymentNotes = paymentNotes.map((note) =>
+            updates.deliveryNotes = deliveryNotes.map((note) =>
                 note._id.toString()
             );
         }
 
-        const updatedPayment = await PaymentModel.findByIdAndUpdate(
+        const updatedShipment = await ShipmentModel.findByIdAndUpdate(
             id,
             updates,
             {
@@ -40,13 +40,13 @@ export const updatePayment = async (
             }
         );
 
-        if (!updatedPayment) {
-            return res.status(404).json({ error: "Payment not found" });
+        if (!updatedShipment) {
+            return res.status(404).json({ error: "Shipment not found" });
         }
 
         return res.status(200).json({
-            msg: "Payment updated successfully",
-            data: updatedPayment,
+            msg: "Shipment updated successfully",
+            data: updatedShipment,
         });
     } catch (error) {
         console.error(error);

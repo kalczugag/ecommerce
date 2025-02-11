@@ -94,6 +94,18 @@ export const userApi = apiSlice.injectEndpoints({
             ],
         }),
 
+        editAdminUser: builder.mutation<User, Partial<User>>({
+            query: (values) => ({
+                url: `/admin/users/${values._id}`,
+                method: "PATCH",
+                body: values,
+            }),
+            invalidatesTags: (result, error, values) => [
+                { type: "Users", id: values._id },
+                { type: "Users", id: "LIST" },
+            ],
+        }),
+
         editUser: builder.mutation<User, Partial<User>>({
             query: (values) => ({
                 url: `/users/${values._id}`,
@@ -122,5 +134,6 @@ export const {
     useGetUserByIdQuery,
     useAddUserMutation,
     useEditUserMutation,
+    useEditAdminUserMutation,
     useDeleteUserMutation,
 } = userApi;

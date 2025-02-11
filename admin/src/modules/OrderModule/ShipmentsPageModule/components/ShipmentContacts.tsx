@@ -1,20 +1,17 @@
 import { Button } from "@mui/material";
 import Contact from "../../SummaryPageModule/components/Contact";
-import type { ShippingAddress } from "@/types/Order";
+import type { Shipment, ShippingAddress } from "@/types/Order";
+import EditAddressDialog from "./EditAddressDialog";
 
 interface ShipmentContactsProps {
-    shipFrom: ShippingAddress;
-    shipTo: ShippingAddress;
+    shipment: Shipment;
     user: { fullName?: string; phone?: string };
-    onEditAddress: () => void;
 }
 
-const ShipmentContacts = ({
-    shipFrom,
-    shipTo,
-    user,
-    onEditAddress,
-}: ShipmentContactsProps) => {
+const ShipmentContacts = ({ shipment, user }: ShipmentContactsProps) => {
+    const shipFrom = shipment.shipFrom;
+    const shipTo = shipment.shipTo;
+
     return (
         <div className="flex-1 space-x-2 flex justify-between">
             <Contact label="Ship From" address={shipFrom} className="w-full" />
@@ -22,11 +19,7 @@ const ShipmentContacts = ({
                 label="Ship To"
                 address={shipTo}
                 contact={user}
-                actionButton={
-                    <Button variant="outlined" onClick={onEditAddress}>
-                        Edit Address
-                    </Button>
-                }
+                actionButton={<EditAddressDialog shipment={shipment} />}
                 className="w-full"
             />
         </div>

@@ -1,6 +1,6 @@
 import { apiSlice } from "./apiSlice";
 import { serialize } from "@/utils/helpers";
-import type { Order, UpdateOrder } from "@/types/Order";
+import type { Order } from "@/types/Order";
 
 export type summaryType = "yearly" | "monthly" | "weekly";
 type orderSummary = {

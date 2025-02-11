@@ -30,3 +30,5 @@ export * from "./apis/ordersApi";
 export * from "./apis/summary";
 export * from "./apis/categoriesApi";
 export * from "./apis/rolesApi";
+export * from "./apis/paymentsApi";
+export * from "./apis/shipmentsApi";
