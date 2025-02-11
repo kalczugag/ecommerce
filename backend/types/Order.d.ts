@@ -48,6 +48,8 @@ interface Payment {
     authorized?: boolean;
     voided?: boolean;
     capturedAmount?: number;
+    authorizationStatus?: "open" | "closed";
+    allowAdditionalCapture?: boolean;
     createdAt?: Date;
     updatedAt?: Date;
 }

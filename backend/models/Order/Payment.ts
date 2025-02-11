@@ -33,6 +33,15 @@ const paymentSchema = new mongoose.Schema<Payment>(
                 required: false,
             },
         ],
+        authorized: { type: Boolean, default: false, required: false },
+        voided: { type: Boolean, default: false, required: false },
+        capturedAmount: { type: Number, required: false },
+        authorizationStatus: {
+            type: String,
+            enum: ["open", "closed"],
+            default: "open",
+        },
+        allowAdditionalCapture: { type: Boolean, required: false },
     },
     { timestamps: true }
 );
