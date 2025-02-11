@@ -21,7 +21,12 @@ const deliveryMethodSchema = new mongoose.Schema<DeliveryMethod>({
     type: {
         type: String,
         required: true,
-        enum: ["home_delivery", "locker_delivery", "pickup"],
+        enum: [
+            "home_delivery",
+            "locker_delivery",
+            "pickup",
+            "unavailable_for_customers",
+        ],
     },
     providers: [providerSchema],
     metadata: { type: mongoose.Schema.Types.Mixed },

@@ -11,7 +11,11 @@ export interface Provider {
 
 export interface DeliveryMethod {
     _id?: string;
-    type: "home_delivery" | "locker_delivery" | "pickup";
+    type:
+        | "home_delivery"
+        | "locker_delivery"
+        | "pickup"
+        | "unavailable_for_customers";
     providers: Provider[];
     metadata?: any;
 }

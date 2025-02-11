@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Field, Form } from "react-final-form";
 import { useGetDeliveryMethodsQuery } from "@/store/apis/deliveryMethods";
+import { required } from "@/utils/validators";
 import { deliveryMethods } from "@/constants/deliveryMethods";
 import {
     Button,
@@ -11,6 +12,7 @@ import {
     DialogTitle,
     Divider,
     FormControl,
+    FormHelperText,
     InputLabel,
     ListSubheader,
     MenuItem,
@@ -67,15 +69,26 @@ const ChangeShippingMethodDialog = ({
                                     </span>
                                     <span>{methodName}</span>
                                 </DialogContentText>
-                                <Field name="shippingMethod" type="select">
-                                    {({ input }) => (
+                                <Field
+                                    name="shippingMethod"
+                                    type="select"
+                                    validate={required}
+                                >
+                                    {(props) => (
                                         <FormControl
                                             disabled={isLoading}
                                             sx={{ minWidth: 200 }}
                                         >
-                                            <InputLabel>New Method</InputLabel>
+                                            <InputLabel
+                                                error={
+                                                    props.meta.error &&
+                                                    props.meta.touched
+                                                }
+                                            >
+                                                New Method
+                                            </InputLabel>
                                             <Select
-                                                {...input}
+                                                {...props.input}
                                                 label="New Method"
                                                 MenuProps={{
                                                     slotProps: {
@@ -86,6 +99,10 @@ const ChangeShippingMethodDialog = ({
                                                         },
                                                     },
                                                 }}
+                                                error={
+                                                    props.meta.error &&
+                                                    props.meta.touched
+                                                }
                                             >
                                                 <MenuItem value="">
                                                     None
@@ -122,13 +139,13 @@ const ChangeShippingMethodDialog = ({
                                                             ),
                                                         ]
                                                     )}
-                                                <ListSubheader>
-                                                    Unavailable for customers
-                                                </ListSubheader>
-                                                <MenuItem value="free">
-                                                    ** Free shipping
-                                                </MenuItem>
                                             </Select>
+                                            {props.meta.error &&
+                                                props.meta.touched && (
+                                                    <FormHelperText error>
+                                                        Select shipping method
+                                                    </FormHelperText>
+                                                )}
                                         </FormControl>
                                     )}
                                 </Field>

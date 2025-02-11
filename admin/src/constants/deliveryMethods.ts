@@ -7,4 +7,5 @@ export const deliveryMethods: Record<
     home_delivery: "Home Delivery",
     locker_delivery: "Locker Delivery",
     pickup: "Pickup",
+    unavailable_for_customers: "Unavailable for Customers",
 };
