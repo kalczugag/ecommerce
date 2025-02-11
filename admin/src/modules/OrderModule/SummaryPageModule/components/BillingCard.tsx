@@ -51,7 +51,10 @@ const BillingCard = ({ data }: BillingCardProps) => {
                                     <FormControl fullWidth>
                                         <Select
                                             {...input}
-                                            onChange={form.submit}
+                                            onChange={(e) => {
+                                                input.onChange(e.target.value);
+                                                form.submit();
+                                            }}
                                             disabled={isLoading}
                                         >
                                             {Object.entries(orderStatuses).map(

@@ -28,7 +28,7 @@ export const orderApi = apiSlice.injectEndpoints({
                 }
 
                 return {
-                    url: "/orders",
+                    url: "/admin/orders",
                     method: "GET",
                     params: queryParams,
                     keepUnusedDataFor: 300,
@@ -54,7 +54,7 @@ export const orderApi = apiSlice.injectEndpoints({
 
         getOrdersSummary: builder.query<orderSummary[], summaryType>({
             query: (type) => ({
-                url: "/orders/summary",
+                url: "/admin/orders/summary",
                 method: "GET",
                 params: { type },
             }),
@@ -62,7 +62,7 @@ export const orderApi = apiSlice.injectEndpoints({
 
         updateOrder: builder.mutation<ApiResponseObject<Order>, UpdateOrder>({
             query: (order) => ({
-                url: `/orders/${order._id}`,
+                url: `/admin/orders/${order._id}`,
                 method: "PATCH",
                 body: order,
             }),

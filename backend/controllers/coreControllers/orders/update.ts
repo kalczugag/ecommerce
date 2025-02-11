@@ -1,5 +1,6 @@
 import express from "express";
 import { isValidObjectId } from "mongoose";
+import _ from "lodash";
 import { OrderModel } from "../../../models/Order";
 import type { Order } from "../../../types/Order";
 
@@ -8,11 +9,12 @@ export const updateOrder = async (
     res: express.Response
 ) => {
     const { id } = req.params;
-    const updates = req.body;
 
     if (!isValidObjectId(id)) {
         return res.status(400).json({ error: "Invalid order ID format" });
     }
+
+    const updates = _.omit(req.body, "_id");
 
     if (Object.keys(updates).length === 0) {
         return res.status(400).json({ error: "No update fields provided" });

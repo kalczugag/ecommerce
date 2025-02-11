@@ -1,6 +1,5 @@
 import express from "express";
 
-// app routes
 import auth from "./appRoutes/auth";
 import users from "./appRoutes/user";
 import roles from "./appRoutes/roles";
@@ -15,13 +14,9 @@ import payment from "./appRoutes/payment";
 import deliveryMethods from "./appRoutes/deliveryMethods";
 import returns from "./appRoutes/returns";
 
-// core routes
-import coreOrders from "./coreRoutes/orders";
-
 const router = express.Router();
 
 export default (): express.Router => {
-    // app routes
     auth(router);
     users(router);
     roles(router);
@@ -35,9 +30,6 @@ export default (): express.Router => {
     payment(router);
     deliveryMethods(router);
     returns(router);
-
-    // core routes
-    coreOrders(router);
 
     return router;
 };

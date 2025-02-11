@@ -6,7 +6,8 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 
-import appRouter from "./routes/v1";
+import appRouter from "./routes/v1/appRouter";
+import coreRouter from "./routes/v1/coreRouter";
 
 import "./config/passport";
 import "./config/cron";
@@ -37,6 +38,7 @@ app.post(
 app.use(bodyParser.json());
 
 app.use("/api/v1", appRouter());
+app.use("/api/v1/admin", coreRouter());
 
 app.post("/trigger-summary-cron", (req, res) => {
     summaryCronJob();
