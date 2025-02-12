@@ -34,7 +34,7 @@ const SummaryPage = ({ data }: SummaryPageProps) => {
             {divider}
 
             {Array.isArray(data.payments) && data.payments.length > 0 && (
-                <PaymentsCard data={data} />
+                <PaymentsCard payment={data.payments[0]} />
             )}
         </div>
     );

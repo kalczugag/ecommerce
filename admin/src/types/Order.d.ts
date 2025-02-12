@@ -37,6 +37,23 @@ interface Payment {
     paymentMethod: string;
     paymentStatus: "unpaid" | "pending" | "completed" | "failed" | "refunded";
     amount: number;
+    card?: {
+        checks: {
+            cvc_check: "pass" | "fail" | "unavailable" | "unchecked";
+            address_line1_check: "pass" | "fail" | "unavailable" | "unchecked";
+            address_postal_code_check:
+                | "pass"
+                | "fail"
+                | "unavailable"
+                | "unchecked";
+        };
+        brand: string;
+        last4: string;
+        exp_month: number;
+        exp_year: number;
+        funding: string;
+        country: string;
+    };
     transactionId?: string;
     paymentDate?: Date;
     paymentNotes?: OrderNote[];

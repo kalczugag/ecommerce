@@ -65,7 +65,7 @@ export const orderConfirmation = (order: Order) => {
                                                     <p style="margin: 0">${product.title}</p>
                                                     <p style="font-size: 14px; color: #555; margin: 0">Color: ${item.color}</p>
                                                     <p style="font-size: 14px; color: #555; margin: 0">Size: ${item.size}</p>
-                                                    <p style="font-size: 14px; color: #555; margin: 0">Product ID: ${product._id}</p>
+                                                    <p style="font-size: 14px; color: #555; margin: 0">SKU: ${product.sku}</p>
                                                 </td>
                                                 <td align="right" style="font-weight: 600;">
                                                     $${item.unitPrice}

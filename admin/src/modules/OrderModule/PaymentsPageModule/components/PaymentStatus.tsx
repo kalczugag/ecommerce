@@ -5,7 +5,21 @@ interface PaymentStatusProps {
     payment: Payment;
 }
 
+type FraudCheckStatus = "pass" | "fail" | "unavailable" | "unchecked";
+
+const fraudCheckLabels: Record<FraudCheckStatus, string> = {
+    pass: "Approved",
+    fail: "Declined",
+    unavailable: "Unavailable",
+    unchecked: "Unchecked",
+};
+
 const PaymentStatus = ({ payment }: PaymentStatusProps) => {
+    const cardChecks = payment.card?.checks;
+
+    const avsStatus = cardChecks?.address_line1_check || "unchecked";
+    const cvcStatus = cardChecks?.cvc_check || "unchecked";
+
     return (
         <div className="flex-1 flex flex-col space-y-4">
             <div>
@@ -14,8 +28,10 @@ const PaymentStatus = ({ payment }: PaymentStatusProps) => {
             </div>
             <div className="flex flex-col space-y-1">
                 <span className="font-bold">Fraud Report: </span>
-                <span className="text-sm">AVS: Not Supported (S)</span>
-                <span className="text-sm">CVV: Not Response (x)</span>
+                <div className="text-sm">
+                    <div>AVS: {fraudCheckLabels[avsStatus]}</div>
+                    <div>CVC: {fraudCheckLabels[cvcStatus]}</div>
+                </div>
             </div>
 
             <PaymentActions payment={payment} />

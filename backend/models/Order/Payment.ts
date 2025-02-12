@@ -10,18 +10,25 @@ const paymentSchema = new mongoose.Schema<Payment>(
         },
         paymentMethod: {
             type: String,
-            enum: [
-                "credit_card",
-                "paypal",
-                "bank_transfer",
-                "cash_on_delivery",
-            ],
             required: true,
         },
         paymentStatus: {
             type: String,
             enum: ["unpaid", "pending", "completed", "failed", "refunded"],
             default: "pending",
+        },
+        card: {
+            brand: String,
+            last4: String,
+            exp_month: Number,
+            exp_year: Number,
+            funding: String,
+            country: String,
+            checks: {
+                cvc_check: String,
+                address_line1_check: String,
+                address_postal_code_check: String,
+            },
         },
         amount: { type: Number, required: true },
         transactionId: { type: String, required: false },
