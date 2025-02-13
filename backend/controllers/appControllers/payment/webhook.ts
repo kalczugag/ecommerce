@@ -61,7 +61,7 @@ export const stripeWebhook = async (
                 console.warn(`Unhandled event type: ${event.type}`);
         }
 
-        res.json();
+        res.json(successResponse({ received: true }));
     } catch (error) {
         console.error("Error handling webhook:", error);
         return res

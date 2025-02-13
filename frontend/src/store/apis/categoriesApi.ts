@@ -20,13 +20,15 @@ export const categoryApi = apiSlice.injectEndpoints({
             },
         }),
 
-        getCategoriesByLevel: builder.query<Category[], string>({
-            query: (level) => ({
-                url: "/categories/byLevel",
-                method: "GET",
-                params: { level },
-            }),
-        }),
+        getCategoriesByLevel: builder.query<ApiResponseArray<Category>, string>(
+            {
+                query: (level) => ({
+                    url: "/categories/byLevel",
+                    method: "GET",
+                    params: { level },
+                }),
+            }
+        ),
     }),
 });
 

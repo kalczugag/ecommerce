@@ -28,7 +28,7 @@ const valuetext = (value: number) => `${value}USD`;
 
 interface SidebarSortFormProps {
     config: {
-        data: ProductFilters;
+        data?: ProductFilters;
         disabled?: boolean;
     };
 }

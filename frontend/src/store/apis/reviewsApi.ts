@@ -3,7 +3,10 @@ import type { ShortReviewsCount } from "@/types/Review";
 
 export const reviewsApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        getReviewsByProductId: builder.query<ShortReviewsCount, string>({
+        getReviewsByProductId: builder.query<
+            ApiResponseObject<ShortReviewsCount>,
+            string
+        >({
             query: (id) => ({
                 url: `/reviews/${id}`,
                 method: "GET",

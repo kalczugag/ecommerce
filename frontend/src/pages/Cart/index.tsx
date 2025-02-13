@@ -18,7 +18,7 @@ const Cart = () => {
         }
     }, []);
 
-    return <CartModule data={data} isLoading={isFetching} />;
+    return <CartModule data={data?.result} isLoading={isFetching} />;
 };
 
 export default Cart;

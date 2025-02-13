@@ -81,7 +81,7 @@ export const getOrdersByUserId = async (
             .status(200)
             .json(
                 successResponse(
-                    enhanceShipments,
+                    enhancedOrders,
                     "OK",
                     200,
                     totalDocuments,

@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
 import { useTitle } from "@/hooks/useTitle";
 import { RegisterInput, useRegisterMutation } from "@/store";
-import { LoadingButton } from "@mui/lab";
 import AuthModule from "@/modules/AuthModule";
 import RegisterForm from "@/forms/RegisterForm";
 import { Button } from "@mui/material";

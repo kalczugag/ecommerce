@@ -12,7 +12,7 @@ const AccountDetails = () => {
         <div className="flex flex-col">
             {data &&
                 Object.values(data).map((value, index) => (
-                    <p>
+                    <p key={index}>
                         {keys[index]}: {value.toString()}
                     </p>
                 ))}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { useQueryParams } from "@/hooks/useQueryParams";
 import { IconButton, ListSubheader, Menu, MenuItem } from "@mui/material";
 import { Sort } from "@mui/icons-material";
@@ -36,17 +36,20 @@ const SortBar = ({ config }: SortBarProps) => {
                 <Sort />
             </IconButton>
             <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-                {config.map((item) => (
-                    <>
+                {config.map((item, index) => (
+                    <div key={item.listLabel + "_" + index}>
                         {item.listLabel && (
                             <ListSubheader>{item.listLabel}</ListSubheader>
                         )}
-                        {item.elements.map((element) => (
-                            <MenuItem onClick={() => handleSort(element.value)}>
+                        {item.elements.map((element, subIndex) => (
+                            <MenuItem
+                                key={element.label + "_" + subIndex}
+                                onClick={() => handleSort(element.value)}
+                            >
                                 {element.label}
                             </MenuItem>
                         ))}
-                    </>
+                    </div>
                 ))}
             </Menu>
         </div>

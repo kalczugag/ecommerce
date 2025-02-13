@@ -29,7 +29,7 @@ const CreateReturnModule = () => {
         {
             label: "Select items",
             element: (props: StepProps) => (
-                <SelectItemsStep {...props} data={data} />
+                <SelectItemsStep {...props} data={data?.result} />
             ),
         },
         {
@@ -51,8 +51,6 @@ const CreateReturnModule = () => {
             returnedItems: selectedProducts,
             returnReason: reason || otherReason || "other",
         };
-
-        console.log(output);
 
         await addReturn(output);
     };

@@ -64,7 +64,7 @@ const DeliveryModule = ({ data, isDeliveryLoading }: DeliveryModuleProps) => {
         }
 
         await updateOrder({
-            _id: order._id,
+            _id: order._id || "",
             shipments: [
                 {
                     _order: order._id!,

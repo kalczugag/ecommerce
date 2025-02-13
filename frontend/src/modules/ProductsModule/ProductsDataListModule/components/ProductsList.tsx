@@ -51,7 +51,7 @@ const ProductsList = ({ category, setIsFetching }: ProductsListProps) => {
     return (
         <div className="grid justify-items-center grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {data?.pages.map((page) =>
-                page?.data.map((product) => (
+                page?.result.map((product) => (
                     <ProductCard
                         key={product._id}
                         data={product}

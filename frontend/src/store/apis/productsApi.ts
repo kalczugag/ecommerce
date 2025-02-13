@@ -27,16 +27,19 @@ export const productApi = apiSlice.injectEndpoints({
                     params: queryParams,
                 };
             },
-            providesTags: (result) =>
-                result
-                    ? result.data.map((product) => ({
+            providesTags: (data) =>
+                data
+                    ? data.result.map((product) => ({
                           type: "Products",
                           id: product._id,
                       }))
                     : [{ type: "Products", id: "LIST" }],
         }),
 
-        getProductFilters: builder.query<ProductFilters, string>({
+        getProductFilters: builder.query<
+            ApiResponseObject<ProductFilters>,
+            string
+        >({
             query: (cat) => {
                 return {
                     url: "/products/filters",
@@ -46,14 +49,14 @@ export const productApi = apiSlice.injectEndpoints({
             },
         }),
 
-        getRandomProduct: builder.query<Product[], void>({
+        getRandomProduct: builder.query<ApiResponseArray<Product>, void>({
             query: () => ({
                 url: "/products?random=true",
                 method: "GET",
             }),
         }),
 
-        getProductById: builder.query<Product, string>({
+        getProductById: builder.query<ApiResponseObject<Product>, string>({
             query: (id) => ({
                 url: `/products/id/${id}`,
                 method: "GET",

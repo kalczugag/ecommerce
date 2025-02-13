@@ -69,7 +69,7 @@ const ProductsDataListModule = ({ config }: ProductsDataListModuleProps) => {
             >
                 <Sidebar
                     config={{
-                        data: productFilters!,
+                        data: productFilters?.result,
                         // disabled: !data.length,
                         onSubmit: handleFilters,
                     }}

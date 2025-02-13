@@ -5,7 +5,11 @@ import methods from "../../../controllers/appControllers/categories";
 import { hasRole, cache } from "../../../middlewares";
 
 const categories = (router: express.Router) => {
-    router.get("/categories", cache("categories"), methods.read);
+    router.get(
+        "/categories",
+        // cache("categories"),
+        methods.read
+    );
 
     router.get(
         "/categories/byLevel",

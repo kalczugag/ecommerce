@@ -64,7 +64,7 @@ const CartModule = ({ data, isLoading }: CartModuleProps) => {
 
         try {
             const result = await addOrder(orderPayload);
-            const orderId = result.data?.data._id;
+            const orderId = result.data?.result._id;
 
             if (orderId) {
                 navigate(`/checkout/${orderId}/delivery`);

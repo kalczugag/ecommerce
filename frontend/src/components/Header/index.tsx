@@ -69,7 +69,7 @@ const Header = ({ topLabel }: HeaderProps) => {
                             </Link>
                         </div>
                         <CategoryContainer
-                            data={data?.data}
+                            data={data?.result}
                             setOpen={setOpenCategories}
                             openCategories={openCategories}
                         />
@@ -77,9 +77,9 @@ const Header = ({ topLabel }: HeaderProps) => {
                     </Toolbar>
                 </Container>
             </AppBar>
-            {data?.data && (
+            {data?.result && (
                 <CategoryList
-                    data={data.data}
+                    data={data.result}
                     page={openCategories.page}
                     isOpen={openCategories.isOpen}
                     setOpen={setOpenCategories}

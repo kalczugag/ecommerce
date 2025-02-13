@@ -5,7 +5,12 @@ import type { StepProps } from "../../../../types/Step";
 const ReturnMethodStep = ({ formValues }: StepProps) => {
     const { data, isLoading } = useGetDeliveryMethodsQuery();
 
-    return <DeliveryMethodForm content={data || []} isLoading={isLoading} />;
+    return (
+        <DeliveryMethodForm
+            content={data?.result || []}
+            isLoading={isLoading}
+        />
+    );
 };
 
 export default ReturnMethodStep;

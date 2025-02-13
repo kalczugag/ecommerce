@@ -14,17 +14,17 @@ interface BodyProps {
 
 export const cartApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        getUsersCart: builder.query<Cart, void>({
+        getUsersCart: builder.query<ApiResponseObject<Cart>, void>({
             query: () => ({
                 url: "/cart",
                 method: "GET",
             }),
-            providesTags: (result) =>
-                result ? [{ type: "Cart", id: result._id }] : [],
+            providesTags: (data) =>
+                data ? [{ type: "Cart", id: data.result._id }] : [],
         }),
 
         getUsersCartCount: builder.query<
-            { _id: string; count: number },
+            ApiResponseObject<{ _id: string; count: number }>,
             { onlyCount?: boolean }
         >({
             query: (onlyCount) => ({
@@ -32,8 +32,8 @@ export const cartApi = apiSlice.injectEndpoints({
                 method: "GET",
                 params: onlyCount,
             }),
-            providesTags: (result) =>
-                result ? [{ type: "Cart", id: result._id }] : [],
+            providesTags: (data) =>
+                data ? [{ type: "Cart", id: data.result._id }] : [],
         }),
 
         editUsersCart: builder.mutation<ApiResponseObject<Cart>, BodyProps>({
@@ -42,8 +42,8 @@ export const cartApi = apiSlice.injectEndpoints({
                 method: "PATCH",
                 body: cart,
             }),
-            invalidatesTags: (result, error, cart) => [
-                { type: "Cart", id: result?.data._id },
+            invalidatesTags: (data, error, cart) => [
+                { type: "Cart", id: data?.result._id },
             ],
         }),
     }),

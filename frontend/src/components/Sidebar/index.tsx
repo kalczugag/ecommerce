@@ -7,7 +7,7 @@ import { Close } from "@mui/icons-material";
 
 interface SidebarProps {
     config: {
-        data: ProductFilters;
+        data?: ProductFilters;
         disabled?: boolean;
         onSubmit: (values: any) => void;
     };

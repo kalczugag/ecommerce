@@ -7,7 +7,7 @@ const AccountPreferences = () => {
     const { data: currentUser, isLoading: currentUserLoading } =
         useGetCurrentUserQuery();
 
-    const formattedData = categoriesData?.map((item) => ({
+    const formattedData = categoriesData?.result.map((item) => ({
         _id: item._id || "",
         label: item.name,
     }));
