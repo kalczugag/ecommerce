@@ -1,14 +1,4 @@
-interface SuccessResponse<T> {
-    success: boolean;
-    result: T;
-    message: string;
-    statusCode: number;
-    count?: number;
-    hasMore?: boolean;
-    nextCursor?: number;
-}
-
-interface ErrorResponse<T> {
+interface ApiResponse<T> {
     success: boolean;
     result: T;
     message: string;
@@ -25,7 +15,7 @@ export const successResponse = <T>(
     count?: number,
     hasMore?: boolean,
     nextCursor?: number
-): SuccessResponse<T> => ({
+): ApiResponse<T> => ({
     success: true,
     result,
     message,
@@ -39,7 +29,7 @@ export const errorResponse = <T>(
     result: T = null as any,
     message: string,
     statusCode = 500
-): ErrorResponse<T> => ({
+): ApiResponse<T> => ({
     success: false,
     result,
     message,

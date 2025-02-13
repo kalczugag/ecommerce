@@ -22,12 +22,12 @@ const AddProduct = ({ orderData, handleSubTabChange }: AddProductProps) => {
         console.log(values);
     };
 
-    const enhancedTableData = data?.data
-        ? data?.data.map((row) => ({
+    const enhancedTableData = data?.result
+        ? data?.result.map((row) => ({
               ...row,
-              shipments: orderData._shipment,
+              shipments: orderData.shipments,
           }))
-        : data?.data;
+        : data?.result;
 
     return (
         <div className="flex flex-col space-y-4">

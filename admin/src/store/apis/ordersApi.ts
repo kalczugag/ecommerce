@@ -34,16 +34,16 @@ export const orderApi = apiSlice.injectEndpoints({
                     keepUnusedDataFor: 300,
                 };
             },
-            providesTags: (result) =>
-                result
-                    ? result.data.map((order) => ({
+            providesTags: (data) =>
+                data
+                    ? data.result.map((order) => ({
                           type: "Orders",
                           id: order._id,
                       }))
                     : [{ type: "Orders", id: "LIST" }],
         }),
 
-        getOrderById: builder.query<Order, string>({
+        getOrderById: builder.query<ApiResponseObject<Order>, string>({
             query: (id) => ({
                 url: `/orders/id/${id}`,
                 method: "GET",
@@ -52,7 +52,10 @@ export const orderApi = apiSlice.injectEndpoints({
             providesTags: (result, error, id) => [{ type: "Orders", id: id }],
         }),
 
-        getOrdersSummary: builder.query<orderSummary[], summaryType>({
+        getOrdersSummary: builder.query<
+            ApiResponseArray<orderSummary>,
+            summaryType
+        >({
             query: (type) => ({
                 url: "/admin/orders/summary",
                 method: "GET",

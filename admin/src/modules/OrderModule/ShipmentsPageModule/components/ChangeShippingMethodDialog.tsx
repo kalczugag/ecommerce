@@ -108,8 +108,8 @@ const ChangeShippingMethodDialog = ({
                                                     None
                                                 </MenuItem>
                                                 <Divider />
-                                                {data &&
-                                                    data.map(
+                                                {data?.result &&
+                                                    data.result.map(
                                                         (deliveryMethod) => [
                                                             <ListSubheader
                                                                 key={

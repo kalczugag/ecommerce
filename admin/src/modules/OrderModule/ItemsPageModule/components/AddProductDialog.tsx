@@ -196,8 +196,8 @@ const AddProductDialog = ({ data }: AddProductDialogProps) => {
                                                         None
                                                     </MenuItem>
                                                     <Divider />
-                                                    {deliveryMethodsData &&
-                                                        deliveryMethodsData.map(
+                                                    {deliveryMethodsData?.result &&
+                                                        deliveryMethodsData.result.map(
                                                             (
                                                                 deliveryMethod
                                                             ) => [

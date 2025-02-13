@@ -3,7 +3,7 @@ import { Summary } from "@/types/Summary";
 
 export const summaryApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        getSummary: builder.query<Summary, void>({
+        getSummary: builder.query<ApiResponseObject<Summary>, void>({
             query: () => ({
                 url: "/summary",
                 method: "GET",

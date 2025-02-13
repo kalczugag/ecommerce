@@ -19,7 +19,7 @@ const Overview = () => {
 
     return (
         <DefaultLayout>
-            <PreviewCard chartData={data} />
+            <PreviewCard chartData={data.result || []} />
         </DefaultLayout>
     );
 };

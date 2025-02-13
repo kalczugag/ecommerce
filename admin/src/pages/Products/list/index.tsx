@@ -32,7 +32,7 @@ const ProductsList = () => {
 
     const config = {
         tableConfig,
-        tableData: data?.data || [],
+        tableData: data?.result || [],
         total: data?.count || 0,
         action: deleteProduct,
         isLoading: isFetching || result.isLoading,

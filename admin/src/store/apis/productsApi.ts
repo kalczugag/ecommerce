@@ -31,16 +31,16 @@ export const productApi = apiSlice.injectEndpoints({
                     keepUnusedDataFor: 300,
                 };
             },
-            providesTags: (result) =>
-                result
-                    ? result.data.map((product) => ({
+            providesTags: (data) =>
+                data
+                    ? data.result.map((product) => ({
                           type: "Products",
                           id: product._id,
                       }))
                     : [{ type: "Products", id: "LIST" }],
         }),
 
-        getProductById: builder.query<Product, string>({
+        getProductById: builder.query<ApiResponseObject<Product>, string>({
             query: (id) => ({
                 url: `/products/id/${id}`,
                 method: "GET",
@@ -52,7 +52,7 @@ export const productApi = apiSlice.injectEndpoints({
             providesTags: (result, error, id) => [{ type: "Products", id: id }],
         }),
 
-        addProduct: builder.mutation<Product, Product>({
+        addProduct: builder.mutation<ApiResponseObject<Product>, Product>({
             query: (values) => ({
                 url: "/products",
                 method: "POST",
@@ -63,7 +63,10 @@ export const productApi = apiSlice.injectEndpoints({
             ],
         }),
 
-        editProduct: builder.mutation<Product, Partial<Product>>({
+        editProduct: builder.mutation<
+            ApiResponseObject<Product>,
+            Partial<Product>
+        >({
             query: (values) => ({
                 url: `/products/${values._id}`,
                 method: "PATCH",
@@ -75,7 +78,7 @@ export const productApi = apiSlice.injectEndpoints({
             ],
         }),
 
-        deleteProduct: builder.mutation<Product, string>({
+        deleteProduct: builder.mutation<ApiResponseObject<Product>, string>({
             query: (id) => ({
                 url: `/products/${id}`,
                 method: "DELETE",

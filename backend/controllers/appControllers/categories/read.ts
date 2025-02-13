@@ -86,7 +86,11 @@ export const getAllCategories = async (
 
         await redisClient.set(cacheKey, JSON.stringify(resultData), "EX", 3600);
 
-        return res.status(200).json(successResponse(resultData));
+        return res
+            .status(200)
+            .json(
+                successResponse(resultData.data, "OK", 200, resultData.count)
+            );
     } catch (error) {
         console.error(error);
         return res
