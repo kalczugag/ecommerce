@@ -1,4 +1,5 @@
 import express from "express";
+import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import { DeliveryMethodModel } from "../../../models/DeliveryMethod";
 import { redisClient } from "../../../config/redis";
 
@@ -12,7 +13,9 @@ export const getAllDeliveryMethods = async (
         const deliveryMethods = await DeliveryMethodModel.find();
 
         if (!deliveryMethods || deliveryMethods.length === 0) {
-            return res.status(404).json({ error: "No delivery methods found" });
+            return res
+                .status(404)
+                .json(errorResponse(null, "No delivery methods found", 404));
         }
 
         await redisClient.set(
@@ -22,11 +25,11 @@ export const getAllDeliveryMethods = async (
             3600 * 24 * 7
         );
 
-        return res.status(200).json(deliveryMethods);
+        return res.status(200).json(successResponse(deliveryMethods));
     } catch (error) {
         console.error(error);
         return res
             .status(500)
-            .json({ data: [], error: "Internal server error" });
+            .json(errorResponse(null, "Internal server error"));
     }
 };

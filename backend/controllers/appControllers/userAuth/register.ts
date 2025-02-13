@@ -1,5 +1,6 @@
 import express from "express";
 import ms from "ms";
+import { errorResponse } from "../../../handlers/apiResponse";
 import { genPassword, issueJWT } from "../../../utils/helpers";
 import schema from "./schemaValidate";
 import { UserModel } from "../../../models/User";
@@ -17,9 +18,15 @@ export const register = async (
     const { error } = schema.validate(req.body);
 
     if (error) {
-        return res.status(400).json({
-            error: error.details.map((detail) => detail.message).join(", "),
-        });
+        return res
+            .status(400)
+            .json(
+                errorResponse(
+                    null,
+                    error.details.map((detail) => detail.message).join(", "),
+                    400
+                )
+            );
     }
 
     try {
@@ -69,9 +76,13 @@ export const register = async (
         if (err instanceof Error) {
             console.error(err);
             if (err.message.includes("duplicate key")) {
-                return res.status(409).json({ error: "Email already exists" });
+                return res
+                    .status(409)
+                    .json(errorResponse(null, "User already exists", 409));
             }
         }
-        return res.status(500).json({ error: "Internal server error" });
+        return res
+            .status(500)
+            .json(errorResponse(null, "Internal server error"));
     }
 };

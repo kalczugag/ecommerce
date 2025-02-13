@@ -1,5 +1,6 @@
 import express from "express";
 import moment from "moment";
+import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import { OrderModel } from "../../../models/Order";
 
 interface IncomeByPeriod {
@@ -78,9 +79,11 @@ export const summary = async (
             currentDate.add(1, periodFormat);
         }
 
-        return res.status(200).json(allPeriods);
+        return res.status(200).json(successResponse(allPeriods));
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res
+            .status(500)
+            .json(errorResponse(null, "Internal server error"));
     }
 };

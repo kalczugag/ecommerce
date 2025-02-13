@@ -1,5 +1,6 @@
 import express from "express";
 import { isValidObjectId } from "mongoose";
+import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import { CategoryModel } from "../../../models/Categories";
 
 export const getCategoryById = async (
@@ -9,7 +10,9 @@ export const getCategoryById = async (
     const { id } = req.params;
 
     if (!isValidObjectId(id)) {
-        return res.status(400).json({ error: "Category ID is required" });
+        return res
+            .status(400)
+            .json(errorResponse(null, "Invalid category ID format", 400));
     }
 
     try {
@@ -18,12 +21,16 @@ export const getCategoryById = async (
             .exec();
 
         if (!category) {
-            return res.status(404).json({ error: "Category not found" });
+            return res
+                .status(404)
+                .json(errorResponse(null, "Category not found", 404));
         }
 
-        return res.status(200).json(category);
+        return res.status(200).json(successResponse(category));
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res
+            .status(500)
+            .json(errorResponse(null, "Internal server error"));
     }
 };

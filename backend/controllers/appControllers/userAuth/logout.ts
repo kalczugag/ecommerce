@@ -1,4 +1,5 @@
 import express from "express";
+import { errorResponse } from "../../../handlers/apiResponse";
 import { UserModel } from "../../../models/User";
 import { redisClient } from "../../../config/redis";
 
@@ -6,7 +7,9 @@ export const logout = async (req: express.Request, res: express.Response) => {
     const cookies = req.cookies;
 
     if (!cookies || !cookies.refreshToken) {
-        return res.status(403).json({ error: "Refresh token not found" });
+        return res
+            .status(403)
+            .json(errorResponse(null, "Refresh token required", 403));
     }
 
     const refreshToken = cookies.refreshToken;
@@ -27,7 +30,9 @@ export const logout = async (req: express.Request, res: express.Response) => {
 
             await redisClient.del("current_user:no-query");
 
-            return res.status(401).json({ error: "Invalid refresh token" });
+            return res
+                .status(401)
+                .json(errorResponse(null, "Invalid refresh token", 401));
         }
 
         await UserModel.updateOne(
@@ -44,6 +49,8 @@ export const logout = async (req: express.Request, res: express.Response) => {
         return res.status(200).json("Logged out successfully");
     } catch (err) {
         console.error(err);
-        return res.status(500).json({ error: "Internal server error" });
+        return res
+            .status(500)
+            .json(errorResponse(null, "Internal server error"));
     }
 };

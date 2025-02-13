@@ -1,8 +1,9 @@
 import express from "express";
-import { CategoryModel } from "../../../models/Categories";
-import { PaginatedCategories, Category } from "../../../types/Category";
 import _ from "lodash";
 import { MongooseQueryParser } from "mongoose-query-parser";
+import { errorResponse, successResponse } from "../../../handlers/apiResponse";
+import { CategoryModel } from "../../../models/Categories";
+import { PaginatedCategories, Category } from "../../../types/Category";
 import { redisClient } from "../../../config/redis";
 
 const parser = new MongooseQueryParser();
@@ -44,7 +45,9 @@ export const getAllCategories = async (
         );
 
         if (!categories || categories.length === 0) {
-            return res.status(404).json({ error: "No categories found" });
+            return res
+                .status(404)
+                .json(errorResponse(null, "No categories found", 404));
         }
 
         let modifiedCategories = categories;
@@ -83,11 +86,11 @@ export const getAllCategories = async (
 
         await redisClient.set(cacheKey, JSON.stringify(resultData), "EX", 3600);
 
-        return res.status(200).json(resultData);
+        return res.status(200).json(successResponse(resultData));
     } catch (error) {
         console.error(error);
         return res
             .status(500)
-            .json({ data: [], error: "Internal server error" });
+            .json(errorResponse(null, "Internal server error"));
     }
 };

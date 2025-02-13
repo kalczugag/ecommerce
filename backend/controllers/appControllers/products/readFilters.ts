@@ -1,7 +1,8 @@
 import express from "express";
 import _ from "lodash";
-import { ProductModel } from "../../../models/Product";
 import { MongooseQueryParser } from "mongoose-query-parser";
+import { errorResponse, successResponse } from "../../../handlers/apiResponse";
+import { ProductModel } from "../../../models/Product";
 import { CategoryModel } from "../../../models/Categories";
 import type { Category } from "../../../types/Category";
 
@@ -35,7 +36,9 @@ export const getFilters = async (
                 .exec();
 
             if (!categories || categories.length === 0) {
-                return res.status(404).json({ error: "Category not found" });
+                return res
+                    .status(404)
+                    .json(errorResponse(null, "Category not found", 404));
             }
 
             const categoryMap = categories.reduce(
@@ -86,7 +89,9 @@ export const getFilters = async (
                     query.thirdLevelCategory = thirdLevelCategoryId[0].id;
             }
         } catch (error) {
-            return res.status(500).json({ error: "Internal server error" });
+            return res
+                .status(500)
+                .json(errorResponse(null, "Internal server error"));
         }
     }
 
@@ -98,7 +103,9 @@ export const getFilters = async (
             .exec();
 
         if (!filters) {
-            return res.status(404).json({ error: "Error getting filters" });
+            return res
+                .status(404)
+                .json(errorResponse(null, "Filters not found", 404));
         }
 
         const colorsCount = _.chain(filters)
@@ -120,9 +127,11 @@ export const getFilters = async (
             maxPrice,
         };
 
-        return res.status(200).json(result);
+        return res.status(200).json(successResponse(result));
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res
+            .status(500)
+            .json(errorResponse(null, "Internal server error"));
     }
 };

@@ -1,5 +1,6 @@
 import express from "express";
 import schema from "./schemaValidate";
+import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import { generateSKU } from "../../../utils/generateSKU";
 import { ProductModel } from "../../../models/Product";
 import { Product } from "../../../types/Product";
@@ -13,9 +14,15 @@ export const createProduct = async (
     const { error } = schema.validate({ ...req.body, sku });
 
     if (error) {
-        return res.status(400).json({
-            error: error.details.map((detail) => detail.message).join(", "),
-        });
+        return res
+            .status(400)
+            .json(
+                errorResponse(
+                    null,
+                    error.details.map((detail) => detail.message).join(", "),
+                    400
+                )
+            );
     }
 
     try {
@@ -25,9 +32,13 @@ export const createProduct = async (
 
         return res
             .status(201)
-            .json({ msg: "Product added successfully", data: newProduct });
+            .json(
+                successResponse(newProduct, "Product added successfully", 201)
+            );
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res
+            .status(500)
+            .json(errorResponse(null, "Internal server error"));
     }
 };

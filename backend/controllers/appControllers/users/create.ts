@@ -1,4 +1,5 @@
 import express from "express";
+import { successResponse, errorResponse } from "../../../handlers/apiResponse";
 import schema from "./schemaValidate";
 import { UserModel } from "../../../models/User";
 import type { User } from "../../../types/User";
@@ -12,9 +13,15 @@ export const createUser = async (
     const { error } = schema.validate(req.body);
 
     if (error) {
-        return res.status(400).json({
-            error: error.details.map((detail) => detail.message).join(", "),
-        });
+        return res
+            .status(400)
+            .json(
+                errorResponse(
+                    null,
+                    error.details.map((detail) => detail.message).join(", "),
+                    400
+                )
+            );
     }
 
     let params = req.body;
@@ -38,12 +45,13 @@ export const createUser = async (
 
         await newUser.save();
 
-        return res.status(201).json({
-            msg: "User added successfully",
-            data: newUser,
-        });
+        return res
+            .status(201)
+            .json(successResponse(newUser, "User added successfully", 201));
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res
+            .status(500)
+            .json(errorResponse(null, "Internal server error"));
     }
 };

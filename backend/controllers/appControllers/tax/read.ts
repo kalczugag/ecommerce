@@ -1,7 +1,8 @@
 import express from "express";
+import { MongooseQueryParser } from "mongoose-query-parser";
+import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import { TaxModel } from "../../../models/Tax";
 import type { PaginatedTaxes } from "../../../types/Tax";
-import { MongooseQueryParser } from "mongoose-query-parser";
 
 const parser = new MongooseQueryParser();
 
@@ -32,12 +33,18 @@ export const getAllTaxes = async (
         );
 
         if (!taxes || taxes.length === 0) {
-            return res.status(404).json({ error: "No taxes found" });
+            return res
+                .status(404)
+                .json(errorResponse(null, "No taxes found", 404));
         }
 
-        return res.status(200).json({ data: taxes, count: totalDocuments });
+        return res
+            .status(200)
+            .json(successResponse(taxes, "OK", 200, totalDocuments));
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res
+            .status(500)
+            .json(errorResponse(null, "Internal server error"));
     }
 };

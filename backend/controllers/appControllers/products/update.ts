@@ -1,5 +1,6 @@
 import express from "express";
 import { isValidObjectId } from "mongoose";
+import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import { ProductModel } from "../../../models/Product";
 import type { Product } from "../../../types/Product";
 
@@ -10,13 +11,17 @@ export const updateProduct = async (
     const { id } = req.params;
 
     if (!isValidObjectId(id)) {
-        return res.status(400).json({ error: "Invalid product ID format" });
+        return res
+            .status(400)
+            .json(errorResponse(null, "Invalid product ID format", 400));
     }
 
     const updates = req.body;
 
     if (Object.keys(updates).length === 0) {
-        return res.status(400).json({ error: "No update fields provided" });
+        return res
+            .status(400)
+            .json(errorResponse(null, "No update fields provided", 400));
     }
 
     try {
@@ -27,12 +32,16 @@ export const updateProduct = async (
         );
 
         if (!updatedProduct) {
-            return res.status(404).json({ error: "Product not found" });
+            return res
+                .status(404)
+                .json(errorResponse(null, "Product not found", 404));
         }
 
-        return res.status(200).json(updatedProduct);
+        return res.status(200).json(successResponse(updatedProduct));
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res
+            .status(500)
+            .json(errorResponse(null, "Internal server error"));
     }
 };

@@ -1,5 +1,6 @@
-import { isValidObjectId } from "mongoose";
 import express from "express";
+import { isValidObjectId } from "mongoose";
+import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import { ReviewModel } from "../../../models/Review";
 
 export const getReviewsByProduct = async (
@@ -9,7 +10,9 @@ export const getReviewsByProduct = async (
     const { id } = req.params;
 
     if (!isValidObjectId(id)) {
-        return res.status(400).json({ error: "Product ID is required" });
+        return res
+            .status(400)
+            .json(errorResponse(null, "Invalid product ID format", 400));
     }
 
     try {
@@ -33,9 +36,11 @@ export const getReviewsByProduct = async (
 
         return res
             .status(200)
-            .json({ value: averageRating, count: totalDocuments });
+            .json(successResponse(averageRating, "OK", 200, totalDocuments));
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res
+            .status(500)
+            .json(errorResponse(null, "Internal server error"));
     }
 };

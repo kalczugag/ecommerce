@@ -3,3 +3,4 @@ export { hasAddress } from "./hasAddress";
 export { optionalAuth } from "./optionalAuth";
 export { isOwner } from "./isOwner";
 export { cache } from "./cache";
+export { errorHandler } from "./errorHandler";

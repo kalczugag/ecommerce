@@ -1,4 +1,5 @@
 import express from "express";
+import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import { OrderModel } from "../../../models/Order";
 import { PaginatedOrders } from "../../../types/Order";
 import { MongooseQueryParser } from "mongoose-query-parser";
@@ -32,15 +33,18 @@ export const getAllOrders = async (
         );
 
         if (!orders || orders.length === 0) {
-            return res.status(404).json({ error: "No orders found" });
+            return res
+                .status(404)
+                .json(errorResponse(null, "No orders found", 404));
         }
 
-        return res.status(200).json({
-            data: orders,
-            count: totalDocuments,
-        });
+        return res
+            .status(200)
+            .json(successResponse(orders, "OK", 200, totalDocuments));
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res
+            .status(500)
+            .json(errorResponse(null, "Internal server error"));
     }
 };

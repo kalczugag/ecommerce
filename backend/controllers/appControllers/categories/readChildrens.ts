@@ -1,5 +1,6 @@
 import express from "express";
 import { isValidObjectId } from "mongoose";
+import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import { CategoryModel } from "../../../models/Categories";
 
 export const getChildrens = async (
@@ -9,23 +10,27 @@ export const getChildrens = async (
     const { id } = req.params;
 
     if (!isValidObjectId(id)) {
-        return res.status(400).json({ error: "Category ID is required" });
+        return res
+            .status(400)
+            .json(errorResponse(null, "Invalid category ID format", 400));
     }
 
     try {
-        const categoryChilrdens = await CategoryModel.find({
+        const categoryChildrens = await CategoryModel.find({
             _parentCategory: id,
         });
 
-        if (!categoryChilrdens || categoryChilrdens.length === 0) {
+        if (!categoryChildrens || categoryChildrens.length === 0) {
             return res
                 .status(404)
-                .json({ error: "Category childrens not found" });
+                .json(errorResponse(null, "Category childrens not found", 404));
         }
 
-        return res.status(200).json(categoryChilrdens);
+        return res.status(200).json(successResponse(categoryChildrens));
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res
+            .status(500)
+            .json(errorResponse(null, "Internal server error"));
     }
 };

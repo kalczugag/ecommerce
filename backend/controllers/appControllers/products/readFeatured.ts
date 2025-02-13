@@ -1,5 +1,6 @@
 import express from "express";
 import { isValidObjectId } from "mongoose";
+import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import { ProductModel } from "../../../models/Product";
 
 export const getFeaturedProducts = async (
@@ -12,12 +13,14 @@ export const getFeaturedProducts = async (
         if (!products) {
             return res
                 .status(404)
-                .json({ error: "Featured products not found" });
+                .json(errorResponse(null, "No featured products found", 404));
         }
 
-        return res.status(200).json(products);
+        return res.status(200).json(successResponse(products));
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res
+            .status(500)
+            .json(errorResponse(null, "Internal server error"));
     }
 };

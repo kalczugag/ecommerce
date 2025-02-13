@@ -1,4 +1,5 @@
 import express from "express";
+import { errorResponse } from "../../../handlers/apiResponse";
 import { User } from "../../../types/User";
 import { redisClient } from "../../../config/redis";
 
@@ -16,6 +17,8 @@ export const getCurrentUser = async (
         return res.status(200).json(user);
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res
+            .status(500)
+            .json(errorResponse(null, "Internal server error"));
     }
 };

@@ -1,7 +1,8 @@
 import express from "express";
+import { isValidObjectId } from "mongoose";
+import { successResponse, errorResponse } from "../../../handlers/apiResponse";
 import { UserModel } from "../../../models/User";
 import { User } from "../../../types/User";
-import { isValidObjectId } from "mongoose";
 
 //only role update for now
 export const updateUser = async (
@@ -12,7 +13,9 @@ export const updateUser = async (
     const data = req.body;
 
     if (!isValidObjectId(id)) {
-        return res.status(400).json({ error: "Invalid user ID format" });
+        return res
+            .status(400)
+            .json(errorResponse(null, "Invalid user ID format", 400));
     }
 
     try {
@@ -25,14 +28,18 @@ export const updateUser = async (
         });
 
         if (!updatedUser) {
-            return res.status(404).json({ error: "User not found" });
+            return res
+                .status(404)
+                .json(errorResponse(null, "User not found", 404));
         }
 
         return res
             .status(200)
-            .json({ msg: "User updated successfully", data: updatedUser });
+            .json(successResponse(updatedUser, "User updated successfully"));
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res
+            .status(500)
+            .json(errorResponse(null, "Internal server error"));
     }
 };

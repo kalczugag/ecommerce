@@ -1,7 +1,8 @@
 import express from "express";
+import { MongooseQueryParser } from "mongoose-query-parser";
+import { successResponse, errorResponse } from "../../../handlers/apiResponse";
 import { UserModel } from "../../../models/User";
 import { PaginatedUsers } from "../../../types/User";
-import { MongooseQueryParser } from "mongoose-query-parser";
 
 const parser = new MongooseQueryParser();
 
@@ -32,14 +33,18 @@ export const getAllUsers = async (
         );
 
         if (!users || users.length === 0) {
-            return res.status(404).json({ error: "No users found" });
+            return res
+                .status(404)
+                .json(errorResponse(null, "No users found", 404));
         }
 
-        return res.status(200).json({ data: users, count: totalDocuments });
+        return res
+            .status(200)
+            .json(successResponse(users, "OK", 200, totalDocuments));
     } catch (error) {
         console.error(error);
         return res
             .status(500)
-            .json({ data: [], error: "Internal server error" });
+            .json(errorResponse(null, "Internal server error"));
     }
 };

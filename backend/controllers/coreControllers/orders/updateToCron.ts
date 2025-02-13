@@ -1,4 +1,5 @@
 import express from "express";
+import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import { OrderModel } from "../../../models/Order";
 import { PaymentModel } from "../../../models/Order/Payment";
 import { processPayments } from "../../../utils/processFunctions";
@@ -27,7 +28,9 @@ export const updateToCron = async (
         });
 
         if (!orders.length) {
-            return res.status(200).json({ message: "No orders to update" });
+            return res
+                .status(200)
+                .json(successResponse(null, "No orders to update"));
         }
 
         const updates = await Promise.all(
@@ -60,12 +63,15 @@ export const updateToCron = async (
             })
         );
 
-        return res.status(200).json({
-            message: "Orders updated successfully",
-            updatedOrders: updates.length,
-        });
+        return res
+            .status(200)
+            .json(
+                successResponse(updates.length, "Orders updated successfully")
+            );
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res
+            .status(500)
+            .json(errorResponse(null, "Internal server error"));
     }
 };

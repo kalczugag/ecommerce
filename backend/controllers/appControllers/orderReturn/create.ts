@@ -1,4 +1,5 @@
 import express from "express";
+import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import schema from "./schemaValidate";
 import { ReturnModel } from "../../../models/Order/Return";
 import { OrderModel } from "../../../models/Order";
@@ -19,9 +20,15 @@ export const createReturn = async (
     const { error } = schema.validate(orderReturn);
 
     if (error) {
-        return res.status(400).json({
-            error: error.details.map((detail) => detail.message).join(", "),
-        });
+        return res
+            .status(400)
+            .json(
+                errorResponse(
+                    null,
+                    error.details.map((detail) => detail.message).join(", "),
+                    400
+                )
+            );
     }
 
     try {
@@ -35,7 +42,7 @@ export const createReturn = async (
             order?.payments?.length === 0 ||
             order.status === "returned"
         ) {
-            return res.status(400).json({ error: "Order cannot be returned" });
+            return res.status(400).json(errorResponse(null, "Invalid order"));
         }
 
         const refundAmount = (order.items as Item[]).reduce((acc, item) => {
@@ -56,9 +63,11 @@ export const createReturn = async (
 
         return res
             .status(201)
-            .json({ msg: "Return added successfully", data: newReturn });
+            .json(successResponse(newReturn, "Return added successfully", 201));
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res
+            .status(500)
+            .json(errorResponse(null, "Internal server error"));
     }
 };

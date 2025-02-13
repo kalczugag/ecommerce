@@ -1,6 +1,7 @@
 import express from "express";
 import { isValidObjectId } from "mongoose";
 import _ from "lodash";
+import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import { PaymentModel } from "../../../models/Order/Payment";
 import { NoteModel } from "../../../models/Order/Notes";
 import type { Payment } from "../../../types/Order";
@@ -12,13 +13,17 @@ export const updatePayment = async (
     const { id } = req.params;
 
     if (!isValidObjectId(id)) {
-        return res.status(400).json({ error: "Invalid payment ID format" });
+        return res
+            .status(400)
+            .json(errorResponse(null, "Invalid payment ID format", 400));
     }
 
     const updates = _.omit(req.body, "_id");
 
     if (Object.keys(updates).length === 0) {
-        return res.status(400).json({ error: "No update fields provided" });
+        return res
+            .status(400)
+            .json(errorResponse(null, "No update fields provided", 400));
     }
 
     try {
@@ -41,15 +46,20 @@ export const updatePayment = async (
         );
 
         if (!updatedPayment) {
-            return res.status(404).json({ error: "Payment not found" });
+            return res
+                .status(404)
+                .json(errorResponse(null, "Payment not found", 404));
         }
 
-        return res.status(200).json({
-            msg: "Payment updated successfully",
-            data: updatedPayment,
-        });
+        return res
+            .status(200)
+            .json(
+                successResponse(updatePayment, "Payment updated successfully")
+            );
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res
+            .status(500)
+            .json(errorResponse(null, "Internal server error"));
     }
 };

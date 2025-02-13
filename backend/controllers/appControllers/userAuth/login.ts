@@ -1,5 +1,6 @@
 import express from "express";
 import ms from "ms";
+import { errorResponse } from "../../../handlers/apiResponse";
 import { validPassword, issueJWT } from "../../../utils/helpers";
 import { UserModel } from "../../../models/User";
 
@@ -7,7 +8,9 @@ export const login = async (req: express.Request, res: express.Response) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-        return res.status(400).json({ error: "Email and password required" });
+        return res
+            .status(400)
+            .json(errorResponse(null, "Missing credentials", 400));
     }
 
     try {
@@ -17,7 +20,9 @@ export const login = async (req: express.Request, res: express.Response) => {
             .exec();
 
         if (!existingUser) {
-            return res.status(401).json({ error: "Invalid credentials" });
+            return res
+                .status(401)
+                .json(errorResponse(null, "Invalid credentials", 401));
         }
 
         const isMatch = validPassword(
@@ -27,7 +32,9 @@ export const login = async (req: express.Request, res: express.Response) => {
         );
 
         if (!isMatch) {
-            return res.status(401).json({ error: "Invalid credentials" });
+            return res
+                .status(401)
+                .json(errorResponse(null, "Invalid credentials", 401));
         }
 
         const accessToken = issueJWT(existingUser, "access");
@@ -56,6 +63,8 @@ export const login = async (req: express.Request, res: express.Response) => {
         });
     } catch (err: any) {
         console.error(err.message);
-        return res.status(500).json({ error: "Internal server error" });
+        return res
+            .status(500)
+            .json(errorResponse(null, "Internal server error"));
     }
 };

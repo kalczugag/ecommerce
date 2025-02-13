@@ -1,6 +1,7 @@
 import express from "express";
 import { isValidObjectId } from "mongoose";
 import { MongooseQueryParser } from "mongoose-query-parser";
+import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import { OrderModel } from "../../../models/Order";
 import { enhanceShipments } from "../../../utils/enhanceShipments";
 import type { PaginatedOrders } from "../../../types/Order";
@@ -14,7 +15,9 @@ export const getOrdersByUserId = async (
     const { userId } = req.params;
 
     if (!isValidObjectId(userId)) {
-        return res.status(400).json({ error: "Invalid User ID" });
+        return res
+            .status(400)
+            .json(errorResponse(null, "Invalid user ID format", 400));
     }
 
     const parsedQuery = parser.parse(req.query);
@@ -63,7 +66,7 @@ export const getOrdersByUserId = async (
         if (!orders || orders.length === 0) {
             return res
                 .status(404)
-                .json({ data: [], error: "Orders not found" });
+                .json(errorResponse(null, "No orders found", 404));
         }
 
         const hasMore = (page + 1) * pageSize < totalDocuments;
@@ -74,14 +77,22 @@ export const getOrdersByUserId = async (
             }))
         );
 
-        return res.status(200).json({
-            data: enhancedOrders,
-            count: totalDocuments,
-            hasMore,
-            nextCursor: page + 1,
-        });
+        return res
+            .status(200)
+            .json(
+                successResponse(
+                    enhanceShipments,
+                    "OK",
+                    200,
+                    totalDocuments,
+                    hasMore,
+                    page + 1
+                )
+            );
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res
+            .status(500)
+            .json(errorResponse(null, "Internal server error"));
     }
 };

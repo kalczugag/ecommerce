@@ -1,4 +1,5 @@
 import express from "express";
+import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import {
     handlePaymentIntentSucceeded,
     handleCheckoutSessionCompleted,
@@ -26,7 +27,7 @@ export const stripeWebhook = async (
         console.error(error);
         return res
             .status(400)
-            .json({ error: `Webhook Error: ${error.message}` });
+            .json(errorResponse(null, "Invalid webhook signature", 400));
     }
 
     try {
@@ -60,9 +61,11 @@ export const stripeWebhook = async (
                 console.warn(`Unhandled event type: ${event.type}`);
         }
 
-        res.json({ received: true });
+        res.json();
     } catch (error) {
         console.error("Error handling webhook:", error);
-        res.status(500).json({ error: "Internal Server Error" });
+        return res
+            .status(500)
+            .json(errorResponse(null, "Internal server error"));
     }
 };

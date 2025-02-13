@@ -1,6 +1,7 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import ms from "ms";
+import { errorResponse } from "../../../handlers/apiResponse";
 import { issueJWT } from "../../../utils/helpers";
 import { UserModel } from "../../../models/User";
 
@@ -11,7 +12,9 @@ export const refreshToken = async (
     const cookies = req.cookies;
 
     if (!cookies || !cookies.refreshToken) {
-        return res.status(403).json({ error: "Refresh token required" });
+        return res
+            .status(403)
+            .json(errorResponse(null, "Refresh token required", 403));
     }
 
     let refreshToken = cookies.refreshToken;
@@ -29,13 +32,15 @@ export const refreshToken = async (
             .exec();
 
         if (!user) {
-            return res.status(401).json({ error: "Invalid refresh token" });
+            return res
+                .status(401)
+                .json(errorResponse(null, "User not found", 401));
         }
 
         if (user.refreshToken.token !== cookies.refreshToken) {
             return res
                 .status(403)
-                .json({ error: "Invalid or expired refresh token" });
+                .json(errorResponse(null, "Invalid refresh token", 403));
         }
 
         const accessToken = issueJWT(user, "access");
@@ -63,6 +68,6 @@ export const refreshToken = async (
         console.error(err);
         return res
             .status(403)
-            .json({ error: "Invalid or expired refresh token" });
+            .json(errorResponse(null, "Invalid or expired refresh token", 403));
     }
 };

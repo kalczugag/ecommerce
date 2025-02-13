@@ -1,5 +1,6 @@
 import express from "express";
 import { summaryCronJob } from "./config/cronJob";
+import { errorHandler } from "./middlewares";
 
 import cors from "cors";
 
@@ -44,5 +45,7 @@ app.post("/trigger-summary-cron", (req, res) => {
     summaryCronJob();
     res.status(200).send("Summary cron job triggered");
 });
+
+app.use(errorHandler);
 
 export default app;

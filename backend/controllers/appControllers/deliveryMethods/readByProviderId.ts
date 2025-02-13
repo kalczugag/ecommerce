@@ -1,5 +1,6 @@
 import express from "express";
 import { isValidObjectId } from "mongoose";
+import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import { DeliveryMethodModel } from "../../../models/DeliveryMethod";
 
 export const getDeliveryMethodsByProviderId = async (
@@ -11,7 +12,9 @@ export const getDeliveryMethodsByProviderId = async (
     if (!isValidObjectId(id)) {
         return res
             .status(400)
-            .json({ error: "Delivery method ID is required" });
+            .json(
+                errorResponse(null, "Invalid delivery method ID format", 400)
+            );
     }
 
     try {
@@ -21,12 +24,16 @@ export const getDeliveryMethodsByProviderId = async (
         );
 
         if (!deliveryMethod) {
-            return res.status(404).json({ error: "Delivery method not found" });
+            return res
+                .status(404)
+                .json(errorResponse(null, "Delivery method not found", 404));
         }
 
-        return res.status(200).json(deliveryMethod);
+        return res.status(200).json(successResponse(deliveryMethod));
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res
+            .status(500)
+            .json(errorResponse(null, "Internal server error"));
     }
 };

@@ -1,4 +1,5 @@
 import express from "express";
+import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import schema from "./schemaValidate";
 import { OrderModel } from "../../../models/Order";
 import { NoteModel } from "../../../models/Order/Notes";
@@ -19,9 +20,15 @@ export const createOrder = async (
     const { error } = schema.validate(order);
 
     if (error) {
-        return res.status(400).json({
-            error: error.details.map((detail) => detail.message).join(", "),
-        });
+        return res
+            .status(400)
+            .json(
+                errorResponse(
+                    null,
+                    error.details.map((detail) => detail.message).join(", "),
+                    400
+                )
+            );
     }
 
     try {
@@ -37,9 +44,11 @@ export const createOrder = async (
 
         return res
             .status(201)
-            .json({ msg: "Order added successfully", data: newOrder });
+            .json(successResponse(newOrder, "Order created successfully", 201));
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res
+            .status(500)
+            .json(errorResponse(null, "Internal server error"));
     }
 };

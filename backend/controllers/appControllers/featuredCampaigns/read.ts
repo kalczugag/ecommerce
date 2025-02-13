@@ -1,4 +1,5 @@
 import express from "express";
+import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import { FeaturedCampaignModel } from "../../../models/FeaturedCampaign";
 import { CategoryModel } from "../../../models/Categories";
 import { MongooseQueryParser } from "mongoose-query-parser";
@@ -48,19 +49,27 @@ export const getAllCampaigns = async (
         if (!campaigns || campaigns.length === 0) {
             return res
                 .status(404)
-                .json({ error: "No campaigns found for your preferences" });
+                .json(errorResponse(null, "No campaigns found", 404));
         }
 
         const hasMore = (page + 1) * pageSize < totalDocuments;
 
-        return res.status(200).json({
-            data: campaigns,
-            count: totalDocuments,
-            hasMore,
-            nextCursor: page + 1,
-        });
+        return res
+            .status(200)
+            .json(
+                successResponse(
+                    campaigns,
+                    "OK",
+                    200,
+                    totalDocuments,
+                    hasMore,
+                    page + 1
+                )
+            );
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res
+            .status(500)
+            .json(errorResponse(null, "Internal server error"));
     }
 };

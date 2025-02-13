@@ -1,4 +1,5 @@
 import express from "express";
+import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import { CategoryModel } from "../../../models/Categories";
 
 export const getCategoryByLevel = async (
@@ -8,7 +9,9 @@ export const getCategoryByLevel = async (
     const { level } = req.query;
 
     if (!level) {
-        return res.status(400).send({ error: "Category level is required" });
+        return res
+            .status(400)
+            .send(errorResponse(null, "Category level is required", 400));
     }
 
     try {
@@ -18,7 +21,9 @@ export const getCategoryByLevel = async (
             .exec();
 
         if (!categories) {
-            return res.status(404).json({ error: "Categories not found" });
+            return res
+                .status(404)
+                .json(errorResponse(null, "Categories not found", 404));
         }
 
         let labelledCategories;
@@ -36,11 +41,13 @@ export const getCategoryByLevel = async (
             });
         }
 
-        return res.status(200).json(labelledCategories || categories);
+        return res
+            .status(200)
+            .json(successResponse(labelledCategories || categories));
     } catch (error) {
         console.error(error);
         return res
             .status(500)
-            .json({ data: [], error: "Internal server error" });
+            .json(errorResponse(null, "Internal server error"));
     }
 };

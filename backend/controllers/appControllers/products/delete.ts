@@ -1,5 +1,6 @@
 import express from "express";
 import { isValidObjectId } from "mongoose";
+import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import { ProductModel } from "../../../models/Product";
 
 export const deleteProduct = async (
@@ -9,19 +10,25 @@ export const deleteProduct = async (
     const { id } = req.params;
 
     if (!isValidObjectId(id)) {
-        return res.status(400).json({ error: "Product ID is required" });
+        return res
+            .status(400)
+            .json(errorResponse(null, "Invalid product ID format", 400));
     }
 
     try {
         const deletedProduct = await ProductModel.findByIdAndDelete(id);
 
         if (!deletedProduct) {
-            return res.status(404).json({ error: "Product not found" });
+            return res
+                .status(404)
+                .json(errorResponse(null, "Product not found", 404));
         }
 
-        return res.json(deletedProduct);
+        return res.json(successResponse(deletedProduct));
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res
+            .status(500)
+            .json(errorResponse(null, "Internal server error"));
     }
 };

@@ -1,5 +1,6 @@
 import express from "express";
 import { isValidObjectId } from "mongoose";
+import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import { CartModel } from "../../../models/Cart";
 import {
     handleAdd,
@@ -35,14 +36,18 @@ export const updateCart = async (
     const { action, ...newItem } = req.body;
 
     if (!isValidObjectId(id)) {
-        return res.status(400).json({ error: "Cart ID is required" });
+        return res
+            .status(400)
+            .json(errorResponse(null, "Invalid order ID format", 400));
     }
 
     try {
         const cart = await CartModel.findById(id).populate("items").exec();
 
         if (!cart) {
-            return res.status(404).json({ error: "Cart not found" });
+            return res
+                .status(404)
+                .json(errorResponse(null, "Cart not found", 404));
         }
 
         let result;
@@ -66,15 +71,17 @@ export const updateCart = async (
                 break;
             }
             default:
-                return res.status(400).json({ error: "Invalid action" });
+                return res
+                    .status(400)
+                    .json(errorResponse(null, "Invalid action", 400));
         }
 
         if (result?.success) {
             return res
                 .status(200)
-                .json({ msg: result.message, data: result.updatedCart });
+                .json(successResponse(result.updatedCart, result.message));
         } else {
-            return res.status(500).json(result);
+            return res.status(500).json(errorResponse(null, result.message));
         }
     } catch (error) {
         console.error(error);

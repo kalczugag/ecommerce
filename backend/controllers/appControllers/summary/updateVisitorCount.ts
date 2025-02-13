@@ -1,4 +1,5 @@
 import express from "express";
+import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import { SummaryModel } from "../../../models/Summary";
 import {
     getStartOfThisWeek,
@@ -49,9 +50,13 @@ export const updateVisitorCount = async (
 
         await summary.save();
 
-        return res.status(200).json({ msg: "Visitor count updated" });
+        return res
+            .status(200)
+            .json(successResponse(null, "Visitor count updated"));
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res
+            .status(500)
+            .json(errorResponse(null, "Internal server error"));
     }
 };

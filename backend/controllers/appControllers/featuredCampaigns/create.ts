@@ -1,4 +1,5 @@
 import express from "express";
+import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import schema from "./schemaValidate";
 import { FeaturedCampaignModel } from "../../../models/FeaturedCampaign";
 import type { FeaturedCampaign } from "../../../types/FeaturedCampaign";
@@ -10,9 +11,15 @@ export const createCampaign = async (
     const { error } = schema.validate(req.body);
 
     if (error) {
-        return res.status(400).json({
-            error: error.details.map((detail) => detail.message),
-        });
+        return res
+            .status(400)
+            .json(
+                errorResponse(
+                    null,
+                    error.details.map((detail) => detail.message).join(", "),
+                    400
+                )
+            );
     }
 
     try {
@@ -20,19 +27,22 @@ export const createCampaign = async (
 
         await newCampaign.save();
 
-        return res.status(201).json({
-            msg: "Campaign added successfully",
-            data: newCampaign,
-        });
+        return res
+            .status(201)
+            .json(
+                successResponse(newCampaign, "Campaign added successfully", 201)
+            );
     } catch (error) {
         if (error instanceof Error) {
             console.error(error);
             if (error.message.includes("duplicate key")) {
                 return res
                     .status(409)
-                    .json({ error: "Campaign with this name already exists" });
+                    .json(errorResponse(null, "Campaign already exists", 409));
             }
         }
-        return res.status(500).json({ error: "Internal server error" });
+        return res
+            .status(500)
+            .json(errorResponse(null, "Internal server error"));
     }
 };

@@ -1,4 +1,5 @@
 import express from "express";
+import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import { processShipments } from "../../../utils/processFunctions";
 import type { Item, Order, Shipment } from "../../../types/Order";
 import type { Product } from "../../../types/Product";
@@ -16,13 +17,17 @@ export const createCheckoutSession = async (
     const url = process.env.REDIRECT_URL;
 
     if (!order) {
-        return res.status(400).json({ error: "No order provided" });
+        return res
+            .status(400)
+            .json(errorResponse(null, "No order provided", 400));
     }
 
     const user = order._user as User;
 
     if (!user.address) {
-        return res.status(400).json({ error: "No address provided" });
+        return res
+            .status(400)
+            .json(errorResponse(null, "No address provided", 400));
     }
 
     let lineItems = (order.items as Item[]).map((item) => {
@@ -129,9 +134,11 @@ export const createCheckoutSession = async (
             cancel_url: `${url}/account/orders/${order._id}?status=canceled`,
         });
 
-        return res.json({ sessionId: session.id });
+        return res.json(successResponse(session.id));
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res
+            .status(500)
+            .json(errorResponse(null, "Internal server error"));
     }
 };

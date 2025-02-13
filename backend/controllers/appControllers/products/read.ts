@@ -1,9 +1,10 @@
 import express from "express";
+import { MongooseQueryParser } from "mongoose-query-parser";
+import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import { ProductModel } from "../../../models/Product";
 import { CategoryModel } from "../../../models/Categories";
 import { PaginatedProducts } from "../../../types/Product";
 import { Category } from "../../../types/Category";
-import { MongooseQueryParser } from "mongoose-query-parser";
 
 const parser = new MongooseQueryParser();
 
@@ -44,7 +45,9 @@ export const getAllProducts = async (
                 .exec();
 
             if (!categories || categories.length === 0) {
-                return res.status(404).json({ error: "Category not found" });
+                return res
+                    .status(404)
+                    .json(errorResponse(null, "No categories", 404));
             }
 
             const categoryMap = categories.reduce(
@@ -96,7 +99,9 @@ export const getAllProducts = async (
                     query.thirdLevelCategory = thirdLevelCategoryId[0].id;
             }
         } catch (error) {
-            return res.status(500).json({ error: "Internal server error" });
+            return res
+                .status(500)
+                .json(errorResponse(null, "Internal server error"));
         }
     }
 
@@ -107,10 +112,12 @@ export const getAllProducts = async (
                 .exec();
 
             if (!randomProducts) {
-                return res.status(404).json({ error: "No products found" });
+                return res
+                    .status(404)
+                    .json(errorResponse(null, "No products", 404));
             }
 
-            return res.status(200).json(randomProducts);
+            return res.status(200).json(successResponse(randomProducts));
         }
 
         const combinedFilters = { ...query, ...parsedQuery.filter };
@@ -127,20 +134,28 @@ export const getAllProducts = async (
         const totalDocuments = await ProductModel.countDocuments(isQuery);
 
         if (!products || products.length === 0) {
-            return res.status(404).json({ error: "No products found" });
+            return res
+                .status(404)
+                .json(errorResponse(null, "No products", 404));
         }
 
         const hasMore = (page + 1) * pageSize < totalDocuments;
 
-        return res.status(200).json({
-            data: products,
-            count: totalDocuments,
-            hasMore,
-            nextCursor: page + 1,
-        });
+        return res
+            .status(200)
+            .json(
+                successResponse(
+                    products,
+                    "OK",
+                    200,
+                    totalDocuments,
+                    hasMore,
+                    page + 1
+                )
+            );
     } catch (error) {
         return res
             .status(500)
-            .json({ data: [], error: "Internal server error" });
+            .json(errorResponse(null, "Internal server error"));
     }
 };
