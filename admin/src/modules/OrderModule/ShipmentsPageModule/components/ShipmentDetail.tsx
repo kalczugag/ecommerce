@@ -1,6 +1,7 @@
+import { ReactNode } from "react";
 import DetailCard from "@/components/DetailCard";
 import ShipmentContacts from "./ShipmentContacts";
-import { Divider, Table } from "@mui/material";
+import { Divider } from "@mui/material";
 import ShipmentActions from "./ShipmentActions";
 import ShipmentMethod from "./ShipmentMethod";
 import PaperCard from "@/components/PaperCard";
@@ -16,6 +17,7 @@ interface ShipmentDetailProps {
     isMobile: boolean;
     isTablet: boolean;
     handleSubTabChange: (tab: number, options?: any) => void;
+    children?: ReactNode;
 }
 
 const ShipmentDetail = ({
@@ -27,6 +29,7 @@ const ShipmentDetail = ({
     isMobile,
     isTablet,
     handleSubTabChange,
+    children,
 }: ShipmentDetailProps) => {
     return (
         <DetailCard
@@ -90,6 +93,7 @@ const ShipmentDetail = ({
                     </div>
                 </div>
             </div>
+            {children && children}
         </DetailCard>
     );
 };

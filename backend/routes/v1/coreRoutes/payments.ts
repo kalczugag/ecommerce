@@ -11,6 +11,13 @@ const orders = (router: express.Router) => {
         hasRole("admin"),
         methods.update
     );
+
+    router.delete(
+        "/payments:id",
+        passport.authenticate("jwt", { session: false }),
+        hasRole("admin"),
+        methods.delete
+    );
 };
 
 export default orders;

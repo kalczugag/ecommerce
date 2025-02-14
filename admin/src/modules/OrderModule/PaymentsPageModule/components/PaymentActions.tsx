@@ -1,5 +1,5 @@
 import { enqueueSnackbar } from "notistack";
-import { useEditPaymentMutation } from "@/store";
+import { useEditPaymentMutation, useDeletePaymentMutation } from "@/store";
 import { Button } from "@mui/material";
 import AlertDialog from "@/components/AlertDialog";
 import TooltipButton from "@/components/TooltipButton";
@@ -11,25 +11,65 @@ interface PaymentActionsProps {
 }
 
 const PaymentActions = ({ payment }: PaymentActionsProps) => {
-    const [editPayment, { isLoading }] = useEditPaymentMutation();
+    const [editPayment, { isLoading: editLoading }] = useEditPaymentMutation();
+    const [deletePayment, { isLoading: deleteLoading }] =
+        useDeletePaymentMutation();
 
-    const handleAuthorize = async () => {
+    const handleAction = async (
+        values: Partial<Payment>,
+        successMsg: string,
+        errorMsg: string,
+        fn?: (values?: Partial<Payment>) => ReturnType<typeof editPayment>
+    ) => {
         try {
-            await editPayment({
-                _id: payment._id || "",
-                authorized: true,
-            }).unwrap();
-            enqueueSnackbar("Payment authorized", {
+            if (!payment._id) throw new Error("Missing payment ID");
+
+            if (fn) {
+                await fn({
+                    _id: payment._id,
+                    ...values,
+                }).unwrap();
+            } else {
+                await editPayment({
+                    _id: payment._id,
+                    ...values,
+                }).unwrap();
+            }
+
+            enqueueSnackbar(successMsg, {
                 variant: "success",
             });
         } catch (error) {
-            enqueueSnackbar("Failed to authorize", {
+            enqueueSnackbar(errorMsg, {
                 variant: "error",
             });
         }
     };
 
-    const isDisabled = payment.authorized || isLoading;
+    const handleAuthorize = () => {
+        handleAction(
+            {
+                authorized: true,
+            },
+            "Payment authorized",
+            "Failed to authorize"
+        );
+    };
+
+    const handleVoid = () => {
+        handleAction({ voided: true }, "Payment voided", "Failed to void");
+    };
+
+    const handleDelete = () => {
+        handleAction(
+            {},
+            "Payment deleted",
+            "Failed to delete",
+            deletePayment()
+        );
+    };
+
+    const isDisabled = payment.authorized || editLoading || deleteLoading;
 
     return (
         <div className="flex flex-col space-y-2">

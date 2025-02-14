@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-const shippingAddressSchema = Joi.object({
+export const shippingAddressSchema = Joi.object({
     street: Joi.string().required(),
     city: Joi.string().required(),
     state: Joi.string().required(),

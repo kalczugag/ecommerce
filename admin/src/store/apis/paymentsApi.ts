@@ -12,11 +12,21 @@ export const paymentsApi = apiSlice.injectEndpoints({
                 method: "PATCH",
                 body: payment,
             }),
-            // invalidatesTags: (result, error, values) => [
-            //     { type: "Payments", id: values._id },
-            // ],
+            invalidatesTags: (result, error, values) => [
+                { type: "Payments", id: values._id },
+            ],
+        }),
+
+        deletePayment: builder.mutation<ApiResponseObject<Payment>, string>({
+            query: (id) => ({
+                url: `/admin/payments/${id}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: (result, error, id) => [
+                { type: "Payments", id: id },
+            ],
         }),
     }),
 });
 
-export const { useEditPaymentMutation } = paymentsApi;
+export const { useEditPaymentMutation, useDeletePaymentMutation } = paymentsApi;

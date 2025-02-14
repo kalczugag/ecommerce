@@ -5,13 +5,13 @@ import type { User } from "../types/User";
 
 export const orderConfirmation = (order: Order) => {
     const user = order._user as User;
-    const { shipmentCount } = processShipments(order.shipments as Shipment[]);
+    const { shipmentTotal } = processShipments(order.shipments as Shipment[]);
 
     const priceData = {
         total: order.total.toFixed(2) || "",
         subTotal: order.subTotal.toFixed(2) || "",
         discount: order.discount.toFixed(2) || "",
-        delivery: shipmentCount.toFixed(2) || "",
+        delivery: shipmentTotal.toFixed(2) || "",
     };
 
     return `

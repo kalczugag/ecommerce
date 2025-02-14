@@ -18,14 +18,16 @@ export const getAllDeliveryMethods = async (
                 .json(errorResponse(null, "No delivery methods found", 404));
         }
 
+        const response = successResponse(deliveryMethods);
+
         await redisClient.set(
             cacheKey,
-            JSON.stringify(deliveryMethods),
+            JSON.stringify(response),
             "EX",
             3600 * 24 * 7
         );
 
-        return res.status(200).json(successResponse(deliveryMethods));
+        return res.status(200).json(response);
     } catch (error) {
         console.error(error);
         return res

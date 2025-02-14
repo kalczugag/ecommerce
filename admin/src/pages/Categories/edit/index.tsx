@@ -45,7 +45,7 @@ const CategoriesEdit = () => {
         <CrudModule
             actionForm={
                 <UpdateForm
-                    initialValues={data}
+                    initialValues={data?.result}
                     handleSubmit={handleSubmit}
                     isLoading={isLoading || result.isLoading}
                     formElements={

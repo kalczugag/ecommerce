@@ -18,6 +18,7 @@ const PaymentsPage = ({ data }: PaymentsPageProps) => {
             {payments.length > 0 ? (
                 payments.map((payment, index) => (
                     <PaymentDetail
+                        key={payment._id}
                         payment={payment}
                         paymentIndex={index}
                         paymentCount={paymentCount}
