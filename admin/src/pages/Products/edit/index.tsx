@@ -52,7 +52,7 @@ const ProductsEdit = () => {
     };
 
     const updatedInitialValues = {
-        ...productsData,
+        ...productsData?.result,
         imageUrl: (productsData?.result.imageUrl as string[])?.join(",\n"),
     };
 

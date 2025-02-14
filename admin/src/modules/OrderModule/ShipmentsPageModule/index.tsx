@@ -8,6 +8,7 @@ import { tableConfig } from "./tableConfig";
 import type { Order } from "@/types/Order";
 import type { ManageAction } from "@/modules/ManageModule/types/Manage";
 import ShipmentDetail from "./components/ShipmentDetail";
+import { useMemo } from "react";
 
 interface ShipmentsPageProps extends ManageAction {
     data: Order;
@@ -49,12 +50,14 @@ const ShipmentsPage = ({ data, handleSubTabChange }: ShipmentsPageProps) => {
     const isTablet = useMediaQuery("(max-width: 1280px)");
     const { shipmentCount, shipments } = processShipments(data.shipments);
 
-    const enhancedTableData = data.items
-        ? data.items.map((row) => ({
-              ...row,
-              handleDelete: () => console.log("x"),
-          }))
-        : data.items;
+    const enhancedTableData = useMemo(() => {
+        return data.items
+            ? data.items.map((row) => ({
+                  ...row,
+                  handleDelete: () => console.log("x"),
+              }))
+            : [];
+    }, [data.items]);
 
     return (
         <div className="flex flex-col space-y-4">

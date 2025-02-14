@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Divider, useMediaQuery } from "@mui/material";
 import Table from "@/components/Table";
 import DetailCard from "@/components/DetailCard";
@@ -14,12 +15,14 @@ interface ItemsPageProps extends ManageAction {
 const ItemsPage = ({ data, handleSubTabChange }: ItemsPageProps) => {
     const isMobile = useMediaQuery("(max-width: 1024px)");
 
-    const enhancedTableData = data.items
-        ? data.items.map((row) => ({
-              ...row,
-              handleDelete: () => console.log("x"),
-          }))
-        : data.items;
+    const enhancedTableData = useMemo(() => {
+        return data.items
+            ? data.items.map((row) => ({
+                  ...row,
+                  handleDelete: () => console.log("x"),
+              }))
+            : [];
+    }, [data.items]);
 
     const config: PaperCardProps[] = [
         {

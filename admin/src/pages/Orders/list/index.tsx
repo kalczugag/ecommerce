@@ -37,7 +37,6 @@ const OrdersList = () => {
         total: data?.count || 0,
         isLoading: isFetching,
     };
-    index: pagination.skip * pagination.limit + index + 1,
 
     return (
         <CrudModule
