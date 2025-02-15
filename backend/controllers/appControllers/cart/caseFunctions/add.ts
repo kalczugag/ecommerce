@@ -17,8 +17,14 @@ export const handleAdd = async (
                 item.size === newItem.size
         );
 
+        console.log(itemExists);
+
         if (itemExists) {
-            itemExists.quantity += newItem.quantity;
+            await BaseItemModel.findByIdAndUpdate(
+                { _id: itemExists._id },
+                { $inc: { quantity: newItem.quantity } },
+                { new: true }
+            );
         } else {
             const newBaseItem = new BaseItemModel(newItem);
             await newBaseItem.save();

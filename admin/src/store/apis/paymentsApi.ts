@@ -14,6 +14,7 @@ export const paymentsApi = apiSlice.injectEndpoints({
             }),
             invalidatesTags: (result, error, values) => [
                 { type: "Payments", id: values._id },
+                { type: "Orders", id: "GLOBAL" },
             ],
         }),
 
@@ -24,6 +25,7 @@ export const paymentsApi = apiSlice.injectEndpoints({
             }),
             invalidatesTags: (result, error, id) => [
                 { type: "Payments", id: id },
+                { type: "Orders", id: "GLOBAL" },
             ],
         }),
     }),

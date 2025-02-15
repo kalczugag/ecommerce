@@ -39,6 +39,13 @@ const orders = (router: express.Router) => {
         hasRole("admin"),
         methods.delete
     );
+
+    router.delete(
+        "/orders/:orderId/item/:itemId",
+        passport.authenticate("jwt", { session: false }),
+        hasRole("admin"),
+        methods.deleteItem
+    );
 };
 
 export default orders;

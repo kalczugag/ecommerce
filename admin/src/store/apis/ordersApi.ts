@@ -49,7 +49,10 @@ export const orderApi = apiSlice.injectEndpoints({
                 method: "GET",
                 keepUnusedDataFor: 300,
             }),
-            providesTags: (result, error, id) => [{ type: "Orders", id: id }],
+            providesTags: (result, error, id) => [
+                { type: "Orders", id: id },
+                { type: "Orders", id: "GLOBAL" },
+            ],
         }),
 
         getOrdersSummary: builder.query<
@@ -73,6 +76,20 @@ export const orderApi = apiSlice.injectEndpoints({
                 { type: "Orders", id: values._id },
             ],
         }),
+
+        deleteOrderItem: builder.mutation<
+            ApiResponseObject<Order>,
+            { orderId: string; itemId: string }
+        >({
+            query: (order) => ({
+                url: `/admin/orders/${order.orderId}/item/${order.itemId}`,
+                method: "PATCH",
+                body: order,
+            }),
+            invalidatesTags: (result, error, values) => [
+                { type: "Orders", id: values.orderId },
+            ],
+        }),
     }),
 });
 
@@ -81,4 +98,5 @@ export const {
     useGetOrderByIdQuery,
     useGetOrdersSummaryQuery,
     useEditOrderMutation,
+    useDeleteOrderItemMutation,
 } = orderApi;

@@ -8,7 +8,7 @@ const auth = (router: express.Router) => {
     router.get(
         "/auth/current_user",
         passport.authenticate("jwt", { session: false }),
-        cache("current_user"),
+        // cache("current_user"),
         methods.readCurrentUser
     );
 

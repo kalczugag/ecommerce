@@ -12,6 +12,9 @@ export const shipmentsApi = apiSlice.injectEndpoints({
                 method: "PATCH",
                 body: values,
             }),
+            invalidatesTags: (result, error, values) => [
+                { type: "Orders", id: "GLOBAL" },
+            ],
         }),
     }),
 });
