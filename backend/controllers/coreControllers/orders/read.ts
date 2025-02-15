@@ -23,7 +23,7 @@ export const getAllOrders = async (
         const orders = await OrderModel.find(parsedQuery.filter)
             .populate(parsedQuery.populate)
             .select(parsedQuery.select)
-            .sort(parsedQuery.sort)
+            .sort({ ...parsedQuery.sort, createdAt: -1 })
             .skip(page * pageSize)
             .limit(pageSize)
             .exec();

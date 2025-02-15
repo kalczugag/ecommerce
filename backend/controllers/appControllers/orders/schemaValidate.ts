@@ -39,7 +39,7 @@ const schema = Joi.object({
     billingAddress: shippingAddressSchema,
     subTotal: Joi.number().positive().required(),
     tax: Joi.number().min(0).max(100),
-    discount: Joi.number().min(0).max(100),
+    discount: Joi.number().min(0).optional(),
     total: Joi.number().positive().required(),
     payments: Joi.string(),
     shipments: Joi.array().items(shipmentSchema).optional(),
