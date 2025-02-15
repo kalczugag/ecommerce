@@ -13,7 +13,7 @@ const orders = (router: express.Router) => {
     );
 
     router.delete(
-        "/payments:id",
+        "/payments/:id",
         passport.authenticate("jwt", { session: false }),
         hasRole("admin"),
         methods.delete

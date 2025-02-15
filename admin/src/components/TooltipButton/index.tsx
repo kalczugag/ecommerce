@@ -3,6 +3,14 @@ import { Button, Tooltip } from "@mui/material";
 
 interface TooltipButtonProps {
     variant?: "text" | "contained" | "outlined";
+    color?:
+        | "inherit"
+        | "primary"
+        | "secondary"
+        | "success"
+        | "error"
+        | "info"
+        | "warning";
     title: string;
     tooltipText: string;
     disabled: boolean;
@@ -11,6 +19,7 @@ interface TooltipButtonProps {
 
 const TooltipButton = ({
     variant,
+    color,
     title,
     tooltipText,
     disabled,
@@ -21,6 +30,7 @@ const TooltipButton = ({
             variant={variant}
             onClick={onClick}
             disabled={disabled}
+            color={color}
             sx={{
                 "&.Mui-disabled": {
                     pointerEvents: "auto",
