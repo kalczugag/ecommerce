@@ -4,6 +4,7 @@ import orders from "./coreRoutes/orders";
 import payments from "./coreRoutes/payments";
 import users from "./coreRoutes/users";
 import shipments from "./coreRoutes/shipments";
+import baseItems from "./coreRoutes/baseItems";
 
 const router = express.Router();
 

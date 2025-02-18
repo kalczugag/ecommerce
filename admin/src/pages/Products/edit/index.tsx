@@ -26,7 +26,12 @@ const ProductsEdit = () => {
         data: productsData,
         isError,
         isLoading: productsLoading,
-    } = useGetProductByIdQuery(id || "");
+    } = useGetProductByIdQuery({
+        id: id || "",
+        params: {
+            populate: "topLevelCategory secondLevelCategory thirdLevelCategory",
+        },
+    });
     const [editProduct, result] = useEditProductMutation();
 
     if (isError || (!productsLoading && !productsData?.result))

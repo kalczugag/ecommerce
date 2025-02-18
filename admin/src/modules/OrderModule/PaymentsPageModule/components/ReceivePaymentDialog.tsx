@@ -161,7 +161,11 @@ const ReceivePaymentDialog = ({ data }: ReceivePaymentDialogProps) => {
                                 <Button onClick={handleClose} color="info">
                                     Cancel
                                 </Button>
-                                <Button type="submit" color="info">
+                                <Button
+                                    type="submit"
+                                    color="info"
+                                    disabled={isLoading}
+                                >
                                     Save
                                 </Button>
                             </DialogActions>

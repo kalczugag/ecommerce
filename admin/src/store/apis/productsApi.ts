@@ -40,16 +40,18 @@ export const productApi = apiSlice.injectEndpoints({
                     : [{ type: "Products", id: "LIST" }],
         }),
 
-        getProductById: builder.query<ApiResponseObject<Product>, string>({
-            query: (id) => ({
+        getProductById: builder.query<
+            ApiResponseObject<Product>,
+            { id: string; params?: Paginate }
+        >({
+            query: ({ id, params = {} }) => ({
                 url: `/products/id/${id}`,
                 method: "GET",
-                params: {
-                    populate:
-                        "topLevelCategory secondLevelCategory thirdLevelCategory",
-                },
+                params,
             }),
-            providesTags: (result, error, id) => [{ type: "Products", id: id }],
+            providesTags: (result, error, { id }) => [
+                { type: "Products", id: id },
+            ],
         }),
 
         addProduct: builder.mutation<ApiResponseObject<Product>, Product>({

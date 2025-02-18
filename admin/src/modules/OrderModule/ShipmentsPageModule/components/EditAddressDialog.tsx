@@ -126,7 +126,11 @@ const EditAddressDialog = ({ shipment }: EditAddressDialogProps) => {
                                 <Button onClick={handleClose} color="info">
                                     Cancel
                                 </Button>
-                                <Button type="submit" color="info">
+                                <Button
+                                    type="submit"
+                                    color="info"
+                                    disabled={isLoading}
+                                >
                                     Save
                                 </Button>
                             </DialogActions>

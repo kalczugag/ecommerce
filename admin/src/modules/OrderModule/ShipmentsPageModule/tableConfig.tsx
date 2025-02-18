@@ -3,6 +3,7 @@ import type { Item } from "@/types/Order";
 import type { TableColumnProps } from "@/modules/CrudModule";
 import { IconButton } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
+import EditItemDialog from "./components/EditItemDialog";
 
 interface RowProps extends Item {
     isLoading: boolean;
@@ -40,9 +41,7 @@ export const tableConfig: TableColumnProps<RowProps>[] = [
 
         render: (row) => (
             <div className="flex justify-end">
-                <IconButton>
-                    <Edit />
-                </IconButton>
+                <EditItemDialog item={row} />
                 <IconButton>
                     <Delete />
                 </IconButton>

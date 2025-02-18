@@ -11,6 +11,7 @@ import {
     Divider,
     FormControl,
     FormHelperText,
+    InputAdornment,
     InputLabel,
     MenuItem,
     Select,
@@ -176,6 +177,15 @@ const EditPaymentDialog = ({ payment }: EditPaymentDialogProps) => {
                                                 {...props.input}
                                                 label="Amount"
                                                 type="number"
+                                                slotProps={{
+                                                    input: {
+                                                        startAdornment: (
+                                                            <InputAdornment position="start">
+                                                                $
+                                                            </InputAdornment>
+                                                        ),
+                                                    },
+                                                }}
                                                 error={
                                                     props.meta.error &&
                                                     props.meta.touched
