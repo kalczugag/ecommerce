@@ -3,7 +3,7 @@ import type { Item } from "@/types/Order";
 
 export const baseItemsApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        editShipment: builder.mutation<ApiResponseObject<void>, Partial<Item>>({
+        editBaseItem: builder.mutation<ApiResponseObject<void>, Partial<Item>>({
             query: (values) => ({
                 url: `/admin/items/${values._id}`,
                 method: "PATCH",
@@ -16,4 +16,4 @@ export const baseItemsApi = apiSlice.injectEndpoints({
     }),
 });
 
-export const { useEditShipmentMutation } = baseItemsApi;
+export const { useEditBaseItemMutation } = baseItemsApi;

@@ -26,6 +26,13 @@ const orders = (router: express.Router) => {
         methods.updateToCron
     );
 
+    router.post(
+        "/orders/recalculate/:id",
+        passport.authenticate("jwt", { session: false }),
+        hasRole("admin"),
+        methods.recalculate
+    );
+
     router.patch(
         "/orders/:id",
         passport.authenticate("jwt", { session: false }),

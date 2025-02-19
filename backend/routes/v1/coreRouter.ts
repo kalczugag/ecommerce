@@ -13,6 +13,7 @@ export default (): express.Router => {
     payments(router);
     shipments(router);
     users(router);
+    baseItems(router);
 
     return router;
 };

@@ -1,3 +1,6 @@
+import { useParams } from "react-router-dom";
+import { useRecalculateOrderMutation } from "@/store";
+import { useHandleMutation } from "@/hooks/useHandleMutation";
 import { Button } from "@mui/material";
 import ChangeShippingMethodDialog from "./ChangeShippingMethodDialog";
 import { deliveryMethods } from "@/constants/deliveryMethods";
@@ -8,6 +11,20 @@ interface ShipmentMethodProps {
 }
 
 const ShipmentMethod = ({ deliveryMethod }: ShipmentMethodProps) => {
+    const { id } = useParams();
+    const { handleMutation } = useHandleMutation();
+
+    const [recalculate, { isLoading }] = useRecalculateOrderMutation();
+
+    const handleRecalculate = () => {
+        handleMutation({
+            values: id,
+            mutation: recalculate,
+            successMessage: "Order recalculated",
+            errorMessage: "Failed to recalculate order",
+        });
+    };
+
     const methodName =
         deliveryMethods[deliveryMethod.type] +
         " - " +
@@ -24,7 +41,13 @@ const ShipmentMethod = ({ deliveryMethod }: ShipmentMethodProps) => {
                     currentDeliveryMethod={deliveryMethod.providers[0]._id}
                     methodName={methodName}
                 />
-                <Button variant="outlined">Recalculate</Button>
+                <Button
+                    variant="outlined"
+                    onClick={handleRecalculate}
+                    disabled={isLoading}
+                >
+                    Recalculate
+                </Button>
             </div>
         </div>
     );

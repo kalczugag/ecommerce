@@ -66,6 +66,17 @@ export const orderApi = apiSlice.injectEndpoints({
             }),
         }),
 
+        recalculateOrder: builder.mutation<void, string>({
+            query: (id) => ({
+                url: `/admin/orders/recalculate/${id}`,
+                method: "POST",
+            }),
+            invalidatesTags: (result, error, id) => [
+                { type: "Orders", id: id },
+                { type: "Orders", id: "GLOBAL" },
+            ],
+        }),
+
         editOrder: builder.mutation<ApiResponseObject<Order>, Partial<Order>>({
             query: (order) => ({
                 url: `/admin/orders/${order._id}`,
@@ -97,6 +108,7 @@ export const {
     useGetAllOrdersQuery,
     useGetOrderByIdQuery,
     useGetOrdersSummaryQuery,
+    useRecalculateOrderMutation,
     useEditOrderMutation,
     useDeleteOrderItemMutation,
 } = orderApi;

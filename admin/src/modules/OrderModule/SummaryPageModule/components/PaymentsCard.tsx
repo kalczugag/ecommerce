@@ -1,12 +1,13 @@
 import CapturePaymentDialog from "./CapturePaymentDialog";
 import DetailCard from "@/components/DetailCard";
-import type { Order, Payment } from "@/types/Order";
+import type { Payment } from "@/types/Order";
 
 interface PaymentsCardProps {
     payment: Payment;
+    orderTotal: number;
 }
 
-const PaymentsCard = ({ payment }: PaymentsCardProps) => {
+const PaymentsCard = ({ payment, orderTotal }: PaymentsCardProps) => {
     // const payment = data.payments?.[0];
 
     const card = payment.card;
@@ -19,7 +20,7 @@ const PaymentsCard = ({ payment }: PaymentsCardProps) => {
             </div>
             <div>
                 <span className="font-bold">Order Total: </span>
-                <span>${payment.amount.toFixed(2)}</span>
+                <span>${orderTotal.toFixed(2)}</span>
             </div>
             <div
                 className={`p-1 rounded text-center text-white font-semibold ${

@@ -53,7 +53,7 @@ const ShipmentDetail = ({
                     sx={isMobile ? { marginY: 4 } : { marginX: 4 }}
                 />
 
-                <div className="flex-1 flex flex-col xl:flex-row xl:justify-between">
+                <div className="flex-1 flex flex-col 2xl:flex-row 2xl:justify-between">
                     <div className="flex flex-col space-y-6">
                         <div className="space-y-4">
                             <div>
@@ -61,7 +61,6 @@ const ShipmentDetail = ({
                                 <span>{shipment.status}</span>
                             </div>
                             <ShipmentActions
-                                isMobile={isMobile}
                                 onShipItems={() =>
                                     handleSubTabChange(2, {
                                         shipmentIndex: shipmentIndex.toString(),

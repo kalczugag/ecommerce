@@ -17,8 +17,6 @@ export const handleAdd = async (
                 item.size === newItem.size
         );
 
-        console.log(itemExists);
-
         if (itemExists) {
             await BaseItemModel.findByIdAndUpdate(
                 { _id: itemExists._id },

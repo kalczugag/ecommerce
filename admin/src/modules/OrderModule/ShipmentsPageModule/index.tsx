@@ -47,7 +47,7 @@ const config: PaperCardProps[] = [
 
 const ShipmentsPage = ({ data, handleSubTabChange }: ShipmentsPageProps) => {
     const isMobile = useMediaQuery("(max-width: 1024px)");
-    const isTablet = useMediaQuery("(max-width: 1280px)");
+    const isTablet = useMediaQuery("(max-width: 1536px)");
     const { shipmentCount, shipments } = processShipments(data.shipments);
 
     const enhancedTableData = useMemo(() => {

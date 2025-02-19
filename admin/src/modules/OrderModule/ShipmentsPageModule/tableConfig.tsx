@@ -25,7 +25,7 @@ export const tableConfig: TableColumnProps<RowProps>[] = [
         ),
     },
     {
-        label: "Price",
+        label: "Unit Price",
         render: (row) => `$${row.unitPrice.toFixed(2)}`,
     },
     {

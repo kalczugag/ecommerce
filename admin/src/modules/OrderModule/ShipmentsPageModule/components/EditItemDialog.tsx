@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Field, Form, FormSpy } from "react-final-form";
-import { compose, minValue, mustBeNumber, required } from "@/utils/validators";
+import { useHandleMutation } from "@/hooks/useHandleMutation";
+import { compose, minValue, required } from "@/utils/validators";
+import { useGetProductByIdQuery, useEditBaseItemMutation } from "@/store";
 import {
     Button,
     Dialog,
@@ -10,7 +12,6 @@ import {
     DialogTitle,
     Divider,
     FormControl,
-    FormHelperText,
     IconButton,
     InputAdornment,
     InputLabel,
@@ -20,16 +21,25 @@ import {
 } from "@mui/material";
 import { Edit, RestartAlt } from "@mui/icons-material";
 import { Item } from "@/types/Order";
-import { useGetProductByIdQuery } from "@/store";
 
 interface EditItemDialogProps {
     item: Item;
 }
 
+interface FormValues {
+    total: number;
+    quantity: number;
+    size: string;
+    color: string;
+}
+
 const EditItemDialog = ({ item }: EditItemDialogProps) => {
     const [isOpen, setIsOpen] = useState(false);
+    const { handleMutation } = useHandleMutation();
 
-    const { data, isLoading } = useGetProductByIdQuery({
+    const [editBaseItem, { isLoading: editLoading }] =
+        useEditBaseItemMutation();
+    const { data, isLoading: productLoading } = useGetProductByIdQuery({
         id: item._product._id || "",
         params: { select: "size,color" },
     });
@@ -37,10 +47,17 @@ const EditItemDialog = ({ item }: EditItemDialogProps) => {
     const handleOpen = () => setIsOpen(true);
     const handleClose = () => setIsOpen(false);
 
-    const handleSubmit = (values: any) => {
-        console.log(values);
+    const handleSubmit = (values: FormValues) => {
+        handleMutation({
+            values: { _id: item._id, ...values },
+            mutation: editBaseItem,
+            successMessage: "Item updated",
+            errorMessage: "Failed to update item",
+        });
         handleClose();
     };
+
+    const isLoading = productLoading || editLoading;
 
     return (
         <>
@@ -49,7 +66,12 @@ const EditItemDialog = ({ item }: EditItemDialogProps) => {
             </IconButton>
             <Dialog open={isOpen} onClose={handleClose}>
                 <Form
-                    initialValues={item}
+                    initialValues={{
+                        total: item.total,
+                        quantity: item.quantity,
+                        size: item.size,
+                        color: item.color,
+                    }}
                     onSubmit={handleSubmit}
                     render={({ handleSubmit }) => (
                         <form onSubmit={handleSubmit}>
@@ -166,11 +188,61 @@ const EditItemDialog = ({ item }: EditItemDialogProps) => {
                                 />
 
                                 <div className="flex-1 flex flex-col space-y-4">
-                                    <Field name="size" validate={required}>
+                                    <Field
+                                        name="size"
+                                        type="select"
+                                        validate={required}
+                                    >
+                                        {(props) => (
+                                            <FormControl
+                                                disabled={isLoading}
+                                                sx={{ minWidth: 200 }}
+                                            >
+                                                <InputLabel>Size</InputLabel>
+                                                <Select
+                                                    {...props.input}
+                                                    label="Size"
+                                                    MenuProps={{
+                                                        slotProps: {
+                                                            paper: {
+                                                                style: {
+                                                                    maxHeight: 300,
+                                                                },
+                                                            },
+                                                        },
+                                                    }}
+                                                >
+                                                    {data?.result &&
+                                                        data.result.size.map(
+                                                            (size, index) => (
+                                                                <MenuItem
+                                                                    key={
+                                                                        size.name +
+                                                                        "_" +
+                                                                        index
+                                                                    }
+                                                                    value={
+                                                                        size.name
+                                                                    }
+                                                                >
+                                                                    {size.name}
+                                                                </MenuItem>
+                                                            )
+                                                        )}
+                                                </Select>
+                                            </FormControl>
+                                        )}
+                                    </Field>
+                                    <Field name="color" validate={required}>
                                         {(props) => (
                                             <TextField
                                                 {...props.input}
-                                                label="Size"
+                                                label="Color"
+                                                slotProps={{
+                                                    input: {
+                                                        readOnly: true,
+                                                    },
+                                                }}
                                                 error={
                                                     props.meta.error &&
                                                     props.meta.touched
@@ -181,6 +253,7 @@ const EditItemDialog = ({ item }: EditItemDialogProps) => {
                                                         ? props.meta.error
                                                         : null
                                                 }
+                                                fullWidth
                                             />
                                         )}
                                     </Field>
