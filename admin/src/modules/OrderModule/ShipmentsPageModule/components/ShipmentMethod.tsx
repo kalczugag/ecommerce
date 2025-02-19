@@ -20,8 +20,6 @@ const ShipmentMethod = ({ deliveryMethod }: ShipmentMethodProps) => {
         handleMutation({
             values: id,
             mutation: recalculate,
-            successMessage: "Order recalculated",
-            errorMessage: "Failed to recalculate order",
         });
     };
 

@@ -21,6 +21,7 @@ import TooltipButton from "@/components/TooltipButton";
 
 interface ReceivePaymentDialogProps {
     data: Payment;
+    disabled: boolean;
 }
 
 interface FormProps {
@@ -29,7 +30,10 @@ interface FormProps {
     paymentNote?: string;
 }
 
-const ReceivePaymentDialog = ({ data }: ReceivePaymentDialogProps) => {
+const ReceivePaymentDialog = ({
+    data,
+    disabled,
+}: ReceivePaymentDialogProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const [editPayment, { isLoading }] = useEditPaymentMutation();
 
@@ -61,7 +65,7 @@ const ReceivePaymentDialog = ({ data }: ReceivePaymentDialogProps) => {
         handleClose();
     };
 
-    const isDisabled = Boolean(data.capturedAmount) || isLoading;
+    const isDisabled = Boolean(data.capturedAmount) || isLoading || disabled;
 
     return (
         <>

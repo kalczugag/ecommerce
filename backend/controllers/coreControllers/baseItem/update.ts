@@ -26,6 +26,10 @@ export const updateBaseItem = async (
     }
 
     try {
+        if (updates.unitPrice && updates.quantity) {
+            updates.total = updates.unitPrice * updates.quantity;
+        }
+
         const updatedBaseItem = await BaseItemModel.findByIdAndUpdate(
             id,
             updates,

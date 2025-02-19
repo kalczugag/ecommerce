@@ -35,6 +35,10 @@ export const recalculateOrder = async (
         let subTotal = 0;
 
         for (const baseItem of baseItems) {
+            await BaseItemModel.findByIdAndUpdate(baseItem._id, {
+                total: baseItem.unitPrice * baseItem.quantity,
+            });
+
             const itemTotal = baseItem.unitPrice * baseItem.quantity;
             subTotal += itemTotal;
         }
@@ -67,29 +71,36 @@ export const recalculateOrder = async (
         });
 
         const remainingBalance = total - capturedAmount;
+        let pendingPayment;
 
         if (remainingBalance > 0) {
-            const newPayment = new PaymentModel({
-                _order: order._id,
-                paymentMethod: "pending",
-                amount: remainingBalance,
-            });
+            pendingPayment = payments.find(
+                (payment) => payment.paymentStatus === "pending"
+            );
 
-            await newPayment.save();
+            if (!pendingPayment) {
+                const newPayment = new PaymentModel({
+                    _order: order._id,
+                    paymentMethod: "pending",
+                    amount: remainingBalance,
+                });
 
-            (order.payments as string[]).push(newPayment._id.toString());
+                await newPayment.save();
+
+                (order.payments as string[]).push(newPayment._id.toString());
+                await order.save();
+            }
         }
-
-        await order.save();
 
         return res
             .status(200)
             .json(
                 successResponse(
                     null,
-                    `Order recalculated successfully ${
-                        remainingBalance > 0 &&
-                        "and a new pending payment has been created"
+                    `Order recalculated successfully${
+                        remainingBalance > 0 && !pendingPayment
+                            ? " and a new pending payment has been created"
+                            : ""
                     }`,
                     200
                 )

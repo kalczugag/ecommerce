@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Field, Form, FormSpy } from "react-final-form";
 import { useHandleMutation } from "@/hooks/useHandleMutation";
-import { compose, minValue, required } from "@/utils/validators";
+import { compose, maxValue, minValue, required } from "@/utils/validators";
 import { useGetProductByIdQuery, useEditBaseItemMutation } from "@/store";
 import {
     Button,
@@ -12,6 +12,7 @@ import {
     DialogTitle,
     Divider,
     FormControl,
+    FormHelperText,
     IconButton,
     InputAdornment,
     InputLabel,
@@ -27,7 +28,7 @@ interface EditItemDialogProps {
 }
 
 interface FormValues {
-    total: number;
+    unitPrice: number;
     quantity: number;
     size: string;
     color: string;
@@ -67,13 +68,13 @@ const EditItemDialog = ({ item }: EditItemDialogProps) => {
             <Dialog open={isOpen} onClose={handleClose}>
                 <Form
                     initialValues={{
-                        total: item.total,
+                        unitPrice: item.unitPrice,
                         quantity: item.quantity,
                         size: item.size,
                         color: item.color,
                     }}
                     onSubmit={handleSubmit}
-                    render={({ handleSubmit }) => (
+                    render={({ handleSubmit, form }) => (
                         <form onSubmit={handleSubmit}>
                             <DialogTitle>Edit Item</DialogTitle>
                             <DialogContent>
@@ -85,7 +86,7 @@ const EditItemDialog = ({ item }: EditItemDialogProps) => {
                             <DialogContent className="flex flex-row justify-between">
                                 <div className="flex-1 flex flex-col space-y-4">
                                     <Field
-                                        name="total"
+                                        name="unitPrice"
                                         validate={compose(
                                             minValue(0),
                                             required
@@ -98,7 +99,7 @@ const EditItemDialog = ({ item }: EditItemDialogProps) => {
                                                     2
                                                 )}
                                                 type="number"
-                                                label="Price"
+                                                label="Unit Price"
                                                 slotProps={{
                                                     htmlInput: {
                                                         step: 0.05,
@@ -122,12 +123,12 @@ const EditItemDialog = ({ item }: EditItemDialogProps) => {
                                                                 }) =>
                                                                     props.input
                                                                         .value !==
-                                                                        initialValues.total && (
+                                                                        initialValues.unitPrice && (
                                                                         <IconButton
                                                                             onClick={() =>
                                                                                 form.change(
-                                                                                    "total",
-                                                                                    initialValues.total
+                                                                                    "unitPrice",
+                                                                                    initialValues.unitPrice
                                                                                 )
                                                                             }
                                                                         >
@@ -160,7 +161,13 @@ const EditItemDialog = ({ item }: EditItemDialogProps) => {
                                         )}
                                     </Field>
 
-                                    <Field name="quantity" validate={required}>
+                                    <Field
+                                        name="quantity"
+                                        validate={compose(
+                                            required,
+                                            minValue(0)
+                                        )}
+                                    >
                                         {(props) => (
                                             <TextField
                                                 {...props.input}
@@ -179,6 +186,19 @@ const EditItemDialog = ({ item }: EditItemDialogProps) => {
                                             />
                                         )}
                                     </Field>
+                                    <FormSpy>
+                                        {({ form }) => (
+                                            <FormHelperText>
+                                                Total: $
+                                                {(
+                                                    form.getState().values
+                                                        .unitPrice *
+                                                    form.getState().values
+                                                        .quantity
+                                                ).toFixed(2)}
+                                            </FormHelperText>
+                                        )}
+                                    </FormSpy>
                                 </div>
 
                                 <Divider

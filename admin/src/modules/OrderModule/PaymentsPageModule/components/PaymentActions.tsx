@@ -50,7 +50,7 @@ const PaymentActions = ({ payment }: PaymentActionsProps) => {
     return (
         <div className="flex flex-col space-y-2">
             <div className="flex space-x-1">
-                <ReceivePaymentDialog data={payment} />
+                <ReceivePaymentDialog data={payment} disabled={isDisabled} />
                 <AlertDialog
                     title="Are you sure?"
                     content="You won't be able to revert this!"
@@ -88,7 +88,7 @@ const PaymentActions = ({ payment }: PaymentActionsProps) => {
                         />
                     )}
                 </AlertDialog>
-                <EditPaymentDialog payment={payment} />
+                <EditPaymentDialog payment={payment} disabled={isDisabled} />
                 <AlertDialog
                     title="Are you sure?"
                     content="You won't be able to revert this!"
@@ -101,6 +101,7 @@ const PaymentActions = ({ payment }: PaymentActionsProps) => {
                             variant="outlined"
                             color="error"
                             onClick={props.open}
+                            disabled={isDisabled}
                         >
                             Delete
                         </Button>

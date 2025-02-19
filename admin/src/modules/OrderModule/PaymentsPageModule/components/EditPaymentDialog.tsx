@@ -24,9 +24,10 @@ import { RestartAlt } from "@mui/icons-material";
 
 interface EditPaymentDialogProps {
     payment: Payment;
+    disabled: boolean;
 }
 
-const EditPaymentDialog = ({ payment }: EditPaymentDialogProps) => {
+const EditPaymentDialog = ({ payment, disabled }: EditPaymentDialogProps) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const handleOpen = () => setIsOpen(true);
@@ -39,7 +40,12 @@ const EditPaymentDialog = ({ payment }: EditPaymentDialogProps) => {
 
     return (
         <>
-            <Button variant="outlined" color="warning" onClick={handleOpen}>
+            <Button
+                variant="outlined"
+                color="warning"
+                onClick={handleOpen}
+                disabled={disabled}
+            >
                 Edit
             </Button>
             <Dialog open={isOpen} onClose={handleClose}>
