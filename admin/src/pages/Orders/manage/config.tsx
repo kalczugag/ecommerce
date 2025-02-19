@@ -8,10 +8,10 @@ import {
     AddressesPage,
 } from "@/modules/OrderModule";
 import SplitShipment from "@/modules/OrderModule/ShipmentsPageModule/tabs/SplitShipment";
-import type { Manage, ManageAction } from "@/modules/ManageModule/types/Manage";
-import type { Order } from "@/types/Order";
 import ShipItems from "@/modules/OrderModule/ShipmentsPageModule/tabs/ShipItems";
 import AddProduct from "@/modules/OrderModule/ItemsPageModule/tabs/AddProduct";
+import type { Manage, ManageAction } from "@/modules/ManageModule/types/Manage";
+import type { Order } from "@/types/Order";
 
 type EnhancedData = Order & ManageAction;
 

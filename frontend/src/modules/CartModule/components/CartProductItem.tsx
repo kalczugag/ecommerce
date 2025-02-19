@@ -26,8 +26,8 @@ const CartProductItem = ({
 
         if (_product.discountPercent) {
             discountedPrice = +(
-                (price - (price * _product.discountPercent) / 100) *
-                itemQuantity
+                price -
+                (price * _product.discountPercent) / 100
             ).toFixed(2);
         }
     }
@@ -53,14 +53,14 @@ const CartProductItem = ({
                             <>
                                 <span>${discountedPrice}</span>
                                 <span className="text-gray-500 line-through">
-                                    ${price * itemQuantity}
+                                    ${price}
                                 </span>
                                 <span className="text-green-600">
                                     {_product?.discountPercent}% off
                                 </span>
                             </>
                         ) : (
-                            "$" + price * itemQuantity
+                            `$${price}`
                         )}
                     </p>
                 </div>

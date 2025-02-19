@@ -20,15 +20,15 @@ const OrderDetails = () => {
     useEffect(() => {
         if (status) {
             updateOrder({
-                _id: id,
+                _id: id || "",
                 status,
             });
         }
     }, [status]);
 
-    if (isError || (!isLoading && !data)) return <NotFound />;
+    if (isError || (!isLoading && !data?.result)) return <NotFound />;
 
-    return <ReadOrderDetailsModule data={data} isLoading={isLoading} />;
+    return <ReadOrderDetailsModule data={data?.result} isLoading={isLoading} />;
 };
 
 export default OrderDetails;

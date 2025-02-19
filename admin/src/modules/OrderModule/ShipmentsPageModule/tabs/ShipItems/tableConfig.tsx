@@ -3,6 +3,7 @@ import UnderlineLink from "@/components/UnderlineLink";
 import type { Item, Shipment } from "@/types/Order";
 import type { TableColumnProps } from "@/modules/CrudModule";
 import { TextField } from "@mui/material";
+import { compose, required, maxValue, minValue } from "@/utils/validators";
 
 interface RowProps extends Item {
     shipments: Shipment[];
@@ -34,13 +35,26 @@ export const tableConfig: TableColumnProps<RowProps>[] = [
     {
         label: "Quantity To Ship",
         render: (row) => (
-            <Field name={`${row._id}.quantityToShip`}>
+            <Field
+                name={`${row._id}.quantityToShip`}
+                validate={compose(
+                    required,
+                    minValue(0),
+                    maxValue(row.quantity)
+                )}
+            >
                 {(props) => (
                     <TextField
                         {...props.input}
                         type="number"
                         variant="standard"
                         slotProps={{ htmlInput: { max: row.quantity, min: 0 } }}
+                        error={props.meta.error && props.meta.touched}
+                        helperText={
+                            props.meta.error && props.meta.touched
+                                ? props.meta.error
+                                : null
+                        }
                         disabled={row.isLoading}
                         fullWidth
                     />

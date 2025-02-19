@@ -1,13 +1,16 @@
 import CapturePaymentDialog from "./CapturePaymentDialog";
 import DetailCard from "@/components/DetailCard";
-import type { Order } from "@/types/Order";
+import type { Payment } from "@/types/Order";
 
 interface PaymentsCardProps {
-    data: Order;
+    payment: Payment;
+    orderTotal: number;
 }
 
-const PaymentsCard = ({ data }: PaymentsCardProps) => {
-    const payment = data.payments?.[0];
+const PaymentsCard = ({ payment, orderTotal }: PaymentsCardProps) => {
+    // const payment = data.payments?.[0];
+
+    const card = payment.card;
 
     return (
         <DetailCard label="Payments">
@@ -17,7 +20,7 @@ const PaymentsCard = ({ data }: PaymentsCardProps) => {
             </div>
             <div>
                 <span className="font-bold">Order Total: </span>
-                <span>${data.total.toFixed(2)}</span>
+                <span>${orderTotal.toFixed(2)}</span>
             </div>
             <div
                 className={`p-1 rounded text-center text-white font-semibold ${
@@ -30,7 +33,15 @@ const PaymentsCard = ({ data }: PaymentsCardProps) => {
             </div>
             <div>
                 <span className="font-bold">Last Payment: </span>
-                <span>Visa ***9</span>
+                {card ? (
+                    <span>
+                        {card.brand.slice(0, 1).toUpperCase() +
+                            card.brand.slice(1)}{" "}
+                        {"***" + card.last4.slice(-1)}
+                    </span>
+                ) : (
+                    <span>None</span>
+                )}
             </div>
             <div>{payment && <CapturePaymentDialog data={payment} />}</div>
         </DetailCard>

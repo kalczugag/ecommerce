@@ -9,16 +9,19 @@ const ProductDetails = () => {
     const { data, isLoading, isError } = useGetProductByIdQuery(id || "");
     const { data: rating } = useGetReviewsByProductIdQuery(id || "");
 
-    useTitle(data?.title || (!isLoading ? "Product - Details" : ""));
+    useTitle(data?.result.title || (!isLoading ? "Product - Details" : ""));
 
-    if (isError || (!isLoading && !data)) return <NotFound />;
+    if (isError || (!isLoading && !data?.result)) return <NotFound />;
 
     const config = {
-        rating: { count: rating?.count || 0, value: rating?.value || 0 },
+        rating: {
+            count: rating?.result.count || 0,
+            value: rating?.result.value || 0,
+        },
         isLoading,
     };
 
-    return <ReadProductDetailsModule config={config} data={data} />;
+    return <ReadProductDetailsModule config={config} data={data?.result} />;
 };
 
 export default ProductDetails;

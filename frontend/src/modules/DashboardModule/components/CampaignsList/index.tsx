@@ -49,7 +49,7 @@ const CampaignsList = ({ isToken }: CampaignsListProps) => {
     return (
         <div className="space-y-12">
             {data?.pages.map((page) =>
-                page?.data.map((campaign) => {
+                page?.result.map((campaign) => {
                     const products = campaign?.products.map((product) => (
                         <ProductCard
                             key={product._id}

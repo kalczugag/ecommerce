@@ -4,11 +4,11 @@ import { Form } from "react-final-form";
 import { useLoginMutation, LoginInput } from "@/store";
 import { enqueueSnackbar } from "notistack";
 import { useTitle } from "@/hooks/useTitle";
-import { LoadingButton } from "@mui/lab";
 import AuthModule from "@/modules/AuthModule";
 import LoginForm from "@/forms/LoginForm";
 import { ContentCopy } from "@mui/icons-material";
 import CopyToClipboard from "react-copy-to-clipboard";
+import { Button } from "@mui/material";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -70,15 +70,14 @@ const Login = () => {
                         </p>
                     </div>
                     <LoginForm isLoading={isLoading} />
-                    <LoadingButton
+                    <Button
                         type="submit"
                         variant="contained"
-                        loading={isLoading}
                         disabled={!form.getFieldState("recaptcha")?.value}
                         fullWidth
                     >
                         Sign In
-                    </LoadingButton>
+                    </Button>
                 </form>
             )}
         />

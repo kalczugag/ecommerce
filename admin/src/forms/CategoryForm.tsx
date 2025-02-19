@@ -126,7 +126,7 @@ const CategoryForm = ({
                             >
                                 <MenuItem value="">None</MenuItem>
                                 {isSuccess &&
-                                    data.map(({ name, _id }, index) => (
+                                    data.result.map(({ name, _id }, index) => (
                                         <MenuItem key={index} value={_id}>
                                             {name}
                                         </MenuItem>

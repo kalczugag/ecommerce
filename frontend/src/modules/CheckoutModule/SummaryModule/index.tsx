@@ -31,9 +31,11 @@ const SummaryModule = () => {
         try {
             const { data } = await createPayment(order!);
 
-            if (data?.sessionId) {
+            if (data?.result) {
                 const stripe = await stripePromise;
-                await stripe?.redirectToCheckout({ sessionId: data.sessionId });
+                await stripe?.redirectToCheckout({
+                    sessionId: data.result,
+                });
             }
         } catch (err) {
             console.error("Checkout error:", err);

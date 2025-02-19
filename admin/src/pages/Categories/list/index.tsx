@@ -35,7 +35,7 @@ const CategoriesList = () => {
 
     const config = {
         tableConfig,
-        tableData: data?.data || [],
+        tableData: data?.result || [],
         total: data?.count || 0,
         action: deleteCategory,
         isLoading: isFetching || result.isLoading,

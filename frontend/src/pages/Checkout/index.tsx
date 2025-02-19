@@ -13,11 +13,11 @@ const Checkout = () => {
 
     useTitle("Checkout");
 
-    if (isError || (!isLoading && !data)) return <NotFound />;
+    if (isError || (!isLoading && !data?.result)) return <NotFound />;
 
     return (
         <OrderProvider
-            order={data}
+            order={data?.result}
             steps={checkoutSteps}
             isError={isError}
             isLoading={isLoading}

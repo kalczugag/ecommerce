@@ -28,16 +28,22 @@ const ReadProductModule = ({ config, data }: ReadProductModuleProps) => {
             enqueueSnackbar("Please select a size", {
                 variant: "warning",
             });
-        } else if (token && cartId) {
+        } else if (data && token && cartId) {
             {
                 try {
+                    const itemPrice =
+                        (data.discountPercent ?? 0) > 0
+                            ? data.price -
+                              (data.price * (data.discountPercent ?? 1)) / 100
+                            : data.price;
+
                     await editCart({
                         cartId,
-                        _product: data?._id || "",
+                        _product: data._id,
                         action: "add",
-                        color: data?.color,
+                        color: data.color,
                         size,
-                        unitPrice: data?.price,
+                        unitPrice: itemPrice,
                         quantity: 1,
                     }).unwrap();
 

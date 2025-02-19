@@ -27,6 +27,13 @@ const EnterTrackingNumber = ({
                         <TextField
                             {...props.input}
                             label="Tracking Number"
+                            slotProps={{
+                                input: {
+                                    readOnly: data.trackingNumber
+                                        ? true
+                                        : false,
+                                },
+                            }}
                             error={props.meta.error && props.meta.touched}
                             helperText={
                                 props.meta.error && props.meta.touched

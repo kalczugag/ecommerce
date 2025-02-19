@@ -33,7 +33,7 @@ const OrdersList = () => {
 
     const config = {
         tableConfig,
-        tableData: data?.data || [],
+        tableData: data?.result || [],
         total: data?.count || 0,
         isLoading: isFetching,
     };

@@ -4,13 +4,18 @@ export interface Provider {
     price: number;
     estimatedDeliveryTimeMin: number;
     estimatedDeliveryTimeMax: number;
-    additionalNotes?: any;
+    trackingUrl?: string;
+    additionalNotes?: string;
     isAvailable?: boolean;
 }
 
 export interface DeliveryMethod {
     _id?: string;
-    type: "home_delivery" | "locker_delivery" | "pickup";
+    type:
+        | "home_delivery"
+        | "locker_delivery"
+        | "pickup"
+        | "unavailable_for_customers";
     providers: Provider[];
     metadata?: any;
 }

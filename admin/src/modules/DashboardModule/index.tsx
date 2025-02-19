@@ -30,39 +30,39 @@ const DashboardModule = () => {
     const content = [
         {
             title: "Sales",
-            value: summary.orders.total.toFixed(2),
+            value: summary.result.orders.total.toFixed(2),
             prefix: "$",
             summary: weeklyComparison(
-                summary.orders.thisWeek,
-                summary.orders.lastWeek
+                summary.result.orders.thisWeek,
+                summary.result.orders.lastWeek
             ),
             icon: <LocalShippingOutlined />,
         },
         {
             title: "Visitors",
-            value: summary.visitors.total.toString(),
+            value: summary.result.visitors.total.toString(),
             summary: weeklyComparison(
-                summary.visitors.thisWeek,
-                summary.visitors.lastWeek
+                summary.result.visitors.thisWeek,
+                summary.result.visitors.lastWeek
             ),
             icon: <PeopleOutlineOutlined />,
         },
         {
             title: "Earnings",
-            value: summary.orders.paid.toFixed(2),
+            value: summary.result.orders.paid.toFixed(2),
             prefix: "$",
             summary: weeklyComparison(
-                summary.orders.thisWeek,
-                summary.orders.lastWeek
+                summary.result.orders.thisWeek,
+                summary.result.orders.lastWeek
             ),
             icon: <AttachMoneyOutlined />,
         },
         {
             title: "Orders",
-            value: summary.orders.count.toString(),
+            value: summary.result.orders.count.toString(),
             summary: weeklyComparison(
-                summary.orders.thisWeek,
-                summary.orders.lastWeek
+                summary.result.orders.thisWeek,
+                summary.result.orders.lastWeek
             ),
             icon: <ShoppingCartOutlined />,
         },
@@ -77,7 +77,7 @@ const DashboardModule = () => {
                     ))}
                 </div>
 
-                <PreviewCard chartData={ordersSummary} />
+                <PreviewCard chartData={ordersSummary.result} />
             </DefaultLayout>
         </Loading>
     );

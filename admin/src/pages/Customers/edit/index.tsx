@@ -16,7 +16,7 @@ const CustomersEdit = () => {
     const { data, isError, isLoading } = useGetUserByIdQuery(id || "");
     const [editUser, result] = useEditUserMutation();
 
-    if (isError || (!isLoading && !data)) return <NotFound />;
+    if (isError || (!isLoading && !data?.result)) return <NotFound />;
 
     const handleSubmit = async (values: User) => {
         try {
@@ -36,7 +36,7 @@ const CustomersEdit = () => {
         <CrudModule
             actionForm={
                 <UpdateForm
-                    initialValues={data}
+                    initialValues={data?.result}
                     handleSubmit={handleSubmit}
                     isLoading={isLoading || result.isLoading}
                     formElements={<CustomerForm isLoading={result.isLoading} />}

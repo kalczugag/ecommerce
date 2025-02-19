@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Field, Form } from "react-final-form";
+import { enqueueSnackbar } from "notistack";
 import { required, minValue, maxValue, compose } from "@/utils/validators";
+import { useEditPaymentMutation } from "@/store/apis/paymentsApi";
 import {
     Button,
     Dialog,
@@ -16,6 +18,7 @@ import {
     TextField,
 } from "@mui/material";
 import type { Payment } from "@/types/Order";
+import TooltipButton from "@/components/TooltipButton";
 
 interface CapturePaymentDialogProps {
     data: Payment;
@@ -23,31 +26,58 @@ interface CapturePaymentDialogProps {
 
 interface FormProps {
     amount: number;
-    leaveAuthorizationOpen: boolean;
+    authorizationStatus: "open" | "closed";
     paymentNote?: string;
 }
 
 const CapturePaymentDialog = ({ data }: CapturePaymentDialogProps) => {
     const [isOpen, setIsOpen] = useState(false);
+    const [editPayment, { isLoading }] = useEditPaymentMutation();
 
     const handleOpen = () => setIsOpen(true);
     const handleClose = () => setIsOpen(false);
 
-    const handleSubmit = (values: FormProps) => {
-        console.log(values);
+    const handleSubmit = async (values: FormProps) => {
+        try {
+            await editPayment({
+                _id: data._id || "",
+                capturedAmount: values.amount,
+                authorizationStatus: values.authorizationStatus,
+                paymentNotes: Array.isArray(data.paymentNotes)
+                    ? [
+                          ...data.paymentNotes,
+                          { text: values.paymentNote || "", private: true },
+                      ]
+                    : [{ text: values.paymentNote || "", private: true }],
+            }).unwrap();
+            enqueueSnackbar("Payment captured successfully", {
+                variant: "success",
+            });
+        } catch (error) {
+            enqueueSnackbar("Failed to capture payment", {
+                variant: "error",
+            });
+        }
+
         handleClose();
     };
 
+    const isDisabled = Boolean(data.capturedAmount) || isLoading;
+
     return (
         <>
-            <Button variant="outlined" onClick={handleOpen}>
-                Capture
-            </Button>
+            <TooltipButton
+                title="Capture"
+                tooltipText="Payment already captured"
+                disabled={isDisabled}
+                onClick={handleOpen}
+                variant="outlined"
+            />
             <Dialog open={isOpen} onClose={handleClose}>
                 <Form
                     initialValues={{
-                        amount: data.amount.toFixed(2),
-                        leaveAuthorizationOpen: true,
+                        amount: data.amount,
+                        authorizationStatus: data.authorizationStatus,
                     }}
                     onSubmit={handleSubmit}
                     render={({ handleSubmit }) => (
@@ -84,9 +114,13 @@ const CapturePaymentDialog = ({ data }: CapturePaymentDialogProps) => {
                                     {(props) => (
                                         <TextField
                                             {...props.input}
+                                            value={props.input.value.toFixed(2)}
                                             type="number"
-                                            label="Capture amount"
+                                            label="Capture Amount"
                                             slotProps={{
+                                                htmlInput: {
+                                                    step: 0.05,
+                                                },
                                                 input: {
                                                     startAdornment: (
                                                         <InputAdornment position="start">
@@ -95,6 +129,11 @@ const CapturePaymentDialog = ({ data }: CapturePaymentDialogProps) => {
                                                     ),
                                                 },
                                             }}
+                                            onChange={(e) =>
+                                                props.input.onChange(
+                                                    parseFloat(e.target.value)
+                                                )
+                                            }
                                             error={
                                                 props.meta.error &&
                                                 props.meta.touched
@@ -113,22 +152,19 @@ const CapturePaymentDialog = ({ data }: CapturePaymentDialogProps) => {
                                         Additional Capture Option:
                                     </span>
                                 </DialogContentText>
-                                <FormControl component="fieldset">
-                                    <Field name="leaveAuthorizationOpen">
+                                <FormControl
+                                    disabled={isLoading}
+                                    component="fieldset"
+                                >
+                                    <Field name="authorizationStatus">
                                         {({ input }) => (
                                             <RadioGroup
-                                                value={input.value}
-                                                onChange={(event) => {
-                                                    const value =
-                                                        event.target.value ===
-                                                        "true";
-                                                    input.onChange(value);
-                                                }}
+                                                {...input}
                                                 className="space-y-2"
                                             >
                                                 <div>
                                                     <FormControlLabel
-                                                        value="true"
+                                                        value="open"
                                                         control={<Radio />}
                                                         label="Yes, leave authorization open"
                                                     />
@@ -140,7 +176,7 @@ const CapturePaymentDialog = ({ data }: CapturePaymentDialogProps) => {
                                                 </div>
                                                 <div>
                                                     <FormControlLabel
-                                                        value="false"
+                                                        value="closed"
                                                         control={<Radio />}
                                                         label="No, do not leave authorization open"
                                                     />
@@ -167,15 +203,24 @@ const CapturePaymentDialog = ({ data }: CapturePaymentDialogProps) => {
                                             rows={3}
                                             multiline
                                             fullWidth
+                                            disabled={isLoading}
                                         />
                                     )}
                                 </Field>
                             </DialogContent>
                             <DialogActions>
-                                <Button onClick={handleClose} color="info">
+                                <Button
+                                    onClick={handleClose}
+                                    color="info"
+                                    disabled={isLoading}
+                                >
                                     Cancel
                                 </Button>
-                                <Button type="submit" color="info">
+                                <Button
+                                    type="submit"
+                                    color="info"
+                                    disabled={isLoading}
+                                >
                                     Save
                                 </Button>
                             </DialogActions>

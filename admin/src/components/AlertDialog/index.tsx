@@ -13,7 +13,7 @@ interface AlertDialogProps {
     content: ReactNode;
     confirm: string;
     cancel: string;
-    onConfirm: () => void;
+    onConfirm: () => any;
     children: (props: { open: () => void }) => ReactNode;
 }
 

@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useMemo } from "react";
 import CrudLayout from "@/layouts/CrudLayout";
 import Table from "@/components/Table";
 
@@ -22,14 +22,15 @@ interface CrudModuleProps {
 const CrudModule = ({ config, actionForm }: CrudModuleProps) => {
     const hasTableConfig = config && config.tableConfig && config.tableData;
 
-    const enhancedTableData =
-        config?.tableData && config?.action
+    const enhancedTableData = useMemo(() => {
+        return config?.tableData && config?.action
             ? config.tableData.map((row) => ({
                   ...row,
                   bolder: config.bolder || false,
                   handleDelete: () => config.action!(row._id),
               }))
             : config?.tableData;
+    }, [config?.action, config?.bolder, config?.tableData]);
 
     return (
         <CrudLayout headerPanel={actionForm}>

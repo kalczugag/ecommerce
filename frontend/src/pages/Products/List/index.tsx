@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { useTitle } from "@/hooks/useTitle";
 import ProductsDataListModule from "@/modules/ProductsModule/ProductsDataListModule";
 import useFilters from "@/hooks/useFilters";

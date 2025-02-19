@@ -39,8 +39,26 @@ interface ShippingAddress {
 interface Payment {
     _id?: string;
     _order: string | Order;
+    _user: string | User;
     paymentMethod: string;
     paymentStatus: "unpaid" | "pending" | "completed" | "failed" | "refunded";
+    card?: {
+        checks: {
+            cvc_check: "pass" | "fail" | "unavailable" | "unchecked";
+            address_line1_check: "pass" | "fail" | "unavailable" | "unchecked";
+            address_postal_code_check:
+                | "pass"
+                | "fail"
+                | "unavailable"
+                | "unchecked";
+        };
+        brand: string;
+        last4: string;
+        exp_month: number;
+        exp_year: number;
+        funding: string;
+        country: string;
+    };
     amount: number;
     transactionId?: string;
     paymentDate?: Date;
@@ -48,6 +66,8 @@ interface Payment {
     authorized?: boolean;
     voided?: boolean;
     capturedAmount?: number;
+    authorizationStatus?: "open" | "closed";
+    allowAdditionalCapture?: boolean;
     createdAt?: Date;
     updatedAt?: Date;
 }

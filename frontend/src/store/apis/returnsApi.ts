@@ -4,7 +4,7 @@ import type { CreateReturnOrder, ReturnOrder } from "@/types/Returns";
 
 export const returnsApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        getReturnById: builder.query<ReturnOrder, string>({
+        getReturnById: builder.query<ApiResponseObject<ReturnOrder>, string>({
             query: (id) => ({
                 url: `/returns/id/${id}`,
                 method: "GET",

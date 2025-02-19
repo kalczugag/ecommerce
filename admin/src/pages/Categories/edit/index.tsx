@@ -22,7 +22,7 @@ const CategoriesEdit = () => {
         useGetChildrensQuery(id || "");
     const [editCategory, result] = useEditCategoryMutation();
 
-    if (isError || (!isLoading && !data)) return <NotFound />;
+    if (isError || (!isLoading && !data?.result)) return <NotFound />;
 
     const handleSubmit = async (values: Category) => {
         try {
@@ -39,18 +39,18 @@ const CategoriesEdit = () => {
     };
 
     const hasChildren =
-        childrenIsSuccess && childrenData?.length > 0 ? true : false;
+        childrenIsSuccess && childrenData?.result.length > 0 ? true : false;
 
     return (
         <CrudModule
             actionForm={
                 <UpdateForm
-                    initialValues={data}
+                    initialValues={data?.result}
                     handleSubmit={handleSubmit}
                     isLoading={isLoading || result.isLoading}
                     formElements={
                         <CategoryForm
-                            level={data?.level}
+                            level={data?.result.level}
                             hasChildren={hasChildren}
                             isLoading={result.isLoading}
                             isUpdateForm

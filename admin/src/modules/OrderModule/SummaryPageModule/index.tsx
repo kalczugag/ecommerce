@@ -29,11 +29,16 @@ const SummaryPage = ({ data }: SummaryPageProps) => {
 
             {divider}
 
-            <ShippingCard data={data} />
+            {data.shipments.length > 0 && <ShippingCard data={data} />}
 
             {divider}
 
-            <PaymentsCard data={data} />
+            {Array.isArray(data.payments) && data.payments.length > 0 && (
+                <PaymentsCard
+                    payment={data.payments[0]}
+                    orderTotal={data.total}
+                />
+            )}
         </div>
     );
 };

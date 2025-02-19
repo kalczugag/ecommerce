@@ -275,7 +275,7 @@ const CustomerForm = ({ isUpdateForm, isLoading }: CustomerFormProps) => {
                                 error={props.meta.error && props.meta.touched}
                             >
                                 {isSuccess &&
-                                    data.map(({ _id, name }) => (
+                                    data.result.map(({ _id, name }) => (
                                         <MenuItem key={_id} value={_id}>
                                             {name}
                                         </MenuItem>

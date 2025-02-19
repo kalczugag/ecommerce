@@ -11,9 +11,15 @@ const OrdersManage = () => {
 
     const { data, isError, isLoading } = useGetOrderByIdQuery(id || "");
 
-    if (isError || (!isLoading && !data)) return <NotFound />;
+    if (isError || (!isLoading && !data?.result)) return <NotFound />;
 
-    return <ManageModule config={config} data={data} isLoading={isLoading} />;
+    return (
+        <ManageModule
+            config={config}
+            data={data?.result}
+            isLoading={isLoading}
+        />
+    );
 };
 
 export default OrdersManage;

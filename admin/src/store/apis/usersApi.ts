@@ -32,9 +32,9 @@ export const userApi = apiSlice.injectEndpoints({
                     keepUnusedDataFor: 300,
                 };
             },
-            providesTags: (result) =>
-                result
-                    ? result.data.map((user) => ({
+            providesTags: (data) =>
+                data
+                    ? data.result.map((user) => ({
                           type: "Users",
                           id: user._id,
                       }))
@@ -65,16 +65,16 @@ export const userApi = apiSlice.injectEndpoints({
                     keepUnusedDataFor: 300,
                 };
             },
-            providesTags: (result) =>
-                result
-                    ? result.data.map((user) => ({
+            providesTags: (data) =>
+                data
+                    ? data.result.map((user) => ({
                           type: "Users",
                           id: user._id,
                       }))
                     : [{ type: "Users", id: "LIST" }],
         }),
 
-        getUserById: builder.query<User, string>({
+        getUserById: builder.query<ApiResponseObject<User>, string>({
             query: (id) => ({
                 url: `/users/${id}`,
                 method: "GET",
@@ -83,7 +83,7 @@ export const userApi = apiSlice.injectEndpoints({
             providesTags: (result, error, id) => [{ type: "Users", id: id }],
         }),
 
-        addUser: builder.mutation<User, User>({
+        addUser: builder.mutation<ApiResponseObject<User>, User>({
             query: (values) => ({
                 url: "/users",
                 method: "POST",
@@ -94,7 +94,21 @@ export const userApi = apiSlice.injectEndpoints({
             ],
         }),
 
-        editUser: builder.mutation<User, User>({
+        editAdminUser: builder.mutation<ApiResponseObject<User>, Partial<User>>(
+            {
+                query: (values) => ({
+                    url: `/admin/users/${values._id}`,
+                    method: "PATCH",
+                    body: values,
+                }),
+                invalidatesTags: (result, error, values) => [
+                    { type: "Users", id: values._id },
+                    { type: "Users", id: "LIST" },
+                ],
+            }
+        ),
+
+        editUser: builder.mutation<ApiResponseObject<User>, Partial<User>>({
             query: (values) => ({
                 url: `/users/${values._id}`,
                 method: "PATCH",
@@ -106,7 +120,7 @@ export const userApi = apiSlice.injectEndpoints({
             ],
         }),
 
-        deleteUser: builder.mutation<User, string>({
+        deleteUser: builder.mutation<ApiResponseObject<User>, string>({
             query: (id) => ({
                 url: `/users/${id}`,
                 method: "DELETE",
@@ -122,5 +136,6 @@ export const {
     useGetUserByIdQuery,
     useAddUserMutation,
     useEditUserMutation,
+    useEditAdminUserMutation,
     useDeleteUserMutation,
 } = userApi;

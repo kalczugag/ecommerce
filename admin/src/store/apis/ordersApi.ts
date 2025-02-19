@@ -1,6 +1,6 @@
 import { apiSlice } from "./apiSlice";
 import { serialize } from "@/utils/helpers";
-import type { Order, UpdateOrder } from "@/types/Order";
+import type { Order } from "@/types/Order";
 
 export type summaryType = "yearly" | "monthly" | "weekly";
 type orderSummary = {
@@ -28,46 +28,77 @@ export const orderApi = apiSlice.injectEndpoints({
                 }
 
                 return {
-                    url: "/orders",
+                    url: "/admin/orders",
                     method: "GET",
                     params: queryParams,
                     keepUnusedDataFor: 300,
                 };
             },
-            providesTags: (result) =>
-                result
-                    ? result.data.map((order) => ({
+            providesTags: (data) =>
+                data
+                    ? data.result.map((order) => ({
                           type: "Orders",
                           id: order._id,
                       }))
                     : [{ type: "Orders", id: "LIST" }],
         }),
 
-        getOrderById: builder.query<Order, string>({
+        getOrderById: builder.query<ApiResponseObject<Order>, string>({
             query: (id) => ({
                 url: `/orders/id/${id}`,
                 method: "GET",
                 keepUnusedDataFor: 300,
             }),
-            providesTags: (result, error, id) => [{ type: "Orders", id: id }],
+            providesTags: (result, error, id) => [
+                { type: "Orders", id: id },
+                { type: "Orders", id: "GLOBAL" },
+            ],
         }),
 
-        getOrdersSummary: builder.query<orderSummary[], summaryType>({
+        getOrdersSummary: builder.query<
+            ApiResponseArray<orderSummary>,
+            summaryType
+        >({
             query: (type) => ({
-                url: "/orders/summary",
+                url: "/admin/orders/summary",
                 method: "GET",
                 params: { type },
             }),
         }),
 
-        updateOrder: builder.mutation<ApiResponseObject<Order>, UpdateOrder>({
+        recalculateOrder: builder.mutation<void, string>({
+            query: (id) => ({
+                url: `/admin/orders/recalculate/${id}`,
+                method: "POST",
+            }),
+            invalidatesTags: (result, error, id) => [
+                { type: "Orders", id: id },
+                { type: "Orders", id: "GLOBAL" },
+            ],
+        }),
+
+        editOrder: builder.mutation<ApiResponseObject<Order>, Partial<Order>>({
             query: (order) => ({
-                url: `/orders/${order._id}`,
+                url: `/admin/orders/${order._id}`,
                 method: "PATCH",
                 body: order,
             }),
             invalidatesTags: (result, error, values) => [
                 { type: "Orders", id: values._id },
+            ],
+        }),
+
+        deleteOrderItem: builder.mutation<
+            ApiResponseObject<Order>,
+            { orderId: string; itemId: string }
+        >({
+            query: (order) => ({
+                url: `/admin/orders/${order.orderId}/item/${order.itemId}`,
+                method: "PATCH",
+                body: order,
+            }),
+            invalidatesTags: (result, error, values) => [
+                { type: "Orders", id: values.orderId },
             ],
         }),
     }),
@@ -77,5 +108,7 @@ export const {
     useGetAllOrdersQuery,
     useGetOrderByIdQuery,
     useGetOrdersSummaryQuery,
-    useUpdateOrderMutation,
+    useRecalculateOrderMutation,
+    useEditOrderMutation,
+    useDeleteOrderItemMutation,
 } = orderApi;

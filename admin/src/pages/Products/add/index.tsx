@@ -44,7 +44,7 @@ const ProductAdd = () => {
                     isLoading={result.isLoading}
                     formElements={
                         <ProductForm
-                            data={data?.data}
+                            data={data?.result}
                             isLoading={result.isLoading || isLoading}
                         />
                     }

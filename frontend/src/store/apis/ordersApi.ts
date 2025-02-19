@@ -4,7 +4,7 @@ import type { Order, UpdateOrder, AddOrder } from "@/types/Order";
 
 export const ordersApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        getOrderById: builder.query<Order, string>({
+        getOrderById: builder.query<ApiResponseObject<Order>, string>({
             query: (id) => ({
                 url: `/orders/id/${id}`,
                 method: "GET",

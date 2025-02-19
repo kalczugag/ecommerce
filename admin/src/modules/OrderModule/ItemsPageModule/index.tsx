@@ -1,3 +1,6 @@
+import { useMemo } from "react";
+import { useHandleMutation } from "@/hooks/useHandleMutation";
+import { useRecalculateOrderMutation } from "@/store";
 import { Divider, useMediaQuery } from "@mui/material";
 import Table from "@/components/Table";
 import DetailCard from "@/components/DetailCard";
@@ -13,13 +16,25 @@ interface ItemsPageProps extends ManageAction {
 
 const ItemsPage = ({ data, handleSubTabChange }: ItemsPageProps) => {
     const isMobile = useMediaQuery("(max-width: 1024px)");
+    const { handleMutation } = useHandleMutation();
+    const [recalculate, { isLoading: isRecalculating }] =
+        useRecalculateOrderMutation();
 
-    const enhancedTableData = data.items
-        ? data.items.map((row) => ({
-              ...row,
-              handleDelete: () => console.log("x"),
-          }))
-        : data.items;
+    const enhancedTableData = useMemo(() => {
+        return data.items
+            ? data.items.map((row) => ({
+                  ...row,
+                  handleDelete: () => console.log("x"),
+              }))
+            : [];
+    }, [data.items]);
+
+    const handleRecalculate = () => {
+        handleMutation({
+            values: data._id,
+            mutation: recalculate,
+        });
+    };
 
     const config: PaperCardProps[] = [
         {
@@ -28,7 +43,8 @@ const ItemsPage = ({ data, handleSubTabChange }: ItemsPageProps) => {
             elements: [
                 {
                     label: "Recalculate",
-                    onClick: () => {},
+                    onClick: handleRecalculate,
+                    isLoading: isRecalculating,
                 },
             ],
         },

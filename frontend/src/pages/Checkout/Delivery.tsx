@@ -8,9 +8,14 @@ const Delivery = () => {
 
     useTitle("Checkout - Delivery");
 
-    if (isError || (!isLoading && !data)) return <NotFound />;
+    if (isError || (!isLoading && !data?.result)) return <NotFound />;
 
-    return <DeliveryModule data={data || []} isDeliveryLoading={isLoading} />;
+    return (
+        <DeliveryModule
+            data={data?.result || []}
+            isDeliveryLoading={isLoading}
+        />
+    );
 };
 
 export default Delivery;

@@ -26,10 +26,16 @@ const ProductsEdit = () => {
         data: productsData,
         isError,
         isLoading: productsLoading,
-    } = useGetProductByIdQuery(id || "");
+    } = useGetProductByIdQuery({
+        id: id || "",
+        params: {
+            populate: "topLevelCategory secondLevelCategory thirdLevelCategory",
+        },
+    });
     const [editProduct, result] = useEditProductMutation();
 
-    if (isError || (!productsLoading && !productsData)) return <NotFound />;
+    if (isError || (!productsLoading && !productsData?.result))
+        return <NotFound />;
 
     const handleSubmit = async (values: Product) => {
         const { quantity, ...rest } = values;
@@ -51,8 +57,8 @@ const ProductsEdit = () => {
     };
 
     const updatedInitialValues = {
-        ...productsData,
-        imageUrl: (productsData?.imageUrl as string[])?.join(",\n"),
+        ...productsData?.result,
+        imageUrl: (productsData?.result.imageUrl as string[])?.join(",\n"),
     };
 
     return (
@@ -66,7 +72,7 @@ const ProductsEdit = () => {
                     }
                     formElements={
                         <ProductForm
-                            data={categoriesData?.data}
+                            data={categoriesData?.result}
                             isLoading={result.isLoading}
                             isUpdateForm
                         />

@@ -104,7 +104,7 @@ const AccountTools = () => {
                 handleCloseUserMenu={handleCloseUserMenu}
             />
             <Search />
-            <CartIcon count={data?.count || 0} />
+            <CartIcon count={data?.result.count || 0} />
         </Box>
     );
 };

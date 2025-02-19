@@ -1,15 +1,19 @@
 interface ApiResponseArray<T> {
-    count: number;
-    data: T[];
-    message?: string;
-    error?: string;
+    success: boolean;
+    result: T[];
+    message: string;
+    count?: number;
+    hasMore?: boolean;
+    nextCursor?: number;
 }
 
 interface ApiResponseObject<T> {
-    count: number;
-    data: T;
-    message?: string;
-    error?: string;
+    success: boolean;
+    result: T;
+    message: string;
+    count?: number;
+    hasMore?: boolean;
+    nextCursor?: number;
 }
 
 interface Paginate {
@@ -22,6 +26,7 @@ interface Paginate {
     limit?: number;
     roleName?: string;
     populate?: string;
+    select?: string;
     search?: string;
 }
 

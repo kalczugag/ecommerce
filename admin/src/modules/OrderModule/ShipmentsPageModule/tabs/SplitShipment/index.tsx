@@ -6,16 +6,19 @@ import { tableConfig } from "./tableConfig";
 import type { Order } from "@/types/Order";
 import type { ManageAction } from "@/modules/ManageModule/types/Manage";
 import { Form } from "react-final-form";
+import { useMemo } from "react";
 
 interface SplitShipmentProps extends ManageAction {
     data: Order;
 }
 
 const SplitShipment = ({ data, handleSubTabChange }: SplitShipmentProps) => {
-    const enhancedData = data.items.map((item) => ({
-        ...item,
-        shipments: data.shipments,
-    }));
+    const enhancedData = useMemo(() => {
+        return data.items.map((item) => ({
+            ...item,
+            shipments: data.shipments,
+        }));
+    }, [data.items, data.shipments]);
 
     const handleSubmit = (values: any) => {
         console.log(values); // values.price need to be parsed to float

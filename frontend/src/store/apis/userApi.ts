@@ -11,7 +11,7 @@ export const userApi = apiSlice.injectEndpoints({
             keepUnusedDataFor: 300,
         }),
 
-        updateUser: builder.mutation<User, UpdateUser>({
+        updateUser: builder.mutation<ApiResponseObject<User>, UpdateUser>({
             query: (values) => ({
                 url: `/users/${values._id}`,
                 method: "PATCH",

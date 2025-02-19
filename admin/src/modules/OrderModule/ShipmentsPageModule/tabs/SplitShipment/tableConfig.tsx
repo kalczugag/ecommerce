@@ -5,10 +5,12 @@ import { Field } from "react-final-form";
 import {
     Divider,
     FormControl,
+    IconButton,
     MenuItem,
     Select,
     TextField,
 } from "@mui/material";
+import { Close } from "@mui/icons-material";
 
 interface RowProps extends Item {
     shipments: Shipment[];
@@ -46,7 +48,26 @@ export const tableConfig: TableColumnProps<RowProps>[] = [
                         {...props.input}
                         type="number"
                         variant="standard"
-                        slotProps={{ htmlInput: { max: row.quantity, min: 1 } }}
+                        slotProps={{
+                            htmlInput: {
+                                max: row.quantity,
+                                min: 1,
+                            },
+                            ...(props.input.value && {
+                                input: {
+                                    endAdornment: (
+                                        <IconButton
+                                            onClick={() => {
+                                                props.input.onChange(undefined);
+                                            }}
+                                            sx={{ p: 0 }}
+                                        >
+                                            <Close />
+                                        </IconButton>
+                                    ),
+                                },
+                            }),
+                        }}
                         disabled={row.isLoading}
                         fullWidth
                     />
@@ -68,10 +89,11 @@ export const tableConfig: TableColumnProps<RowProps>[] = [
                                     key={shipment._id}
                                     value={shipment._id}
                                 >
-                                    {index}
+                                    Shipment #{index + 1}
                                 </MenuItem>
                             ))}
-                            <MenuItem value="new">New Shipment</MenuItem>
+                            <Divider />
+                            <MenuItem value="new">** New Shipment</MenuItem>
                         </Select>
                     </FormControl>
                 )}

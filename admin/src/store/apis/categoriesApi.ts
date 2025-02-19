@@ -31,9 +31,9 @@ export const categoryApi = apiSlice.injectEndpoints({
                     keepUnusedDataFor: 300,
                 };
             },
-            providesTags: (result) =>
-                result
-                    ? result.data.map((category) => ({
+            providesTags: (data) =>
+                data
+                    ? data.result.map((category) => ({
                           type: "Categories",
                           id: category._id,
                       }))
@@ -66,7 +66,7 @@ export const categoryApi = apiSlice.injectEndpoints({
             },
         }),
 
-        getCategoryById: builder.query<Category, string>({
+        getCategoryById: builder.query<ApiResponseObject<Category>, string>({
             query: (id) => ({
                 url: `/categories/${id}`,
                 method: "GET",
@@ -76,22 +76,24 @@ export const categoryApi = apiSlice.injectEndpoints({
             ],
         }),
 
-        getCategoriesByLevel: builder.query<Category[], string>({
-            query: (level) => ({
-                url: "/categories/byLevel",
-                method: "GET",
-                params: { level },
-            }),
-        }),
+        getCategoriesByLevel: builder.query<ApiResponseArray<Category>, string>(
+            {
+                query: (level) => ({
+                    url: "/categories/byLevel",
+                    method: "GET",
+                    params: { level },
+                }),
+            }
+        ),
 
-        getChildrens: builder.query<Category[], string>({
+        getChildrens: builder.query<ApiResponseArray<Category>, string>({
             query: (id) => ({
                 url: `/categories/${id}/childrens`,
                 method: "GET",
             }),
         }),
 
-        addCategory: builder.mutation<Category, Category>({
+        addCategory: builder.mutation<ApiResponseObject<Category>, Category>({
             query: (values) => ({
                 url: "/categories",
                 method: "POST",
@@ -102,7 +104,7 @@ export const categoryApi = apiSlice.injectEndpoints({
             ],
         }),
 
-        editCategory: builder.mutation<Category, Category>({
+        editCategory: builder.mutation<ApiResponseObject<Category>, Category>({
             query: (values) => ({
                 url: `/categories/${values._id}`,
                 method: "PATCH",
@@ -114,7 +116,7 @@ export const categoryApi = apiSlice.injectEndpoints({
             ],
         }),
 
-        deleteCategory: builder.mutation<Category, string>({
+        deleteCategory: builder.mutation<ApiResponseObject<Category>, string>({
             query: (id) => ({
                 url: `/categories/${id}`,
                 method: "DELETE",

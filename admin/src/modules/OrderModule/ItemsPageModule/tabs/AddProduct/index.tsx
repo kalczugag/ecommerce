@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import type { ManageAction } from "@/modules/ManageModule/types/Manage";
 import DetailCard from "@/components/DetailCard";
 import Table from "@/components/Table";
@@ -22,12 +23,14 @@ const AddProduct = ({ orderData, handleSubTabChange }: AddProductProps) => {
         console.log(values);
     };
 
-    const enhancedTableData = data?.data
-        ? data?.data.map((row) => ({
-              ...row,
-              shipments: orderData._shipment,
-          }))
-        : data?.data;
+    const enhancedTableData = useMemo(() => {
+        return data?.result
+            ? data?.result.map((row) => ({
+                  ...row,
+                  shipments: orderData.shipments,
+              }))
+            : [];
+    }, [data?.result, orderData.shipments]);
 
     return (
         <div className="flex flex-col space-y-4">

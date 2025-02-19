@@ -6,6 +6,7 @@ export interface PaperCardProps {
     elements: {
         label: ReactNode;
         icon?: JSX.Element;
+        isLoading?: boolean;
         onClick?: () => void;
     }[];
 }
@@ -21,6 +22,7 @@ const PaperCard = ({ description, elements }: PaperCardProps) => {
                             variant="contained"
                             startIcon={element.icon}
                             onClick={element.onClick}
+                            disabled={element.isLoading}
                         >
                             {element.label}
                         </Button>
