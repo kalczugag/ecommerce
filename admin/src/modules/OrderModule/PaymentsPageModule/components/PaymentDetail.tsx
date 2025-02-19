@@ -24,8 +24,8 @@ const PaymentDetail = ({
         card.brand.slice(0, 1).toUpperCase() +
             card.brand.slice(1) +
             " " +
-            "****" +
-            card.last4;
+            "***" +
+            card.last4.slice(-1);
 
     return (
         <DetailCard

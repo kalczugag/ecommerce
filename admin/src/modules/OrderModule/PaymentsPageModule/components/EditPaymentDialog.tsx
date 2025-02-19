@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Field, Form } from "react-final-form";
+import { Field, Form, FormSpy } from "react-final-form";
 import { compose, mustBeNumber, required } from "@/utils/validators";
 import {
     Button,
@@ -11,6 +11,7 @@ import {
     Divider,
     FormControl,
     FormHelperText,
+    IconButton,
     InputAdornment,
     InputLabel,
     MenuItem,
@@ -19,6 +20,7 @@ import {
 } from "@mui/material";
 import type { Payment } from "@/types/Order";
 import { paymentStatuses } from "@/constants/paymentStatuses";
+import { RestartAlt } from "@mui/icons-material";
 
 interface EditPaymentDialogProps {
     payment: Payment;
@@ -175,17 +177,58 @@ const EditPaymentDialog = ({ payment }: EditPaymentDialogProps) => {
                                         {(props) => (
                                             <TextField
                                                 {...props.input}
-                                                label="Amount"
+                                                value={props.input.value.toFixed(
+                                                    2
+                                                )}
                                                 type="number"
+                                                label="Amount"
                                                 slotProps={{
+                                                    htmlInput: {
+                                                        step: 0.05,
+                                                    },
                                                     input: {
                                                         startAdornment: (
                                                             <InputAdornment position="start">
                                                                 $
                                                             </InputAdornment>
                                                         ),
+                                                        endAdornment: (
+                                                            <FormSpy
+                                                                subscription={{
+                                                                    initialValues:
+                                                                        true,
+                                                                }}
+                                                            >
+                                                                {({
+                                                                    form,
+                                                                    initialValues,
+                                                                }) =>
+                                                                    props.input
+                                                                        .value !==
+                                                                        initialValues.amount && (
+                                                                        <IconButton
+                                                                            onClick={() =>
+                                                                                form.change(
+                                                                                    "amount",
+                                                                                    initialValues.amount
+                                                                                )
+                                                                            }
+                                                                        >
+                                                                            <RestartAlt />
+                                                                        </IconButton>
+                                                                    )
+                                                                }
+                                                            </FormSpy>
+                                                        ),
                                                     },
                                                 }}
+                                                onChange={(e) =>
+                                                    props.input.onChange(
+                                                        parseFloat(
+                                                            e.target.value
+                                                        )
+                                                    )
+                                                }
                                                 error={
                                                     props.meta.error &&
                                                     props.meta.touched

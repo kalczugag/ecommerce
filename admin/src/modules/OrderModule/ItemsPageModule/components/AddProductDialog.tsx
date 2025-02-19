@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Field, Form } from "react-final-form";
+import { Field, Form, FormSpy } from "react-final-form";
 import { compose, maxValue, minValue, required } from "@/utils/validators";
 import { useGetDeliveryMethodsQuery } from "@/store/apis/deliveryMethods";
 import { deliveryMethods } from "@/constants/deliveryMethods";
@@ -21,7 +21,7 @@ import {
     Select,
     TextField,
 } from "@mui/material";
-import { Add } from "@mui/icons-material";
+import { Add, RestartAlt } from "@mui/icons-material";
 import type { Product } from "@/types/Product";
 
 interface AddProductDialogProps {
@@ -54,7 +54,7 @@ const AddProductDialog = ({ data }: AddProductDialogProps) => {
             <Dialog open={isOpen} onClose={handleClose}>
                 <Form
                     initialValues={{
-                        price: data.price.toFixed(2),
+                        price: data.price,
                         quantity: 1,
                     }}
                     onSubmit={handleSubmit}
@@ -92,20 +92,58 @@ const AddProductDialog = ({ data }: AddProductDialogProps) => {
                                         {(props) => (
                                             <TextField
                                                 {...props.input}
+                                                value={props.input.value.toFixed(
+                                                    2
+                                                )}
                                                 type="number"
+                                                label="Price"
                                                 slotProps={{
+                                                    htmlInput: {
+                                                        step: 0.05,
+                                                    },
                                                     input: {
                                                         startAdornment: (
                                                             <InputAdornment position="start">
                                                                 $
                                                             </InputAdornment>
                                                         ),
-                                                    },
-                                                    htmlInput: {
-                                                        min: 1,
+                                                        endAdornment: (
+                                                            <FormSpy
+                                                                subscription={{
+                                                                    initialValues:
+                                                                        true,
+                                                                }}
+                                                            >
+                                                                {({
+                                                                    form,
+                                                                    initialValues,
+                                                                }) =>
+                                                                    props.input
+                                                                        .value !==
+                                                                        initialValues.price && (
+                                                                        <IconButton
+                                                                            onClick={() =>
+                                                                                form.change(
+                                                                                    "price",
+                                                                                    initialValues.price
+                                                                                )
+                                                                            }
+                                                                        >
+                                                                            <RestartAlt />
+                                                                        </IconButton>
+                                                                    )
+                                                                }
+                                                            </FormSpy>
+                                                        ),
                                                     },
                                                 }}
-                                                label="Price"
+                                                onChange={(e) =>
+                                                    props.input.onChange(
+                                                        parseFloat(
+                                                            e.target.value
+                                                        )
+                                                    )
+                                                }
                                                 error={
                                                     props.meta.error &&
                                                     props.meta.touched
@@ -231,13 +269,6 @@ const AddProductDialog = ({ data }: AddProductDialogProps) => {
                                                                 ),
                                                             ]
                                                         )}
-                                                    <ListSubheader>
-                                                        Unavailable for
-                                                        customers
-                                                    </ListSubheader>
-                                                    <MenuItem value="free">
-                                                        ** Free shipping
-                                                    </MenuItem>
                                                 </Select>
                                                 {props.meta.error &&
                                                     props.meta.touched && (

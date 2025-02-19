@@ -76,7 +76,7 @@ const CapturePaymentDialog = ({ data }: CapturePaymentDialogProps) => {
             <Dialog open={isOpen} onClose={handleClose}>
                 <Form
                     initialValues={{
-                        amount: data.amount.toFixed(2),
+                        amount: data.amount,
                         authorizationStatus: data.authorizationStatus,
                     }}
                     onSubmit={handleSubmit}
@@ -114,9 +114,13 @@ const CapturePaymentDialog = ({ data }: CapturePaymentDialogProps) => {
                                     {(props) => (
                                         <TextField
                                             {...props.input}
+                                            value={props.input.value.toFixed(2)}
                                             type="number"
-                                            label="Capture amount"
+                                            label="Capture Amount"
                                             slotProps={{
+                                                htmlInput: {
+                                                    step: 0.05,
+                                                },
                                                 input: {
                                                     startAdornment: (
                                                         <InputAdornment position="start">
@@ -125,6 +129,11 @@ const CapturePaymentDialog = ({ data }: CapturePaymentDialogProps) => {
                                                     ),
                                                 },
                                             }}
+                                            onChange={(e) =>
+                                                props.input.onChange(
+                                                    parseFloat(e.target.value)
+                                                )
+                                            }
                                             error={
                                                 props.meta.error &&
                                                 props.meta.touched
@@ -135,7 +144,6 @@ const CapturePaymentDialog = ({ data }: CapturePaymentDialogProps) => {
                                                     ? props.meta.error
                                                     : null
                                             }
-                                            disabled={isLoading}
                                         />
                                     )}
                                 </Field>

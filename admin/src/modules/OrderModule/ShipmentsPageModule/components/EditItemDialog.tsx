@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Field, Form } from "react-final-form";
-import { compose, mustBeNumber, required } from "@/utils/validators";
+import { Field, Form, FormSpy } from "react-final-form";
+import { compose, minValue, mustBeNumber, required } from "@/utils/validators";
 import {
     Button,
     Dialog,
@@ -18,7 +18,7 @@ import {
     Select,
     TextField,
 } from "@mui/material";
-import { Edit } from "@mui/icons-material";
+import { Edit, RestartAlt } from "@mui/icons-material";
 import { Item } from "@/types/Order";
 import { useGetProductByIdQuery } from "@/store";
 
@@ -62,7 +62,13 @@ const EditItemDialog = ({ item }: EditItemDialogProps) => {
                             </DialogContent>
                             <DialogContent className="flex flex-row justify-between">
                                 <div className="flex-1 flex flex-col space-y-4">
-                                    <Field name="total" validate={required}>
+                                    <Field
+                                        name="total"
+                                        validate={compose(
+                                            minValue(0),
+                                            required
+                                        )}
+                                    >
                                         {(props) => (
                                             <TextField
                                                 {...props.input}
@@ -74,6 +80,41 @@ const EditItemDialog = ({ item }: EditItemDialogProps) => {
                                                 slotProps={{
                                                     htmlInput: {
                                                         step: 0.05,
+                                                    },
+                                                    input: {
+                                                        startAdornment: (
+                                                            <InputAdornment position="start">
+                                                                $
+                                                            </InputAdornment>
+                                                        ),
+                                                        endAdornment: (
+                                                            <FormSpy
+                                                                subscription={{
+                                                                    initialValues:
+                                                                        true,
+                                                                }}
+                                                            >
+                                                                {({
+                                                                    form,
+                                                                    initialValues,
+                                                                }) =>
+                                                                    props.input
+                                                                        .value !==
+                                                                        initialValues.total && (
+                                                                        <IconButton
+                                                                            onClick={() =>
+                                                                                form.change(
+                                                                                    "total",
+                                                                                    initialValues.total
+                                                                                )
+                                                                            }
+                                                                        >
+                                                                            <RestartAlt />
+                                                                        </IconButton>
+                                                                    )
+                                                                }
+                                                            </FormSpy>
+                                                        ),
                                                     },
                                                 }}
                                                 onChange={(e) =>

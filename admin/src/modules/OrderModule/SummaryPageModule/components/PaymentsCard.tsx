@@ -36,7 +36,7 @@ const PaymentsCard = ({ payment }: PaymentsCardProps) => {
                     <span>
                         {card.brand.slice(0, 1).toUpperCase() +
                             card.brand.slice(1)}{" "}
-                        {"****" + card.last4}
+                        {"***" + card.last4.slice(-1)}
                     </span>
                 ) : (
                     <span>None</span>
