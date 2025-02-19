@@ -21,13 +21,6 @@ export interface HandleAddResult {
     updatedCart?: CartDocument;
 }
 
-// const itemExists = items.find(
-//     (item) =>
-//         item._product?.toString() === _product &&
-//         item.color === color &&
-//         item.size === size
-// );
-
 export const updateCart = async (
     req: express.Request<{ id: string }, {}, BodyProps>,
     res: express.Response

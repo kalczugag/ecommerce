@@ -32,11 +32,10 @@ const ReadProductModule = ({ config, data }: ReadProductModuleProps) => {
             {
                 try {
                     const itemPrice =
-                        data.discountPercent && data.discountedPrice
-                            ? data.discountedPrice
-                            : data.discountPercent
-                            ? data.price
-                            : 0;
+                        (data.discountPercent ?? 0) > 0
+                            ? data.price -
+                              (data.price * (data.discountPercent ?? 1)) / 100
+                            : data.price;
 
                     await editCart({
                         cartId,

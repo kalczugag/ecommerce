@@ -39,6 +39,7 @@ interface ShippingAddress {
 interface Payment {
     _id?: string;
     _order: string | Order;
+    _user: string | User;
     paymentMethod: string;
     paymentStatus: "unpaid" | "pending" | "completed" | "failed" | "refunded";
     card?: {

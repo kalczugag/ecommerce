@@ -40,6 +40,8 @@ export const handleCheckoutSessionCompleted = async (
             throw new Error("Order not found");
         }
 
+        console.log(order, "\n\n\n\n\n");
+
         const bulkUpdates = (order.items as Item[]).map((item) => {
             const productId = (item._product as Product)._id;
             const purchasedQuantity = item.quantity;

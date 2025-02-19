@@ -14,6 +14,8 @@ export const orderConfirmation = (order: Order) => {
         delivery: shipmentTotal.toFixed(2) || "",
     };
 
+    console.log("price data: ", priceData);
+
     return `
     <!DOCTYPE html>
     <html>

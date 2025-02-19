@@ -10,6 +10,7 @@ export const shippingAddressSchema = Joi.object({
 
 const shipmentSchema = Joi.object({
     _order: Joi.string().required(),
+    _user: Joi.string().required(),
     shipFrom: shippingAddressSchema,
     shipTo: shippingAddressSchema,
     status: Joi.string().valid("pending", "shipped", "delivered"),
