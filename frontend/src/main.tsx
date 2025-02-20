@@ -6,11 +6,11 @@ import { SnackbarProvider } from "notistack";
 import { store } from "./store";
 import App from "./App.tsx";
 import "./index.css";
-import { StrictMode } from "react";
 
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(
+<<<<<<< HEAD
     <Provider store={store}>
         <QueryClientProvider client={queryClient}>
             <BrowserRouter>
@@ -24,4 +24,19 @@ createRoot(document.getElementById("root")!).render(
             </BrowserRouter>
         </QueryClientProvider>
     </Provider>
+=======
+        <Provider store={store}>
+            <QueryClientProvider client={queryClient}>
+                <BrowserRouter>
+                    <SnackbarProvider
+                        autoHideDuration={2000}
+                        preventDuplicate
+                        className="print:hidden"
+                    >
+                        <App />
+                    </SnackbarProvider>
+                </BrowserRouter>
+            </QueryClientProvider>
+        </Provider>
+>>>>>>> 1b915f4c07fe0c82d041b96dee8fd35c99c2c148
 );
