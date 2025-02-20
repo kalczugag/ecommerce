@@ -12,6 +12,7 @@ import ShipItems from "@/modules/OrderModule/ShipmentsPageModule/tabs/ShipItems"
 import AddProduct from "@/modules/OrderModule/ItemsPageModule/tabs/AddProduct";
 import type { Manage, ManageAction } from "@/modules/ManageModule/types/Manage";
 import type { Order } from "@/types/Order";
+import AddOtherItem from "@/modules/OrderModule/ItemsPageModule/tabs/AddOtherItem";
 
 type EnhancedData = Order & ManageAction;
 
@@ -70,6 +71,16 @@ export const config: Manage[] = [
                 label: "Add Product",
                 element: ({ handleSubTabChange, ...rest }: EnhancedData) => (
                     <AddProduct
+                        orderData={rest}
+                        handleSubTabChange={handleSubTabChange}
+                    />
+                ),
+            },
+            {
+                key: "items_add_other",
+                label: "Add Other Item",
+                element: ({ handleSubTabChange, ...rest }: EnhancedData) => (
+                    <AddOtherItem
                         orderData={rest}
                         handleSubTabChange={handleSubTabChange}
                     />

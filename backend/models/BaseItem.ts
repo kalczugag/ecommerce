@@ -5,10 +5,9 @@ export const baseItemSchema = new mongoose.Schema<Item>({
     _product: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Product",
-        required: true,
+        required: false,
     },
     name: { type: String, required: false },
-    sku: { type: String, required: false },
     color: { type: String, required: false },
     size: { type: String, required: false },
     unitPrice: { type: Number, required: true },

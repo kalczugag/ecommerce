@@ -130,8 +130,10 @@ const CapturePaymentDialog = ({ data }: CapturePaymentDialogProps) => {
                                                 },
                                             }}
                                             onChange={(e) =>
-                                                props.input.onChange(
-                                                    parseFloat(e.target.value)
+                                                parseFloat(
+                                                    e.target.value === ""
+                                                        ? "0"
+                                                        : e.target.value
                                                 )
                                             }
                                             error={

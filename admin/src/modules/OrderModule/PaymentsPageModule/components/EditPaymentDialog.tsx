@@ -231,7 +231,10 @@ const EditPaymentDialog = ({ payment, disabled }: EditPaymentDialogProps) => {
                                                 onChange={(e) =>
                                                     props.input.onChange(
                                                         parseFloat(
-                                                            e.target.value
+                                                            e.target.value ===
+                                                                ""
+                                                                ? "0"
+                                                                : e.target.value
                                                         )
                                                     )
                                                 }

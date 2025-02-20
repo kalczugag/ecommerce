@@ -30,7 +30,7 @@ export const deletePayment = async (
             { $pull: { payments: deletedPayment._id } }
         ).exec();
 
-        return res.json(successResponse(deletedPayment));
+        return res.json(successResponse(null, "Payment deleted"));
     } catch (error) {
         console.error(error);
         return res

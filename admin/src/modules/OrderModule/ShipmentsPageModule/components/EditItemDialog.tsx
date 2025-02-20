@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Field, Form, FormSpy } from "react-final-form";
 import { useHandleMutation } from "@/hooks/useHandleMutation";
-import { compose, maxValue, minValue, required } from "@/utils/validators";
+import { compose, minValue, required } from "@/utils/validators";
 import { useGetProductByIdQuery, useEditBaseItemMutation } from "@/store";
 import {
     Button,
@@ -74,7 +74,7 @@ const EditItemDialog = ({ item }: EditItemDialogProps) => {
                         color: item.color,
                     }}
                     onSubmit={handleSubmit}
-                    render={({ handleSubmit, form }) => (
+                    render={({ handleSubmit }) => (
                         <form onSubmit={handleSubmit}>
                             <DialogTitle>Edit Item</DialogTitle>
                             <DialogContent>
@@ -143,7 +143,10 @@ const EditItemDialog = ({ item }: EditItemDialogProps) => {
                                                 onChange={(e) =>
                                                     props.input.onChange(
                                                         parseFloat(
-                                                            e.target.value
+                                                            e.target.value ===
+                                                                ""
+                                                                ? "0"
+                                                                : e.target.value
                                                         )
                                                     )
                                                 }

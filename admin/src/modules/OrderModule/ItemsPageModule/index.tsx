@@ -1,6 +1,9 @@
 import { useMemo } from "react";
 import { useHandleMutation } from "@/hooks/useHandleMutation";
-import { useRecalculateOrderMutation } from "@/store";
+import {
+    useDeleteBaseItemMutation,
+    useRecalculateOrderMutation,
+} from "@/store";
 import { Divider, useMediaQuery } from "@mui/material";
 import Table from "@/components/Table";
 import DetailCard from "@/components/DetailCard";
@@ -17,17 +20,10 @@ interface ItemsPageProps extends ManageAction {
 const ItemsPage = ({ data, handleSubTabChange }: ItemsPageProps) => {
     const isMobile = useMediaQuery("(max-width: 1024px)");
     const { handleMutation } = useHandleMutation();
+
     const [recalculate, { isLoading: isRecalculating }] =
         useRecalculateOrderMutation();
-
-    const enhancedTableData = useMemo(() => {
-        return data.items
-            ? data.items.map((row) => ({
-                  ...row,
-                  handleDelete: () => console.log("x"),
-              }))
-            : [];
-    }, [data.items]);
+    const [deleteItem, { isLoading: isDeleting }] = useDeleteBaseItemMutation();
 
     const handleRecalculate = () => {
         handleMutation({
@@ -35,6 +31,23 @@ const ItemsPage = ({ data, handleSubTabChange }: ItemsPageProps) => {
             mutation: recalculate,
         });
     };
+
+    const enhancedTableData = useMemo(() => {
+        const handleDelete = (id: string) => {
+            handleMutation({
+                values: { itemId: id, orderId: data._id },
+                mutation: deleteItem,
+            });
+        };
+
+        return data.items
+            ? data.items.map((row) => ({
+                  ...row,
+                  isLoading: isDeleting,
+                  handleDelete,
+              }))
+            : [];
+    }, [data.items, isDeleting]);
 
     const config: PaperCardProps[] = [
         {
@@ -57,7 +70,7 @@ const ItemsPage = ({ data, handleSubTabChange }: ItemsPageProps) => {
                 },
                 {
                     label: "Add Other Item",
-                    onClick: () => {},
+                    onClick: () => handleSubTabChange(2),
                 },
             ],
         },

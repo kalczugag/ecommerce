@@ -11,6 +11,13 @@ const baseItems = (router: express.Router) => {
         hasRole("admin"),
         methods.update
     );
+
+    router.delete(
+        "/items/:id",
+        passport.authenticate("jwt", { session: false }),
+        hasRole("admin"),
+        methods.update
+    );
 };
 
 export default baseItems;
