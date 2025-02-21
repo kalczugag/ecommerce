@@ -5,11 +5,10 @@ import { OrderModel } from "../../../models/Order";
 import { BaseItemModel } from "../../../models/BaseItem";
 
 export const deleteBaseItem = async (
-    req: express.Request<{ id: string }, {}, { orderId: string }>,
+    req: express.Request<{ id: string; orderId: string }>,
     res: express.Response
 ) => {
-    const { id } = req.params;
-    const { orderId } = req.body;
+    const { id, orderId } = req.params;
 
     if (!isValidObjectId(id)) {
         return res

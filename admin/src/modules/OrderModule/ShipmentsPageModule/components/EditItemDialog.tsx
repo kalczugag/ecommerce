@@ -40,10 +40,13 @@ const EditItemDialog = ({ item }: EditItemDialogProps) => {
 
     const [editBaseItem, { isLoading: editLoading }] =
         useEditBaseItemMutation();
-    const { data, isLoading: productLoading } = useGetProductByIdQuery({
-        id: item._product._id || "",
-        params: { select: "size,color" },
-    });
+    const { data, isLoading: productLoading } = useGetProductByIdQuery(
+        {
+            id: item._product?._id || "",
+            params: { select: "size,color" },
+        },
+        { skip: !item._product }
+    );
 
     const handleOpen = () => setIsOpen(true);
     const handleClose = () => setIsOpen(false);
@@ -211,14 +214,13 @@ const EditItemDialog = ({ item }: EditItemDialogProps) => {
                                 />
 
                                 <div className="flex-1 flex flex-col space-y-4">
-                                    <Field
-                                        name="size"
-                                        type="select"
-                                        validate={required}
-                                    >
+                                    <Field name="size" type="select">
                                         {(props) => (
                                             <FormControl
-                                                disabled={isLoading}
+                                                disabled={
+                                                    isLoading ||
+                                                    !data?.result.size
+                                                }
                                                 sx={{ minWidth: 200 }}
                                             >
                                                 <InputLabel>Size</InputLabel>
@@ -256,7 +258,7 @@ const EditItemDialog = ({ item }: EditItemDialogProps) => {
                                             </FormControl>
                                         )}
                                     </Field>
-                                    <Field name="color" validate={required}>
+                                    <Field name="color">
                                         {(props) => (
                                             <TextField
                                                 {...props.input}
@@ -266,16 +268,6 @@ const EditItemDialog = ({ item }: EditItemDialogProps) => {
                                                         readOnly: true,
                                                     },
                                                 }}
-                                                error={
-                                                    props.meta.error &&
-                                                    props.meta.touched
-                                                }
-                                                helperText={
-                                                    props.meta.error &&
-                                                    props.meta.touched
-                                                        ? props.meta.error
-                                                        : null
-                                                }
                                                 fullWidth
                                             />
                                         )}

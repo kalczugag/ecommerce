@@ -139,6 +139,11 @@ interface UpdateOrder {
     status?: Order["status"];
 }
 
+interface AddItem extends Omit<Item, "_product"> {
+    orderId: string;
+    _product?: string;
+}
+
 export {
     Item,
     ShippingAddress,
@@ -148,4 +153,5 @@ export {
     OrderNote,
     ReturnOrder,
     UpdateOrder,
+    AddItem,
 };

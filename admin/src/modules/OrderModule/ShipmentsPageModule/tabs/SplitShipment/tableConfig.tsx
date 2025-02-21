@@ -21,15 +21,18 @@ interface RowProps extends Item {
 export const tableConfig: TableColumnProps<RowProps>[] = [
     {
         label: "SKU",
-        render: (row) => row._product.sku,
+        render: (row) => (row._product ? row._product.sku : "-"),
     },
     {
         label: "item",
-        render: (row) => (
-            <UnderlineLink to={`/products/${row._product._id}`}>
-                {row._product.title}
-            </UnderlineLink>
-        ),
+        render: (row) =>
+            row._product ? (
+                <UnderlineLink to={`/products/${row._product._id}`}>
+                    {row._product.title}
+                </UnderlineLink>
+            ) : (
+                row.name
+            ),
     },
     {
         label: "Price",
