@@ -36,13 +36,15 @@ const DetailCard = ({
     return (
         <div className={`flex flex-col space-y-4 ${className}`}>
             {variant === "standard" && (
-                <h3 className="text-lg bg-gray-200 p-3">{label}</h3>
+                <h3 className="text-lg bg-gray-200 p-3 dark:bg-text-light">
+                    {label}
+                </h3>
             )}
             {variant === "accordion" ? (
                 <>
                     <button
                         type="button"
-                        className="flex justify-between items-center text-lg bg-gray-200 p-3"
+                        className="flex justify-between items-center text-lg bg-gray-200 p-3 dark:bg-text-light"
                         onClick={handleClick}
                     >
                         {label}

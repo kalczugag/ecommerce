@@ -49,7 +49,7 @@ export const tableConfig: TableColumnProps<RowProps>[] = [
     {
         label: "Order Status",
         render: (row) => (
-            <div className="bg-gray-300 text-center rounded truncate px-2">
+            <div className="bg-gray-300 text-center rounded truncate px-2 dark:bg-slate-700">
                 {row.status}
             </div>
         ),
@@ -68,7 +68,7 @@ export const tableConfig: TableColumnProps<RowProps>[] = [
 
             return (
                 <div
-                    className={`text-center rounded truncate px-2 ${statusClasses}`}
+                    className={`text-center rounded truncate px-2 ${statusClasses} dark:bg-slate-700`}
                 >
                     {paymentStatus}
                 </div>

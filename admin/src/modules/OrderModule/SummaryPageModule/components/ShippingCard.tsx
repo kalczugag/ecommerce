@@ -28,7 +28,7 @@ const ShippingCard = ({ data }: ShippingCardProps) => {
                     data.status === "delivered"
                         ? "bg-green-600"
                         : "bg-orange-500"
-                }`}
+                } dark:bg-slate-700`}
             >
                 items {data.status}
             </div>

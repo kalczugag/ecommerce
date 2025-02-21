@@ -27,7 +27,7 @@ const PaymentsCard = ({ payment, orderTotal }: PaymentsCardProps) => {
                     payment?.paymentStatus === "completed"
                         ? "bg-green-600"
                         : "bg-orange-500"
-                }`}
+                } dark:bg-slate-700`}
             >
                 {payment?.paymentStatus}
             </div>
