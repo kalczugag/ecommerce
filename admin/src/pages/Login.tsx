@@ -5,31 +5,27 @@ import { LoginInput, useLoginMutation } from "@/store";
 import { enqueueSnackbar } from "notistack";
 import CopyToClipboard from "react-copy-to-clipboard";
 import { useTitle } from "@/hooks/useTitle";
+import { useHandleMutation } from "@/hooks/useHandleMutation";
 import AuthModule from "@/modules/AuthModule";
 import LoginForm from "@/forms/LoginForm";
 import { ContentCopy } from "@mui/icons-material";
 import { Button } from "@mui/material";
 
 const Login = () => {
-    const navigate = useNavigate();
-    const [login, { isLoading, isSuccess }] = useLoginMutation();
     useTitle("Sign In");
+    const navigate = useNavigate();
+    const { handleMutation } = useHandleMutation();
+    const [login, { isLoading, isSuccess }] = useLoginMutation();
 
     useEffect(() => {
         if (isSuccess) navigate("/");
     }, [isSuccess]);
 
-    const handleLogin = async (values: LoginInput, form: any) => {
-        try {
-            await login(values).unwrap();
-        } catch (error: any) {
-            const errorMessage =
-                error.data?.error || "An unexpected error occurred.";
-            enqueueSnackbar(errorMessage, { variant: "error" });
-            return;
-        }
-
-        form.restart();
+    const handleLogin = (values: LoginInput) => {
+        handleMutation({
+            values,
+            mutation: login,
+        });
     };
 
     const FormContainer = () => (

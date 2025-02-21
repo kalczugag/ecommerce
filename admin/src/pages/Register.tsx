@@ -3,31 +3,27 @@ import { Form } from "react-final-form";
 import { useNavigate } from "react-router-dom";
 import { RegisterInput, useRegisterMutation } from "@/store";
 import { enqueueSnackbar } from "notistack";
+import { useHandleMutation } from "@/hooks/useHandleMutation";
 import { useTitle } from "@/hooks/useTitle";
 import AuthModule from "@/modules/AuthModule";
 import RegisterForm from "@/forms/RegisterForm";
 import { Button } from "@mui/material";
 
 const Register = () => {
-    const navigate = useNavigate();
-    const [register, { isLoading, isSuccess }] = useRegisterMutation();
     useTitle("Sign Up");
+    const navigate = useNavigate();
+    const { handleMutation } = useHandleMutation();
+    const [register, { isLoading, isSuccess }] = useRegisterMutation();
 
     useEffect(() => {
         if (isSuccess) navigate("/");
     }, [isSuccess]);
 
     const handleRegister = async (values: RegisterInput) => {
-        try {
-            await register(values).unwrap();
-            enqueueSnackbar("Registered in successfully", {
-                variant: "success",
-            });
-        } catch (error: any) {
-            const errorMessage =
-                error.data?.error || "An unexpected error occurred.";
-            enqueueSnackbar(errorMessage, { variant: "error" });
-        }
+        handleMutation({
+            values,
+            mutation: register,
+        });
     };
 
     const FormContainer = () => (
@@ -39,7 +35,9 @@ const Register = () => {
                     <Button
                         type="submit"
                         variant="contained"
-                        disabled={!form.getFieldState("recaptcha")?.value}
+                        disabled={
+                            !form.getFieldState("recaptcha")?.value || isLoading
+                        }
                         fullWidth
                     >
                         Sign Up
