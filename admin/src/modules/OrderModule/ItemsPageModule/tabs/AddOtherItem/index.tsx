@@ -30,7 +30,7 @@ interface FormValues {
 
 const AddOtherItem = ({ handleSubTabChange }: AddOtherItemProps) => {
     const { id } = useParams();
-    const isMobile = useMediaQuery("(max-width: 1024px)");
+    const isMobile = useMediaQuery("(max-width: 768px)");
     const { handleMutation } = useHandleMutation();
 
     const [addProduct, { isLoading }] = useAddBaseItemMutation();
@@ -51,7 +51,7 @@ const AddOtherItem = ({ handleSubTabChange }: AddOtherItemProps) => {
                 render={({ handleSubmit, form }) => (
                     <form
                         onSubmit={handleSubmit}
-                        className="flex flex-col justify-between lg:flex-row"
+                        className="flex flex-col justify-between md:flex-row"
                     >
                         <div className="flex-1">
                             <p className="text-sm mb-4">

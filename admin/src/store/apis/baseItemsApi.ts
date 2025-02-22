@@ -32,10 +32,9 @@ export const baseItemsApi = apiSlice.injectEndpoints({
             query: ({ itemId, orderId }) => ({
                 url: `/admin/items/${itemId}`,
                 method: "DELETE",
-                params: {
-                    orderId,
-                },
+                body: { orderId },
             }),
+
             invalidatesTags: (result, error, values) => [
                 { type: "Orders", id: "GLOBAL" },
             ],

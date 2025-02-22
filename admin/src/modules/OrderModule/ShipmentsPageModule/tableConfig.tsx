@@ -17,7 +17,7 @@ export const tableConfig: TableColumnProps<RowProps>[] = [
         render: (row) => (row._product ? row._product.sku : "-"),
     },
     {
-        label: "item",
+        label: "Item",
         render: (row) =>
             row._product ? (
                 <UnderlineLink to={`/products/${row._product._id}`}>

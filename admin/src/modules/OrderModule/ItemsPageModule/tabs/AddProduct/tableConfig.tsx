@@ -12,7 +12,7 @@ export const tableConfig: TableColumnProps<RowProps>[] = [
         render: (row) => row.sku,
     },
     {
-        label: "item",
+        label: "Item",
         render: (row) => row.title,
     },
     {
