@@ -44,7 +44,7 @@ const ShipItems = ({ data, handleSubTabChange }: ShipItemsProps) => {
 
     const handleSubmit = (values: FormProps) => {
         handleMutation({
-            values,
+            values: { _id: data._id, ...values },
             mutation: editOrder,
         });
     };

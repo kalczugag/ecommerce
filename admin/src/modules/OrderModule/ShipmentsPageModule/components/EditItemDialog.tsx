@@ -221,7 +221,6 @@ const EditItemDialog = ({ item }: EditItemDialogProps) => {
                                                     isLoading ||
                                                     !data?.result.size
                                                 }
-                                                sx={{ minWidth: 200 }}
                                             >
                                                 <InputLabel>Size</InputLabel>
                                                 <Select

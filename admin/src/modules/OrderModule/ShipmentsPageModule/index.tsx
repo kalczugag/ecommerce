@@ -81,7 +81,7 @@ const ShipmentsPage = ({ data, handleSubTabChange }: ShipmentsPageProps) => {
 
     return (
         <div className="flex flex-col space-y-4">
-            {shipments ? (
+            {shipments.length > 0 ? (
                 shipments.map((shipment, index) => (
                     <ShipmentDetail
                         key={shipment._id}

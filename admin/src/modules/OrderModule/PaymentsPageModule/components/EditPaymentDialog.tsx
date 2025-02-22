@@ -93,10 +93,7 @@ const EditPaymentDialog = ({ payment, disabled }: EditPaymentDialogProps) => {
                                         validate={required}
                                     >
                                         {(props) => (
-                                            <FormControl
-                                                disabled={false}
-                                                sx={{ minWidth: 200 }}
-                                            >
+                                            <FormControl disabled={false}>
                                                 <InputLabel
                                                     error={
                                                         props.meta.error &&

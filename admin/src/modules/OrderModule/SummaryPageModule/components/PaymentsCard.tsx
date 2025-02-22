@@ -8,8 +8,6 @@ interface PaymentsCardProps {
 }
 
 const PaymentsCard = ({ payment, orderTotal }: PaymentsCardProps) => {
-    // const payment = data.payments?.[0];
-
     const card = payment.card;
 
     return (
