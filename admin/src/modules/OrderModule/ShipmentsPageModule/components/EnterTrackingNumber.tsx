@@ -8,12 +8,14 @@ interface EnterTrackingNumberProps {
     data: Shipment;
     handleBack: () => void;
     form: any;
+    isLoading: boolean;
 }
 
 const EnterTrackingNumber = ({
     data,
     handleBack,
     form,
+    isLoading,
 }: EnterTrackingNumberProps) => {
     return (
         <div className="flex-1 space-y-4">
@@ -41,6 +43,7 @@ const EnterTrackingNumber = ({
                                     : null
                             }
                             fullWidth
+                            disabled={isLoading}
                         />
                     )}
                 </Field>
@@ -56,7 +59,11 @@ const EnterTrackingNumber = ({
                         onConfirm={form.submit}
                     >
                         {(props) => (
-                            <Button variant="contained" onClick={props.open}>
+                            <Button
+                                variant="contained"
+                                onClick={props.open}
+                                disabled={isLoading}
+                            >
                                 Ship
                             </Button>
                         )}

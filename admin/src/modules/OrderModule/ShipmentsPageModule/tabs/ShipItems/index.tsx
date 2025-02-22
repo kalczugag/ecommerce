@@ -1,5 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import { Form } from "react-final-form";
+import { useEditOrderMutation } from "@/store";
+import { useHandleMutation } from "@/hooks/useHandleMutation";
 import { deliveryMethods } from "@/constants/deliveryMethods";
 import DetailCard from "@/components/DetailCard";
 import Contact from "@/modules/OrderModule/SummaryPageModule/components/Contact";
@@ -22,6 +24,8 @@ interface FormProps {
 const ShipItems = ({ data, handleSubTabChange }: ShipItemsProps) => {
     const [searchParams] = useSearchParams();
     const isMobile = useMediaQuery("(max-width: 768px)");
+    const { handleMutation } = useHandleMutation();
+    const [editOrder, { isLoading }] = useEditOrderMutation();
 
     const shipmentIndex = parseInt(searchParams.get("shipmentIndex") || "0");
 
@@ -39,12 +43,16 @@ const ShipItems = ({ data, handleSubTabChange }: ShipItemsProps) => {
         shipment._deliveryMethod.providers[0].name;
 
     const handleSubmit = (values: FormProps) => {
-        console.log(values);
+        handleMutation({
+            values,
+            mutation: editOrder,
+        });
     };
 
     return (
         <DetailCard label="Ship Items">
             <Form
+                initialValues={{ trackingNumber: shipment.trackingNumber }}
                 onSubmit={handleSubmit}
                 render={({ handleSubmit, form }) => (
                     <form onSubmit={handleSubmit}>
@@ -81,6 +89,7 @@ const ShipItems = ({ data, handleSubTabChange }: ShipItemsProps) => {
                                 data={data.shipments[shipmentIndex]}
                                 handleBack={() => handleSubTabChange(0)}
                                 form={form}
+                                isLoading={isLoading}
                             />
                         </div>
 

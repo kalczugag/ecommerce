@@ -14,6 +14,7 @@ import {
     TextField,
 } from "@mui/material";
 import Row from "@/components/Row";
+import { MuiTelInput } from "mui-tel-input";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 interface CustomerFormProps {
@@ -173,11 +174,9 @@ const CustomerForm = ({ isUpdateForm, isLoading }: CustomerFormProps) => {
             <Row label="Contact">
                 <Field name="phone">
                     {(props) => (
-                        <TextField
-                            label="Phone"
-                            name={props.input.name}
-                            value={props.input.value}
-                            onChange={props.input.onChange}
+                        <MuiTelInput
+                            {...props.input}
+                            defaultCountry="US"
                             error={props.meta.error && props.meta.touched}
                             helperText={
                                 props.meta.error && props.meta.touched
@@ -187,6 +186,20 @@ const CustomerForm = ({ isUpdateForm, isLoading }: CustomerFormProps) => {
                             disabled={isLoading}
                             fullWidth
                         />
+                        // <TextField
+                        //     label="Phone"
+                        //     name={props.input.name}
+                        //     value={props.input.value}
+                        //     onChange={props.input.onChange}
+                        //     error={props.meta.error && props.meta.touched}
+                        //     helperText={
+                        //         props.meta.error && props.meta.touched
+                        //             ? props.meta.error
+                        //             : null
+                        //     }
+                        //     disabled={isLoading}
+                        //     fullWidth
+                        // />
                     )}
                 </Field>
                 <Field name="email" validate={compose(validateEmail, required)}>
