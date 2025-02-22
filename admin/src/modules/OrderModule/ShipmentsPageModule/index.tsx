@@ -96,32 +96,22 @@ const ShipmentsPage = ({ data, handleSubTabChange }: ShipmentsPageProps) => {
                         isMobile={isMobile}
                         isTablet={isTablet}
                         handleSubTabChange={handleSubTabChange}
-                    >
-                        <Divider
-                            orientation="horizontal"
-                            flexItem
-                            sx={{ marginY: 4 }}
-                        />
-
-                        <Table
-                            headerOptions={tableConfig}
-                            totalItems={data.items.length}
-                            rowData={enhancedTableData}
-                            isLoading={false}
-                        />
-                    </ShipmentDetail>
+                    />
                 ))
             ) : (
                 <NotFound title="No shipments found" />
             )}
+
+            <Divider orientation="horizontal" flexItem sx={{ marginY: 4 }} />
+
+            <Table
+                headerOptions={tableConfig}
+                totalItems={data.items.length}
+                rowData={enhancedTableData}
+                isLoading={false}
+            />
         </div>
     );
 };
 
 export default ShipmentsPage;
-function handleMutation(arg0: {
-    values: { itemId: string; orderId: string | undefined };
-    mutation: any;
-}) {
-    throw new Error("Function not implemented.");
-}

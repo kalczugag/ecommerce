@@ -74,6 +74,7 @@ interface Payment {
 interface Shipment extends Document {
     _id: string;
     _order: string | Order;
+    items: string[] | Item[];
     shipFrom: ShippingAddress;
     shipTo: ShippingAddress;
     status:

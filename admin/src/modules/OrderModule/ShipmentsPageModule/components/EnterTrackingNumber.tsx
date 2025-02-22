@@ -2,6 +2,7 @@ import { Field } from "react-final-form";
 import { required } from "@/utils/validators";
 import { Button, TextField } from "@mui/material";
 import AlertDialog from "@/components/AlertDialog";
+import TooltipButton from "@/components/TooltipButton";
 import type { Shipment } from "@/types/Order";
 
 interface EnterTrackingNumberProps {
@@ -59,13 +60,15 @@ const EnterTrackingNumber = ({
                         onConfirm={form.submit}
                     >
                         {(props) => (
-                            <Button
+                            <TooltipButton
+                                title="Ship"
+                                tooltipText="Shipment already has a tracking number"
                                 variant="contained"
                                 onClick={props.open}
-                                disabled={isLoading}
-                            >
-                                Ship
-                            </Button>
+                                disabled={
+                                    isLoading || Boolean(data.trackingNumber)
+                                }
+                            />
                         )}
                     </AlertDialog>
                 </div>

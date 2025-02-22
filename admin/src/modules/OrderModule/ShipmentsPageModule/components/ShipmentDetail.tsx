@@ -71,6 +71,7 @@ const ShipmentDetail = ({
                             />
                         </div>
                         <ShipmentMethod
+                            trackingNumber={shipment.trackingNumber}
                             deliveryMethod={shipment._deliveryMethod}
                         />
                     </div>

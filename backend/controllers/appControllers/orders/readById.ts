@@ -21,6 +21,10 @@ export const getOrderById = async (
             .populate("payments")
             .populate({
                 path: "shipments",
+                populate: {
+                    path: "items",
+                    model: "BaseItem",
+                },
             })
             .populate({
                 path: "items",

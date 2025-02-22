@@ -37,6 +37,28 @@ export const updateShipment = async (
             );
         }
 
+        if (updates.trackingNumber) {
+            const shipment = await ShipmentModel.findById(id);
+
+            if (!shipment) {
+                return res
+                    .status(404)
+                    .json(errorResponse(null, "Shipment not found", 404));
+            }
+
+            if (shipment.trackingNumber && shipment.status !== "pending") {
+                return res
+                    .status(400)
+                    .json(
+                        errorResponse(
+                            null,
+                            "Shipment already has a tracking number",
+                            400
+                        )
+                    );
+            }
+        }
+
         const updatedShipment = await ShipmentModel.findByIdAndUpdate(
             id,
             updates,

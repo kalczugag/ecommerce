@@ -39,7 +39,7 @@ export const tableConfig: TableColumnProps<RowProps>[] = [
         label: "Quantity To Ship",
         render: (row) => (
             <Field
-                name={`${row._id}.quantityToShip`}
+                name={`${row._id}.quantity`}
                 validate={compose(
                     required,
                     minValue(0),

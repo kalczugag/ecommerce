@@ -7,10 +7,14 @@ import { deliveryMethods } from "@/constants/deliveryMethods";
 import type { DeliveryMethod } from "@/types/DeliveryMethod";
 
 interface ShipmentMethodProps {
+    trackingNumber?: string;
     deliveryMethod: DeliveryMethod;
 }
 
-const ShipmentMethod = ({ deliveryMethod }: ShipmentMethodProps) => {
+const ShipmentMethod = ({
+    trackingNumber,
+    deliveryMethod,
+}: ShipmentMethodProps) => {
     const { id } = useParams();
     const { handleMutation } = useHandleMutation();
 
@@ -37,6 +41,7 @@ const ShipmentMethod = ({ deliveryMethod }: ShipmentMethodProps) => {
             <div className="flex space-x-1">
                 <ChangeShippingMethodDialog
                     currentDeliveryMethod={deliveryMethod.providers[0]._id}
+                    trackingNumber={trackingNumber}
                     methodName={methodName}
                 />
                 <Button

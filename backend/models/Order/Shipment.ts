@@ -8,6 +8,13 @@ const shipmentSchema = new mongoose.Schema<Shipment>(
             ref: "Order",
             required: true,
         },
+        items: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "BaseItem",
+                required: true,
+            },
+        ],
         shipFrom: {
             street: { type: String, required: false },
             city: { type: String, required: false },

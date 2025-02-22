@@ -69,6 +69,7 @@ interface Payment {
 interface Shipment {
     _id?: string;
     _order: string | Order;
+    items: Item[];
     shipFrom: ShippingAddress;
     shipTo: ShippingAddress;
     status:

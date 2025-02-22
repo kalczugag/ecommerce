@@ -18,13 +18,16 @@ import {
     MenuItem,
     Select,
 } from "@mui/material";
+import TooltipButton from "@/components/TooltipButton";
 
 interface ChangeShippingMethodDialogProps {
+    trackingNumber?: string;
     currentDeliveryMethod?: string;
     methodName: string;
 }
 
 const ChangeShippingMethodDialog = ({
+    trackingNumber,
     currentDeliveryMethod,
     methodName,
 }: ChangeShippingMethodDialogProps) => {
@@ -44,9 +47,13 @@ const ChangeShippingMethodDialog = ({
 
     return (
         <>
-            <Button variant="outlined" onClick={handleOpen}>
-                Change Method
-            </Button>
+            <TooltipButton
+                title="Change Method"
+                tooltipText="Cannot change shipping method after items have been shipped"
+                variant="outlined"
+                onClick={handleOpen}
+                disabled={isLoading || Boolean(trackingNumber)}
+            />
             <Dialog open={isOpen} onClose={handleClose}>
                 <Form
                     initialValues={{

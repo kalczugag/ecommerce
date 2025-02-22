@@ -1,6 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import { Form } from "react-final-form";
-import { useEditOrderMutation } from "@/store";
+import { useEditOrderMutation, useEditShipmentMutation } from "@/store";
 import { useHandleMutation } from "@/hooks/useHandleMutation";
 import { deliveryMethods } from "@/constants/deliveryMethods";
 import DetailCard from "@/components/DetailCard";
@@ -18,14 +18,13 @@ interface ShipItemsProps extends ManageAction {
 
 interface FormProps {
     trackingNumber: string;
-    quantityToShip: number;
 }
 
 const ShipItems = ({ data, handleSubTabChange }: ShipItemsProps) => {
     const [searchParams] = useSearchParams();
     const isMobile = useMediaQuery("(max-width: 768px)");
     const { handleMutation } = useHandleMutation();
-    const [editOrder, { isLoading }] = useEditOrderMutation();
+    const [editShipment, { isLoading }] = useEditShipmentMutation();
 
     const shipmentIndex = parseInt(searchParams.get("shipmentIndex") || "0");
 
@@ -43,16 +42,28 @@ const ShipItems = ({ data, handleSubTabChange }: ShipItemsProps) => {
         shipment._deliveryMethod.providers[0].name;
 
     const handleSubmit = (values: FormProps) => {
+        const { trackingNumber, ...items } = values;
+
+        const itemsArray = Object.entries(items).map(([key]) => key);
+
+        const updatedShipment = {
+            trackingNumber,
+            status: "shipped",
+            items: itemsArray,
+        };
+
         handleMutation({
-            values: { _id: data._id, ...values },
-            mutation: editOrder,
+            values: { _id: shipment._id, ...updatedShipment },
+            mutation: editShipment,
         });
     };
 
     return (
         <DetailCard label="Ship Items">
             <Form
-                initialValues={{ trackingNumber: shipment.trackingNumber }}
+                initialValues={{
+                    trackingNumber: shipment.trackingNumber,
+                }}
                 onSubmit={handleSubmit}
                 render={({ handleSubmit, form }) => (
                     <form onSubmit={handleSubmit}>
