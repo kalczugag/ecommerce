@@ -45,7 +45,7 @@ const EditItemDialog = ({ item }: EditItemDialogProps) => {
             id: item._product?._id || "",
             params: { select: "size,color" },
         },
-        { skip: !item._product }
+        { skip: !isOpen || !item._product }
     );
 
     const handleOpen = () => setIsOpen(true);

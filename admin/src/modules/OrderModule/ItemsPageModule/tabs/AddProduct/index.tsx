@@ -14,12 +14,18 @@ interface AddProductProps extends ManageAction {
     orderData: Order;
 }
 
+interface FormValues {
+    title:string;
+    sku:string;
+
+}
+
 const AddProduct = ({ orderData, handleSubTabChange }: AddProductProps) => {
     const [pagination] = usePagination();
 
     const { data, isFetching } = useGetAllProductsQuery(pagination);
 
-    const handleSearch = (values: any) => {
+    const handleSearch = (values: FormValues) => {
         console.log(values);
     };
 
