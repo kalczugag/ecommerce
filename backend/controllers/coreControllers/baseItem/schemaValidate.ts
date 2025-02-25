@@ -2,7 +2,7 @@ import Joi from "joi";
 
 const schema = Joi.object({
     _product: Joi.string().optional(),
-    name: Joi.string().min(2).required(),
+    name: Joi.string().min(2).optional(),
     color: Joi.string().optional(),
     size: Joi.string().optional(),
     unitPrice: Joi.number().min(0).required(),

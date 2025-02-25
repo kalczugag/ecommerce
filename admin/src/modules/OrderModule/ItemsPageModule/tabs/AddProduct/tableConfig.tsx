@@ -1,8 +1,10 @@
 import AddProductDialog from "../../components/AddProductDialog";
 import type { TableColumnProps } from "@/modules/CrudModule";
+import { Shipment } from "@/types/Order";
 import type { Product } from "@/types/Product";
 
 interface RowProps extends Product {
+    shipments: Shipment[];
     isLoading: boolean;
 }
 

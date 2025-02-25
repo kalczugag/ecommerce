@@ -36,7 +36,14 @@ const productSchema = new mongoose.Schema<Product>({
     description: { type: String },
 });
 
-productSchema.index({ sku: 1, brand: "text", title: "text" });
+productSchema.index({ sku: 1 }, { unique: true });
+productSchema.index({
+    sku: "text",
+    brand: "text",
+    title: "text",
+    color: "text",
+    description: "text",
+});
 
 productSchema.pre("validate", async function (next) {
     const product = this;

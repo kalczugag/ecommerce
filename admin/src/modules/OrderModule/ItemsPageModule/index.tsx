@@ -43,6 +43,7 @@ const ItemsPage = ({ data, handleSubTabChange }: ItemsPageProps) => {
         return data.items
             ? data.items.map((row) => ({
                   ...row,
+                  shipments: data.shipments,
                   isLoading: isDeleting,
                   handleDelete,
               }))

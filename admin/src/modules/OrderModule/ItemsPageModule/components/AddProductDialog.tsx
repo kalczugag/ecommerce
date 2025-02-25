@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Field, Form, FormSpy } from "react-final-form";
 import { compose, maxValue, minValue, required } from "@/utils/validators";
-import { useGetDeliveryMethodsQuery } from "@/store/apis/deliveryMethods";
+import { useAddBaseItemMutation, useGetDeliveryMethodsQuery } from "@/store";
+import { useHandleMutation } from "@/hooks/useHandleMutation";
 import { deliveryMethods } from "@/constants/deliveryMethods";
 import {
     Button,
@@ -23,26 +24,34 @@ import {
 } from "@mui/material";
 import { Add, RestartAlt } from "@mui/icons-material";
 import type { Product } from "@/types/Product";
+import { useParams } from "react-router-dom";
 
 interface AddProductDialogProps {
     data: Product;
 }
 
-const AddProductDialog = ({ data }: AddProductDialogProps) => {
-    const [isOpen, setIsOpen] = useState(false);
+interface FormValues {
+    unitPrice: number;
+    quantity: number;
+    // shipment: string;
+}
 
-    const { data: deliveryMethodsData, isLoading } = useGetDeliveryMethodsQuery(
-        undefined,
-        {
-            skip: !isOpen,
-        }
-    );
+const AddProductDialog = ({ data }: AddProductDialogProps) => {
+    const { id } = useParams();
+    const [isOpen, setIsOpen] = useState(false);
+    const { handleMutation } = useHandleMutation();
+
+    const [addBaseItem, { isLoading: addBaseItemLoading }] =
+        useAddBaseItemMutation();
 
     const handleOpen = () => setIsOpen(true);
     const handleClose = () => setIsOpen(false);
 
-    const handleSubmit = (values: any) => {
-        console.log(values);
+    const handleSubmit = (values: FormValues) => {
+        handleMutation({
+            values: { orderId: id, _product: data._id, ...values },
+            mutation: addBaseItem,
+        });
         handleClose();
     };
 
@@ -54,7 +63,7 @@ const AddProductDialog = ({ data }: AddProductDialogProps) => {
             <Dialog open={isOpen} onClose={handleClose}>
                 <Form
                     initialValues={{
-                        price: data.price,
+                        unitPrice: data.price,
                         quantity: 1,
                     }}
                     onSubmit={handleSubmit}
@@ -83,7 +92,7 @@ const AddProductDialog = ({ data }: AddProductDialogProps) => {
                             <DialogContent className="flex flex-row justify-between">
                                 <div className="flex-1 flex flex-col space-y-4">
                                     <Field
-                                        name="price"
+                                        name="unitPrice"
                                         validate={compose(
                                             required,
                                             minValue(0)
@@ -120,12 +129,12 @@ const AddProductDialog = ({ data }: AddProductDialogProps) => {
                                                                 }) =>
                                                                     props.input
                                                                         .value !==
-                                                                        initialValues.price && (
+                                                                        initialValues.unitPrice && (
                                                                         <IconButton
                                                                             onClick={() =>
                                                                                 form.change(
-                                                                                    "price",
-                                                                                    initialValues.price
+                                                                                    "unitPrice",
+                                                                                    initialValues.unitPrice
                                                                                 )
                                                                             }
                                                                         >
@@ -199,12 +208,12 @@ const AddProductDialog = ({ data }: AddProductDialogProps) => {
 
                                 <div className="flex-1 flex flex-col space-y-4">
                                     <Field
-                                        name="shippingMethod"
+                                        name="shipment"
                                         type="select"
-                                        validate={required}
+                                        // validate={required}
                                     >
                                         {(props) => (
-                                            <FormControl fullWidth>
+                                            <FormControl fullWidth disabled>
                                                 <InputLabel
                                                     error={
                                                         props.meta.error &&
@@ -234,47 +243,11 @@ const AddProductDialog = ({ data }: AddProductDialogProps) => {
                                                         None
                                                     </MenuItem>
                                                     <Divider />
-                                                    {deliveryMethodsData?.result &&
-                                                        deliveryMethodsData.result.map(
-                                                            (
-                                                                deliveryMethod
-                                                            ) => [
-                                                                <ListSubheader
-                                                                    key={
-                                                                        deliveryMethod._id
-                                                                    }
-                                                                >
-                                                                    {
-                                                                        deliveryMethods[
-                                                                            deliveryMethod
-                                                                                .type
-                                                                        ]
-                                                                    }
-                                                                </ListSubheader>,
-                                                                ...deliveryMethod.providers.map(
-                                                                    (
-                                                                        provider
-                                                                    ) => (
-                                                                        <MenuItem
-                                                                            key={
-                                                                                provider._id
-                                                                            }
-                                                                            value={
-                                                                                provider._id
-                                                                            }
-                                                                        >
-                                                                            {`${provider.name} - $${provider.price}`}
-                                                                        </MenuItem>
-                                                                    )
-                                                                ),
-                                                            ]
-                                                        )}
                                                 </Select>
                                                 {props.meta.error &&
                                                     props.meta.touched && (
                                                         <FormHelperText error>
-                                                            Select shipping
-                                                            method
+                                                            Select shipment
                                                         </FormHelperText>
                                                     )}
                                             </FormControl>
@@ -283,17 +256,13 @@ const AddProductDialog = ({ data }: AddProductDialogProps) => {
                                 </div>
                             </DialogContent>
                             <DialogActions>
-                                <Button
-                                    onClick={handleClose}
-                                    color="info"
-                                    disabled={isLoading}
-                                >
+                                <Button onClick={handleClose} color="info">
                                     Cancel
                                 </Button>
                                 <Button
                                     type="submit"
                                     color="info"
-                                    disabled={isLoading}
+                                    disabled={addBaseItemLoading}
                                 >
                                     Add Product
                                 </Button>

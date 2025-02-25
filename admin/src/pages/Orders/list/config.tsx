@@ -3,11 +3,60 @@ import ActionButtons from "@/components/Table/ActionButtons";
 import type { Order } from "@/types/Order";
 import UnderlineLink from "@/components/UnderlineLink";
 import { TableColumnProps } from "@/modules/CrudModule";
+import { Chip } from "@mui/material";
 
 interface RowProps extends Order {
     bolder: string;
     isLoading: boolean;
 }
+
+const StatusChip = ({
+    status,
+    type,
+}: {
+    status: string;
+    type: "order" | "payment";
+}) => {
+    const orderColorMap: Record<
+        string,
+        | "default"
+        | "primary"
+        | "secondary"
+        | "error"
+        | "warning"
+        | "info"
+        | "success"
+    > = {
+        placed: "default",
+        confirmed: "primary",
+        shipped: "info",
+        delivered: "success",
+        canceled: "error",
+        "pending payment": "warning",
+        returned: "secondary",
+    };
+
+    const paymentColorMap: Record<
+        string,
+        | "default"
+        | "primary"
+        | "secondary"
+        | "error"
+        | "warning"
+        | "info"
+        | "success"
+    > = {
+        unpaid: "warning",
+        pending: "default",
+        completed: "primary",
+        failed: "error",
+        refunded: "secondary",
+    };
+
+    const colorMap = type === "order" ? orderColorMap : paymentColorMap;
+
+    return <Chip label={status} color={colorMap[status] || "default"} />;
+};
 
 export const sortConfig: SortConfigProps[] = [
     {
@@ -48,31 +97,13 @@ export const tableConfig: TableColumnProps<RowProps>[] = [
     },
     {
         label: "Order Status",
-        render: (row) => (
-            <div className="bg-gray-300 text-center rounded truncate px-2 dark:bg-slate-700">
-                {row.status}
-            </div>
-        ),
+        render: (row) => <StatusChip status={row.status || ""} type="order" />,
     },
     {
         label: "Payment",
         render: (row) => {
             const paymentStatus = row.payments?.[0]?.paymentStatus || "no data";
-
-            const statusClasses =
-                paymentStatus === "completed"
-                    ? "bg-orange-500 text-white"
-                    : paymentStatus === "no data"
-                    ? "bg-gray-300"
-                    : "bg-green-400 text-white";
-
-            return (
-                <div
-                    className={`text-center rounded truncate px-2 ${statusClasses} dark:bg-slate-700`}
-                >
-                    {paymentStatus}
-                </div>
-            );
+            return <StatusChip status={paymentStatus} type="payment" />;
         },
     },
     {

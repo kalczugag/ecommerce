@@ -2,8 +2,8 @@ import PopperButton, { PopperButtonProps } from "@/components/PopperButton";
 import { Button } from "@mui/material";
 
 interface AdvancedSearchProps {
-    form: any;
     handleBack: () => void;
+    handleReset: (form: any) => void;
 }
 
 const config: PopperButtonProps["elements"] = [
@@ -15,14 +15,14 @@ const config: PopperButtonProps["elements"] = [
     },
 ];
 
-const AdvancedSearch = ({ form, handleBack }: AdvancedSearchProps) => {
+const AdvancedSearch = ({ handleBack, handleReset }: AdvancedSearchProps) => {
     return (
         <div className="flex justify-end space-x-1">
             <Button variant="outlined" onClick={handleBack}>
                 Cancel
             </Button>
             <PopperButton elements={config}>Search</PopperButton>
-            <Button variant="outlined" onClick={form.reset}>
+            <Button variant="outlined" onClick={handleReset}>
                 Reset
             </Button>
         </div>
