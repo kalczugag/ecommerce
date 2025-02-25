@@ -2,61 +2,13 @@ import moment from "moment";
 import ActionButtons from "@/components/Table/ActionButtons";
 import type { Order } from "@/types/Order";
 import UnderlineLink from "@/components/UnderlineLink";
+import StatusChip from "@/components/StatusChip";
 import { TableColumnProps } from "@/modules/CrudModule";
-import { Chip } from "@mui/material";
 
 interface RowProps extends Order {
     bolder: string;
     isLoading: boolean;
 }
-
-const StatusChip = ({
-    status,
-    type,
-}: {
-    status: string;
-    type: "order" | "payment";
-}) => {
-    const orderColorMap: Record<
-        string,
-        | "default"
-        | "primary"
-        | "secondary"
-        | "error"
-        | "warning"
-        | "info"
-        | "success"
-    > = {
-        placed: "default",
-        confirmed: "primary",
-        shipped: "info",
-        delivered: "success",
-        canceled: "error",
-        "pending payment": "warning",
-        returned: "secondary",
-    };
-
-    const paymentColorMap: Record<
-        string,
-        | "default"
-        | "primary"
-        | "secondary"
-        | "error"
-        | "warning"
-        | "info"
-        | "success"
-    > = {
-        unpaid: "warning",
-        pending: "default",
-        completed: "primary",
-        failed: "error",
-        refunded: "secondary",
-    };
-
-    const colorMap = type === "order" ? orderColorMap : paymentColorMap;
-
-    return <Chip label={status} color={colorMap[status] || "default"} />;
-};
 
 export const sortConfig: SortConfigProps[] = [
     {

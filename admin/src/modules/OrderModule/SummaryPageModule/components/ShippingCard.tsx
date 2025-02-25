@@ -1,6 +1,7 @@
 import moment from "moment";
 import { processShipments } from "@/utils/processFunctions";
 import DetailCard from "@/components/DetailCard";
+import StatusChip from "@/components/StatusChip";
 import Contact from "./Contact";
 import type { Order } from "@/types/Order";
 
@@ -23,15 +24,8 @@ const ShippingCard = ({ data }: ShippingCardProps) => {
                 <span className="font-bold">Last Shipment: </span>
                 <span>None</span>
             </div>
-            <div
-                className={`p-1 rounded text-center text-white font-semibold ${
-                    data.status === "delivered"
-                        ? "bg-green-600"
-                        : "bg-orange-500"
-                } dark:bg-slate-700`}
-            >
-                items {data.status}
-            </div>
+
+            <StatusChip status={data.status || ""} type="order" />
             <div>
                 <span className="font-bold">Shipping Cost: </span>
                 <span>
