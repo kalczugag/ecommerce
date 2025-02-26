@@ -8,6 +8,7 @@ interface DetailCardProps extends HTMLAttributes<HTMLDivElement> {
     defaultExpanded?: boolean;
     label: string;
     children: ReactNode;
+    onToggle?: () => any;
 }
 
 const DetailCard = ({
@@ -16,6 +17,7 @@ const DetailCard = ({
     defaultExpanded = false,
     children,
     className,
+    onToggle,
 }: DetailCardProps) => {
     const [_, setSearchParams] = useSearchParams();
     const [expanded, setExpanded] = useState(defaultExpanded);
@@ -29,6 +31,8 @@ const DetailCard = ({
                 return newParams;
             });
         }
+
+        if (onToggle) onToggle();
 
         setExpanded(!expanded);
     };

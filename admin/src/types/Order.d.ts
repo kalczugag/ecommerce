@@ -142,6 +142,7 @@ interface UpdateOrder {
 
 interface AddItem extends Omit<Item, "_product"> {
     orderId: string;
+    shipmentId?: string;
     _product?: string;
 }
 

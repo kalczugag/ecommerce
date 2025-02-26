@@ -16,8 +16,9 @@ interface ShipmentDetailProps {
     config: PaperCardProps[];
     isMobile: boolean;
     isTablet: boolean;
-    handleSubTabChange: (tab: number, options?: any) => void;
     children?: ReactNode;
+    handleSubTabChange: (tab: number, options?: any) => void;
+    onToggle?: () => any;
 }
 
 const ShipmentDetail = ({
@@ -28,8 +29,9 @@ const ShipmentDetail = ({
     config,
     isMobile,
     isTablet,
-    handleSubTabChange,
     children,
+    handleSubTabChange,
+    onToggle,
 }: ShipmentDetailProps) => {
     return (
         <DetailCard
@@ -37,6 +39,7 @@ const ShipmentDetail = ({
             defaultExpanded={shipmentIndex === 0 && true}
             label={`Shipment #${shipmentIndex + 1} of ${shipmentCount}`}
             variant="accordion"
+            onToggle={onToggle}
         >
             <div className="flex flex-col space-y-6 lg:space-y-0 lg:flex-row lg:justify-between">
                 <ShipmentContacts

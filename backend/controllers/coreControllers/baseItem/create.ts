@@ -2,16 +2,21 @@ import express from "express";
 import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import schema from "./schemaValidate";
 import { BaseItemModel } from "../../../models/BaseItem";
+import { ShipmentModel } from "../../../models/Order/Shipment";
 import { OrderModel } from "../../../models/Order";
 import type { Item } from "../../../types/Order";
 
 export const createBaseItem = async (
-    req: express.Request<{}, {}, Item & { orderId: string }>,
+    req: express.Request<
+        {},
+        {},
+        Item & { orderId: string; shipmentId: string }
+    >,
     res: express.Response
 ) => {
-    const { orderId, ...item } = req.body;
+    const { orderId, shipmentId, ...updates } = req.body;
 
-    const { error } = schema.validate(item);
+    const { error } = schema.validate(updates);
 
     if (error) {
         return res
@@ -32,8 +37,22 @@ export const createBaseItem = async (
     }
 
     try {
-        const newBaseItem = new BaseItemModel(item);
+        const newBaseItem = new BaseItemModel(updates);
         await newBaseItem.save();
+
+        if (!newBaseItem) {
+            return res
+                .status(404)
+                .json(errorResponse(null, "Cannot create an item", 404));
+        }
+
+        if (shipmentId) {
+            await ShipmentModel.findOneAndUpdate(
+                { _id: shipmentId },
+                { $push: { items: newBaseItem } },
+                { new: true }
+            );
+        }
 
         await OrderModel.findOneAndUpdate(
             { _id: orderId },

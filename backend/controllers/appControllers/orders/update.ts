@@ -5,7 +5,7 @@ import { OrderModel } from "../../../models/Order";
 import { PaymentModel } from "../../../models/Order/Payment";
 import { ShipmentModel } from "../../../models/Order/Shipment";
 import { processShipments } from "../../../utils/processFunctions";
-import type { Order } from "../../../types/Order";
+import type { Order, Shipment } from "../../../types/Order";
 
 export const updateOrder = async (
     req: express.Request<{ id: string }, {}, Partial<Order>>,
@@ -57,21 +57,30 @@ export const updateOrder = async (
             }
         }
 
-        let shipmentCost = 0;
-        if (updates.shipments) {
-            const shipments = await ShipmentModel.insertMany(updates.shipments);
-            updates.shipments = shipments;
-
-            const { shipmentTotal } = processShipments(shipments);
-            shipmentCost = shipmentTotal;
-        }
-
         const order = await OrderModel.findById(id);
 
         if (!order) {
             return res
                 .status(404)
                 .json(errorResponse(null, "Order not found", 404));
+        }
+
+        let shipmentCost = 0;
+        if (updates.shipments) {
+            const shipmentsWithItems = (updates.shipments as Shipment[]).map(
+                (shipment) => ({
+                    ...shipment,
+                    items: order.items,
+                })
+            );
+
+            const shipments = await ShipmentModel.insertMany(
+                shipmentsWithItems
+            );
+            updates.shipments = shipments;
+
+            const { shipmentTotal } = processShipments(shipments);
+            shipmentCost = shipmentTotal;
         }
 
         const updatedOrder = await OrderModel.findByIdAndUpdate(

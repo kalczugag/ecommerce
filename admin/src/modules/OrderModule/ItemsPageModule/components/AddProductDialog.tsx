@@ -1,9 +1,9 @@
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 import { Field, Form, FormSpy } from "react-final-form";
 import { compose, maxValue, minValue, required } from "@/utils/validators";
-import { useAddBaseItemMutation, useGetDeliveryMethodsQuery } from "@/store";
+import { useAddBaseItemMutation } from "@/store";
 import { useHandleMutation } from "@/hooks/useHandleMutation";
-import { deliveryMethods } from "@/constants/deliveryMethods";
 import {
     Button,
     Dialog,
@@ -24,19 +24,20 @@ import {
 } from "@mui/material";
 import { Add, RestartAlt } from "@mui/icons-material";
 import type { Product } from "@/types/Product";
-import { useParams } from "react-router-dom";
+import type { Shipment } from "@/types/Order";
 
 interface AddProductDialogProps {
     data: Product;
+    shipments: Shipment[];
 }
 
 interface FormValues {
     unitPrice: number;
     quantity: number;
-    // shipment: string;
+    shipmentId: string;
 }
 
-const AddProductDialog = ({ data }: AddProductDialogProps) => {
+const AddProductDialog = ({ data, shipments }: AddProductDialogProps) => {
     const { id } = useParams();
     const [isOpen, setIsOpen] = useState(false);
     const { handleMutation } = useHandleMutation();
@@ -49,7 +50,11 @@ const AddProductDialog = ({ data }: AddProductDialogProps) => {
 
     const handleSubmit = (values: FormValues) => {
         handleMutation({
-            values: { orderId: id, _product: data._id, ...values },
+            values: {
+                orderId: id,
+                _product: data._id,
+                ...values,
+            },
             mutation: addBaseItem,
         });
         handleClose();
@@ -208,12 +213,12 @@ const AddProductDialog = ({ data }: AddProductDialogProps) => {
 
                                 <div className="flex-1 flex flex-col space-y-4">
                                     <Field
-                                        name="shipment"
+                                        name="shipmentId"
                                         type="select"
-                                        // validate={required}
+                                        validate={required}
                                     >
                                         {(props) => (
-                                            <FormControl fullWidth disabled>
+                                            <FormControl fullWidth>
                                                 <InputLabel
                                                     error={
                                                         props.meta.error &&
@@ -243,6 +248,33 @@ const AddProductDialog = ({ data }: AddProductDialogProps) => {
                                                         None
                                                     </MenuItem>
                                                     <Divider />
+                                                    <ListSubheader>
+                                                        Existing Shipments
+                                                    </ListSubheader>
+                                                    {shipments.map(
+                                                        (shipment, index) => (
+                                                            <MenuItem
+                                                                key={
+                                                                    shipment._id
+                                                                }
+                                                                value={
+                                                                    shipment._id
+                                                                }
+                                                            >
+                                                                #{index + 1}{" "}
+                                                                {
+                                                                    shipment
+                                                                        ._deliveryMethod
+                                                                        .providers[0]
+                                                                        .name
+                                                                }
+                                                            </MenuItem>
+                                                        )
+                                                    )}
+                                                    <Divider />
+                                                    <MenuItem value="new">
+                                                        ** New Shipment
+                                                    </MenuItem>
                                                 </Select>
                                                 {props.meta.error &&
                                                     props.meta.touched && (

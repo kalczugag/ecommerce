@@ -1,5 +1,8 @@
-import { useMemo } from "react";
-import { useDeleteBaseItemMutation } from "@/store";
+import { useEffect, useState } from "react";
+import {
+    useDeleteBaseItemMutation,
+    useLazyGetShipmentByIdQuery,
+} from "@/store";
 import { useHandleMutation } from "@/hooks/useHandleMutation";
 import { processShipments } from "@/utils/processFunctions";
 import { Divider, useMediaQuery } from "@mui/material";
@@ -17,31 +20,6 @@ interface ShipmentsPageProps extends ManageAction {
 }
 
 const ShipmentsPage = ({ data, handleSubTabChange }: ShipmentsPageProps) => {
-    const isMobile = useMediaQuery("(max-width: 1024px)");
-    const isTablet = useMediaQuery("(max-width: 1536px)");
-    const { handleMutation } = useHandleMutation();
-
-    const [deleteItem, { isLoading: isDeleting }] = useDeleteBaseItemMutation();
-
-    const { shipmentCount, shipments } = processShipments(data.shipments);
-
-    const enhancedTableData = useMemo(() => {
-        const handleDelete = (id: string) => {
-            handleMutation({
-                values: { itemId: id, orderId: data._id },
-                mutation: deleteItem,
-            });
-        };
-
-        return data.items
-            ? data.items.map((row) => ({
-                  ...row,
-                  isLoading: isDeleting,
-                  handleDelete,
-              }))
-            : [];
-    }, [data.items, isDeleting]);
-
     const config: PaperCardProps[] = [
         {
             description: "Print for this shipment",
@@ -79,37 +57,88 @@ const ShipmentsPage = ({ data, handleSubTabChange }: ShipmentsPageProps) => {
         },
     ];
 
+    const isMobile = useMediaQuery("(max-width: 1024px)");
+    const isTablet = useMediaQuery("(max-width: 1536px)");
+    const { handleMutation } = useHandleMutation();
+    const [expandedShipment, setExpandedShipment] = useState<string | null>(
+        data.shipments.length > 0 ? data.shipments[0]?._id || "" : null
+    );
+
+    const [triggerFetch, { data: shipmentData, isLoading: shipmentLoading }] =
+        useLazyGetShipmentByIdQuery();
+    const [deleteItem, { isLoading: isDeleting }] = useDeleteBaseItemMutation();
+
+    const { shipmentCount, shipments } = processShipments(data.shipments);
+
+    const handleToggleShipment = (shipmentId: string) => {
+        setExpandedShipment((prev) =>
+            prev === shipmentId ? null : shipmentId
+        );
+    };
+
+    useEffect(() => {
+        if (expandedShipment) {
+            triggerFetch(expandedShipment);
+        }
+    }, [expandedShipment, triggerFetch]);
+
+    const handleDelete = (id: string) => {
+        handleMutation({
+            values: { itemId: id, orderId: data._id },
+            mutation: deleteItem,
+        });
+    };
+
+    const isLoading = shipmentLoading || isDeleting;
+
     return (
         <div className="flex flex-col space-y-4">
             {shipments.length > 0 ? (
-                shipments.map((shipment, index) => (
-                    <ShipmentDetail
-                        key={shipment._id}
-                        shipment={shipment}
-                        shipmentIndex={index}
-                        shipmentCount={shipmentCount}
-                        user={{
-                            fullName: `${data._user?.firstName} ${data._user?.lastName}`,
-                            phone: data._user?.phone,
-                        }}
-                        config={config}
-                        isMobile={isMobile}
-                        isTablet={isTablet}
-                        handleSubTabChange={handleSubTabChange}
-                    />
-                ))
+                shipments.map((shipment, index) => {
+                    const enhancedTableData = shipmentData?.result
+                        ? shipmentData.result.items.map((item) => ({
+                              ...item,
+                              isLoading,
+                              handleDelete,
+                          }))
+                        : [];
+
+                    return (
+                        <ShipmentDetail
+                            key={shipment._id}
+                            shipment={shipment}
+                            shipmentIndex={index}
+                            shipmentCount={shipmentCount}
+                            user={{
+                                fullName: `${data._user?.firstName} ${data._user?.lastName}`,
+                                phone: data._user?.phone,
+                            }}
+                            config={config}
+                            isMobile={isMobile}
+                            isTablet={isTablet}
+                            handleSubTabChange={handleSubTabChange}
+                            onToggle={() =>
+                                handleToggleShipment(shipment._id || "")
+                            }
+                        >
+                            <Divider
+                                orientation="horizontal"
+                                flexItem
+                                sx={{ marginY: 4 }}
+                            />
+
+                            <Table
+                                headerOptions={tableConfig}
+                                totalItems={data.items.length}
+                                rowData={enhancedTableData}
+                                isLoading={false}
+                            />
+                        </ShipmentDetail>
+                    );
+                })
             ) : (
                 <NotFound title="No shipments found" />
             )}
-
-            <Divider orientation="horizontal" flexItem sx={{ marginY: 4 }} />
-
-            <Table
-                headerOptions={tableConfig}
-                totalItems={data.items.length}
-                rowData={enhancedTableData}
-                isLoading={false}
-            />
         </div>
     );
 };

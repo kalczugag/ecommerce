@@ -27,6 +27,8 @@ export const tableConfig: TableColumnProps<RowProps>[] = [
     },
     {
         label: "Add Item",
-        render: (row) => <AddProductDialog data={row} />,
+        render: (row) => (
+            <AddProductDialog data={row} shipments={row.shipments} />
+        ),
     },
 ];
