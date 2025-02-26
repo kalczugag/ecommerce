@@ -149,10 +149,7 @@ const EditPaymentDialog = ({ payment, disabled }: EditPaymentDialogProps) => {
                                 />
 
                                 <div className="flex-1 flex flex-col space-y-4">
-                                    <Field
-                                        name="transactionId"
-                                        validate={required}
-                                    >
+                                    <Field name="transactionId">
                                         {(props) => (
                                             <TextField
                                                 {...props.input}
