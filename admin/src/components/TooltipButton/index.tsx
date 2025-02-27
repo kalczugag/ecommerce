@@ -26,26 +26,18 @@ const TooltipButton = ({
     onClick,
 }: TooltipButtonProps) => {
     return (
-        <Button
-            variant={variant}
-            onClick={onClick}
-            disabled={disabled}
-            color={color}
-            sx={{
-                "&.Mui-disabled": {
-                    pointerEvents: "auto",
-                },
-            }}
-        >
-            {title}
-            {disabled && (
-                <Tooltip title={tooltipText}>
-                    <span style={{ display: "inline-block", marginLeft: 8 }}>
-                        <HelpOutline fontSize="small" />
-                    </span>
-                </Tooltip>
-            )}
-        </Button>
+        <Tooltip title={tooltipText}>
+            <span>
+                <Button
+                    variant={variant}
+                    onClick={onClick}
+                    disabled={disabled}
+                    color={color}
+                >
+                    {title}
+                </Button>
+            </span>
+        </Tooltip>
     );
 };
 
