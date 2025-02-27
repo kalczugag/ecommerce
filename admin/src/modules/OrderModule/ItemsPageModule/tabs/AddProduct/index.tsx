@@ -1,15 +1,14 @@
 import { useMemo, useState } from "react";
 import { Form } from "react-final-form";
-import { useAddBaseItemMutation, useGetAllProductsQuery } from "@/store";
+import { useGetAllProductsQuery } from "@/store";
 import usePagination from "@/hooks/usePagination";
 import type { ManageAction } from "@/modules/ManageModule/types/Manage";
 import DetailCard from "@/components/DetailCard";
 import Table from "@/components/Table";
 import SearchProducts from "../../components/SearchProducts";
 import AdvancedSearch from "../../components/AdvancedSearch";
-import type { Item, AddItem, Order } from "@/types/Order";
+import type { Order } from "@/types/Order";
 import { tableConfig } from "./tableConfig";
-import { Product } from "@/types/Product";
 
 interface AddProductProps extends ManageAction {
     orderData: Order;

@@ -81,7 +81,7 @@ export const config: Manage[] = [
                 label: "Add Other Item",
                 element: ({ handleSubTabChange, ...rest }: EnhancedData) => (
                     <AddOtherItem
-                        orderData={rest}
+                        data={rest}
                         handleSubTabChange={handleSubTabChange}
                     />
                 ),

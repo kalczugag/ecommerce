@@ -92,15 +92,6 @@ const AddOtherItem = ({ handleSubTabChange }: AddOtherItemProps) => {
                                         {(props) => (
                                             <TextField
                                                 {...props.input}
-                                                onChange={(e) =>
-                                                    props.input.onChange(
-                                                        e.target.value === ""
-                                                            ? ""
-                                                            : parseInt(
-                                                                  e.target.value
-                                                              )
-                                                    )
-                                                }
                                                 type="number"
                                                 label="Quantity"
                                                 error={
@@ -172,21 +163,30 @@ const AddOtherItem = ({ handleSubTabChange }: AddOtherItemProps) => {
                                     </Field>
                                 </Row>
                                 <Row>
+                                    <Field name="size" validate={required}>
+                                        {(props) => (
+                                            <TextField
+                                                {...props.input}
+                                                label="Size"
+                                                error={
+                                                    props.meta.error &&
+                                                    props.meta.touched
+                                                }
+                                                helperText={
+                                                    props.meta.error &&
+                                                    props.meta.touched
+                                                        ? props.meta.error
+                                                        : null
+                                                }
+                                                fullWidth
+                                            />
+                                        )}
+                                    </Field>
                                     <Field name="color">
                                         {(props) => (
                                             <TextField
                                                 {...props.input}
                                                 label="Color"
-                                                helperText="optional"
-                                                fullWidth
-                                            />
-                                        )}
-                                    </Field>
-                                    <Field name="size">
-                                        {(props) => (
-                                            <TextField
-                                                {...props.input}
-                                                label="Size"
                                                 helperText="optional"
                                                 fullWidth
                                             />

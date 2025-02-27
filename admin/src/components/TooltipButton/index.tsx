@@ -26,7 +26,7 @@ const TooltipButton = ({
     onClick,
 }: TooltipButtonProps) => {
     return (
-        <Tooltip title={tooltipText}>
+        <Tooltip title={disabled ? tooltipText : null}>
             <span>
                 <Button
                     variant={variant}

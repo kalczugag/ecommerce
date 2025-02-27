@@ -147,6 +147,9 @@ const DetailsProductCard = ({
                         <Box sx={{ maxWidth: 300 }}>
                             <FormControl fullWidth>
                                 <InputLabel id="size-label">Size</InputLabel>
+
+                                {/* TODO: simplify */}
+
                                 <Select
                                     labelId="size-label"
                                     id="size-select"

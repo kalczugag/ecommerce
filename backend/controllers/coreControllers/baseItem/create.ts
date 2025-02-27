@@ -4,6 +4,7 @@ import schema from "./schemaValidate";
 import { BaseItemModel } from "../../../models/BaseItem";
 import { ShipmentModel } from "../../../models/Order/Shipment";
 import { OrderModel } from "../../../models/Order";
+import { ProductModel } from "../../../models/Product";
 import type { Item } from "../../../types/Order";
 
 export const createBaseItem = async (
@@ -44,6 +45,17 @@ export const createBaseItem = async (
             return res
                 .status(404)
                 .json(errorResponse(null, "Cannot create an item", 404));
+        }
+
+        if (newBaseItem._product) {
+            await ProductModel.updateOne(
+                { _id: newBaseItem._product, "size.name": newBaseItem.size },
+                {
+                    $inc: {
+                        "size.$.quantity": -newBaseItem.quantity,
+                    },
+                }
+            ).exec();
         }
 
         if (shipmentId) {

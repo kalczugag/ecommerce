@@ -3,6 +3,7 @@ import { isValidObjectId } from "mongoose";
 import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import { OrderModel } from "../../../models/Order";
 import { BaseItemModel } from "../../../models/BaseItem";
+import { ProductModel } from "../../../models/Product";
 
 export const deleteBaseItem = async (
     req: express.Request<{ id: string }, {}, { orderId: string }>,
@@ -30,6 +31,20 @@ export const deleteBaseItem = async (
             return res
                 .status(404)
                 .json(errorResponse(null, "Item not found", 404));
+        }
+
+        if (deletedBaseItem._product) {
+            await ProductModel.updateOne(
+                {
+                    _id: deletedBaseItem._product,
+                    "size.name": deletedBaseItem.size,
+                },
+                {
+                    $inc: {
+                        "size.$.quantity": deletedBaseItem.quantity,
+                    },
+                }
+            ).exec();
         }
 
         await OrderModel.findOneAndUpdate(

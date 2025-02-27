@@ -3,6 +3,7 @@ import { isValidObjectId } from "mongoose";
 import _ from "lodash";
 import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import { BaseItemModel } from "../../../models/BaseItem";
+import { ProductModel } from "../../../models/Product";
 import type { Item } from "../../../types/Order";
 
 export const updateBaseItem = async (
@@ -26,6 +27,28 @@ export const updateBaseItem = async (
     }
 
     try {
+        const baseItem = await BaseItemModel.findById(id);
+        if (!baseItem) {
+            return res
+                .status(404)
+                .json(errorResponse(null, "Item not found", 404));
+        }
+
+        if (baseItem._product) {
+            const quantityDiff =
+                (updates.quantity ?? baseItem.quantity) - baseItem.quantity;
+
+            await ProductModel.updateOne(
+                { _id: baseItem._product, "size.name": baseItem.size },
+                {
+                    $inc: {
+                        "size.$.quantity": -quantityDiff,
+                        quantity: -quantityDiff,
+                    },
+                }
+            ).exec();
+        }
+
         if (updates.unitPrice && updates.quantity) {
             updates.total = updates.unitPrice * updates.quantity;
         }
@@ -33,9 +56,7 @@ export const updateBaseItem = async (
         const updatedBaseItem = await BaseItemModel.findByIdAndUpdate(
             id,
             updates,
-            {
-                new: true,
-            }
+            { new: true }
         );
 
         if (!updatedBaseItem) {
