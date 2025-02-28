@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, useCallback } from "react";
 import DetailCard from "@/components/DetailCard";
 import ShipmentContacts from "./ShipmentContacts";
 import { Divider } from "@mui/material";
@@ -18,7 +18,7 @@ interface ShipmentDetailProps {
     isTablet: boolean;
     children?: ReactNode;
     handleSubTabChange: (tab: number, options?: any) => void;
-    onToggle?: () => any;
+    triggerFetch?: any;
 }
 
 const ShipmentDetail = ({
@@ -31,15 +31,15 @@ const ShipmentDetail = ({
     isTablet,
     children,
     handleSubTabChange,
-    onToggle,
+    triggerFetch,
 }: ShipmentDetailProps) => {
     return (
         <DetailCard
             key={shipment._id}
-            defaultExpanded={shipmentIndex === 0 && true}
+            defaultExpanded={shipmentIndex === 0}
             label={`Shipment #${shipmentIndex + 1} of ${shipmentCount}`}
             variant="accordion"
-            onToggle={onToggle}
+            fetchOnMount={() => triggerFetch(shipment._id)}
         >
             <div className="flex flex-col space-y-6 lg:space-y-0 lg:flex-row lg:justify-between">
                 <ShipmentContacts

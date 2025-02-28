@@ -11,6 +11,7 @@ import type { ManageAction } from "@/modules/ManageModule/types/Manage";
 import Table from "@/components/Table";
 import type { Order } from "@/types/Order";
 import { tableConfig } from "./tableConfig";
+import { enqueueSnackbar } from "notistack";
 
 interface ShipItemsProps extends ManageAction {
     data: Order;
@@ -45,6 +46,11 @@ const ShipItems = ({ data, handleSubTabChange }: ShipItemsProps) => {
         const { trackingNumber, ...items } = values;
 
         const itemsArray = Object.entries(items).map(([key]) => key);
+
+        if (itemsArray.length === 0) {
+            enqueueSnackbar("No items selected", { variant: "warning" });
+            return;
+        }
 
         const updatedShipment = {
             trackingNumber,

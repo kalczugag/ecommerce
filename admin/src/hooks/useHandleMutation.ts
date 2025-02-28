@@ -5,7 +5,7 @@ type MutationTrigger = (values: any) => Promise<any> & {
 };
 
 interface UseHandleMutationProps<TValues, TResult, TError = unknown> {
-    values: TValues;
+    values?: TValues;
     snackbar?: boolean;
     successMessage?: string;
     errorMessage?: string;

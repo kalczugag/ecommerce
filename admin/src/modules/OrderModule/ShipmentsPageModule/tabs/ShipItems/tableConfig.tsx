@@ -40,11 +40,7 @@ export const tableConfig: TableColumnProps<RowProps>[] = [
         render: (row) => (
             <Field
                 name={`${row._id}.quantity`}
-                validate={compose(
-                    required,
-                    minValue(0),
-                    maxValue(row.quantity)
-                )}
+                validate={maxValue(row.quantity)}
             >
                 {(props) => (
                     <TextField

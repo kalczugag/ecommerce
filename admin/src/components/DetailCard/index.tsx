@@ -1,14 +1,15 @@
-import { HTMLAttributes, ReactNode, useState } from "react";
+import { HTMLAttributes, ReactNode, useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { useHandleMutation } from "@/hooks/useHandleMutation";
 import { Collapse } from "@mui/material";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
-import { useSearchParams } from "react-router-dom";
 
 interface DetailCardProps extends HTMLAttributes<HTMLDivElement> {
     variant?: "standard" | "accordion";
     defaultExpanded?: boolean;
     label: string;
     children: ReactNode;
-    onToggle?: () => any;
+    fetchOnMount?: () => any;
 }
 
 const DetailCard = ({
@@ -17,10 +18,12 @@ const DetailCard = ({
     defaultExpanded = false,
     children,
     className,
-    onToggle,
+    fetchOnMount,
 }: DetailCardProps) => {
-    const [_, setSearchParams] = useSearchParams();
+    const [hasFetched, setHasFetched] = useState(false);
     const [expanded, setExpanded] = useState(defaultExpanded);
+    const [_, setSearchParams] = useSearchParams();
+    const { handleMutation } = useHandleMutation();
 
     const handleClick = () => {
         if (!expanded) {
@@ -32,10 +35,18 @@ const DetailCard = ({
             });
         }
 
-        if (onToggle) onToggle();
-
         setExpanded(!expanded);
     };
+
+    useEffect(() => {
+        if (fetchOnMount && expanded && !hasFetched) {
+            handleMutation({
+                mutation: fetchOnMount,
+                snackbar: false,
+                onSuccess: () => setHasFetched(true),
+            });
+        }
+    }, [expanded]);
 
     return (
         <div className={`flex flex-col space-y-4 ${className}`}>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {
     useDeleteBaseItemMutation,
+    useGetShipmentByIdQuery,
     useLazyGetShipmentByIdQuery,
 } from "@/store";
 import { useHandleMutation } from "@/hooks/useHandleMutation";
@@ -60,27 +61,12 @@ const ShipmentsPage = ({ data, handleSubTabChange }: ShipmentsPageProps) => {
     const isMobile = useMediaQuery("(max-width: 1024px)");
     const isTablet = useMediaQuery("(max-width: 1536px)");
     const { handleMutation } = useHandleMutation();
-    const [expandedShipment, setExpandedShipment] = useState<string | null>(
-        data.shipments.length > 0 ? data.shipments[0]?._id || "" : null
-    );
 
     const [triggerFetch, { data: shipmentData, isLoading: shipmentLoading }] =
         useLazyGetShipmentByIdQuery();
     const [deleteItem, { isLoading: isDeleting }] = useDeleteBaseItemMutation();
 
     const { shipmentCount, shipments } = processShipments(data.shipments);
-
-    const handleToggleShipment = (shipmentId: string) => {
-        setExpandedShipment((prev) =>
-            prev === shipmentId ? null : shipmentId
-        );
-    };
-
-    useEffect(() => {
-        if (expandedShipment) {
-            triggerFetch(expandedShipment);
-        }
-    }, [expandedShipment, triggerFetch]);
 
     const handleDelete = (id: string) => {
         handleMutation({
@@ -117,9 +103,7 @@ const ShipmentsPage = ({ data, handleSubTabChange }: ShipmentsPageProps) => {
                             isMobile={isMobile}
                             isTablet={isTablet}
                             handleSubTabChange={handleSubTabChange}
-                            onToggle={() =>
-                                handleToggleShipment(shipment._id || "")
-                            }
+                            triggerFetch={triggerFetch}
                         >
                             <Divider
                                 orientation="horizontal"
