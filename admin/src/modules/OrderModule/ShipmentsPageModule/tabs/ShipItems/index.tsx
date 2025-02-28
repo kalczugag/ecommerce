@@ -1,6 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import { Form } from "react-final-form";
-import { useEditOrderMutation, useEditShipmentMutation } from "@/store";
+import { useEditShipmentMutation } from "@/store";
 import { useHandleMutation } from "@/hooks/useHandleMutation";
 import { deliveryMethods } from "@/constants/deliveryMethods";
 import DetailCard from "@/components/DetailCard";
@@ -12,6 +12,7 @@ import Table from "@/components/Table";
 import type { Order } from "@/types/Order";
 import { tableConfig } from "./tableConfig";
 import { enqueueSnackbar } from "notistack";
+import { useMemo } from "react";
 
 interface ShipItemsProps extends ManageAction {
     data: Order;
@@ -63,6 +64,16 @@ const ShipItems = ({ data, handleSubTabChange }: ShipItemsProps) => {
             mutation: editShipment,
         });
     };
+    const shippedProductIds = new Set(
+        shipment.items.map((item) => item._product.toString())
+    );
+
+    const enhancedTableData = useMemo(() => {
+        return data.items.map((row) => ({
+            ...row,
+            isShippedItem: shippedProductIds.has(row._product._id || ""),
+        }));
+    }, [data.items, shipment.items]);
 
     return (
         <DetailCard label="Ship Items">
@@ -124,7 +135,7 @@ const ShipItems = ({ data, handleSubTabChange }: ShipItemsProps) => {
                         <Table
                             headerOptions={tableConfig}
                             totalItems={data.items.length}
-                            rowData={data.items}
+                            rowData={enhancedTableData}
                             isLoading={false}
                         />
                     </form>

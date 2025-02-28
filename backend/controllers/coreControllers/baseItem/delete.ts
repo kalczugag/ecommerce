@@ -42,6 +42,7 @@ export const deleteBaseItem = async (
                 {
                     $inc: {
                         "size.$.quantity": deletedBaseItem.quantity,
+                        quantity: deletedBaseItem.quantity,
                     },
                 }
             ).exec();

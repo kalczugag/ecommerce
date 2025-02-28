@@ -1,14 +1,13 @@
 import { Field } from "react-final-form";
 import UnderlineLink from "@/components/UnderlineLink";
-import type { Item, Shipment } from "@/types/Order";
+import type { Item } from "@/types/Order";
 import type { TableColumnProps } from "@/modules/CrudModule";
 import { TextField } from "@mui/material";
-import { compose, required, maxValue, minValue } from "@/utils/validators";
+import { maxValue } from "@/utils/validators";
 
 interface RowProps extends Item {
-    shipments: Shipment[];
     isLoading: boolean;
-    handleSplit: () => void;
+    isShippedItem: boolean;
 }
 
 export const tableConfig: TableColumnProps<RowProps>[] = [
@@ -47,14 +46,16 @@ export const tableConfig: TableColumnProps<RowProps>[] = [
                         {...props.input}
                         type="number"
                         variant="standard"
-                        slotProps={{ htmlInput: { max: row.quantity, min: 0 } }}
+                        slotProps={{
+                            htmlInput: { max: row.quantity, min: row.quantity },
+                        }}
                         error={props.meta.error && props.meta.touched}
                         helperText={
                             props.meta.error && props.meta.touched
                                 ? props.meta.error
                                 : null
                         }
-                        disabled={row.isLoading}
+                        disabled={row.isLoading || row.isShippedItem}
                         fullWidth
                     />
                 )}

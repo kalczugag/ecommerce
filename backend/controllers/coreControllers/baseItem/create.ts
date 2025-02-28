@@ -53,6 +53,7 @@ export const createBaseItem = async (
                 {
                     $inc: {
                         "size.$.quantity": -newBaseItem.quantity,
+                        quantity: -newBaseItem.quantity,
                     },
                 }
             ).exec();
