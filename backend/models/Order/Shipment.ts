@@ -79,7 +79,7 @@ const shipmentSchema = new mongoose.Schema<Shipment>(
                 required: false,
             },
         ],
-        deliveryNotes: [
+        notes: [
             {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: "Note",

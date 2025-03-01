@@ -9,6 +9,10 @@ import type { Document } from "mongoose";
 interface OrderNote {
     text: string;
     private: boolean;
+    belongsTo: {
+        _entity: any;
+        model: any;
+    };
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -61,7 +65,7 @@ interface Payment {
     amount: number;
     transactionId?: string;
     paymentDate?: Date;
-    paymentNotes?: string[] | OrderNote[];
+    notes?: string[] | OrderNote[];
     authorized?: boolean;
     voided?: boolean;
     capturedAmount?: number;
@@ -92,7 +96,7 @@ interface Shipment extends Document {
     deliverySignature?: boolean;
     _parentShipment?: string | Shipment; // If shipment was split
     splitShipments?: string[] | Shipment[]; // IDs of split child shipments
-    deliveryNotes?: string[] | OrderNote[];
+    notes?: string[] | OrderNote[];
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -119,7 +123,7 @@ interface Order {
     shipments: string[] | Shipment[];
     _parentOrder?: string | Order; // If order was split from another order
     splitOrders?: string[] | Order[]; // IDs of split child orders
-    orderNotes?: string[] | OrderNote[];
+    notes?: string[] | OrderNote[];
     createdAt: Date;
     updatedAt: Date;
 }
@@ -135,7 +139,7 @@ interface ReturnOrder {
     refundMethod: "credit_card" | "paypal" | "bank_transfer";
     _deliveryMethod?: DeliveryMethod;
     refundPayments?: string[] | Payment[];
-    refundNotes?: string[] | OrderNote[];
+    notes?: string[] | OrderNote[];
     createdAt?: Date;
     updatedAt?: Date;
 }

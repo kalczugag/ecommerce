@@ -56,7 +56,7 @@ interface Payment {
     };
     transactionId?: string;
     paymentDate?: Date;
-    paymentNotes?: OrderNote[];
+    notes?: OrderNote[];
     authorized?: boolean;
     voided?: boolean;
     capturedAmount?: number;
@@ -87,7 +87,7 @@ interface Shipment {
     deliverySignature?: boolean;
     _parentShipment?: Shipment;
     splitShipments?: Shipment[];
-    deliveryNotes?: OrderNote[];
+    notes?: OrderNote[];
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -114,7 +114,7 @@ interface Order {
     shipments: Shipment[];
     _parentOrder?: Order;
     splitOrders?: Order[];
-    orderNotes?: OrderNote[];
+    notes?: OrderNote[];
     createdAt: Date;
     updatedAt: Date;
 }

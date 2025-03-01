@@ -44,7 +44,7 @@ const returnSchema = new mongoose.Schema<ReturnOrder>(
                 required: true,
             },
         ],
-        refundNotes: [
+        notes: [
             {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: "Note",

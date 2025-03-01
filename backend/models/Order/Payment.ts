@@ -33,7 +33,7 @@ const paymentSchema = new mongoose.Schema<Payment>(
         amount: { type: Number, required: true },
         transactionId: { type: String, required: false },
         paymentDate: { type: Date, required: false },
-        paymentNotes: [
+        notes: [
             {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: "Note",

@@ -27,14 +27,10 @@ export const updatePayment = async (
     }
 
     try {
-        if (updates.paymentNotes && updates.paymentNotes.length > 0) {
-            const paymentNotes = await NoteModel.insertMany(
-                updates.paymentNotes
-            );
+        if (updates.notes && updates.notes.length > 0) {
+            const paymentNotes = await NoteModel.insertMany(updates.notes);
 
-            updates.paymentNotes = paymentNotes.map((note) =>
-                note._id.toString()
-            );
+            updates.notes = paymentNotes.map((note) => note._id.toString());
         }
 
         const updatedPayment = await PaymentModel.findByIdAndUpdate(

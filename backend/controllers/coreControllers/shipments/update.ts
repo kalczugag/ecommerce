@@ -27,14 +27,10 @@ export const updateShipment = async (
     }
 
     try {
-        if (updates.deliveryNotes && updates.deliveryNotes.length > 0) {
-            const deliveryNotes = await NoteModel.insertMany(
-                updates.deliveryNotes
-            );
+        if (updates.notes && updates.notes.length > 0) {
+            const deliveryNotes = await NoteModel.insertMany(updates.notes);
 
-            updates.deliveryNotes = deliveryNotes.map((note) =>
-                note._id.toString()
-            );
+            updates.notes = deliveryNotes.map((note) => note._id.toString());
         }
 
         if (updates.trackingNumber) {

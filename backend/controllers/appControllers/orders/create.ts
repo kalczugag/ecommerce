@@ -32,10 +32,10 @@ export const createOrder = async (
     }
 
     try {
-        if (order.orderNotes && order.orderNotes.length > 0) {
-            const notes = await NoteModel.insertMany(order.orderNotes);
+        if (order.notes && order.notes.length > 0) {
+            const notes = await NoteModel.insertMany(order.notes);
 
-            order.orderNotes = notes.map((note) => note._id.toString());
+            order.notes = notes.map((note) => note._id.toString());
         }
 
         const newOrder = new OrderModel(order);

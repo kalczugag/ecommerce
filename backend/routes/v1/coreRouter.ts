@@ -5,6 +5,7 @@ import payments from "./coreRoutes/payments";
 import users from "./coreRoutes/users";
 import shipments from "./coreRoutes/shipments";
 import baseItems from "./coreRoutes/baseItems";
+import notes from "./coreRoutes/notes";
 
 const router = express.Router();
 
@@ -14,6 +15,7 @@ export default (): express.Router => {
     shipments(router);
     users(router);
     baseItems(router);
+    notes(router);
 
     return router;
 };

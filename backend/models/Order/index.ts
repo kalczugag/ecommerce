@@ -67,7 +67,7 @@ const orderSchema = new mongoose.Schema<Order>(
             ref: "Order",
             required: false,
         },
-        orderNotes: [
+        notes: [
             {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: "Note",
