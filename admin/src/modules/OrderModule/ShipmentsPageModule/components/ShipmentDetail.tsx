@@ -1,4 +1,4 @@
-import { ReactNode, useCallback } from "react";
+import { ReactNode } from "react";
 import DetailCard from "@/components/DetailCard";
 import ShipmentContacts from "./ShipmentContacts";
 import { Divider } from "@mui/material";
@@ -39,7 +39,7 @@ const ShipmentDetail = ({
             defaultExpanded={shipmentIndex === 0}
             label={`Shipment #${shipmentIndex + 1} of ${shipmentCount}`}
             variant="accordion"
-            fetchOnMount={() => triggerFetch(shipment._id)}
+            fetchOnMount={() => triggerFetch(shipment._id, 1)}
         >
             <div className="flex flex-col space-y-6 lg:space-y-0 lg:flex-row lg:justify-between">
                 <ShipmentContacts

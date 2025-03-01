@@ -24,3 +24,6 @@ const noteSchema = new mongoose.Schema<OrderNote>(
 );
 
 export const NoteModel = mongoose.model("Note", noteSchema);
+
+//example usage to get belongsTo
+// const notes = await NoteModel.find().populate("belongsTo.entityId");

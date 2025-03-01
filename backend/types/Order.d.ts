@@ -4,14 +4,16 @@ import type { Payment } from "./Payment";
 import type { ParsedQs } from "qs";
 import type { CartItem } from "./Cart";
 import type { DeliveryMethod } from "./DeliveryMethod";
+import type { RefModels } from "../models/Order/Notes";
 import type { Document } from "mongoose";
 
 interface OrderNote {
+    _id?: string;
     text: string;
     private: boolean;
     belongsTo: {
-        _entity: any;
-        model: any;
+        _entity: string;
+        model: RefModels;
     };
     createdAt?: Date;
     updatedAt?: Date;

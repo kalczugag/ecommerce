@@ -18,6 +18,13 @@ const notes = (router: express.Router) => {
         hasRole("admin"),
         methods.create
     );
+
+    router.patch(
+        "/notes/:id",
+        passport.authenticate("jwt", { session: false }),
+        hasRole("admin"),
+        methods.reorder
+    );
 };
 
 export default notes;

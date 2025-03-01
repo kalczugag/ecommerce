@@ -34,3 +34,4 @@ export * from "./apis/paymentsApi";
 export * from "./apis/shipmentsApi";
 export * from "./apis/baseItemsApi";
 export * from "./apis/deliveryMethods";
+export * from "./apis/notesApi";

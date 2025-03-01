@@ -3,10 +3,28 @@ import type { Product } from "./Product";
 import type { DeliveryMethod } from "./DeliveryMethod";
 
 interface OrderNote {
+    _id: string;
     text: string;
-    private: boolean;
+    private?: boolean;
+    belongsTo: {
+        _entity: string;
+        model: "Order" | "Payment" | "Shipment" | "Return";
+    };
     createdAt?: Date;
     updatedAt?: Date;
+}
+
+interface OrderWithNotes {
+    _id: string;
+    payments: {
+        _id: string;
+        notes: OrderNote[];
+    }[];
+    shipments: {
+        _id: string;
+        notes: OrderNote[];
+    }[];
+    notes: OrderNote[];
 }
 
 interface Item {
@@ -153,6 +171,7 @@ export {
     Payment,
     Order,
     OrderNote,
+    OrderWithNotes,
     ReturnOrder,
     UpdateOrder,
     AddItem,
