@@ -80,7 +80,7 @@ const NotesPage = ({ data }: NotesPageProps) => {
     return (
         <DetailCard label="Notes">
             <DragDropProvider onDragEnd={handleDragEnd}>
-                <div className="Root">
+                <div className="flex flex-row flex-wrap gap-5 items-start">
                     {columnOrder.map((column) => (
                         <Column
                             key={column}
