@@ -5,7 +5,7 @@ import { useHandleMutation } from "@/hooks/useHandleMutation";
 import { IconButton } from "@mui/material";
 import { DragIndicator, Clear } from "@mui/icons-material";
 import type { OrderNote } from "@/types/Order";
-import EditItemDialog from "./EditItemDialog";
+import NoteDetailsDialog from "./NoteDetailsDialog";
 
 interface ItemProps {
     item: OrderNote;
@@ -18,7 +18,7 @@ const Item = ({ item, index, column }: ItemProps) => {
     const [isOpenDialog, setIsOpenDialog] = useState(false);
     const { handleMutation } = useHandleMutation();
     const { ref, handleRef, isDragging } = useSortable({
-        id: item._id,
+        id: item._id!,
         index,
         type: `${column}_note`,
         accept: `${column}_note`,
@@ -43,12 +43,16 @@ const Item = ({ item, index, column }: ItemProps) => {
             <div
                 ref={ref}
                 data-dragging={isDragging}
-                onClick={handleOpen}
                 onMouseOver={() => setIsHover(true)}
                 onMouseLeave={() => setIsHover(false)}
-                className="Item flex flex-row items-center justify-between space-x-2 p-3 rounded-md w-full bg-light-primary dark:bg-dark-primary"
+                className="Item flex-1 flex flex-row items-center justify-between space-x-2 rounded-md bg-light-primary hover:shadow dark:bg-dark-primary"
             >
-                <p className="text-sm select-none">{item.text}</p>
+                <p
+                    className="text-sm select-none cursor-pointer px-3 py-4"
+                    onClick={handleOpen}
+                >
+                    {item.text}
+                </p>
                 <span className="flex">
                     <IconButton
                         size="small"
@@ -67,7 +71,7 @@ const Item = ({ item, index, column }: ItemProps) => {
                     </IconButton>
                 </span>
             </div>
-            <EditItemDialog
+            <NoteDetailsDialog
                 isOpen={isOpenDialog}
                 handleClose={handleClose}
                 data={item}

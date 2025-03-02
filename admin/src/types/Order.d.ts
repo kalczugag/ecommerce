@@ -3,7 +3,7 @@ import type { Product } from "./Product";
 import type { DeliveryMethod } from "./DeliveryMethod";
 
 interface OrderNote {
-    _id: string;
+    _id?: string;
     text: string;
     private?: boolean;
     belongsTo: {

@@ -4,12 +4,15 @@ import { CollisionPriority } from "@dnd-kit/abstract";
 import Loading from "@/components/Loading";
 import { Button, IconButton } from "@mui/material";
 import { Add, MoreHoriz } from "@mui/icons-material";
+import MenuButton from "@/components/MenuButton";
 
 interface ColumnProps {
     children: ReactNode;
     column: string;
     isLoading: boolean;
 }
+
+const elements = [{ label: "Add note" }, { label: "Sort by" }];
 
 const Column = ({ column, children, isLoading }: ColumnProps) => {
     const { isDropTarget, ref } = useDroppable({
@@ -29,9 +32,9 @@ const Column = ({ column, children, isLoading }: ColumnProps) => {
             >
                 <div className="flex items-center justify-between px-2 pt-2">
                     <h3 className="font-semibold">{column}</h3>
-                    <IconButton size="small">
+                    <MenuButton variant="icon" size="small" elements={elements}>
                         <MoreHoriz fontSize="small" />
-                    </IconButton>
+                    </MenuButton>
                 </div>
                 <div className="flex flex-col items-start space-y-2">
                     {children}

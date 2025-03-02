@@ -26,21 +26,21 @@ const NotesPage = ({ data }: NotesPageProps) => {
     const sections: { [key: string]: string[] } = {
         Payments:
             notesData?.result.payments.flatMap((p) =>
-                p.notes.map((n) => n._id)
+                p.notes.map((n) => n._id!)
             ) || [],
         Shipments:
             notesData?.result.shipments.flatMap((s) =>
-                s.notes.map((n) => n._id)
+                s.notes.map((n) => n._id!)
             ) || [],
         // "General Notes": notesData?.result.notes.map((n) => n._id) || [],
     };
 
     const noteMap = new Map<string, any>();
     notesData?.result.payments.forEach((p) =>
-        p.notes.forEach((n) => noteMap.set(n._id, n))
+        p.notes.forEach((n) => noteMap.set(n._id!, n))
     );
     notesData?.result.shipments.forEach((s) =>
-        s.notes.forEach((n) => noteMap.set(n._id, n))
+        s.notes.forEach((n) => noteMap.set(n._id!, n))
     );
     // notesData?.result.notes.forEach((n) => noteMap.set(n._id, n));
 
@@ -68,8 +68,6 @@ const NotesPage = ({ data }: NotesPageProps) => {
             newIndex: target.sortable.index,
             belongsTo: belongsToMapping[target.sortable.group],
         };
-
-        console.log(target.sortable.index === source.sortable.initialIndex);
 
         if (target.sortable.index === source.sortable.initialIndex) return;
 

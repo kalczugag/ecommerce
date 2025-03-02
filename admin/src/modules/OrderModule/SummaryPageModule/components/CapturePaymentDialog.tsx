@@ -43,12 +43,28 @@ const CapturePaymentDialog = ({ data }: CapturePaymentDialogProps) => {
                 _id: data._id || "",
                 capturedAmount: values.amount,
                 authorizationStatus: values.authorizationStatus,
-                paymentNotes: Array.isArray(data.paymentNotes)
+                notes: Array.isArray(data.notes)
                     ? [
-                          ...data.paymentNotes,
-                          { text: values.paymentNote || "", private: true },
+                          ...data.notes,
+                          {
+                              belongsTo: {
+                                  _entity: data._id || "",
+                                  model: "Payment",
+                              },
+                              text: values.paymentNote || "",
+                              private: true,
+                          },
                       ]
-                    : [{ text: values.paymentNote || "", private: true }],
+                    : [
+                          {
+                              belongsTo: {
+                                  _entity: data._id || "",
+                                  model: "Payment",
+                              },
+                              text: values.paymentNote || "",
+                              private: true,
+                          },
+                      ],
             }).unwrap();
             enqueueSnackbar("Payment captured successfully", {
                 variant: "success",
