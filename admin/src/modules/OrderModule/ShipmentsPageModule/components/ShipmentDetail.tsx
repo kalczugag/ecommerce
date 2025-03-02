@@ -85,7 +85,7 @@ const ShipmentDetail = ({
                         sx={isTablet ? { marginY: 4 } : { marginX: 4 }}
                     />
 
-                    <div className="flex flex-row space-x-6 lg:flex-col lg:space-x-0 lg:space-y-6">
+                    <div className="flex flex-row flex-wrap gap-6">
                         {config.map((item) => (
                             <PaperCard
                                 key={item.description}

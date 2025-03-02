@@ -96,7 +96,7 @@ const ItemsPage = ({ data, handleSubTabChange }: ItemsPageProps) => {
                     sx={isMobile ? { marginY: 4 } : { marginX: 4 }}
                 />
 
-                <div className="flex-1 flex flex-row space-x-6 lg:flex-col lg:space-x-0 lg:space-y-6">
+                <div className="flex-1 flex flex-row flex-wrap gap-6">
                     {config.map((item) => (
                         <PaperCard
                             key={item.description}

@@ -69,6 +69,10 @@ const NotesPage = ({ data }: NotesPageProps) => {
             belongsTo: belongsToMapping[target.sortable.group],
         };
 
+        console.log(target.sortable.index === source.sortable.initialIndex);
+
+        if (target.sortable.index === source.sortable.initialIndex) return;
+
         handleMutation({
             values: reqBody,
             snackbar: false,
