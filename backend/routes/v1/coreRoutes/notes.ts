@@ -25,6 +25,13 @@ const notes = (router: express.Router) => {
         hasRole("admin"),
         methods.reorder
     );
+
+    router.delete(
+        "/notes/:id",
+        passport.authenticate("jwt", { session: false }),
+        hasRole("admin"),
+        methods.delete
+    );
 };
 
 export default notes;

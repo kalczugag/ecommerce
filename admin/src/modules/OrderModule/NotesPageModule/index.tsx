@@ -18,7 +18,6 @@ const NotesPage = ({ data }: NotesPageProps) => {
     const {
         data: notesData,
         isLoading: isNotesLoading,
-        isSuccess,
         isError,
     } = useGetNotesByOrderIdQuery(data._id || "");
 

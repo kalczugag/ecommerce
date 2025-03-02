@@ -21,7 +21,7 @@ export const notesApi = apiSlice.injectEndpoints({
                 method: "GET",
                 keepUnusedDataFor: 300,
             }),
-            providesTags: (result, error, id) => [{ type: "Notes", id: id }],
+            providesTags: () => [{ type: "Notes", id: "LIST" }],
         }),
 
         addNote: builder.mutation<
@@ -53,6 +53,14 @@ export const notesApi = apiSlice.injectEndpoints({
                 { type: "Notes", id: values.noteId },
             ],
         }),
+
+        deleteNote: builder.mutation<ApiResponseObject<OrderNote>, string>({
+            query: (id) => ({
+                url: `/admin/notes/${id}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: () => [{ type: "Notes", id: "LIST" }],
+        }),
     }),
 });
 
@@ -60,4 +68,5 @@ export const {
     useGetNotesByOrderIdQuery,
     useAddNoteMutation,
     useReorderNotesMutation,
+    useDeleteNoteMutation,
 } = notesApi;

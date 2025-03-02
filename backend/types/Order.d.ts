@@ -19,6 +19,14 @@ interface OrderNote {
     updatedAt?: Date;
 }
 
+interface UpdateOrderNote {
+    newIndex: number;
+    belongsTo: {
+        _entity: string; // RefModel id
+        model: RefModels;
+    };
+}
+
 interface Item {
     _id?: string;
     _order?: string | Order;
@@ -166,6 +174,7 @@ export {
     Shipment,
     Order,
     OrderNote,
+    UpdateOrderNote,
     ReturnOrder,
     UpdateOrder,
     PaginatedOrders,

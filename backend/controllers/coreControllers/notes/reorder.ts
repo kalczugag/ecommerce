@@ -1,19 +1,10 @@
 import express from "express";
 import mongoose, { isValidObjectId } from "mongoose";
 import { errorResponse, successResponse } from "../../../handlers/apiResponse";
-import { NoteModel, RefModels } from "../../../models/Order/Notes";
-import type { OrderNote } from "../../../types/Order";
-
-interface ReorderProps {
-    newIndex: number;
-    belongsTo: {
-        _entity: string; // RefModel id
-        model: RefModels;
-    };
-}
+import type { OrderNote, UpdateOrderNote } from "../../../types/Order";
 
 export const reorderNotes = async (
-    req: express.Request<{ id: string }, {}, ReorderProps>,
+    req: express.Request<{ id: string }, {}, UpdateOrderNote>,
     res: express.Response
 ) => {
     const { id } = req.params; // note id
