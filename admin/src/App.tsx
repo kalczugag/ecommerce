@@ -1,4 +1,5 @@
 import "@/styles/app.css";
+import "react-quill/dist/quill.snow.css";
 
 import { Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@mui/material";

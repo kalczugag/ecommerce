@@ -2,13 +2,13 @@ import Joi from "joi";
 
 const schema = Joi.object({
     sku: Joi.string().required(),
-    imageUrl: Joi.string().uri().required(),
+    imageUrl: Joi.array().items(Joi.string()).required(),
     brand: Joi.string().min(2).required(),
     title: Joi.string().min(2).required(),
     color: Joi.string().required(),
     discountedPrice: Joi.number().positive().optional(),
     price: Joi.number().positive().required(),
-    discountedPercent: Joi.number().min(0).max(100).optional(),
+    discountPercent: Joi.number().min(0).max(100).optional(),
     size: Joi.array()
         .items(
             Joi.object({

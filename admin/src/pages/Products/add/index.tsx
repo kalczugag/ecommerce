@@ -1,14 +1,15 @@
 import { useAddProductMutation, useGetGroupedCategoriesQuery } from "@/store";
-import { enqueueSnackbar } from "notistack";
 import CreateForm from "@/components/CreateForm";
 import CrudModule from "@/modules/CrudModule";
 import type { Product } from "@/types/Product";
 import ProductForm from "@/forms/ProductForm";
 import { useNavigate } from "react-router-dom";
 import { useTitle } from "@/hooks/useTitle";
+import { useHandleMutation } from "@/hooks/useHandleMutation";
 
 const ProductAdd = () => {
     const navigate = useNavigate();
+    const { handleMutation } = useHandleMutation();
     useTitle("Product - Add");
 
     const { data, isLoading } = useGetGroupedCategoriesQuery({
@@ -20,20 +21,14 @@ const ProductAdd = () => {
     const handleSubmit = async (values: Product) => {
         const { quantity, ...rest } = values;
 
-        try {
-            await addProduct({
+        handleMutation({
+            values: {
                 ...rest,
                 imageUrl: (values.imageUrl as string)?.trim().split(","),
-            }).unwrap();
-            navigate("/products");
-            enqueueSnackbar("product added successfully", {
-                variant: "success",
-            });
-        } catch (error) {
-            enqueueSnackbar("Failed to add product", {
-                variant: "error",
-            });
-        }
+            },
+            mutation: addProduct,
+            onSuccess: () => navigate("/products"),
+        });
     };
 
     return (

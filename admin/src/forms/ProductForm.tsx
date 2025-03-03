@@ -12,6 +12,7 @@ import {
     Tooltip,
 } from "@mui/material";
 import { Add, Info, Remove } from "@mui/icons-material";
+import ReactQuill from "react-quill";
 import {
     required,
     mustBeNumber,
@@ -162,6 +163,7 @@ const ProductForm = ({
                     name="price"
                     type="number"
                     validate={compose(required, mustBeNumber, minValue(0))}
+                    parse={(value) => (value.trim() === "" ? 0 : Number(value))}
                 >
                     {(props) => (
                         <TextField
@@ -197,6 +199,7 @@ const ProductForm = ({
                     name="discountPercent"
                     type="number"
                     validate={compose(minValue(0), maxValue(100))}
+                    parse={(value) => (value.trim() === "" ? 0 : Number(value))}
                 >
                     {(props) => (
                         <TextField
@@ -259,21 +262,22 @@ const ProductForm = ({
             </Row>
             <Field name="description" type="textarea">
                 {(props) => (
-                    <TextField
-                        label="Description"
-                        name={props.input.name}
-                        value={props.input.value}
-                        onChange={props.input.onChange}
-                        error={props.meta.error && props.meta.touched}
-                        helperText={
-                            props.meta.error && props.meta.touched
-                                ? props.meta.error
-                                : null
-                        }
-                        disabled={isLoading}
-                        multiline
-                        fullWidth
-                    />
+                    <ReactQuill {...props.input} />
+                    // <TextField
+                    //     label="Description"
+                    //     name={props.input.name}
+                    //     value={props.input.value}
+                    //     onChange={props.input.onChange}
+                    //     error={props.meta.error && props.meta.touched}
+                    //     helperText={
+                    //         props.meta.error && props.meta.touched
+                    //             ? props.meta.error
+                    //             : null
+                    //     }
+                    //     disabled={isLoading}
+                    //     multiline
+                    //     fullWidth
+                    // />
                 )}
             </Field>
             <Row label="Sizes" direction="column">
@@ -311,6 +315,11 @@ const ProductForm = ({
                                             mustBeNumber,
                                             minValue(0)
                                         )}
+                                        parse={(value) =>
+                                            value.trim() === ""
+                                                ? 0
+                                                : Number(value)
+                                        }
                                     >
                                         {(props) => (
                                             <TextField
@@ -347,9 +356,9 @@ const ProductForm = ({
                                                             </InputAdornment>
                                                         ),
                                                     },
-                                                }}
-                                                inputProps={{
-                                                    min: 0,
+                                                    htmlInput: {
+                                                        min: 0,
+                                                    },
                                                 }}
                                             />
                                         )}

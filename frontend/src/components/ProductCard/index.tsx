@@ -3,6 +3,7 @@ import { Box, Rating } from "@mui/material";
 import { TColors, colors } from "@/constants/colors";
 import type { Product } from "@/types/Product";
 import { useState } from "react";
+import SafeHtmlRender from "../SafeHtmlRender";
 
 interface ProductCardProps {
     data: Product;
@@ -96,7 +97,12 @@ const ProductCard = ({
                     {title}
                 </h3>
                 <p className="text-sm">
-                    {description?.slice(0, size === "sm" ? 35 : 50) + "..."}
+                    <SafeHtmlRender
+                        htmlContent={
+                            description?.slice(0, size === "sm" ? 35 : 50) +
+                            "..."
+                        }
+                    />
                 </p>
                 <div className="text-sm text-gray-600">{color}</div>
                 {showRating && (
