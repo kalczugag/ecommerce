@@ -24,7 +24,7 @@ export const deleteProduct = async (
                 .json(errorResponse(null, "Product not found", 404));
         }
 
-        return res.json(successResponse(deletedProduct));
+        return res.json(successResponse(deletedProduct, "Product deleted"));
     } catch (error) {
         console.error(error);
         return res

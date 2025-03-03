@@ -46,7 +46,6 @@ const ProductsEdit = () => {
                 ...rest,
                 imageUrl: (values.imageUrl as string)?.trim().split(",\n"),
             },
-            snackbar: false,
             mutation: editProduct,
             onSuccess: () => navigate(-1),
         });
