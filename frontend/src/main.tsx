@@ -10,17 +10,17 @@ import "./index.css";
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(
-        <Provider store={store}>
-            <QueryClientProvider client={queryClient}>
-                <BrowserRouter>
-                    <SnackbarProvider
-                        autoHideDuration={2000}
-                        preventDuplicate
-                        className="print:hidden"
-                    >
-                        <App />
-                    </SnackbarProvider>
-                </BrowserRouter>
-            </QueryClientProvider>
-        </Provider>
+    <Provider store={store}>
+        <QueryClientProvider client={queryClient}>
+            <BrowserRouter>
+                <SnackbarProvider
+                    autoHideDuration={2000}
+                    preventDuplicate
+                    className="print:hidden"
+                >
+                    <App />
+                </SnackbarProvider>
+            </BrowserRouter>
+        </QueryClientProvider>
+    </Provider>
 );

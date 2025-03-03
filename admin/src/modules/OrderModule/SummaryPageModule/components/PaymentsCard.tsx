@@ -1,5 +1,6 @@
 import CapturePaymentDialog from "./CapturePaymentDialog";
 import DetailCard from "@/components/DetailCard";
+import StatusChip from "@/components/StatusChip";
 import type { Payment } from "@/types/Order";
 
 interface PaymentsCardProps {
@@ -8,8 +9,6 @@ interface PaymentsCardProps {
 }
 
 const PaymentsCard = ({ payment, orderTotal }: PaymentsCardProps) => {
-    // const payment = data.payments?.[0];
-
     const card = payment.card;
 
     return (
@@ -22,15 +21,7 @@ const PaymentsCard = ({ payment, orderTotal }: PaymentsCardProps) => {
                 <span className="font-bold">Order Total: </span>
                 <span>${orderTotal.toFixed(2)}</span>
             </div>
-            <div
-                className={`p-1 rounded text-center text-white font-semibold ${
-                    payment?.paymentStatus === "completed"
-                        ? "bg-green-600"
-                        : "bg-orange-500"
-                }`}
-            >
-                {payment?.paymentStatus}
-            </div>
+            <StatusChip status={payment.paymentStatus || ""} type="payment" />
             <div>
                 <span className="font-bold">Last Payment: </span>
                 {card ? (

@@ -2,18 +2,21 @@ import { Field } from "react-final-form";
 import { required } from "@/utils/validators";
 import { Button, TextField } from "@mui/material";
 import AlertDialog from "@/components/AlertDialog";
+import TooltipButton from "@/components/TooltipButton";
 import type { Shipment } from "@/types/Order";
 
 interface EnterTrackingNumberProps {
     data: Shipment;
     handleBack: () => void;
     form: any;
+    isLoading: boolean;
 }
 
 const EnterTrackingNumber = ({
     data,
     handleBack,
     form,
+    isLoading,
 }: EnterTrackingNumberProps) => {
     return (
         <div className="flex-1 space-y-4">
@@ -27,13 +30,6 @@ const EnterTrackingNumber = ({
                         <TextField
                             {...props.input}
                             label="Tracking Number"
-                            slotProps={{
-                                input: {
-                                    readOnly: data.trackingNumber
-                                        ? true
-                                        : false,
-                                },
-                            }}
                             error={props.meta.error && props.meta.touched}
                             helperText={
                                 props.meta.error && props.meta.touched
@@ -41,6 +37,7 @@ const EnterTrackingNumber = ({
                                     : null
                             }
                             fullWidth
+                            disabled={isLoading}
                         />
                     )}
                 </Field>
@@ -56,9 +53,13 @@ const EnterTrackingNumber = ({
                         onConfirm={form.submit}
                     >
                         {(props) => (
-                            <Button variant="contained" onClick={props.open}>
-                                Ship
-                            </Button>
+                            <TooltipButton
+                                title="Ship"
+                                tooltipText="Shipment already has a tracking number"
+                                variant="contained"
+                                onClick={props.open}
+                                disabled={isLoading}
+                            />
                         )}
                     </AlertDialog>
                 </div>

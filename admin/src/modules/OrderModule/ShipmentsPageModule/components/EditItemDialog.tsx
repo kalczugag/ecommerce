@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Field, Form, FormSpy } from "react-final-form";
 import { useHandleMutation } from "@/hooks/useHandleMutation";
-import { compose, maxValue, minValue, required } from "@/utils/validators";
+import { compose, minValue, required } from "@/utils/validators";
 import { useGetProductByIdQuery, useEditBaseItemMutation } from "@/store";
 import {
     Button,
@@ -40,10 +40,13 @@ const EditItemDialog = ({ item }: EditItemDialogProps) => {
 
     const [editBaseItem, { isLoading: editLoading }] =
         useEditBaseItemMutation();
-    const { data, isLoading: productLoading } = useGetProductByIdQuery({
-        id: item._product._id || "",
-        params: { select: "size,color" },
-    });
+    const { data, isLoading: productLoading } = useGetProductByIdQuery(
+        {
+            id: item._product?._id || "",
+            params: { select: "size,color" },
+        },
+        { skip: !isOpen || !item._product }
+    );
 
     const handleOpen = () => setIsOpen(true);
     const handleClose = () => setIsOpen(false);
@@ -74,7 +77,7 @@ const EditItemDialog = ({ item }: EditItemDialogProps) => {
                         color: item.color,
                     }}
                     onSubmit={handleSubmit}
-                    render={({ handleSubmit, form }) => (
+                    render={({ handleSubmit }) => (
                         <form onSubmit={handleSubmit}>
                             <DialogTitle>Edit Item</DialogTitle>
                             <DialogContent>
@@ -143,7 +146,10 @@ const EditItemDialog = ({ item }: EditItemDialogProps) => {
                                                 onChange={(e) =>
                                                     props.input.onChange(
                                                         parseFloat(
-                                                            e.target.value
+                                                            e.target.value ===
+                                                                ""
+                                                                ? "0"
+                                                                : e.target.value
                                                         )
                                                     )
                                                 }
@@ -208,15 +214,13 @@ const EditItemDialog = ({ item }: EditItemDialogProps) => {
                                 />
 
                                 <div className="flex-1 flex flex-col space-y-4">
-                                    <Field
-                                        name="size"
-                                        type="select"
-                                        validate={required}
-                                    >
+                                    <Field name="size" type="select">
                                         {(props) => (
                                             <FormControl
-                                                disabled={isLoading}
-                                                sx={{ minWidth: 200 }}
+                                                disabled={
+                                                    isLoading ||
+                                                    !data?.result.size
+                                                }
                                             >
                                                 <InputLabel>Size</InputLabel>
                                                 <Select
@@ -253,7 +257,7 @@ const EditItemDialog = ({ item }: EditItemDialogProps) => {
                                             </FormControl>
                                         )}
                                     </Field>
-                                    <Field name="color" validate={required}>
+                                    <Field name="color">
                                         {(props) => (
                                             <TextField
                                                 {...props.input}
@@ -263,16 +267,6 @@ const EditItemDialog = ({ item }: EditItemDialogProps) => {
                                                         readOnly: true,
                                                     },
                                                 }}
-                                                error={
-                                                    props.meta.error &&
-                                                    props.meta.touched
-                                                }
-                                                helperText={
-                                                    props.meta.error &&
-                                                    props.meta.touched
-                                                        ? props.meta.error
-                                                        : null
-                                                }
                                                 fullWidth
                                             />
                                         )}

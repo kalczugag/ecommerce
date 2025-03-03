@@ -1,13 +1,15 @@
-import { HTMLAttributes, ReactNode, useState } from "react";
+import { HTMLAttributes, ReactNode, useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { useHandleMutation } from "@/hooks/useHandleMutation";
 import { Collapse } from "@mui/material";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
-import { useSearchParams } from "react-router-dom";
 
 interface DetailCardProps extends HTMLAttributes<HTMLDivElement> {
     variant?: "standard" | "accordion";
     defaultExpanded?: boolean;
     label: string;
     children: ReactNode;
+    fetchOnMount?: () => any;
 }
 
 const DetailCard = ({
@@ -16,9 +18,12 @@ const DetailCard = ({
     defaultExpanded = false,
     children,
     className,
+    fetchOnMount,
 }: DetailCardProps) => {
-    const [_, setSearchParams] = useSearchParams();
+    const [hasFetched, setHasFetched] = useState(false);
     const [expanded, setExpanded] = useState(defaultExpanded);
+    const [_, setSearchParams] = useSearchParams();
+    const { handleMutation } = useHandleMutation();
 
     const handleClick = () => {
         if (!expanded) {
@@ -33,16 +38,28 @@ const DetailCard = ({
         setExpanded(!expanded);
     };
 
+    useEffect(() => {
+        if (fetchOnMount && expanded && !hasFetched) {
+            handleMutation({
+                mutation: fetchOnMount,
+                snackbar: false,
+                onSuccess: () => setHasFetched(true),
+            });
+        }
+    }, [expanded]);
+
     return (
         <div className={`flex flex-col space-y-4 ${className}`}>
             {variant === "standard" && (
-                <h3 className="text-lg bg-gray-200 p-3">{label}</h3>
+                <h3 className="text-lg bg-gray-200 p-3 dark:bg-text-light">
+                    {label}
+                </h3>
             )}
             {variant === "accordion" ? (
                 <>
                     <button
                         type="button"
-                        className="flex justify-between items-center text-lg bg-gray-200 p-3"
+                        className="flex justify-between items-center text-lg bg-gray-200 p-3 dark:bg-text-light"
                         onClick={handleClick}
                     >
                         {label}

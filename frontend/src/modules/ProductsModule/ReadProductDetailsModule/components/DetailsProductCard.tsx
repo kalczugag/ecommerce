@@ -13,6 +13,7 @@ import ImagePicker from "./ImagePicker";
 import type { Sizes } from "..";
 import type { ShortReviewsCount } from "@/types/Review";
 import type { Product } from "@/types/Product";
+import SafeHtmlRender from "@/components/SafeHtmlRender";
 
 interface DetailsProductCardProps {
     data?: Product;
@@ -147,6 +148,9 @@ const DetailsProductCard = ({
                         <Box sx={{ maxWidth: 300 }}>
                             <FormControl fullWidth>
                                 <InputLabel id="size-label">Size</InputLabel>
+
+                                {/* TODO: simplify */}
+
                                 <Select
                                     labelId="size-label"
                                     id="size-select"
@@ -238,7 +242,7 @@ const DetailsProductCard = ({
                             <Skeleton variant="text" width="80%" height={20} />
                         </>
                     ) : (
-                        data?.description
+                        <SafeHtmlRender htmlContent={data?.description || ""} />
                     )}
                 </div>
             </div>

@@ -1,0 +1,12 @@
+.Item {
+    appearance: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transform: scale(1);
+}
+
+.Item[data-dragging="true"] {
+    transform: scale(1.02);
+    box-shadow: inset 0px 0px 1px rgba(0, 0, 0, 0.5),
+        -1px 0 15px 0 rgba(34, 33, 81, 0.01),
+        0px 15px 15px 0 rgba(34, 33, 81, 0.25);
+}

@@ -2,6 +2,7 @@ import moment from "moment";
 import ActionButtons from "@/components/Table/ActionButtons";
 import type { Order } from "@/types/Order";
 import UnderlineLink from "@/components/UnderlineLink";
+import StatusChip from "@/components/StatusChip";
 import { TableColumnProps } from "@/modules/CrudModule";
 
 interface RowProps extends Order {
@@ -48,31 +49,13 @@ export const tableConfig: TableColumnProps<RowProps>[] = [
     },
     {
         label: "Order Status",
-        render: (row) => (
-            <div className="bg-gray-300 text-center rounded truncate px-2">
-                {row.status}
-            </div>
-        ),
+        render: (row) => <StatusChip status={row.status || ""} type="order" />,
     },
     {
         label: "Payment",
         render: (row) => {
             const paymentStatus = row.payments?.[0]?.paymentStatus || "no data";
-
-            const statusClasses =
-                paymentStatus === "completed"
-                    ? "bg-orange-500 text-white"
-                    : paymentStatus === "no data"
-                    ? "bg-gray-300"
-                    : "bg-green-400 text-white";
-
-            return (
-                <div
-                    className={`text-center rounded truncate px-2 ${statusClasses}`}
-                >
-                    {paymentStatus}
-                </div>
-            );
+            return <StatusChip status={paymentStatus} type="payment" />;
         },
     },
     {

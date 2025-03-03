@@ -70,7 +70,7 @@ const ManageModule = ({ config, data, isLoading }: ManageModuleProps) => {
                         hidden={currentTab !== index}
                     >
                         {currentTab === index && (
-                            <Box sx={{ p: 3 }} className="space-y-10">
+                            <Box className="space-y-10 mt-6 md:p-6 md:mt-0">
                                 {tab.subTabs
                                     ? currentSubTab === 0
                                         ? renderWithCustomArg(tab, {

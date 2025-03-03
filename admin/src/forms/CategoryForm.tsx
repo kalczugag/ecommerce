@@ -12,6 +12,7 @@ import {
     TextField,
     Tooltip,
 } from "@mui/material";
+import ReactQuill from "react-quill";
 import Row from "@/components/Row";
 import { CategoryLevel } from "@/types/Category";
 
@@ -138,21 +139,22 @@ const CategoryForm = ({
             </Row>
             <Field name="description" type="textarea">
                 {(props) => (
-                    <TextField
-                        label="Description"
-                        name={props.input.name}
-                        value={props.input.value}
-                        onChange={props.input.onChange}
-                        error={props.meta.error && props.meta.touched}
-                        helperText={
-                            props.meta.error && props.meta.touched
-                                ? props.meta.error
-                                : null
-                        }
-                        disabled={isLoading}
-                        multiline
-                        fullWidth
-                    />
+                    <ReactQuill {...props.input} />
+                    // <TextField
+                    //     label="Description"
+                    //     name={props.input.name}
+                    //     value={props.input.value}
+                    //     onChange={props.input.onChange}
+                    //     error={props.meta.error && props.meta.touched}
+                    //     helperText={
+                    //         props.meta.error && props.meta.touched
+                    //             ? props.meta.error
+                    //             : null
+                    //     }
+                    //     disabled={isLoading}
+                    //     multiline
+                    //     fullWidth
+                    // />
                 )}
             </Field>
             <Row>

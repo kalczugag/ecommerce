@@ -130,6 +130,7 @@ export const categoryApi = apiSlice.injectEndpoints({
 
 export const {
     useGetAllCategoriesQuery,
+    useLazyGetAllCategoriesQuery,
     useGetGroupedCategoriesQuery,
     useGetCategoryByIdQuery,
     useGetCategoriesByLevelQuery,

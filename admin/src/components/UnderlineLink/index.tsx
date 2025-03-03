@@ -9,7 +9,7 @@ const UnderlineLink = ({ children, ...props }: UnderlineLinkProps) => {
     return (
         <Link
             {...props}
-            className="text-[#197AD4] underline decoration-[#70A2D9] hover:decoration-[#197AD4]"
+            className="text-[#197AD4] underline decoration-[#70A2D9] hover:decoration-[#197AD4] dark:text-text-dark dark:decoration-transparent dark:hover:decoration-text-dark"
         >
             {children}
         </Link>

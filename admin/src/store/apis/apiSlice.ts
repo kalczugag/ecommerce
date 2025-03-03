@@ -74,5 +74,6 @@ export const apiSlice = createApi({
         "Categories",
         "Payments",
         "Shipments",
+        "Notes",
     ],
 });

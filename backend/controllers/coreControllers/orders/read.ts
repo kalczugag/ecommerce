@@ -4,6 +4,16 @@ import { OrderModel } from "../../../models/Order";
 import { PaginatedOrders } from "../../../types/Order";
 import { MongooseQueryParser } from "mongoose-query-parser";
 
+const statusPriority = {
+    placed: 1,
+    confirmed: 2,
+    shipped: 3,
+    delivered: 4,
+    "pending payment": 5,
+    returned: 6,
+    canceled: 7, // Lowest priority
+};
+
 const parser = new MongooseQueryParser();
 
 export const getAllOrders = async (
@@ -20,19 +30,56 @@ export const getAllOrders = async (
         : 5;
 
     try {
-        const orders = await OrderModel.find(parsedQuery.filter)
-            .populate(parsedQuery.populate)
-            .select(parsedQuery.select)
-            .sort({ ...parsedQuery.sort, createdAt: -1 })
-            .skip(page * pageSize)
-            .limit(pageSize)
-            .exec();
+        const orders = await OrderModel.aggregate([
+            { $match: parsedQuery.filter },
+            {
+                $addFields: {
+                    statusPriority: {
+                        $switch: {
+                            branches: Object.entries(statusPriority).map(
+                                ([key, value]) => ({
+                                    case: { $eq: ["$status", key] },
+                                    then: value,
+                                })
+                            ),
+                            default: 99,
+                        },
+                    },
+                },
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "_user",
+                    foreignField: "_id",
+                    pipeline: [{ $project: { firstName: 1, lastName: 1 } }],
+                    as: "_user",
+                },
+            },
+            {
+                $set: {
+                    _user: { $arrayElemAt: ["$_user", 0] },
+                },
+            },
+            {
+                $lookup: {
+                    from: "payments",
+                    localField: "payments",
+                    foreignField: "_id",
+                    pipeline: [{ $project: { paymentStatus: 1 } }],
+                    as: "payments",
+                },
+            },
+            { $sort: { statusPriority: 1, createdAt: -1 } },
+            { $skip: page * pageSize },
+            { $limit: pageSize },
+        ]);
 
         const totalDocuments = await OrderModel.countDocuments(
             parsedQuery.filter
         );
 
-        if (!orders || orders.length === 0) {
+        if (!orders.length) {
             return res
                 .status(404)
                 .json(errorResponse(null, "No orders found", 404));

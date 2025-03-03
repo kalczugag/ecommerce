@@ -93,10 +93,7 @@ const EditPaymentDialog = ({ payment, disabled }: EditPaymentDialogProps) => {
                                         validate={required}
                                     >
                                         {(props) => (
-                                            <FormControl
-                                                disabled={false}
-                                                sx={{ minWidth: 200 }}
-                                            >
+                                            <FormControl disabled={false}>
                                                 <InputLabel
                                                     error={
                                                         props.meta.error &&
@@ -152,10 +149,7 @@ const EditPaymentDialog = ({ payment, disabled }: EditPaymentDialogProps) => {
                                 />
 
                                 <div className="flex-1 flex flex-col space-y-4">
-                                    <Field
-                                        name="transactionId"
-                                        validate={required}
-                                    >
+                                    <Field name="transactionId">
                                         {(props) => (
                                             <TextField
                                                 {...props.input}
@@ -231,7 +225,10 @@ const EditPaymentDialog = ({ payment, disabled }: EditPaymentDialogProps) => {
                                                 onChange={(e) =>
                                                     props.input.onChange(
                                                         parseFloat(
-                                                            e.target.value
+                                                            e.target.value ===
+                                                                ""
+                                                                ? "0"
+                                                                : e.target.value
                                                         )
                                                     )
                                                 }

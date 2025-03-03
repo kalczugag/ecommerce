@@ -4,13 +4,27 @@ import type { Payment } from "./Payment";
 import type { ParsedQs } from "qs";
 import type { CartItem } from "./Cart";
 import type { DeliveryMethod } from "./DeliveryMethod";
+import type { RefModels } from "../models/Order/Notes";
 import type { Document } from "mongoose";
 
 interface OrderNote {
+    _id?: string;
     text: string;
     private: boolean;
+    belongsTo: {
+        _entity: string;
+        model: RefModels;
+    };
     createdAt?: Date;
     updatedAt?: Date;
+}
+
+interface UpdateOrderNote {
+    newIndex: number;
+    belongsTo: {
+        _entity: string; // RefModel id
+        model: RefModels;
+    };
 }
 
 interface Item {
@@ -18,7 +32,6 @@ interface Item {
     _order?: string | Order;
     _product: string | Product;
     name?: string;
-    sku?: string;
     color?: string;
     size?: string;
     unitPrice: number;
@@ -62,7 +75,7 @@ interface Payment {
     amount: number;
     transactionId?: string;
     paymentDate?: Date;
-    paymentNotes?: string[] | OrderNote[];
+    notes?: string[] | OrderNote[];
     authorized?: boolean;
     voided?: boolean;
     capturedAmount?: number;
@@ -75,6 +88,7 @@ interface Payment {
 interface Shipment extends Document {
     _id: string;
     _order: string | Order;
+    items: string[] | Item[];
     shipFrom: ShippingAddress;
     shipTo: ShippingAddress;
     status:
@@ -92,7 +106,7 @@ interface Shipment extends Document {
     deliverySignature?: boolean;
     _parentShipment?: string | Shipment; // If shipment was split
     splitShipments?: string[] | Shipment[]; // IDs of split child shipments
-    deliveryNotes?: string[] | OrderNote[];
+    notes?: string[] | OrderNote[];
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -119,7 +133,7 @@ interface Order {
     shipments: string[] | Shipment[];
     _parentOrder?: string | Order; // If order was split from another order
     splitOrders?: string[] | Order[]; // IDs of split child orders
-    orderNotes?: string[] | OrderNote[];
+    notes?: string[] | OrderNote[];
     createdAt: Date;
     updatedAt: Date;
 }
@@ -135,7 +149,7 @@ interface ReturnOrder {
     refundMethod: "credit_card" | "paypal" | "bank_transfer";
     _deliveryMethod?: DeliveryMethod;
     refundPayments?: string[] | Payment[];
-    refundNotes?: string[] | OrderNote[];
+    notes?: string[] | OrderNote[];
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -160,6 +174,7 @@ export {
     Shipment,
     Order,
     OrderNote,
+    UpdateOrderNote,
     ReturnOrder,
     UpdateOrder,
     PaginatedOrders,

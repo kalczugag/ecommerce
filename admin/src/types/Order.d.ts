@@ -3,10 +3,28 @@ import type { Product } from "./Product";
 import type { DeliveryMethod } from "./DeliveryMethod";
 
 interface OrderNote {
+    _id?: string;
     text: string;
-    private: boolean;
+    private?: boolean;
+    belongsTo: {
+        _entity: string;
+        model: "Order" | "Payment" | "Shipment" | "Return";
+    };
     createdAt?: Date;
     updatedAt?: Date;
+}
+
+interface OrderWithNotes {
+    _id: string;
+    payments: {
+        _id: string;
+        notes: OrderNote[];
+    }[];
+    shipments: {
+        _id: string;
+        notes: OrderNote[];
+    }[];
+    notes: OrderNote[];
 }
 
 interface Item {
@@ -56,7 +74,7 @@ interface Payment {
     };
     transactionId?: string;
     paymentDate?: Date;
-    paymentNotes?: OrderNote[];
+    notes?: OrderNote[];
     authorized?: boolean;
     voided?: boolean;
     capturedAmount?: number;
@@ -69,6 +87,7 @@ interface Payment {
 interface Shipment {
     _id?: string;
     _order: string | Order;
+    items: Item[];
     shipFrom: ShippingAddress;
     shipTo: ShippingAddress;
     status:
@@ -86,7 +105,7 @@ interface Shipment {
     deliverySignature?: boolean;
     _parentShipment?: Shipment;
     splitShipments?: Shipment[];
-    deliveryNotes?: OrderNote[];
+    notes?: OrderNote[];
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -113,7 +132,7 @@ interface Order {
     shipments: Shipment[];
     _parentOrder?: Order;
     splitOrders?: Order[];
-    orderNotes?: OrderNote[];
+    notes?: OrderNote[];
     createdAt: Date;
     updatedAt: Date;
 }
@@ -139,6 +158,12 @@ interface UpdateOrder {
     status?: Order["status"];
 }
 
+interface AddItem extends Omit<Item, "_product"> {
+    orderId: string;
+    shipmentId?: string;
+    _product?: string;
+}
+
 export {
     Item,
     ShippingAddress,
@@ -146,6 +171,8 @@ export {
     Payment,
     Order,
     OrderNote,
+    OrderWithNotes,
     ReturnOrder,
     UpdateOrder,
+    AddItem,
 };

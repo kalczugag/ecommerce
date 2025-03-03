@@ -35,6 +35,12 @@ const PaymentStatus = ({ payment }: PaymentStatusProps) => {
             </div>
 
             <PaymentActions payment={payment} />
+
+            <p className="text-xs italic xl:w-1/2 text-text-light dark:text-text-dark">
+                * Voiding a payment cancels the transaction before it's fully
+                processed, preventing charges. Use this for errors or
+                cancellations before settlement.
+            </p>
         </div>
     );
 };

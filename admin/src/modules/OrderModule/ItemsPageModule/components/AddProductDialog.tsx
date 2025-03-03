@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 import { Field, Form, FormSpy } from "react-final-form";
 import { compose, maxValue, minValue, required } from "@/utils/validators";
-import { useGetDeliveryMethodsQuery } from "@/store/apis/deliveryMethods";
-import { deliveryMethods } from "@/constants/deliveryMethods";
+import { useAddBaseItemMutation } from "@/store";
+import { useHandleMutation } from "@/hooks/useHandleMutation";
 import {
+    Box,
     Button,
     Dialog,
     DialogActions,
@@ -23,26 +25,40 @@ import {
 } from "@mui/material";
 import { Add, RestartAlt } from "@mui/icons-material";
 import type { Product } from "@/types/Product";
+import type { Shipment } from "@/types/Order";
 
 interface AddProductDialogProps {
     data: Product;
+    shipments: Shipment[];
 }
 
-const AddProductDialog = ({ data }: AddProductDialogProps) => {
-    const [isOpen, setIsOpen] = useState(false);
+interface FormValues {
+    unitPrice: number;
+    quantity: number;
+    size: string;
+    shipmentId: string;
+}
 
-    const { data: deliveryMethodsData, isLoading } = useGetDeliveryMethodsQuery(
-        undefined,
-        {
-            skip: !isOpen,
-        }
-    );
+const AddProductDialog = ({ data, shipments }: AddProductDialogProps) => {
+    const { id } = useParams();
+    const [isOpen, setIsOpen] = useState(false);
+    const { handleMutation } = useHandleMutation();
+
+    const [addBaseItem, { isLoading: addBaseItemLoading }] =
+        useAddBaseItemMutation();
 
     const handleOpen = () => setIsOpen(true);
     const handleClose = () => setIsOpen(false);
 
-    const handleSubmit = (values: any) => {
-        console.log(values);
+    const handleSubmit = (values: FormValues) => {
+        handleMutation({
+            values: {
+                orderId: id,
+                _product: data._id,
+                ...values,
+            },
+            mutation: addBaseItem,
+        });
         handleClose();
     };
 
@@ -54,7 +70,7 @@ const AddProductDialog = ({ data }: AddProductDialogProps) => {
             <Dialog open={isOpen} onClose={handleClose}>
                 <Form
                     initialValues={{
-                        price: data.price,
+                        unitPrice: data.price,
                         quantity: 1,
                     }}
                     onSubmit={handleSubmit}
@@ -83,7 +99,7 @@ const AddProductDialog = ({ data }: AddProductDialogProps) => {
                             <DialogContent className="flex flex-row justify-between">
                                 <div className="flex-1 flex flex-col space-y-4">
                                     <Field
-                                        name="price"
+                                        name="unitPrice"
                                         validate={compose(
                                             required,
                                             minValue(0)
@@ -120,12 +136,12 @@ const AddProductDialog = ({ data }: AddProductDialogProps) => {
                                                                 }) =>
                                                                     props.input
                                                                         .value !==
-                                                                        initialValues.price && (
+                                                                        initialValues.unitPrice && (
                                                                         <IconButton
                                                                             onClick={() =>
                                                                                 form.change(
-                                                                                    "price",
-                                                                                    initialValues.price
+                                                                                    "unitPrice",
+                                                                                    initialValues.unitPrice
                                                                                 )
                                                                             }
                                                                         >
@@ -199,7 +215,94 @@ const AddProductDialog = ({ data }: AddProductDialogProps) => {
 
                                 <div className="flex-1 flex flex-col space-y-4">
                                     <Field
-                                        name="shippingMethod"
+                                        name="size"
+                                        type="select"
+                                        validate={required}
+                                    >
+                                        {(props) => (
+                                            <FormControl fullWidth>
+                                                <InputLabel
+                                                    error={
+                                                        props.meta.error &&
+                                                        props.meta.touched
+                                                    }
+                                                >
+                                                    Size
+                                                </InputLabel>
+                                                <Select
+                                                    {...props.input}
+                                                    label="Size"
+                                                    error={
+                                                        props.meta.error &&
+                                                        props.meta.touched
+                                                    }
+                                                    renderValue={(selected) => (
+                                                        <Box
+                                                            sx={{
+                                                                display: "flex",
+                                                                justifyContent:
+                                                                    "space-between",
+                                                            }}
+                                                        >
+                                                            {selected}
+                                                        </Box>
+                                                    )}
+                                                >
+                                                    {data.size.map(
+                                                        (size, index) => (
+                                                            <MenuItem
+                                                                key={
+                                                                    size.name +
+                                                                    "_" +
+                                                                    index
+                                                                }
+                                                                value={
+                                                                    size.name
+                                                                }
+                                                                sx={{
+                                                                    display:
+                                                                        "flex",
+                                                                    justifyContent:
+                                                                        "space-between",
+                                                                }}
+                                                                disabled={
+                                                                    size.quantity ===
+                                                                    0
+                                                                }
+                                                            >
+                                                                <span>
+                                                                    {size.name}
+                                                                </span>
+                                                                {size.quantity ===
+                                                                0 ? (
+                                                                    <span className="text-red-500">
+                                                                        Out of
+                                                                        stock
+                                                                    </span>
+                                                                ) : (
+                                                                    <span className="text-gray-500">
+                                                                        {
+                                                                            size.quantity
+                                                                        }{" "}
+                                                                        pcs.
+                                                                        left
+                                                                    </span>
+                                                                )}
+                                                            </MenuItem>
+                                                        )
+                                                    )}
+                                                </Select>
+                                                {props.meta.error &&
+                                                    props.meta.touched && (
+                                                        <FormHelperText error>
+                                                            Select size
+                                                        </FormHelperText>
+                                                    )}
+                                            </FormControl>
+                                        )}
+                                    </Field>
+                                    <Field
+                                        name="shipmentId"
                                         type="select"
                                         validate={required}
                                     >
@@ -230,51 +333,38 @@ const AddProductDialog = ({ data }: AddProductDialogProps) => {
                                                         props.meta.touched
                                                     }
                                                 >
-                                                    <MenuItem value="">
-                                                        None
-                                                    </MenuItem>
+                                                    <ListSubheader>
+                                                        Existing Shipments
+                                                    </ListSubheader>
+                                                    {shipments.map(
+                                                        (shipment, index) => (
+                                                            <MenuItem
+                                                                key={
+                                                                    shipment._id
+                                                                }
+                                                                value={
+                                                                    shipment._id
+                                                                }
+                                                            >
+                                                                #{index + 1}{" "}
+                                                                {
+                                                                    shipment
+                                                                        ._deliveryMethod
+                                                                        .providers[0]
+                                                                        .name
+                                                                }
+                                                            </MenuItem>
+                                                        )
+                                                    )}
                                                     <Divider />
-                                                    {deliveryMethodsData?.result &&
-                                                        deliveryMethodsData.result.map(
-                                                            (
-                                                                deliveryMethod
-                                                            ) => [
-                                                                <ListSubheader
-                                                                    key={
-                                                                        deliveryMethod._id
-                                                                    }
-                                                                >
-                                                                    {
-                                                                        deliveryMethods[
-                                                                            deliveryMethod
-                                                                                .type
-                                                                        ]
-                                                                    }
-                                                                </ListSubheader>,
-                                                                ...deliveryMethod.providers.map(
-                                                                    (
-                                                                        provider
-                                                                    ) => (
-                                                                        <MenuItem
-                                                                            key={
-                                                                                provider._id
-                                                                            }
-                                                                            value={
-                                                                                provider._id
-                                                                            }
-                                                                        >
-                                                                            {`${provider.name} - $${provider.price}`}
-                                                                        </MenuItem>
-                                                                    )
-                                                                ),
-                                                            ]
-                                                        )}
+                                                    <MenuItem value="new">
+                                                        ** New Shipment
+                                                    </MenuItem>
                                                 </Select>
                                                 {props.meta.error &&
                                                     props.meta.touched && (
                                                         <FormHelperText error>
-                                                            Select shipping
-                                                            method
+                                                            Select shipment
                                                         </FormHelperText>
                                                     )}
                                             </FormControl>
@@ -283,17 +373,13 @@ const AddProductDialog = ({ data }: AddProductDialogProps) => {
                                 </div>
                             </DialogContent>
                             <DialogActions>
-                                <Button
-                                    onClick={handleClose}
-                                    color="info"
-                                    disabled={isLoading}
-                                >
+                                <Button onClick={handleClose} color="info">
                                     Cancel
                                 </Button>
                                 <Button
                                     type="submit"
                                     color="info"
-                                    disabled={isLoading}
+                                    disabled={addBaseItemLoading}
                                 >
                                     Add Product
                                 </Button>

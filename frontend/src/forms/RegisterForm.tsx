@@ -101,20 +101,24 @@ const RegisterForm = ({ isLoading }: RegisterFormProps) => {
                             value={props.input.value}
                             onChange={props.input.onChange}
                             endAdornment={
-                                <InputAdornment position="end">
-                                    <IconButton
-                                        aria-label="toggle password visibility"
-                                        onClick={handleClickShowPassword}
-                                        onMouseDown={handleMouseDownPassword}
-                                        edge="end"
-                                    >
-                                        {showPassword ? (
-                                            <VisibilityOff />
-                                        ) : (
-                                            <Visibility />
-                                        )}
-                                    </IconButton>
-                                </InputAdornment>
+                                props.input.values && (
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            aria-label="toggle password visibility"
+                                            onClick={handleClickShowPassword}
+                                            onMouseDown={
+                                                handleMouseDownPassword
+                                            }
+                                            edge="end"
+                                        >
+                                            {showPassword ? (
+                                                <VisibilityOff />
+                                            ) : (
+                                                <Visibility />
+                                            )}
+                                        </IconButton>
+                                    </InputAdornment>
+                                )
                             }
                             error={props.meta.error && props.meta.touched}
                             label="Password"
@@ -129,14 +133,6 @@ const RegisterForm = ({ isLoading }: RegisterFormProps) => {
                             </FormHelperText>
                         )}
                     </FormControl>
-                )}
-            </Field>
-            <Field name="recaptcha" validate={required}>
-                {(props) => (
-                    <ReCAPTCHA
-                        sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
-                        onChange={props.input.onChange}
-                    />
                 )}
             </Field>
         </div>

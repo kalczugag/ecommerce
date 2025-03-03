@@ -27,14 +27,32 @@ export const updateShipment = async (
     }
 
     try {
-        if (updates.deliveryNotes && updates.deliveryNotes.length > 0) {
-            const deliveryNotes = await NoteModel.insertMany(
-                updates.deliveryNotes
-            );
+        if (updates.notes && updates.notes.length > 0) {
+            const deliveryNotes = await NoteModel.insertMany(updates.notes);
 
-            updates.deliveryNotes = deliveryNotes.map((note) =>
-                note._id.toString()
-            );
+            updates.notes = deliveryNotes.map((note) => note._id.toString());
+        }
+
+        if (updates.trackingNumber) {
+            const shipment = await ShipmentModel.findById(id);
+
+            if (!shipment) {
+                return res
+                    .status(404)
+                    .json(errorResponse(null, "Shipment not found", 404));
+            }
+
+            if (shipment.trackingNumber && shipment.status !== "pending") {
+                return res
+                    .status(400)
+                    .json(
+                        errorResponse(
+                            null,
+                            "Shipment already has a tracking number",
+                            400
+                        )
+                    );
+            }
         }
 
         const updatedShipment = await ShipmentModel.findByIdAndUpdate(

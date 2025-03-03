@@ -4,8 +4,8 @@ import {
     useEditProductMutation,
     useGetGroupedCategoriesQuery,
 } from "@/store";
-import { enqueueSnackbar } from "notistack";
 import { useTitle } from "@/hooks/useTitle";
+import { useHandleMutation } from "@/hooks/useHandleMutation";
 import NotFound from "@/components/NotFound";
 import type { Product } from "@/types/Product";
 import CrudModule from "@/modules/CrudModule";
@@ -15,6 +15,7 @@ import ProductForm from "@/forms/ProductForm";
 const ProductsEdit = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const { handleMutation } = useHandleMutation();
     useTitle("Product - Edit");
 
     const { data: categoriesData, isLoading: categoriesLoading } =
@@ -40,20 +41,14 @@ const ProductsEdit = () => {
     const handleSubmit = async (values: Product) => {
         const { quantity, ...rest } = values;
 
-        try {
-            await editProduct({
+        handleMutation({
+            values: {
                 ...rest,
                 imageUrl: (values.imageUrl as string)?.trim().split(",\n"),
-            }).unwrap();
-            navigate(-1);
-            enqueueSnackbar("Product updated successfully", {
-                variant: "success",
-            });
-        } catch (error) {
-            enqueueSnackbar("Failed to update product", {
-                variant: "error",
-            });
-        }
+            },
+            mutation: editProduct,
+            onSuccess: () => navigate(-1),
+        });
     };
 
     const updatedInitialValues = {

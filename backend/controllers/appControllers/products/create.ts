@@ -26,7 +26,7 @@ export const createProduct = async (
     }
 
     try {
-        const newProduct = new ProductModel(req.body);
+        const newProduct = new ProductModel({ ...req.body, sku });
 
         await newProduct.save();
 

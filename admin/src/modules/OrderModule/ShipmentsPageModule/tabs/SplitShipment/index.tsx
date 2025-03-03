@@ -25,7 +25,7 @@ const SplitShipment = ({ data, handleSubTabChange }: SplitShipmentProps) => {
     };
 
     return (
-        <DetailCard label="Split Shipment">
+        <DetailCard label="Split Shipment - currently not available">
             <Form
                 onSubmit={handleSubmit}
                 render={({ handleSubmit, form }) => (

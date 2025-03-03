@@ -3,14 +3,16 @@ import { sortConfig, tableConfig } from "./config";
 import { useTitle } from "@/hooks/useTitle";
 import usePagination from "@/hooks/usePagination";
 import useSortedData from "@/hooks/useSortedData";
+import useDebounce from "@/hooks/useDebounce";
+import { useHandleMutation } from "@/hooks/useHandleMutation";
 import CrudModule from "@/modules/CrudModule";
 import SortForm from "@/forms/SortForm";
 import SearchItem from "@/components/SearchItem";
-import useDebounce from "@/hooks/useDebounce";
 
 const ProductsList = () => {
     const [pagination] = usePagination();
     useTitle("Products - List");
+    const { handleMutation } = useHandleMutation();
 
     const { sortCriteria, setSortCriteria } = useSortedData();
     const { data, isFetching } = useGetAllProductsQuery({
@@ -30,11 +32,18 @@ const ProductsList = () => {
         setSortCriteria({ filter });
     }, 250);
 
+    const handleDelete = (id: string) => {
+        handleMutation({
+            values: id,
+            mutation: deleteProduct,
+        });
+    };
+
     const config = {
         tableConfig,
         tableData: data?.result || [],
         total: data?.count || 0,
-        action: deleteProduct,
+        action: handleDelete,
         isLoading: isFetching || result.isLoading,
     };
 

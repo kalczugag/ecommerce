@@ -16,8 +16,9 @@ interface ShipmentDetailProps {
     config: PaperCardProps[];
     isMobile: boolean;
     isTablet: boolean;
-    handleSubTabChange: (tab: number, options?: any) => void;
     children?: ReactNode;
+    handleSubTabChange: (tab: number, options?: any) => void;
+    triggerFetch?: any;
 }
 
 const ShipmentDetail = ({
@@ -28,15 +29,17 @@ const ShipmentDetail = ({
     config,
     isMobile,
     isTablet,
-    handleSubTabChange,
     children,
+    handleSubTabChange,
+    triggerFetch,
 }: ShipmentDetailProps) => {
     return (
         <DetailCard
             key={shipment._id}
-            defaultExpanded={shipmentIndex === 0 && true}
+            defaultExpanded={shipmentIndex === 0}
             label={`Shipment #${shipmentIndex + 1} of ${shipmentCount}`}
             variant="accordion"
+            fetchOnMount={() => triggerFetch(shipment._id, 1)}
         >
             <div className="flex flex-col space-y-6 lg:space-y-0 lg:flex-row lg:justify-between">
                 <ShipmentContacts
@@ -71,6 +74,7 @@ const ShipmentDetail = ({
                             />
                         </div>
                         <ShipmentMethod
+                            trackingNumber={shipment.trackingNumber}
                             deliveryMethod={shipment._deliveryMethod}
                         />
                     </div>
@@ -81,7 +85,7 @@ const ShipmentDetail = ({
                         sx={isTablet ? { marginY: 4 } : { marginX: 4 }}
                     />
 
-                    <div className="flex flex-row space-x-6 lg:flex-col lg:space-x-0 lg:space-y-6">
+                    <div className="flex flex-row flex-wrap gap-6">
                         {config.map((item) => (
                             <PaperCard
                                 key={item.description}

@@ -37,7 +37,11 @@ export const updateProduct = async (
                 .json(errorResponse(null, "Product not found", 404));
         }
 
-        return res.status(200).json(successResponse(updatedProduct));
+        return res
+            .status(200)
+            .json(
+                successResponse(updatedProduct, "Product updated successfully")
+            );
     } catch (error) {
         console.error(error);
         return res

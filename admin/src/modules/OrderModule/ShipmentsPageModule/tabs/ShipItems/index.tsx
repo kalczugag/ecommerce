@@ -1,5 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import { Form } from "react-final-form";
+import { useEditShipmentMutation } from "@/store";
+import { useHandleMutation } from "@/hooks/useHandleMutation";
 import { deliveryMethods } from "@/constants/deliveryMethods";
 import DetailCard from "@/components/DetailCard";
 import Contact from "@/modules/OrderModule/SummaryPageModule/components/Contact";
@@ -9,6 +11,8 @@ import type { ManageAction } from "@/modules/ManageModule/types/Manage";
 import Table from "@/components/Table";
 import type { Order } from "@/types/Order";
 import { tableConfig } from "./tableConfig";
+import { enqueueSnackbar } from "notistack";
+import { useMemo } from "react";
 
 interface ShipItemsProps extends ManageAction {
     data: Order;
@@ -16,12 +20,13 @@ interface ShipItemsProps extends ManageAction {
 
 interface FormProps {
     trackingNumber: string;
-    quantityToShip: number;
 }
 
 const ShipItems = ({ data, handleSubTabChange }: ShipItemsProps) => {
     const [searchParams] = useSearchParams();
     const isMobile = useMediaQuery("(max-width: 768px)");
+    const { handleMutation } = useHandleMutation();
+    const [editShipment, { isLoading }] = useEditShipmentMutation();
 
     const shipmentIndex = parseInt(searchParams.get("shipmentIndex") || "0");
 
@@ -39,12 +44,43 @@ const ShipItems = ({ data, handleSubTabChange }: ShipItemsProps) => {
         shipment._deliveryMethod.providers[0].name;
 
     const handleSubmit = (values: FormProps) => {
-        console.log(values);
+        const { trackingNumber, ...items } = values;
+
+        const itemsArray = Object.entries(items).map(([key]) => key);
+
+        if (itemsArray.length === 0) {
+            enqueueSnackbar("No items selected", { variant: "warning" });
+            return;
+        }
+
+        const updatedShipment = {
+            trackingNumber,
+            status: "shipped",
+            items: itemsArray,
+        };
+
+        handleMutation({
+            values: { _id: shipment._id, ...updatedShipment },
+            mutation: editShipment,
+        });
     };
+    const shippedProductIds = new Set(
+        shipment.items.map((item) => item._product.toString())
+    );
+
+    const enhancedTableData = useMemo(() => {
+        return data.items.map((row) => ({
+            ...row,
+            isShippedItem: shippedProductIds.has(row._product._id || ""),
+        }));
+    }, [data.items, shipment.items]);
 
     return (
         <DetailCard label="Ship Items">
             <Form
+                initialValues={{
+                    trackingNumber: shipment.trackingNumber,
+                }}
                 onSubmit={handleSubmit}
                 render={({ handleSubmit, form }) => (
                     <form onSubmit={handleSubmit}>
@@ -81,6 +117,7 @@ const ShipItems = ({ data, handleSubTabChange }: ShipItemsProps) => {
                                 data={data.shipments[shipmentIndex]}
                                 handleBack={() => handleSubTabChange(0)}
                                 form={form}
+                                isLoading={isLoading}
                             />
                         </div>
 
@@ -98,7 +135,7 @@ const ShipItems = ({ data, handleSubTabChange }: ShipItemsProps) => {
                         <Table
                             headerOptions={tableConfig}
                             totalItems={data.items.length}
-                            rowData={data.items}
+                            rowData={enhancedTableData}
                             isLoading={false}
                         />
                     </form>

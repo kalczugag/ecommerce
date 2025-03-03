@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Field, Form } from "react-final-form";
-import { enqueueSnackbar } from "notistack";
 import moment from "moment";
 import { useEditPaymentMutation } from "@/store";
+import { useHandleMutation } from "@/hooks/useHandleMutation";
 import {
     Button,
     Checkbox,
@@ -36,13 +36,14 @@ const ReceivePaymentDialog = ({
 }: ReceivePaymentDialogProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const [editPayment, { isLoading }] = useEditPaymentMutation();
+    const { handleMutation } = useHandleMutation();
 
     const handleOpen = () => setIsOpen(true);
     const handleClose = () => setIsOpen(false);
 
     const handleSubmit = async (values: FormProps) => {
-        try {
-            await editPayment({
+        handleMutation({
+            values: {
                 _id: data._id || "",
                 capturedAmount: values.amount,
                 authorizationStatus: values.authorizationStatus,
@@ -52,15 +53,9 @@ const ReceivePaymentDialog = ({
                           { text: values.paymentNote || "", private: true },
                       ]
                     : [{ text: values.paymentNote || "", private: true }],
-            }).unwrap();
-            enqueueSnackbar("Order status updated successfully", {
-                variant: "success",
-            });
-        } catch (error) {
-            enqueueSnackbar("Failed to update order status", {
-                variant: "error",
-            });
-        }
+            },
+            mutation: editPayment,
+        });
 
         handleClose();
     };
@@ -79,7 +74,7 @@ const ReceivePaymentDialog = ({
             <Dialog open={isOpen} onClose={handleClose}>
                 <Form
                     initialValues={{
-                        amount: data.amount.toFixed(2),
+                        amount: data.amount,
                         paymentDate: moment(data.createdAt).format(
                             "YYYY-MM-DD"
                         ),
