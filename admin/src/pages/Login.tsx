@@ -1,19 +1,19 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Form } from "react-final-form";
+import ReCAPTCHA from "react-google-recaptcha";
 import { LoginInput, useLoginMutation } from "@/store";
-import { enqueueSnackbar } from "notistack";
-import CopyToClipboard from "react-copy-to-clipboard";
 import { useTitle } from "@/hooks/useTitle";
 import { useHandleMutation } from "@/hooks/useHandleMutation";
 import AuthModule from "@/modules/AuthModule";
 import LoginForm from "@/forms/LoginForm";
-import { ContentCopy } from "@mui/icons-material";
-import { Button } from "@mui/material";
+import { Button, Divider } from "@mui/material";
 
 const Login = () => {
     useTitle("Sign In");
     const navigate = useNavigate();
+    const recaptchaRef = useRef<ReCAPTCHA>(null);
+    const recaptchaPromiseRef = useRef<((token: string) => void) | null>(null);
     const { handleMutation } = useHandleMutation();
     const [login, { isLoading, isSuccess }] = useLoginMutation();
 
@@ -21,61 +21,97 @@ const Login = () => {
         if (isSuccess) navigate("/");
     }, [isSuccess]);
 
-    const handleLogin = (values: LoginInput) => {
-        handleMutation({
-            values,
-            mutation: login,
+    const handleVerify = (token: string | null) => {
+        if (token !== null && recaptchaPromiseRef.current) {
+            recaptchaPromiseRef.current(token);
+            recaptchaPromiseRef.current = null;
+        }
+    };
+
+    const handleLogin = async (values: LoginInput) => {
+        const token = await new Promise<string>((resolve) => {
+            recaptchaPromiseRef.current = resolve;
+            recaptchaRef.current?.execute();
         });
+
+        if (token)
+            handleMutation({
+                values,
+                mutation: login,
+            });
     };
 
     const FormContainer = () => (
         <Form
+            initialValues={{
+                email: "admin@test.pl",
+                password: "test123",
+            }}
             onSubmit={handleLogin}
-            render={({ handleSubmit, form }) => (
+            render={({ handleSubmit }) => (
                 <form onSubmit={handleSubmit} className="space-y-8">
-                    <div className="text-gray-400">
-                        <p className="font-bold">Admin demo credentials</p>
-                        <p>
-                            email:{" "}
-                            <span className="underline">admin@test.pl</span>
-                            <CopyToClipboard
-                                text="admin@test.pl"
-                                onCopy={(text) =>
-                                    enqueueSnackbar("Copied to clipboard", {
-                                        variant: "success",
-                                    })
-                                }
-                            >
-                                <ContentCopy
-                                    sx={{ ml: 1, cursor: "pointer" }}
-                                />
-                            </CopyToClipboard>
-                        </p>
-                        <p>
-                            password: <span className="underline">test123</span>
-                            <CopyToClipboard
-                                text="test123"
-                                onCopy={() =>
-                                    enqueueSnackbar("Copied to clipboard", {
-                                        variant: "success",
-                                    })
-                                }
-                            >
-                                <ContentCopy
-                                    sx={{ ml: 1, cursor: "pointer" }}
-                                />
-                            </CopyToClipboard>
-                        </p>
-                    </div>
                     <LoginForm isLoading={isLoading} />
-                    <Button
-                        type="submit"
-                        variant="contained"
-                        disabled={!form.getFieldState("recaptcha")?.value}
-                        fullWidth
-                    >
-                        Sign In
-                    </Button>
+                    <div className="space-y-4">
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            sx={{ bgcolor: "#1c2028" }}
+                            disabled={isLoading}
+                            fullWidth
+                        >
+                            Sign in
+                        </Button>
+                        <div className="text-sm">
+                            <span>Don't have an account? </span>
+                            <Link
+                                to="/register"
+                                className="font-semibold hover:underline"
+                            >
+                                Sign up
+                            </Link>
+                        </div>
+                    </div>
+
+                    <Divider>or</Divider>
+
+                    <div className="space-y-4">
+                        <Button
+                            variant="outlined"
+                            color="inherit"
+                            startIcon={
+                                <img
+                                    src="/icons/google.svg "
+                                    alt="google"
+                                    width={24}
+                                    height={24}
+                                />
+                            }
+                            fullWidth
+                        >
+                            Sign in with Google
+                        </Button>
+                        <Button
+                            variant="outlined"
+                            color="inherit"
+                            startIcon={
+                                <img
+                                    src="/icons/facebook.svg "
+                                    alt="google"
+                                    width={24}
+                                    height={24}
+                                />
+                            }
+                            fullWidth
+                        >
+                            Sign in with Facebook
+                        </Button>
+                    </div>
+                    <ReCAPTCHA
+                        sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                        size="invisible"
+                        ref={recaptchaRef}
+                        onChange={handleVerify}
+                    />
                 </form>
             )}
         />
@@ -84,7 +120,7 @@ const Login = () => {
     return (
         <AuthModule
             authContent={<FormContainer />}
-            title={"Sign In"}
+            title={"Sign in"}
             isLoading={isLoading}
         />
     );

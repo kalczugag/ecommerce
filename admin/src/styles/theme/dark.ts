@@ -1,6 +1,11 @@
 import { createTheme } from "@mui/material/styles";
 
 const darkTheme = createTheme({
+    typography: {
+        button: {
+            textTransform: "none",
+        },
+    },
     palette: {
         mode: "dark",
         background: {
