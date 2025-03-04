@@ -3,22 +3,18 @@ import { Outlet } from "react-router-dom";
 import { useRefreshTokenQuery, useUpdateVisitorCountMutation } from "@/store";
 import useAuth from "@/hooks/useAuth";
 import Layout from "@/layouts/Layout";
+import { useAnalytics } from "@/hooks/useAnalytics";
 
 const VisitorsCounterOutlet = () => {
-    const { token } = useAuth();
-
-    const isAuthLocation =
-        location.pathname === "/login" || location.pathname === "/register";
-
-    useRefreshTokenQuery(undefined, {
-        skip: !!token || isAuthLocation,
-    });
-
-    const [updateView] = useUpdateVisitorCountMutation();
+    const { trackEvent } = useAnalytics();
 
     useEffect(() => {
-        updateView({ isLoggedIn: !!token });
-    }, []);
+        trackEvent("page_view", {
+            pageUrl: window.location.href,
+            pageTitle: document.title,
+            referrer: document.referrer,
+        });
+    }, [window.location.href]);
 
     return (
         <Layout>

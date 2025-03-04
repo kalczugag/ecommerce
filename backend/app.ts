@@ -4,6 +4,7 @@ import { errorHandler } from "./middlewares";
 
 import cors from "cors";
 
+import session from "express-session";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 
@@ -27,6 +28,19 @@ app.use(
 );
 app.options("*", cors());
 app.use(cookieParser());
+app.use(
+    session({
+        secret: process.env.SESSION_SECRET!,
+        resave: false,
+        saveUninitialized: true,
+        cookie: {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: "lax",
+            maxAge: 1000 * 60 * 60 * 24 * 7,
+        },
+    })
+);
 
 app.post(
     "/api/v1/webhook",

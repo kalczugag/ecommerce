@@ -1,6 +1,7 @@
 import express from "express";
 
 import auth from "./appRoutes/auth";
+import analyticsEvents from "./appRoutes/analyticsEvents";
 import users from "./appRoutes/user";
 import roles from "./appRoutes/roles";
 import products from "./appRoutes/products";
@@ -18,6 +19,7 @@ const router = express.Router();
 
 export default (): express.Router => {
     auth(router);
+    analyticsEvents(router);
     users(router);
     roles(router);
     products(router);
