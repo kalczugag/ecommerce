@@ -6,7 +6,7 @@ import { Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "@mui/material";
 import appTheme from "./styles/theme/app";
 import PrivateOutlet from "@/pages/Outlets/PrivateOutlet";
-import VisitorsCounterOutlet from "@/pages/Outlets/VisitorsCounterOutlet";
+import TrackEventsOutlet from "@/pages/Outlets/TrackEventsOutlet";
 import AccountOutlet from "@/pages/Outlets/AccountOutlet";
 import Dashboard from "@/pages/Dashboard";
 import Catalog from "@/pages/Products/List";
@@ -33,7 +33,7 @@ const App = () => {
             <Routes>
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-                <Route element={<VisitorsCounterOutlet />}>
+                <Route element={<TrackEventsOutlet />}>
                     <Route index element={<Dashboard />} />
                     <Route
                         path="/:topLevel/:secondLevel?/:thirdLevel?"

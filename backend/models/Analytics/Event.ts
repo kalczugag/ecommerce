@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import type { Event } from "../../types/Analytics";
 
 const EventSchema = new mongoose.Schema<Event>({
-    type: { type: String, required: true },
+    eventType: { type: String, required: true },
     _user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
@@ -12,7 +12,7 @@ const EventSchema = new mongoose.Schema<Event>({
     _product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
     _category: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
     metadata: { type: Object },
-    timestamp: { type: Date, default: Date.now },
+    timestamp: { type: Date, default: () => new Date() },
 });
 
 EventSchema.index({ timestamp: 1 }, { expireAfterSeconds: 604800 });

@@ -3,9 +3,9 @@ import type { Product } from "./Product";
 
 interface Event {
     _id?: string;
-    type: string;
-    _user: string | User;
+    eventType: string;
     _session: string;
+    _user?: string | User;
     _product?: string | Product;
     _category?: string | Category;
     metadata?: any;

@@ -1,27 +1,24 @@
 import { useRef, useEffect } from "react";
 import { v4 as uuid } from "uuid";
-
-type AnalyticsEvent = {
-    eventName: string;
-    eventData: unknown;
-    timestamp: number;
-    sessionId: string;
-};
+import useAuth from "./useAuth";
+import type { Event } from "@/types/Analytics";
 
 type UseAnalyticsReturn = {
-    trackEvent: (eventName: string, eventData: unknown) => void;
+    trackEvent: (eventType: string, metadata: unknown) => void;
 };
 
 export const useAnalytics = (flushInterval = 5000): UseAnalyticsReturn => {
-    const eventQueueRef = useRef<AnalyticsEvent[]>([]);
+    const eventQueueRef = useRef<Event[]>([]);
     const sessionId = getOrCreateSessionId();
+    const { userId } = useAuth();
 
-    const trackEvent = (eventName: string, eventData: any) => {
+    const trackEvent = (eventType: string, metadata: any) => {
         eventQueueRef.current.push({
-            eventName,
-            eventData,
-            timestamp: Date.now(),
-            sessionId,
+            eventType,
+            metadata,
+            timestamp: new Date(),
+            _session: sessionId,
+            _user: userId || undefined,
         });
     };
 
@@ -31,19 +28,21 @@ export const useAnalytics = (flushInterval = 5000): UseAnalyticsReturn => {
         const eventsToSend = [...eventQueueRef.current];
         eventQueueRef.current = [];
 
+        const payload = JSON.stringify(eventsToSend);
+
         if (typeof navigator.sendBeacon === "function") {
-            const blob = new Blob([JSON.stringify(eventsToSend)], {
+            const blob = new Blob([payload], {
                 type: "application/json",
             });
-            navigator.sendBeacon("/api/v1/analytics/events", blob);
+            navigator.sendBeacon("/api/v1/metrics", blob);
         } else {
-            fetch("/api/v1/analytics/events", {
+            fetch("/api/v1/metrics", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "x-session-id": sessionId,
                 },
-                body: JSON.stringify(eventsToSend),
+                body: payload,
                 credentials: "include",
             });
         }

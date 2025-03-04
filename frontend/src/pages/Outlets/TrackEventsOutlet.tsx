@@ -1,20 +1,24 @@
 import { useEffect } from "react";
-import { Outlet } from "react-router-dom";
-import { useRefreshTokenQuery, useUpdateVisitorCountMutation } from "@/store";
-import useAuth from "@/hooks/useAuth";
+import { Outlet, useLocation } from "react-router-dom";
 import Layout from "@/layouts/Layout";
 import { useAnalytics } from "@/hooks/useAnalytics";
 
-const VisitorsCounterOutlet = () => {
+const TrackEventsOutlet = () => {
+    const location = useLocation();
     const { trackEvent } = useAnalytics();
 
     useEffect(() => {
+        const previousUrl =
+            sessionStorage.getItem("previousPageUrl") || "direct";
+
         trackEvent("page_view", {
             pageUrl: window.location.href,
             pageTitle: document.title,
-            referrer: document.referrer,
+            referrer: previousUrl,
         });
-    }, [window.location.href]);
+
+        sessionStorage.setItem("previousPageUrl", window.location.href);
+    }, [location.pathname]);
 
     return (
         <Layout>
@@ -23,4 +27,4 @@ const VisitorsCounterOutlet = () => {
     );
 };
 
-export default VisitorsCounterOutlet;
+export default TrackEventsOutlet;
