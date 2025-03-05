@@ -18,6 +18,8 @@ const ProductDetails = () => {
             trackEvent("product_view", {
                 pageUrl: window.location.href,
                 pageTitle: document.title,
+                _product: data.result._id,
+                _category: data.result.thirdLevelCategory._id,
             });
         }
     }, [data?.result]);

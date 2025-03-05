@@ -1,6 +1,17 @@
 import { apiSlice } from "./apiSlice";
 import { serialize } from "@/utils/helpers";
 import type { Product, ProductFilters } from "@/types/Product";
+import type { Category } from "@/types/Category";
+
+export interface ProductResult
+    extends Omit<
+        Product,
+        "topLevelCategory" | "secondLevelCategory" | "thirdLevelCategory"
+    > {
+    topLevelCategory: Category;
+    secondLevelCategory: Category;
+    thirdLevelCategory: Category;
+}
 
 export const productApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
@@ -56,17 +67,21 @@ export const productApi = apiSlice.injectEndpoints({
             }),
         }),
 
-        getProductById: builder.query<ApiResponseObject<Product>, string>({
-            query: (id) => ({
-                url: `/products/id/${id}`,
-                method: "GET",
-                params: {
-                    populate:
-                        "topLevelCategory secondLevelCategory thirdLevelCategory",
-                },
-            }),
-            providesTags: (result, error, id) => [{ type: "Products", id: id }],
-        }),
+        getProductById: builder.query<ApiResponseObject<ProductResult>, string>(
+            {
+                query: (id) => ({
+                    url: `/products/id/${id}`,
+                    method: "GET",
+                    params: {
+                        populate:
+                            "topLevelCategory secondLevelCategory thirdLevelCategory",
+                    },
+                }),
+                providesTags: (result, error, id) => [
+                    { type: "Products", id: id },
+                ],
+            }
+        ),
     }),
 });
 

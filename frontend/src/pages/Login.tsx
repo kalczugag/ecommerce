@@ -3,13 +3,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { Form } from "react-final-form";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useLoginMutation, LoginInput } from "@/store";
-import { enqueueSnackbar } from "notistack";
 import { useTitle } from "@/hooks/useTitle";
 import { useHandleMutation } from "@/hooks/useHandleMutation";
+import { useAnalytics } from "@/hooks/useAnalytics";
 import AuthModule from "@/modules/AuthModule";
 import LoginForm from "@/forms/LoginForm";
-import { ContentCopy } from "@mui/icons-material";
-import CopyToClipboard from "react-copy-to-clipboard";
 import { Button, Divider } from "@mui/material";
 
 const Login = () => {
@@ -18,6 +16,7 @@ const Login = () => {
     const recaptchaRef = useRef<ReCAPTCHA>(null);
     const recaptchaPromiseRef = useRef<((token: string) => void) | null>(null);
     const { handleMutation } = useHandleMutation();
+    const { trackEvent } = useAnalytics();
     const [login, { isLoading, isSuccess }] = useLoginMutation();
 
     useEffect(() => {
@@ -41,6 +40,9 @@ const Login = () => {
             handleMutation({
                 values,
                 mutation: login,
+                onSuccess: () => {
+                    trackEvent("log_in");
+                },
             });
     };
 

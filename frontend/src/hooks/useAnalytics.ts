@@ -4,13 +4,20 @@ import useAuth from "./useAuth";
 import type { Event } from "@/types/Analytics";
 
 type UseAnalyticsReturn = {
-    trackEvent: (eventType: string, metadata: unknown) => void;
+    trackEvent: (eventType: string, metadata?: unknown) => void;
 };
 
 export const useAnalytics = (flushInterval = 5000): UseAnalyticsReturn => {
+    const { userId } = useAuth();
+    const userIdRef = useRef<string | null>(userId);
     const eventQueueRef = useRef<Event[]>([]);
     const sessionId = getOrCreateSessionId();
-    const { userId } = useAuth();
+
+    useEffect(() => {
+        if (userId) {
+            userIdRef.current = userId;
+        }
+    }, [userId]);
 
     const trackEvent = (eventType: string, metadata: any) => {
         eventQueueRef.current.push({
@@ -18,7 +25,7 @@ export const useAnalytics = (flushInterval = 5000): UseAnalyticsReturn => {
             metadata,
             timestamp: new Date(),
             _session: sessionId,
-            _user: userId || undefined,
+            _user: userIdRef.current || undefined,
         });
     };
 

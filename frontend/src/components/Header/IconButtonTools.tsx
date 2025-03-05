@@ -14,10 +14,14 @@ import { AvatarAuth, AvatarMenuItemProps } from "./AvatarMenuItem";
 import CartIcon from "./CartIcon";
 import Search from "./Search";
 import AvatarMenu from "./AvatarMenu";
+import { useHandleMutation } from "@/hooks/useHandleMutation";
+import { useAnalytics } from "@/hooks/useAnalytics";
 
 const AccountTools = () => {
     const navigate = useNavigate();
     const { token } = useAuth();
+    const { handleMutation } = useHandleMutation();
+    const { trackEvent } = useAnalytics();
     const { data } = useGetUsersCartCountQuery(
         { onlyCount: true },
         {
@@ -42,19 +46,16 @@ const AccountTools = () => {
         navigate(to);
     };
 
-    const handleLogout = async () => {
-        try {
-            handleCloseUserMenu();
-            await logout();
-            navigate("/");
-            enqueueSnackbar("Logged out successfully", {
-                variant: "success",
-            });
-        } catch (error) {
-            enqueueSnackbar("Failed to logout", {
-                variant: "error",
-            });
-        }
+    const handleLogout = () => {
+        handleCloseUserMenu();
+
+        handleMutation({
+            mutation: logout,
+            onSuccess: () => {
+                trackEvent("log_out");
+                navigate("/");
+            },
+        });
     };
 
     const config: AvatarMenuItemProps[] = [

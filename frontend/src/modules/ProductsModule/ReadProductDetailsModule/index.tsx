@@ -1,9 +1,10 @@
-import { useEditUsersCartMutation } from "@/store";
+import { useEditUsersCartMutation, ProductResult } from "@/store";
 import { useSnackbar } from "notistack";
 import useAuth from "@/hooks/useAuth";
+import { useAnalytics } from "@/hooks/useAnalytics";
+import { useHandleMutation } from "@/hooks/useHandleMutation";
 import DefaultLayout from "@/layouts/DefaultLayout";
 import DetailsProductCard from "./components/DetailsProductCard";
-import type { Product } from "@/types/Product";
 import type { ShortReviewsCount } from "@/types/Review";
 
 export type Sizes = string;
@@ -13,13 +14,15 @@ interface ReadProductModuleProps {
         rating: ShortReviewsCount;
         isLoading: boolean;
     };
-    data?: Product;
+    data?: ProductResult;
 }
 
 const ReadProductModule = ({ config, data }: ReadProductModuleProps) => {
     const { rating, isLoading } = config;
     const { cartId, token } = useAuth();
     const { enqueueSnackbar } = useSnackbar();
+    const { trackEvent } = useAnalytics();
+    const { handleMutation } = useHandleMutation();
 
     const [editCart, { isLoading: editLoading }] = useEditUsersCartMutation();
 
@@ -30,14 +33,14 @@ const ReadProductModule = ({ config, data }: ReadProductModuleProps) => {
             });
         } else if (data && token && cartId) {
             {
-                try {
-                    const itemPrice =
-                        (data.discountPercent ?? 0) > 0
-                            ? data.price -
-                              (data.price * (data.discountPercent ?? 1)) / 100
-                            : data.price;
+                const itemPrice =
+                    (data.discountPercent ?? 0) > 0
+                        ? data.price -
+                          (data.price * (data.discountPercent ?? 1)) / 100
+                        : data.price;
 
-                    await editCart({
+                handleMutation({
+                    values: {
                         cartId,
                         _product: data._id,
                         action: "add",
@@ -45,16 +48,15 @@ const ReadProductModule = ({ config, data }: ReadProductModuleProps) => {
                         size,
                         unitPrice: itemPrice,
                         quantity: 1,
-                    }).unwrap();
-
-                    enqueueSnackbar("Product added to cart successfully", {
-                        variant: "success",
-                    });
-                } catch (error) {
-                    enqueueSnackbar("Failed to add product to cart", {
-                        variant: "error",
-                    });
-                }
+                    },
+                    mutation: editCart,
+                    onSuccess: () => {
+                        trackEvent("add_to_cart", {
+                            _cart: cartId,
+                            _product: data._id,
+                        });
+                    },
+                });
             }
         } else {
             enqueueSnackbar("Please log in to add items to your cart.", {

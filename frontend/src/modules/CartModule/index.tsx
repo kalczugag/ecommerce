@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { useAddOrderMutation, useEditUsersCartMutation } from "@/store";
-import { enqueueSnackbar } from "notistack";
 import useAuth from "@/hooks/useAuth";
+import { useHandleMutation } from "@/hooks/useHandleMutation";
+import { useAnalytics } from "@/hooks/useAnalytics";
 import DefaultLayout from "@/layouts/DefaultLayout";
 import Loading from "@/components/Loading";
 import CheckoutSummary from "./components/CheckoutSummary";
@@ -17,35 +18,40 @@ interface CartModuleProps {
 const CartModule = ({ data, isLoading }: CartModuleProps) => {
     const navigate = useNavigate();
     const { token } = useAuth();
+    const { handleMutation } = useHandleMutation();
+    const { trackEvent } = useAnalytics();
 
     const [editCart, { isLoading: editLoading }] = useEditUsersCartMutation();
     const [addOrder, { isLoading: addLoading }] = useAddOrderMutation();
 
     const handleQuantityChange = async (id: string, quantity: number) => {
-        await editCart({
-            cartId: data?._id,
-            action: "changeQuantity",
-            _id: id,
-            quantity,
+        handleMutation({
+            values: {
+                cartId: data?._id,
+                action: "changeQuantity",
+                _id: id,
+                quantity,
+            },
+            mutation: editCart,
+            snackbar: false,
         });
     };
 
     const handleDelete = async (id: string) => {
-        try {
-            await editCart({
+        handleMutation({
+            values: {
                 cartId: data?._id,
                 action: "delete",
                 _id: id,
-            }).unwrap();
-
-            enqueueSnackbar("Product removed from cart successfully", {
-                variant: "success",
-            });
-        } catch (error) {
-            enqueueSnackbar("Failed to remove product from cart", {
-                variant: "error",
-            });
-        }
+            },
+            mutation: editCart,
+            onSuccess: () => {
+                trackEvent("remove_from_cart", {
+                    _cart: data?._id,
+                    _product: id,
+                });
+            },
+        });
     };
 
     const handleCheckout = async () => {
@@ -67,6 +73,10 @@ const CartModule = ({ data, isLoading }: CartModuleProps) => {
             const orderId = result.data?.result._id;
 
             if (orderId) {
+                trackEvent("begin_checkout", {
+                    _cart: data?._id,
+                    _order: orderId,
+                });
                 navigate(`/checkout/${orderId}/delivery`);
             }
         } catch (error) {

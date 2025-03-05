@@ -6,7 +6,6 @@ const EventSchema = new mongoose.Schema<Event>({
     _user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        required: true,
     },
     _session: { type: String, required: true },
     _product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
