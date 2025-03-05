@@ -1,64 +1,119 @@
-import Box from "@/components/Box";
-import { Info } from "@mui/icons-material";
-import { Tooltip } from "@mui/material";
+import { ReactNode } from "react";
+import dayjs from "dayjs";
+import { Chip, useTheme } from "@mui/material";
+import { SparkLineChart } from "@mui/x-charts/SparkLineChart";
+import { useDrawingArea } from "@mui/x-charts/hooks";
+import {
+    generateMonthDays,
+    generateRandomData,
+} from "@/utils/generateMonthDays";
 
 export interface SummaryCardProps {
-    title: string;
-    value: string;
-    prefix?: string;
-    summary: number;
-    icon: JSX.Element;
+    label: ReactNode;
+    subLabel?: ReactNode;
+    value?: string;
+    rate?: number;
+    data?: any[];
+    children?: ReactNode;
 }
 
-const SummaryCard = ({
-    title = "",
-    value = "",
-    prefix,
-    icon,
-    summary = 0,
-}: SummaryCardProps) => {
+const ColorSwitch = ({
+    colorId,
+    color,
+}: {
+    colorId: string;
+    color: string;
+}) => {
+    const { top, height, bottom } = useDrawingArea();
+    const svgHeight = top + bottom + height;
+
     return (
-        <Box className="flex flex-col">
-            <div className="flex flex-row justify-between">
-                <h5 className="font-bold text-gray-500 dark:text-gray-400">
-                    {title}
-                </h5>
-                <span className="flex items-center justify-center text-blue-500 bg-blue-100 rounded-full p-1 w-10 h-10 dark:bg-slate-700 dark:text-text-dark">
-                    {icon}
-                </span>
-            </div>
-            <div>
-                <h3 className="text-xl">
-                    {prefix}
-                    {value}
-                </h3>
-            </div>
-            <div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {summary ? (
-                        <>
-                            <span
-                                className={`font-bold ${
-                                    summary < 0
-                                        ? "text-red-500"
-                                        : "text-green-500"
-                                }`}
-                            >
-                                {summary}%
-                            </span>{" "}
-                            Since Last week
-                        </>
-                    ) : (
-                        <Tooltip title="Comparison to last week is not available. This field displays the percentage change compared to the previous weeks data.">
-                            <p className="flex items-center space-x-1 underline">
-                                <span>N/A</span>
-                                <Info sx={{ fontSize: "16px" }} />
-                            </p>
-                        </Tooltip>
-                    )}
-                </p>
-            </div>
-        </Box>
+        <defs>
+            <linearGradient
+                id={colorId}
+                x1="0"
+                y1="0"
+                x2="0"
+                y2={`${svgHeight}px`}
+                gradientUnits="userSpaceOnUse"
+            >
+                <stop stopColor={color} stopOpacity="0.3" />
+                <stop offset="1" stopColor={color} stopOpacity="0" />
+            </linearGradient>
+        </defs>
+    );
+};
+
+const SummaryCard = ({
+    label,
+    subLabel,
+    value,
+    rate: rateNumber,
+    data,
+    children,
+}: SummaryCardProps) => {
+    const rate = rateNumber || 0;
+
+    const rateSign = rate > 0 ? "+" : "";
+    const rateColorKey = rate > 5 ? "success" : rate < 5 ? "error" : "default";
+    const baseColor = rate > 5 ? "#52BC52" : rate < 5 ? "#C20A0A" : "#929EB6";
+    const rateLabel = `${rateSign}${rate}%`;
+    const gradientId = `gradient-${baseColor}`;
+
+    const monthDays = generateMonthDays(dayjs().year(), dayjs().month() + 1);
+    const randomData = generateRandomData(monthDays.length);
+
+    return (
+        <div className=" flex-1 flex flex-col min-w-60 space-y-1 p-4 border rounded-lg bg-[#F5F6FA] dark:bg-[#0C1017]">
+            <h5 className="text-sm">{label}</h5>
+            {value && rate && (
+                <div className="flex items-center justify-between">
+                    <p className="text-2xl font-semibold">{value}</p>
+                    <Chip
+                        label={rateLabel}
+                        size="small"
+                        variant="outlined"
+                        color={rateColorKey}
+                        sx={{ fontWeight: "bold", fontSize: "12px" }}
+                    />
+                </div>
+            )}
+            {subLabel && (
+                <p className="text-[12px] text-gray-600">{subLabel}</p>
+            )}
+            {data && (
+                <SparkLineChart
+                    data={randomData}
+                    area={true}
+                    xAxis={{
+                        scaleType: "point",
+                        data: monthDays,
+                        valueFormatter: (value) => value,
+                    }}
+                    height={60}
+                    showTooltip
+                    showHighlight
+                    sx={{
+                        width: "100%",
+                        ".MuiAreaElement-root": {
+                            fill: `url(#${gradientId})`,
+                        },
+                        ".MuiLineElement-root": {
+                            stroke: baseColor,
+                            strokeWidth: 2,
+                        },
+                    }}
+                    slotProps={{
+                        line: {
+                            color: baseColor,
+                        },
+                    }}
+                >
+                    <ColorSwitch colorId={gradientId} color={baseColor} />
+                </SparkLineChart>
+            )}
+            {children}
+        </div>
     );
 };
 
