@@ -75,7 +75,7 @@ const DashboardModule = () => {
     return (
         // <Loading isLoading={summaryIsloading || ordersSummaryIsLoading}>
         <DefaultLayout>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap justify-center gap-4">
                 <SummaryCard
                     label="Users"
                     subLabel="Last 30 days"
@@ -121,6 +121,15 @@ const DashboardModule = () => {
                         </Button>
                     </div>
                 </SummaryCard>
+                <SummaryCard
+                    label="Sessions"
+                    subLabel="Sessions per day for the last 30 days"
+                    value="13,277"
+                    rate={35}
+                    data={[0]}
+                    type="line"
+                    size="large"
+                />
             </div>
         </DefaultLayout>
         // </Loading>
