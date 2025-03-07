@@ -8,6 +8,12 @@ export const generateMonthDays = (year: number, month: number): string[] => {
     });
 };
 
+export const generateLastMonths = (monthsCount: number): string[] => {
+    return Array.from({ length: monthsCount }, (_, i) =>
+        dayjs().subtract(i, "month").format("MMM")
+    ).reverse();
+};
+
 export const generateRandomData = (
     length: number,
     min = 1000,

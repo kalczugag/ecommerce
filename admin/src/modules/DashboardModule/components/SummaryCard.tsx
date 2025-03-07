@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import dayjs from "dayjs";
 import { Chip } from "@mui/material";
-import { LineChart, SparkLineChart } from "@/components/StyledCharts";
+import { BarChart, LineChart, SparkLineChart } from "@/components/StyledCharts";
 import {
     generateMonthDays,
     generateRandomData,
@@ -14,9 +14,15 @@ export interface SummaryCardProps {
     rate?: number;
     data?: any[];
     size?: "small" | "medium" | "large";
-    type?: "sparkLine" | "line";
+    type?: "sparkLine" | "line" | "bar";
     children?: ReactNode;
 }
+
+const colors = {
+    primary: "#0D5DAE",
+    secondary: "#027AF2",
+    tetriary: "#99CCFF",
+};
 
 const SummaryCard = ({
     label,
@@ -25,7 +31,7 @@ const SummaryCard = ({
     rate: rateNumber,
     data,
     type = "sparkLine",
-    size = "medium",
+    size = "small",
     children,
 }: SummaryCardProps) => {
     const rate = rateNumber || 0;
@@ -45,26 +51,30 @@ const SummaryCard = ({
                 monthDays={monthDays}
                 baseColor={baseColor}
             />
-        ) : (
+        ) : type === "line" ? (
             <LineChart
                 data={randomData}
                 monthDays={monthDays}
-                baseColor={baseColor}
+                colors={colors}
             />
+        ) : (
+            <BarChart colors={colors} />
         );
 
     return (
         <div
             className={`flex-1 flex flex-col min-w-60 space-y-1 p-4 border rounded-lg bg-[#F5F6FA] dark:bg-[#0C1017] ${
-                size !== "large" && "max-w-96 max-h-48"
+                size !== "large" && "max-h-48"
             }`}
         >
             <h5 className="text-sm">{label}</h5>
             {value && rate && (
                 <div
                     className={`flex items-center ${
-                        size === "medium" && "justify-between"
-                    } ${size === "large" && "space-x-2"} `}
+                        size === "small" && "justify-between"
+                    } ${
+                        (size === "large" || size === "medium") && "space-x-2"
+                    } `}
                 >
                     <p className="text-2xl font-semibold">{value}</p>
                     <Chip
