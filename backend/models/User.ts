@@ -2,9 +2,10 @@ import mongoose from "mongoose";
 import { SummaryModel } from "./Summary";
 import { CartModel } from "./Cart";
 import { getStartOfThisWeek } from "../utils/helpers";
-import type { User } from "../types/User";
+import type { Locale, User } from "../types/User";
+import type { ShippingAddress } from "../types/Order";
 
-const addressSchema = new mongoose.Schema(
+const addressSchema = new mongoose.Schema<ShippingAddress>(
     {
         street: { type: String, required: false },
         city: { type: String, required: false },
@@ -15,7 +16,34 @@ const addressSchema = new mongoose.Schema(
     { _id: false }
 );
 
-const refreshTokenSchema = new mongoose.Schema(
+const userLocaleSchema = new mongoose.Schema<Locale>(
+    {
+        is_eu: { type: Boolean },
+        country_name: { type: String, required: true },
+        country_code: { type: String },
+        continent_name: { type: String },
+        continent_code: { type: String },
+        calling_code: { type: String },
+        languages: [
+            {
+                name: { type: String },
+                native: { type: String },
+                code: { type: String },
+            },
+        ],
+        currency: {
+            name: { type: String, required: true },
+            code: { type: String, required: true },
+            symbol: { type: String, required: true },
+            native: { type: String, required: true },
+            plural: { type: String, required: true },
+        },
+        time_zone: { type: String, required: true },
+    },
+    { _id: false }
+);
+
+const refreshTokenSchema = new mongoose.Schema<User["refreshToken"]>(
     {
         token: { type: String, required: true },
         expires: { type: String, required: true },
@@ -40,6 +68,7 @@ const userSchema = new mongoose.Schema<User>(
             ref: "Role",
             required: false,
         },
+        locale: { type: userLocaleSchema, required: false, select: false },
         birthday: { type: Date, required: false },
         address: { type: addressSchema, required: false },
         phone: { type: String, required: false },

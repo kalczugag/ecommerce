@@ -77,3 +77,50 @@ const getOrCreateSessionId = () => {
 
     return sessionId;
 };
+
+const getOrSetLocale = async () => {
+    let locale = localStorage.getItem("locale");
+
+    if (!locale) {
+        try {
+            const ipData = await getIPData();
+            locale = JSON.stringify(ipData);
+
+            localStorage.setItem("locale", locale);
+        } catch (error) {
+            locale = JSON.stringify({
+                country_name: "Unknown",
+                currency: {
+                    name: "USD",
+                    code: "USD",
+                    symbol: "$",
+                    native: "$",
+                    plural: "United States dollar",
+                },
+                time_zone: "UTC",
+            });
+        }
+    }
+};
+
+const getIPData = async () => {
+    const fields =
+        "is_eu,country_name,country_code,continent_name,continent_code,calling_code,languages,currency,time_zone";
+    const url = `https://api.ipdata.co?api-key=${
+        import.meta.env.VITE_IPDATA_API_KEY
+    }&fields=${fields}`;
+
+    try {
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error("HTTP error " + response.status);
+        }
+
+        const data = await response.json();
+
+        return data;
+    } catch (error) {
+        console.log(error);
+    }
+};
