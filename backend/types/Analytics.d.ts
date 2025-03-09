@@ -12,28 +12,24 @@ interface Event {
     timestamp: Date;
 }
 
-interface Statistics {
+interface DailySummary {
     _id?: string;
-    _store?: string;
-    totalVisits: number;
-    totalOrders: number;
-    totalRevenue: number;
-    converisonRate: number;
-    averageOrderValue: number;
-    productsStats: {
-        _product: string;
-        views: number;
-        orders: number;
-        revenue: number;
-        conversionRate: number;
-    }[];
-    categoryStats: {
-        _category: string;
-        views: number;
-        orders: number;
-        revenue: number;
-        conversionRate: number;
-    }[];
+    date: Date;
+    pageViews: number;
+    sessions: number;
+    orders: number;
+    sales: number;
+    earnings: number;
+    uniqueUsers: number;
 }
 
-export { Event, Statistics };
+interface ProductDailySummary {
+    _id?: string;
+    date: Date;
+    _product: string | Product;
+    views: number;
+    orders: number;
+    sales: number; // Total revenue from product
+}
+
+export { Event, DailySummary, ProductDailySummary };

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { enqueueEventProcessing } from "../../workers/eventProcessor";
 import type { Event } from "../../types/Analytics";
 
 const EventSchema = new mongoose.Schema<Event>({
@@ -15,5 +16,9 @@ const EventSchema = new mongoose.Schema<Event>({
 });
 
 EventSchema.index({ timestamp: 1 }, { expireAfterSeconds: 604800 });
+
+EventSchema.post("save", function (doc) {
+    enqueueEventProcessing(doc);
+});
 
 export const EventModel = mongoose.model("Event", EventSchema);
