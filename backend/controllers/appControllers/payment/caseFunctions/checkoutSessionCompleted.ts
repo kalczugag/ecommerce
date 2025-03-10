@@ -3,6 +3,7 @@ import { sendEmail } from "../../../../config/nodemailer";
 import { CartModel } from "../../../../models/Cart";
 import { ProductModel } from "../../../../models/Product";
 import { OrderModel } from "../../../../models/Order";
+import { EventModel } from "../../../../models/Analytics/Event";
 import { orderConfirmation } from "../../../../emailTemplates/orderConfirmation";
 import type { Item } from "../../../../types/Order";
 import type { Product } from "../../../../types/Product";
@@ -18,6 +19,22 @@ export const handleCheckoutSessionCompleted = async (
     }
 
     try {
+        const newEvent = new EventModel({
+            eventType: "order",
+            _user: userId,
+            _session: checkoutSession.id,
+            metadata: {
+                paymentStatus: checkoutSession.payment_status,
+                amountTotal: checkoutSession.amount_total,
+                currency: checkoutSession.currency,
+                referrer: checkoutSession.metadata?.referrer || "unknown",
+            },
+            timestamp: new Date(),
+        });
+
+        await newEvent.save();
+        console.log("order event created");
+
         const order = await OrderModel.findByIdAndUpdate(
             orderId,
             {
