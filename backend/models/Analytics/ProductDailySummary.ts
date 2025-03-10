@@ -16,6 +16,6 @@ const ProductDailySummarySchema = new mongoose.Schema<ProductDailySummary>({
 ProductDailySummarySchema.index({ date: 1, _product: 1 });
 
 export const ProductDailySummaryModel = mongoose.model(
-    "DailySummary",
+    "ProductDailySummary",
     ProductDailySummarySchema
 );

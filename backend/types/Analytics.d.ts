@@ -16,7 +16,11 @@ interface DailySummary {
     _id?: string;
     date: Date;
     pageViews: number;
-    sessions: number;
+    sessions: {
+        direct: number;
+        referral: number;
+        organic: number;
+    };
     orders: number;
     sales: number;
     earnings: number;

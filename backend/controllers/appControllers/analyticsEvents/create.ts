@@ -24,8 +24,8 @@ export const createEvent = async (
     }
 
     try {
-        const newDeliveryMethod = new EventModel(event);
-        await newDeliveryMethod.save();
+        const newEvent = new EventModel(event);
+        await newEvent.save();
 
         return res.status(201).json(successResponse());
     } catch (error) {
