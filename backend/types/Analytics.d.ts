@@ -1,5 +1,6 @@
 import type { Category } from "./Category";
 import type { Product } from "./Product";
+import type { ParsedQs } from "qs";
 
 interface Event {
     _id?: string;
@@ -22,7 +23,6 @@ interface DailySummary {
         organic: number;
     };
     orders: number;
-    sales: number;
     earnings: number;
     uniqueUsers: number;
 }
@@ -34,6 +34,13 @@ interface ProductDailySummary {
     views: number;
     orders: number;
     sales: number; // Total revenue from product
+    quantity: number; // Total quantity sold
 }
 
-export { Event, DailySummary, ProductDailySummary };
+interface DailySummaryQueryParams extends ParsedQs {
+    date?: Date;
+    all?: boolean;
+    today?: boolean;
+}
+
+export { Event, DailySummary, ProductDailySummary, DailySummaryQueryParams };

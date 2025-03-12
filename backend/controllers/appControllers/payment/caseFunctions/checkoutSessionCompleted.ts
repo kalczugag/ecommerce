@@ -19,22 +19,6 @@ export const handleCheckoutSessionCompleted = async (
     }
 
     try {
-        const newEvent = new EventModel({
-            eventType: "order",
-            _user: userId,
-            _session: checkoutSession.id,
-            metadata: {
-                paymentStatus: checkoutSession.payment_status,
-                amountTotal: checkoutSession.amount_total,
-                currency: checkoutSession.currency,
-                referrer: checkoutSession.metadata?.referrer || "unknown",
-            },
-            timestamp: new Date(),
-        });
-
-        await newEvent.save();
-        console.log("order event created");
-
         const order = await OrderModel.findByIdAndUpdate(
             orderId,
             {
@@ -56,6 +40,26 @@ export const handleCheckoutSessionCompleted = async (
         if (!order) {
             throw new Error("Order not found");
         }
+
+        const newEvent = new EventModel({
+            eventType: "order",
+            _user: userId,
+            _session: checkoutSession.id,
+            metadata: {
+                paymentStatus: checkoutSession.payment_status,
+                amountTotal: (checkoutSession.amount_total || 0) / 100,
+                currency: checkoutSession.currency,
+                referrer: checkoutSession.metadata?.referrer || "unknown",
+                products: [
+                    (order.items as Item[]).map((item) => ({
+                        _product: (item._product as Product)._id,
+                        amount: item.total,
+                    })),
+                ],
+            },
+            timestamp: new Date(),
+        });
+        await newEvent.save();
 
         const bulkUpdates = (order.items as Item[]).map((item) => {
             const productId = (item._product as Product)._id;

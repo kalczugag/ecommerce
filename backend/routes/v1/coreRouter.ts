@@ -6,6 +6,7 @@ import users from "./coreRoutes/users";
 import shipments from "./coreRoutes/shipments";
 import baseItems from "./coreRoutes/baseItems";
 import notes from "./coreRoutes/notes";
+import analytics from "./coreRoutes/analytics";
 
 const router = express.Router();
 
@@ -16,6 +17,7 @@ export default (): express.Router => {
     users(router);
     baseItems(router);
     notes(router);
+    analytics(router);
 
     return router;
 };

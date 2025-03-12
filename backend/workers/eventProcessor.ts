@@ -15,13 +15,17 @@ eventQueue.process(async (job) => {
 
     const isProductEvent = Boolean(doc.metadata?._product);
     const dailyUpdate: any = { $setOnInsert: { date: dateOnly } };
+    const productDailyUpdate: any = { $setOnInsert: { date: dateOnly } };
 
     if (doc.eventType === "product_view") {
         const productUpdate: any = {
-            $setOnInsert: { date: dateOnly, _product: doc.metadata._product },
+            $setOnInsert: {
+                date: dateOnly,
+                _product: doc.metadata._product,
+            },
         };
 
-        productUpdate.$inc = { pageViews: 1 };
+        productUpdate.$inc = { views: 1 };
         await ProductDailySummaryModel.findOneAndUpdate(
             { date: dateOnly, _product: doc.metadata._product },
             productUpdate,
@@ -34,6 +38,8 @@ eventQueue.process(async (job) => {
             pageViews: doc.eventType === "page_view" ? 1 : 0,
             orders: doc.eventType === "order" ? 1 : 0,
             sales:
+                doc.eventType === "order" ? doc.metadata.amountTotal || 0 : 0,
+            earnings:
                 doc.eventType === "order" ? doc.metadata.amountTotal || 0 : 0,
             uniqueUsers: ["log_in", "sign_up"].includes(doc.eventType) ? 1 : 0,
         };
@@ -53,6 +59,12 @@ eventQueue.process(async (job) => {
         await DailySummaryModel.findOneAndUpdate(
             { date: dateOnly },
             dailyUpdate,
+            { upsert: true, new: true }
+        );
+
+        await ProductDailySummaryModel.findOneAndUpdate(
+            { date: dateOnly },
+            productDailyUpdate,
             { upsert: true, new: true }
         );
     }

@@ -10,7 +10,6 @@ const DailySummarySchema = new mongoose.Schema<DailySummary>({
         organic: { type: Number, default: 0 },
     },
     orders: { type: Number, default: 0 },
-    sales: { type: Number, default: 0 },
     earnings: { type: Number, default: 0 },
     uniqueUsers: { type: Number, default: 0 },
 });
