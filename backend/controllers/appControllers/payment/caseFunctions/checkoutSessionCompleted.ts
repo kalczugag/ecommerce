@@ -50,12 +50,10 @@ export const handleCheckoutSessionCompleted = async (
                 amountTotal: (checkoutSession.amount_total || 0) / 100,
                 currency: checkoutSession.currency,
                 referrer: checkoutSession.metadata?.referrer || "unknown",
-                products: [
-                    (order.items as Item[]).map((item) => ({
-                        _product: (item._product as Product)._id,
-                        amount: item.total,
-                    })),
-                ],
+                products: (order.items as Item[]).map((item) => ({
+                    _product: (item._product as Product)._id,
+                    quantity: item.quantity,
+                })),
             },
             timestamp: new Date(),
         });

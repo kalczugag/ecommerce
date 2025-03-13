@@ -5,53 +5,82 @@ import { ProductDailySummaryModel } from "../models/Analytics/ProductDailySummar
 const eventQueue = new Queue("event_processing", process.env.REDIS_URL!);
 
 eventQueue.process(async (job) => {
-    const doc = job.data;
-    const eventDate = new Date(doc.timestamp);
-    const dateOnly = new Date(
-        eventDate.getFullYear(),
-        eventDate.getMonth(),
-        eventDate.getDate()
-    );
+    try {
+        const doc = job.data;
+        const eventDate = new Date(doc.timestamp);
+        const dateOnly = new Date(
+            Date.UTC(
+                eventDate.getUTCFullYear(),
+                eventDate.getUTCMonth(),
+                eventDate.getUTCDate()
+            )
+        );
 
-    const isProductEvent = Boolean(doc.metadata?._product);
-    const dailyUpdate: any = { $setOnInsert: { date: dateOnly } };
-    const productDailyUpdate: any = { $setOnInsert: { date: dateOnly } };
+        if (doc.eventType === "product_view") {
+            await ProductDailySummaryModel.findOneAndUpdate(
+                { date: dateOnly, _product: doc.metadata._product },
+                {
+                    $setOnInsert: {
+                        date: dateOnly,
+                        _product: doc.metadata._product,
+                    },
+                    $inc: { views: 1 },
+                },
+                { upsert: true, new: true }
+            );
+            return;
+        }
 
-    if (doc.eventType === "product_view") {
-        const productUpdate: any = {
-            $setOnInsert: {
-                date: dateOnly,
-                _product: doc.metadata._product,
+        if (
+            doc.eventType === "order" &&
+            Array.isArray(doc.metadata?.products)
+        ) {
+            const bulkOperations = doc.metadata.products.map(
+                (product: { _product: string; quantity: number }) => ({
+                    updateOne: {
+                        filter: { date: dateOnly, _product: product._product },
+                        update: {
+                            $inc: {
+                                sales: product.quantity || 0,
+                                orders: 1,
+                            },
+                        },
+                        upsert: true,
+                    },
+                })
+            );
+
+            if (bulkOperations.length > 0) {
+                await ProductDailySummaryModel.bulkWrite(bulkOperations);
+            }
+        }
+
+        const dailyUpdate: Record<string, any> = {
+            $setOnInsert: { date: dateOnly },
+            $inc: {
+                pageViews: doc.eventType === "page_view" ? 1 : 0,
+                orders: doc.eventType === "order" ? 1 : 0,
+                sales:
+                    doc.eventType === "order"
+                        ? doc.metadata.amountTotal || 0
+                        : 0,
+                earnings:
+                    doc.eventType === "order"
+                        ? doc.metadata.amountTotal || 0
+                        : 0,
+                uniqueUsers: ["log_in", "sign_up"].includes(doc.eventType)
+                    ? 1
+                    : 0,
             },
         };
 
-        productUpdate.$inc = { views: 1 };
-        await ProductDailySummaryModel.findOneAndUpdate(
-            { date: dateOnly, _product: doc.metadata._product },
-            productUpdate,
-            { upsert: true, new: true }
-        );
-    }
-
-    if (!isProductEvent) {
-        dailyUpdate.$inc = {
-            pageViews: doc.eventType === "page_view" ? 1 : 0,
-            orders: doc.eventType === "order" ? 1 : 0,
-            sales:
-                doc.eventType === "order" ? doc.metadata.amountTotal || 0 : 0,
-            earnings:
-                doc.eventType === "order" ? doc.metadata.amountTotal || 0 : 0,
-            uniqueUsers: ["log_in", "sign_up"].includes(doc.eventType) ? 1 : 0,
-        };
-
         if (doc.eventType === "session_start") {
-            let referrerType = "referral";
-
-            if (doc.metadata.referrer === "direct") {
-                referrerType = "direct";
-            } else if (doc.metadata.referrer === "organic") {
-                referrerType = "organic";
-            }
+            const referrerType =
+                doc.metadata.referrer === "direct"
+                    ? "direct"
+                    : doc.metadata.referrer === "organic"
+                    ? "organic"
+                    : "referral";
 
             dailyUpdate.$inc[`sessions.${referrerType}`] = 1;
         }
@@ -61,12 +90,8 @@ eventQueue.process(async (job) => {
             dailyUpdate,
             { upsert: true, new: true }
         );
-
-        await ProductDailySummaryModel.findOneAndUpdate(
-            { date: dateOnly },
-            productDailyUpdate,
-            { upsert: true, new: true }
-        );
+    } catch (error) {
+        console.error("Error processing event:", error);
     }
 });
 

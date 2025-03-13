@@ -11,7 +11,6 @@ const ProductDailySummarySchema = new mongoose.Schema<ProductDailySummary>({
     views: { type: Number, default: 0 },
     orders: { type: Number, default: 0 },
     sales: { type: Number, default: 0 },
-    quantity: { type: Number, default: 0 },
 });
 
 ProductDailySummarySchema.index({ date: 1, _product: 1 });

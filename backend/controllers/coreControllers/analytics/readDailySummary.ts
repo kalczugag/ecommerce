@@ -7,7 +7,7 @@ export const getDailySummary = async (
     req: express.Request<{}, {}, {}, DailySummaryQueryParams>,
     res: express.Response
 ) => {
-    const { date, all, today } = req.query;
+    const { date, all, today, last30Days } = req.query;
 
     try {
         let query;
@@ -15,16 +15,27 @@ export const getDailySummary = async (
         if (all) {
             query = DailySummaryModel.find();
         } else {
-            if (!date && !today) {
+            if (!date && !today && !last30Days)
                 return res
                     .status(400)
-                    .json(errorResponse(null, "Date is required", 400));
-            }
+                    .json(errorResponse(null, "Date is required"));
 
-            const dateObject = today ? new Date() : new Date(date!);
+            const targetDate = new Date(
+                today || !date ? new Date() : new Date(date)
+            );
+            const startOfDay = new Date(
+                targetDate.getFullYear(),
+                targetDate.getMonth(),
+                targetDate.getDate()
+            );
+            const endOfDay = new Date(
+                targetDate.getFullYear(),
+                targetDate.getMonth(),
+                targetDate.getDate() + 1
+            );
 
             query = DailySummaryModel.findOne({
-                date: dateObject,
+                date: { $gte: startOfDay, $lt: endOfDay },
             });
         }
 
@@ -33,7 +44,13 @@ export const getDailySummary = async (
         if (!result) {
             return res
                 .status(404)
-                .json(errorResponse(null, "Daily summary not found", 404));
+                .json(
+                    errorResponse(
+                        null,
+                        "Daily summary not found for this day",
+                        404
+                    )
+                );
         }
 
         return res.status(201).json(successResponse(result));

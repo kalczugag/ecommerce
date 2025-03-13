@@ -41,6 +41,7 @@ interface DailySummaryQueryParams extends ParsedQs {
     date?: Date;
     all?: boolean;
     today?: boolean;
+    last30Days?: boolean;
 }
 
 export { Event, DailySummary, ProductDailySummary, DailySummaryQueryParams };
