@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { v4 as uuid } from "uuid";
 import useAuth from "./useAuth";
 import type { Event } from "@/types/Analytics";
@@ -11,13 +11,38 @@ export const useAnalytics = (flushInterval = 5000): UseAnalyticsReturn => {
     const { userId } = useAuth();
     const userIdRef = useRef<string | null>(userId);
     const eventQueueRef = useRef<Event[]>([]);
-    const sessionId = getOrCreateSessionId();
+    const [session, setSession] = useState<{
+        sessionId: string;
+        locale: string;
+    }>({
+        sessionId: "",
+        locale: "",
+    });
+
+    useEffect(() => {
+        getOrCreateSession().then((session) => setSession(session));
+    }, []);
+    console.log(session);
 
     useEffect(() => {
         if (userId) {
             userIdRef.current = userId;
         }
     }, [userId]);
+
+    useEffect(() => {
+        const previousUrl =
+            sessionStorage.getItem("previousPageUrl") || "direct";
+
+        trackEvent("session_start", {
+            locale,
+            pageUrl: window.location.href,
+            pageTitle: document.title,
+            referrer: previousUrl,
+        });
+    }, [getOrCreateSession]);
+
+    const { sessionId, locale } = session || {};
 
     const trackEvent = (eventType: string, metadata: any) => {
         eventQueueRef.current.push({
@@ -67,7 +92,8 @@ export const useAnalytics = (flushInterval = 5000): UseAnalyticsReturn => {
     return { trackEvent };
 };
 
-const getOrCreateSessionId = () => {
+const getOrCreateSession = async () => {
+    const locale = await getOrSetLocale();
     let sessionId = localStorage.getItem("sessionId");
 
     if (!sessionId) {
@@ -75,7 +101,7 @@ const getOrCreateSessionId = () => {
         localStorage.setItem("sessionId", sessionId);
     }
 
-    return sessionId;
+    return { sessionId, locale };
 };
 
 const getOrSetLocale = async () => {
@@ -101,6 +127,8 @@ const getOrSetLocale = async () => {
             });
         }
     }
+
+    return locale;
 };
 
 const getIPData = async () => {

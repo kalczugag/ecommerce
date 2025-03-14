@@ -1,9 +1,9 @@
 import express from "express";
 import { errorResponse, successResponse } from "../../../handlers/apiResponse";
-import { DailySummaryModel } from "../../../models/Analytics/DailySummary";
+import { ProductDailySummaryModel } from "../../../models/Analytics/ProductDailySummary";
 import type { DailySummaryQueryParams } from "../../../types/Analytics";
 
-export const getDailySummary = async (
+export const getProductDailySummary = async (
     req: express.Request<{}, {}, {}, DailySummaryQueryParams>,
     res: express.Response
 ) => {
@@ -13,7 +13,7 @@ export const getDailySummary = async (
         let query;
 
         if (all) {
-            query = DailySummaryModel.find();
+            query = ProductDailySummaryModel.find();
         } else {
             if (!date && !today && !last30Days)
                 return res
@@ -40,7 +40,7 @@ export const getDailySummary = async (
                 targetDate.getDate() + 1
             );
 
-            query = DailySummaryModel.findOne({
+            query = ProductDailySummaryModel.findOne({
                 date: { $gte: startOfDay, $lt: endOfDay },
             });
         }
@@ -53,7 +53,7 @@ export const getDailySummary = async (
                 .json(
                     errorResponse(
                         null,
-                        "Daily summary not found for this day",
+                        "Product daily summary not found for this day",
                         404
                     )
                 );
