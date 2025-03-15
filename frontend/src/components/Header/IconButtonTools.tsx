@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGetUsersCartCountQuery, useLogoutMutation } from "@/store";
-import { enqueueSnackbar } from "notistack";
 import useAuth from "@/hooks/useAuth";
 import { Box, MenuItem, Avatar } from "@mui/material";
 import {
@@ -21,7 +20,7 @@ const AccountTools = () => {
     const navigate = useNavigate();
     const { token } = useAuth();
     const { handleMutation } = useHandleMutation();
-    const { trackEvent } = useAnalytics();
+    const { trackEvent, clearSession } = useAnalytics();
     const { data } = useGetUsersCartCountQuery(
         { onlyCount: true },
         {
@@ -53,6 +52,7 @@ const AccountTools = () => {
             mutation: logout,
             onSuccess: () => {
                 trackEvent("log_out");
+                clearSession();
                 navigate("/");
             },
         });
