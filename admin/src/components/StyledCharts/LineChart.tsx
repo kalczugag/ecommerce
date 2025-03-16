@@ -1,9 +1,10 @@
 import { LineChart as Chart } from "@mui/x-charts/LineChart";
-import { generateRandomData } from "@/utils/generateMonthDays";
 
 interface SparkLineChartProps {
-    data: any[];
-    monthDays: any[];
+    data: {
+        date: string;
+        value: number | any;
+    }[];
     colors: {
         primary: string;
         secondary: string;
@@ -11,13 +12,12 @@ interface SparkLineChartProps {
     };
 }
 
-const LineChart = ({ data, monthDays, colors }: SparkLineChartProps) => {
-    const randomData = generateRandomData(monthDays.length);
-
-    const dd = monthDays.map((month) => ({
-        month,
-        direct: data[Math.floor(Math.random() * data.length)],
-        referral: randomData[Math.floor(Math.random() * randomData.length)],
+const LineChart = ({ data, colors }: SparkLineChartProps) => {
+    const dd = data.map(({ date, value }) => ({
+        date,
+        direct: value.direct ?? 0,
+        referral: value.referral ?? 0,
+        organic: value.organic ?? 0,
     }));
 
     return (
@@ -25,8 +25,9 @@ const LineChart = ({ data, monthDays, colors }: SparkLineChartProps) => {
             dataset={dd}
             xAxis={[
                 {
-                    id: "month",
-                    dataKey: "month",
+                    id: "date",
+                    dataKey: "date",
+                    label: "Month",
                     scaleType: "band",
                     valueFormatter: (value) => value,
                 },
@@ -47,6 +48,14 @@ const LineChart = ({ data, monthDays, colors }: SparkLineChartProps) => {
                     stack: "traffic",
                     showMark: false,
                     color: colors.secondary,
+                },
+                {
+                    id: "Organic",
+                    label: "Organic",
+                    dataKey: "organic",
+                    stack: "traffic",
+                    showMark: false,
+                    color: colors.tetriary,
                 },
             ]}
             height={300}

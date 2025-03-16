@@ -7,14 +7,12 @@ export const getProductDailySummary = async (
     req: express.Request<{}, {}, {}, DailySummaryQueryParams>,
     res: express.Response
 ) => {
-    const { date, all, today, last30Days } = req.query;
+    const { date, today, last30Days } = req.query;
 
     try {
         let query;
 
-        if (all) {
-            query = ProductDailySummaryModel.find();
-        } else if (last30Days) {
+        if (last30Days) {
             const endDate = new Date();
             const startDate = new Date();
             startDate.setDate(startDate.getDate() - 30);
@@ -22,7 +20,7 @@ export const getProductDailySummary = async (
             query = ProductDailySummaryModel.find({
                 date: { $gte: startDate, $lt: endDate },
             }).sort({ date: -1 });
-        } else {
+        } else if (date || today) {
             if (!date && !today)
                 return res
                     .status(400)
@@ -51,6 +49,8 @@ export const getProductDailySummary = async (
             query = ProductDailySummaryModel.findOne({
                 date: { $gte: startOfDay, $lt: endOfDay },
             });
+        } else {
+            query = ProductDailySummaryModel.find();
         }
 
         const result = await query.exec();

@@ -1,6 +1,5 @@
 import type { Category } from "./Category";
 import type { Product } from "./Product";
-import type { ParsedQs } from "qs";
 
 interface Event {
     _id?: string;
@@ -38,7 +37,7 @@ interface ProductDailySummary {
     quantity: number; // Total quantity sold
 }
 
-interface DailySummaryQueryParams extends ParsedQs {
+interface DailySummaryQueryParams {
     date?: Date;
     today?: boolean;
     last30Days?: boolean;

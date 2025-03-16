@@ -2,25 +2,23 @@ import { SparkLineChart as Chart } from "@mui/x-charts/SparkLineChart";
 import ColorSwitch from "./ColorSwitch";
 
 interface SparkLineChartProps {
-    data: number[];
-    monthDays: any[];
+    data: {
+        date: string;
+        value: number | any;
+    }[];
     baseColor: string;
 }
 
-const SparkLineChart = ({
-    data,
-    monthDays,
-    baseColor,
-}: SparkLineChartProps) => {
+const SparkLineChart = ({ data, baseColor }: SparkLineChartProps) => {
     const gradientId = `gradient-${baseColor}`;
 
     return (
         <Chart
-            data={data}
+            data={[...data.map((item) => item.value)]}
             area={true}
             xAxis={{
                 scaleType: "point",
-                data: monthDays,
+                data: [...data.map((item) => item.date)],
                 valueFormatter: (value) => value,
             }}
             height={60}

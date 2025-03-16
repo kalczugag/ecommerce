@@ -51,14 +51,16 @@ export const handlePaymentIntentSucceeded = async (
                 fullPaymentIntent.status === "succeeded"
                     ? "completed"
                     : "failed",
-            amount: fullPaymentIntent.amount / 100,
+            amount: parseFloat((fullPaymentIntent.amount / 100).toFixed(2)),
             transactionId: fullPaymentIntent.id,
             paymentDate: new Date(),
             authorizationStatus: "closed",
             allowAdditionalCapture:
                 fullPaymentIntent.status === "succeeded" ? true : false,
             authorized: true,
-            capturedAmount: fullPaymentIntent.amount / 100,
+            capturedAmount: parseFloat(
+                (fullPaymentIntent.amount / 100).toFixed(2)
+            ),
             card: cardDetails,
         });
 

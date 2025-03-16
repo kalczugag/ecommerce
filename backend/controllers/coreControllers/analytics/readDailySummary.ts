@@ -1,28 +1,73 @@
 import express from "express";
 import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import { DailySummaryModel } from "../../../models/Analytics/DailySummary";
-import type { DailySummaryQueryParams } from "../../../types/Analytics";
+import type {
+    DailySummary,
+    DailySummaryQueryParams,
+} from "../../../types/Analytics";
 
 export const getDailySummary = async (
     req: express.Request<{}, {}, {}, DailySummaryQueryParams>,
     res: express.Response
 ) => {
-    const { date, all, today, last30Days } = req.query;
+    const { date, today, last30Days, last6Months } = req.query;
 
     try {
         let query;
+        let last30DaysData: DailySummary[] = [];
+        let last6MonthsData = [];
 
-        if (all) {
-            query = DailySummaryModel.find();
-        } else if (last30Days) {
+        if (last30Days) {
             const endDate = new Date();
             const startDate = new Date();
             startDate.setDate(startDate.getDate() - 30);
 
-            query = DailySummaryModel.find({
+            last30DaysData = await DailySummaryModel.find({
                 date: { $gte: startDate, $lt: endDate },
-            }).sort({ date: -1 });
-        } else {
+            })
+                .sort({ date: -1 })
+                .lean();
+        }
+
+        if (last6Months) {
+            const sixMonthsAgo = new Date();
+            sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+
+            last6MonthsData = await DailySummaryModel.aggregate([
+                {
+                    $match: {
+                        date: { $gte: sixMonthsAgo },
+                    },
+                },
+                {
+                    $group: {
+                        _id: {
+                            year: { $year: "$date" },
+                            month: { $month: "$date" },
+                        },
+                        pageViews: { $sum: "$pageViews" },
+                    },
+                },
+                {
+                    $sort: {
+                        "_id.year": 1,
+                        "_id.month": 1,
+                    },
+                },
+                {
+                    $project: {
+                        _id: 0,
+                        year: "$_id.year",
+                        month: "$_id.month",
+                        pageViews: 1,
+                    },
+                },
+            ]);
+
+            last6MonthsData = JSON.parse(JSON.stringify(last6MonthsData));
+        }
+
+        if (today || date) {
             if (!date && !today)
                 return res
                     .status(400)
@@ -50,24 +95,26 @@ export const getDailySummary = async (
 
             query = DailySummaryModel.findOne({
                 date: { $gte: startOfDay, $lt: endOfDay },
-            });
+            }).lean();
         }
 
-        const result = await query.exec();
-
-        if (!result) {
+        if (
+            !query &&
+            last30DaysData.length === 0 &&
+            last6MonthsData.length === 0
+        ) {
             return res
                 .status(404)
-                .json(
-                    errorResponse(
-                        null,
-                        "Daily summary not found for this day",
-                        404
-                    )
-                );
+                .json(errorResponse(null, "No data found", 404));
         }
 
-        return res.status(201).json(successResponse(result));
+        return res.status(201).json(
+            successResponse({
+                todayOrDate: query || null,
+                last30Days: last30DaysData,
+                last6Months: last6MonthsData,
+            })
+        );
     } catch (error) {
         console.error(error);
         return res

@@ -5,7 +5,10 @@ import {
 import { BarChart as Chart } from "@mui/x-charts";
 
 interface BarLineChartProps {
-    data?: any[];
+    data: {
+        date: string;
+        value: number | any;
+    }[];
     colors: {
         primary: string;
         secondary: string;
@@ -14,12 +17,9 @@ interface BarLineChartProps {
 }
 
 const BarChart = ({ data, colors }: BarLineChartProps) => {
-    const last6Months = generateLastMonths(6);
-    const randomData = generateRandomData(last6Months.length);
-
-    const dd = last6Months.map((month) => ({
-        month,
-        pageViews: randomData[Math.floor(Math.random() * randomData.length)],
+    const dd = data.map((item) => ({
+        month: item.date,
+        pageViews: item.value,
     }));
 
     return (

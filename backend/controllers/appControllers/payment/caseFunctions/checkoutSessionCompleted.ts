@@ -47,7 +47,9 @@ export const handleCheckoutSessionCompleted = async (
             _session: checkoutSession.id,
             metadata: {
                 paymentStatus: checkoutSession.payment_status,
-                amountTotal: (checkoutSession.amount_total || 0) / 100,
+                amountTotal: parseFloat(
+                    ((checkoutSession.amount_total || 0) / 100).toFixed(2)
+                ),
                 currency: checkoutSession.currency,
                 referrer: checkoutSession.metadata?.referrer || "unknown",
                 products: (order.items as Item[]).map((item) => ({

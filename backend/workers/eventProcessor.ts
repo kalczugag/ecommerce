@@ -64,6 +64,7 @@ eventQueue.process(async (job) => {
                     doc.eventType === "order"
                         ? doc.metadata.amountTotal || 0
                         : 0,
+                eventCount: 1,
                 earnings:
                     doc.eventType === "order"
                         ? doc.metadata.amountTotal || 0

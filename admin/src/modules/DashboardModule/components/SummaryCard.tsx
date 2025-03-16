@@ -1,18 +1,16 @@
 import { ReactNode } from "react";
-import dayjs from "dayjs";
 import { Chip } from "@mui/material";
 import { BarChart, LineChart, SparkLineChart } from "@/components/StyledCharts";
-import {
-    generateMonthDays,
-    generateRandomData,
-} from "@/utils/generateMonthDays";
 
 export interface SummaryCardProps {
     label: ReactNode;
     subLabel?: ReactNode;
-    value?: string;
+    value?: string | number;
     rate?: number;
-    data?: any[];
+    data: {
+        date: string;
+        value: any;
+    }[];
     size?: "small" | "medium" | "large";
     type?: "sparkLine" | "line" | "bar";
     children?: ReactNode;
@@ -41,24 +39,13 @@ const SummaryCard = ({
     const baseColor = rate > 5 ? "#52BC52" : rate < 5 ? "#C20A0A" : "#929EB6";
     const rateLabel = `${rateSign}${rate}%`;
 
-    const monthDays = generateMonthDays(dayjs().year(), dayjs().month() + 1);
-    const randomData = generateRandomData(monthDays.length);
-
     const selectedChart =
         type === "sparkLine" ? (
-            <SparkLineChart
-                data={randomData}
-                monthDays={monthDays}
-                baseColor={baseColor}
-            />
+            <SparkLineChart data={data} baseColor={baseColor} />
         ) : type === "line" ? (
-            <LineChart
-                data={randomData}
-                monthDays={monthDays}
-                colors={colors}
-            />
+            <LineChart data={data} colors={colors} />
         ) : (
-            <BarChart colors={colors} />
+            <BarChart data={data} colors={colors} />
         );
 
     return (
