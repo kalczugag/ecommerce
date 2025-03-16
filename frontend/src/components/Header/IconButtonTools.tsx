@@ -52,6 +52,7 @@ const AccountTools = () => {
             mutation: logout,
             onSuccess: () => {
                 trackEvent("log_out");
+                trackEvent("session_end", { reason: "logout" });
                 clearSession();
                 navigate("/");
             },

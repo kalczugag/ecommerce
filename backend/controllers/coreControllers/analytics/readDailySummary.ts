@@ -14,8 +14,16 @@ export const getDailySummary = async (
 
         if (all) {
             query = DailySummaryModel.find();
+        } else if (last30Days) {
+            const endDate = new Date();
+            const startDate = new Date();
+            startDate.setDate(startDate.getDate() - 30);
+
+            query = DailySummaryModel.find({
+                date: { $gte: startDate, $lt: endDate },
+            }).sort({ date: -1 });
         } else {
-            if (!date && !today && !last30Days)
+            if (!date && !today)
                 return res
                     .status(400)
                     .json(

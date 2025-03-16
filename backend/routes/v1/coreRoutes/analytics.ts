@@ -11,6 +11,13 @@ const analytics = (router: express.Router) => {
         hasRole("admin"),
         methods.readDailySummary
     );
+
+    router.get(
+        "/analytics/productDailySummary",
+        passport.authenticate("jwt", { session: false }),
+        hasRole("admin"),
+        methods.readProductDailySummary
+    );
 };
 
 export default analytics;
