@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGetUsersCartCountQuery, useLogoutMutation } from "@/store";
-import { enqueueSnackbar } from "notistack";
 import useAuth from "@/hooks/useAuth";
 import { Box, MenuItem, Avatar } from "@mui/material";
 import {
@@ -14,10 +13,14 @@ import { AvatarAuth, AvatarMenuItemProps } from "./AvatarMenuItem";
 import CartIcon from "./CartIcon";
 import Search from "./Search";
 import AvatarMenu from "./AvatarMenu";
+import { useHandleMutation } from "@/hooks/useHandleMutation";
+import { useAnalytics } from "@/hooks/useAnalytics";
 
 const AccountTools = () => {
     const navigate = useNavigate();
     const { token } = useAuth();
+    const { handleMutation } = useHandleMutation();
+    const { trackEvent, clearSession } = useAnalytics();
     const { data } = useGetUsersCartCountQuery(
         { onlyCount: true },
         {
@@ -42,19 +45,18 @@ const AccountTools = () => {
         navigate(to);
     };
 
-    const handleLogout = async () => {
-        try {
-            handleCloseUserMenu();
-            await logout();
-            navigate("/");
-            enqueueSnackbar("Logged out successfully", {
-                variant: "success",
-            });
-        } catch (error) {
-            enqueueSnackbar("Failed to logout", {
-                variant: "error",
-            });
-        }
+    const handleLogout = () => {
+        handleCloseUserMenu();
+
+        handleMutation({
+            mutation: logout,
+            onSuccess: () => {
+                trackEvent("log_out");
+                trackEvent("session_end", { reason: "logout" });
+                clearSession();
+                navigate("/");
+            },
+        });
     };
 
     const config: AvatarMenuItemProps[] = [

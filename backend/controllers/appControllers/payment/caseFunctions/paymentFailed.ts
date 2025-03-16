@@ -18,7 +18,7 @@ export const handlePaymentFailed = async (
             _user: userId,
             paymentMethod: "credit_card",
             paymentStatus: "failed",
-            amount: paymentIntent.amount / 100,
+            amount: parseFloat((paymentIntent.amount / 100).toFixed(2)),
             transactionId: paymentIntent.id,
             paymentDate: new Date(),
         });

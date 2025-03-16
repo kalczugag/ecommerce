@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useHandleMutation } from "@/hooks/useHandleMutation";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useTitle } from "@/hooks/useTitle";
+import { useAnalytics } from "@/hooks/useAnalytics";
 import { RegisterInput, useRegisterMutation } from "@/store";
 import AuthModule from "@/modules/AuthModule";
 import RegisterForm from "@/forms/RegisterForm";
@@ -15,6 +16,7 @@ const Register = () => {
     const recaptchaRef = useRef<ReCAPTCHA>(null);
     const recaptchaPromiseRef = useRef<((token: string) => void) | null>(null);
     const { handleMutation } = useHandleMutation();
+    const { trackEvent } = useAnalytics();
     const [register, { isLoading, isSuccess }] = useRegisterMutation();
 
     useEffect(() => {
@@ -38,6 +40,9 @@ const Register = () => {
             handleMutation({
                 values,
                 mutation: register,
+                onSuccess: () => {
+                    trackEvent("sing_up");
+                },
             });
     };
 

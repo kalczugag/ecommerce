@@ -11,12 +11,12 @@ import {
 import { LoadingButton } from "@mui/lab";
 import ImagePicker from "./ImagePicker";
 import type { Sizes } from "..";
+import type { ProductResult } from "@/store";
 import type { ShortReviewsCount } from "@/types/Review";
-import type { Product } from "@/types/Product";
 import SafeHtmlRender from "@/components/SafeHtmlRender";
 
 interface DetailsProductCardProps {
-    data?: Product;
+    data?: ProductResult;
     isLoading: boolean;
     editLoading: boolean;
     rating: ShortReviewsCount;

@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { CategoryModel } from "./Categories";
 import type { Product } from "../types/Product";
 
 const productSchema = new mongoose.Schema<Product>({

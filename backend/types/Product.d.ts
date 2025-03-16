@@ -18,7 +18,6 @@ export interface Product {
     }[];
     quantity: number;
     featuredCampaigns: string[] | FeaturedCampaign[];
-    salesCount: number;
     topLevelCategory: string | Category;
     secondLevelCategory: string | Category;
     thirdLevelCategory: string | Category;

@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useGetAllProductsQuery } from "@/store";
 import useDebounce from "@/hooks/useDebounce";
+import { useAnalytics } from "@/hooks/useAnalytics";
 import { IconButton } from "@mui/material";
 import { Close, Search as SearchIcon } from "@mui/icons-material";
 import SearchItem from "../SearchItem";
 
 const Search = () => {
     const navigate = useNavigate();
-
+    const { trackEvent } = useAnalytics();
     const [isOpen, setIsOpen] = useState(false);
     const [query, setQuery] = useSearchParams();
 
@@ -19,6 +20,8 @@ const Search = () => {
     const handleSearch = useDebounce((value: { searchTerm: string }) => {
         if (value.searchTerm === undefined) return;
         // const filter = { $text: { $search: value.searchTerm } };
+
+        trackEvent("search_performed", { searchTerm: value.searchTerm });
 
         setQuery({ q: value.searchTerm });
     }, 250);
