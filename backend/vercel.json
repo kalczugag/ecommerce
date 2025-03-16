@@ -10,7 +10,15 @@
         {
             "src": "/api/(.*)",
             "dest": "server.ts",
-            "methods": ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+            "methods": [
+                "GET",
+                "POST",
+                "PUT",
+                "DELETE",
+                "PATCH",
+                "OPTIONS",
+                "PING"
+            ],
             "headers": {
                 "Access-Control-Allow-Credentials": "true"
             }
