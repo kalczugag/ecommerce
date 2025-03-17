@@ -5,6 +5,8 @@ import type {
     DailySummary,
     DailySummaryQueryParams,
 } from "../../../types/Analytics";
+import { UserModel } from "../../../models/User";
+import { SummaryByCountryModel } from "../../../models/Analytics/SummaryByCountry";
 
 export const getDailySummary = async (
     req: express.Request<{}, {}, {}, DailySummaryQueryParams>,
@@ -16,6 +18,11 @@ export const getDailySummary = async (
         let query;
         let last30DaysData: DailySummary[] = [];
         let last6MonthsData = [];
+
+        const users = await Promise.all([
+            UserModel.countDocuments(),
+            SummaryByCountryModel.find({}),
+        ]).then(([total, byCountry]) => ({ total, byCountry }));
 
         if (last30Days) {
             const endDate = new Date();
@@ -111,6 +118,7 @@ export const getDailySummary = async (
         return res.status(201).json(
             successResponse({
                 todayOrDate: query || null,
+                users,
                 last30Days: last30DaysData,
                 last6Months: last6MonthsData,
             })

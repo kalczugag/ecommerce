@@ -24,6 +24,10 @@ const ProductDetails = () => {
         }
     }, [data?.result]);
 
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
     if (isError || (!isLoading && !data?.result)) return <NotFound />;
 
     const config = {

@@ -1,6 +1,8 @@
 import Queue from "bull";
 import { DailySummaryModel } from "../models/Analytics/DailySummary";
 import { ProductDailySummaryModel } from "../models/Analytics/ProductDailySummary";
+import { SummaryByCountryModel } from "../models/Analytics/SummaryByCountry";
+import { UserModel } from "models/User";
 
 const eventQueue = new Queue("event_processing", process.env.REDIS_URL!);
 
@@ -84,6 +86,24 @@ eventQueue.process(async (job) => {
                     : "referral";
 
             dailyUpdate.$inc[`sessions.${referrerType}`] = 1;
+        }
+
+        if (
+            doc.eventType === "sign_up" &&
+            doc.metadata.country &&
+            doc.metadata.flag
+        ) {
+            await SummaryByCountryModel.findOneAndUpdate(
+                { country: doc.country },
+                {
+                    $setOnInsert: {
+                        country: doc.metadata.country,
+                        flag: doc.metadata.flag,
+                    },
+                    $inc: { count: 1 },
+                },
+                { upsert: true, new: true }
+            );
         }
 
         await DailySummaryModel.findOneAndUpdate(

@@ -4,6 +4,7 @@ const schema = Joi.object({
     firstName: Joi.string().min(2).required(),
     lastName: Joi.string().min(2).required(),
     birthday: Joi.date().iso().optional(),
+    locale: Joi.any().optional(),
     _role: Joi.string().hex().length(24).optional(),
     address: Joi.object({
         street: Joi.string().min(2).optional(),

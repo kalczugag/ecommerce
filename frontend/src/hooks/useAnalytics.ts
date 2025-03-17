@@ -2,6 +2,7 @@ import { useRef, useEffect, useState, useCallback } from "react";
 import { v4 as uuid } from "uuid";
 import useAuth from "./useAuth";
 import type { Event } from "@/types/Analytics";
+import useReferrer from "./useReferrer";
 
 const SESSION_DURATION = 3600;
 
@@ -69,20 +70,22 @@ export const useAnalytics = (flushInterval = 5000): UseAnalyticsReturn => {
         }
     }, [userId]);
 
+    const referrer = useReferrer();
     useEffect(() => {
         const initializeSession = async () => {
             const sessionData = await getOrCreateSession();
             setSession(sessionData);
             sessionRef.current = sessionData;
-            const previousUrl =
-                sessionStorage.getItem("previousPageUrl") || "direct";
 
             if (sessionData.isNew) {
                 trackEvent("session_start", {
-                    locale: sessionData.locale,
+                    locale: {
+                        country: sessionData.locale.country_name,
+                        flag: sessionData.locale.flag,
+                    },
                     pageUrl: window.location.href,
                     pageTitle: document.title,
-                    referrer: previousUrl,
+                    referrer,
                 });
             }
         };
@@ -182,9 +185,9 @@ const getOrSetLocale = async () => {
     return locale;
 };
 
-const getIPData = async () => {
+export const getIPData = async () => {
     const fields =
-        "is_eu,country_name,country_code,continent_name,continent_code,calling_code,languages,currency,time_zone";
+        "is_eu,country_name,country_code,continent_name,continent_code,calling_code,languages,currency,time_zone,flag";
     const url = `https://api.ipdata.co?api-key=${
         import.meta.env.VITE_IPDATA_API_KEY
     }&fields=${fields}`;
@@ -198,7 +201,10 @@ const getIPData = async () => {
 
         const data = await response.json();
 
-        return data;
+        return {
+            ...data,
+            time_zone: data.time_zone.name,
+        };
     } catch (error) {
         console.log(error);
     }
