@@ -27,7 +27,6 @@ const LineChart = ({ data, colors }: SparkLineChartProps) => {
                 {
                     id: "date",
                     dataKey: "date",
-                    label: "Month",
                     scaleType: "band",
                     valueFormatter: (value) => value,
                 },

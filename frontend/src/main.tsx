@@ -3,7 +3,7 @@ import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { SnackbarProvider } from "notistack";
-import { store } from "./store";
+import { store } from "./store/index.ts";
 import App from "./App.tsx";
 import "./index.css";
 

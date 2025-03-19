@@ -1,5 +1,9 @@
 import { apiSlice } from "./apiSlice";
-import { DailySummary, DailySummaryQueryParams } from "@/types/Analytics";
+import {
+    DailySummary,
+    SummaryByCountry,
+    DailySummaryQueryParams,
+} from "@/types/Analytics";
 
 interface ResultDataProps {
     todayOrDate: DailySummary[];
@@ -9,6 +13,10 @@ interface ResultDataProps {
         year: number;
         pageViews: number;
     }[];
+    users: {
+        total: number;
+        byCountry: SummaryByCountry[];
+    };
 }
 
 export const analyticsApi = apiSlice.injectEndpoints({

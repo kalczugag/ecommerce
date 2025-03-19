@@ -38,6 +38,13 @@ interface ProductDailySummary {
     quantity: number; // Total quantity sold
 }
 
+interface SummaryByCountry {
+    _id?: string;
+    country: string;
+    flag: string;
+    count: number;
+}
+
 interface DailySummaryQueryParams extends ParsedQs {
     date?: Date;
     today?: boolean;
@@ -45,4 +52,10 @@ interface DailySummaryQueryParams extends ParsedQs {
     last6Months?: boolean;
 }
 
-export { Event, DailySummary, ProductDailySummary, DailySummaryQueryParams };
+export {
+    Event,
+    DailySummary,
+    ProductDailySummary,
+    DailySummaryQueryParams,
+    SummaryByCountry,
+};

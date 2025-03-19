@@ -46,6 +46,7 @@ const RegisterForm = ({ isLoading }: RegisterFormProps) => {
                                     : null
                             }
                             disabled={isLoading}
+                            fullWidth
                         />
                     )}
                 </Field>
@@ -63,6 +64,7 @@ const RegisterForm = ({ isLoading }: RegisterFormProps) => {
                                     : null
                             }
                             disabled={isLoading}
+                            fullWidth
                         />
                     )}
                 </Field>

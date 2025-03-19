@@ -1,18 +1,25 @@
 import { ReactNode } from "react";
 import { Chip } from "@mui/material";
-import { BarChart, LineChart, SparkLineChart } from "@/components/StyledCharts";
+import {
+    BarChart,
+    DonutChart,
+    LineChart,
+    SparkLineChart,
+} from "@/components/StyledCharts";
 
 export interface SummaryCardProps {
     label: ReactNode;
     subLabel?: ReactNode;
     value?: string | number;
     rate?: number;
-    data: {
-        date: string;
-        value: any;
-    }[];
+    data:
+        | {
+              date: string;
+              value: any;
+          }[]
+        | any;
     size?: "small" | "medium" | "large";
-    type?: "sparkLine" | "line" | "bar";
+    type?: "sparkLine" | "line" | "bar" | "pie";
     children?: ReactNode;
 }
 
@@ -44,14 +51,16 @@ const SummaryCard = ({
             <SparkLineChart data={data} baseColor={baseColor} />
         ) : type === "line" ? (
             <LineChart data={data} colors={colors} />
-        ) : (
+        ) : type === "bar" ? (
             <BarChart data={data} colors={colors} />
+        ) : (
+            <DonutChart total={data.total} byCountry={data.byCountry} />
         );
 
     return (
         <div
             className={`flex-1 flex flex-col min-w-60 space-y-1 p-4 border rounded-lg bg-[#F5F6FA] dark:bg-[#0C1017] ${
-                size !== "large" && "max-h-48"
+                size !== "large" ? "max-h-48" : "min-w-96"
             }`}
         >
             <h5 className="text-sm">{label}</h5>
