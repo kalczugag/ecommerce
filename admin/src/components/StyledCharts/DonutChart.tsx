@@ -41,6 +41,7 @@ const DonutChart = ({ total, byCountry }: DonutChartProps) => {
         color: colors[index] || colors[colors.length - 1],
         flag: item.flag,
     }));
+
     return (
         <Box
             sx={{

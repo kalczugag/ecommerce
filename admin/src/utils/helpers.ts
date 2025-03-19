@@ -16,3 +16,14 @@ export const serialize = (
         return acc;
     }, {} as Record<string, string>);
 };
+
+export const comparison = (thisData: number, lastData: number) => {
+    if (thisData === 0) {
+        return lastData === 0 ? 0 : -100;
+    }
+
+    const difference = thisData - lastData;
+    const percentageDifference = (difference / Math.abs(thisData)) * 100;
+
+    return percentageDifference;
+};

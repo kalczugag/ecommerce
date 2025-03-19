@@ -1,29 +1,19 @@
+import { ReactNode } from "react";
 import dayjs from "dayjs";
-import DefaultLayout from "@/layouts/DefaultLayout";
-import SummaryCard from "./components/SummaryCard";
+import { comparison } from "@/utils/helpers";
 import { Insights, KeyboardArrowRight } from "@mui/icons-material";
 import { Button } from "@mui/material";
-import type { DailySummary, SummaryByCountry } from "@/types/Analytics";
+import DefaultLayout from "@/layouts/DefaultLayout";
 import {
     generateLastMonths,
     generateMonthDays,
 } from "@/utils/generateMonthDays";
-import { ReactNode } from "react";
+import SummaryCard from "./components/SummaryCard";
+import type { DailySummary } from "@/types/Analytics";
+import type { ResultDataProps } from "@/store/apis/analyticsApi";
 
 interface DashboardModuleProps {
-    data: {
-        todayOrDate: DailySummary[];
-        last30Days: DailySummary[];
-        last6Months: {
-            month: number;
-            year: number;
-            pageViews: number;
-        }[];
-        users: {
-            total: number;
-            byCountry: SummaryByCountry[];
-        };
-    };
+    data: ResultDataProps;
 }
 
 const Wrapper = ({ children }: { children: ReactNode }) => {
@@ -93,6 +83,13 @@ const DashboardModule = ({ data }: DashboardModuleProps) => {
         ),
     };
 
+    const currSessionsAll =
+        sessions.direct + sessions.organic + sessions.referral;
+    const prevSessionsAll =
+        data.prev30Days.sessions.direct +
+        data.prev30Days.sessions.organic +
+        data.prev30Days.sessions.referral;
+
     return (
         <DefaultLayout>
             <Wrapper>
@@ -101,21 +98,24 @@ const DashboardModule = ({ data }: DashboardModuleProps) => {
                         label="Unique Visitors"
                         subLabel="Last 30 days"
                         value={uniqueVisitors}
-                        rate={25}
+                        rate={comparison(
+                            uniqueVisitors,
+                            data.prev30Days.uniqueUsers
+                        )}
                         data={formatSummaryData(data.last30Days, "uniqueUsers")}
                     />
                     <SummaryCard
                         label="Orders"
                         subLabel="Last 30 days"
                         value={orders}
-                        rate={-25}
+                        rate={comparison(orders, data.prev30Days.orders)}
                         data={formatSummaryData(data.last30Days, "orders")}
                     />
                     <SummaryCard
                         label="Earnings"
                         subLabel="Last 30 days"
                         value={`$${earnings.toFixed(2)}`}
-                        rate={5}
+                        rate={comparison(earnings, data.prev30Days.earnings)}
                         data={formatSummaryData(data.last30Days, "earnings")}
                     />
                     <SummaryCard
@@ -155,7 +155,7 @@ const DashboardModule = ({ data }: DashboardModuleProps) => {
                             sessions.organic +
                             sessions.referral
                         }
-                        rate={35}
+                        rate={comparison(currSessionsAll, prevSessionsAll)}
                         data={formatSummaryData(data.last30Days, "sessions")}
                         type="line"
                         size="large"
@@ -164,7 +164,7 @@ const DashboardModule = ({ data }: DashboardModuleProps) => {
                         label="Page views"
                         subLabel="Page views from the last 6 months"
                         value={pageViews}
-                        rate={-8}
+                        rate={comparison(pageViews, data.prev6Months.pageViews)}
                         data={formatLast6MonthsData(data.last6Months)}
                         type="bar"
                         size="large"

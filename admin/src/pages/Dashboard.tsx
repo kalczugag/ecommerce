@@ -9,6 +9,8 @@ const Dashboard = () => {
     const { data, isLoading, isError } = useGetDailySummaryQuery({
         last30Days: true,
         last6Months: true,
+        prev30Days: true,
+        prev6Months: true,
     });
 
     if (isError || (!isLoading && !data?.result)) return <NotFound />;
