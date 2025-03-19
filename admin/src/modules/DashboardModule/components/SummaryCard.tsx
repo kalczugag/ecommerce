@@ -6,13 +6,14 @@ import {
     LineChart,
     SparkLineChart,
 } from "@/components/StyledCharts";
+import Loading from "@/components/Loading";
 
 export interface SummaryCardProps {
     label: ReactNode;
     subLabel?: ReactNode;
     value?: string | number;
     rate?: number;
-    data:
+    data?:
         | {
               date: string;
               value: any;
@@ -20,6 +21,7 @@ export interface SummaryCardProps {
         | any;
     size?: "small" | "medium" | "large";
     type?: "sparkLine" | "line" | "bar" | "pie";
+    isLoading?: boolean;
     children?: ReactNode;
 }
 
@@ -33,17 +35,18 @@ const SummaryCard = ({
     label,
     subLabel,
     value,
-    rate: rateNumber,
-    data,
+    rate: rateNumber = 10,
+    data = [],
     type = "sparkLine",
     size = "small",
+    isLoading = false,
     children,
 }: SummaryCardProps) => {
     const rate = rateNumber || 0;
 
     const rateSign = rate > 0 ? "+" : "";
     const rateColorKey = rate > 5 ? "success" : rate < 5 ? "error" : "default";
-    const baseColor = rate > 5 ? "#52BC52" : rate < 5 ? "#C20A0A" : "#929EB6";
+    const baseColor = rate > 5 ? "#52BC52" : rate < -5 ? "#C20A0A" : "#929EB6";
     const rateLabel = `${rateSign}${rate}%`;
 
     const selectedChart =
@@ -58,7 +61,8 @@ const SummaryCard = ({
         );
 
     return (
-        <div
+        <Loading
+            isLoading={isLoading}
             className={`flex-1 flex flex-col min-w-60 space-y-1 p-4 border rounded-lg bg-[#F5F6FA] dark:bg-[#0C1017] ${
                 size !== "large" ? "max-h-48" : "min-w-96"
             }`}
@@ -85,9 +89,9 @@ const SummaryCard = ({
             {subLabel && (
                 <p className="text-[12px] text-gray-600">{subLabel}</p>
             )}
-            {data && selectedChart}
+            {data.length !== 0 && selectedChart}
             {children}
-        </div>
+        </Loading>
     );
 };
 

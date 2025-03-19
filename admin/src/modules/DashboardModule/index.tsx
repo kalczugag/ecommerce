@@ -14,6 +14,7 @@ import type { ResultDataProps } from "@/store/apis/analyticsApi";
 
 interface DashboardModuleProps {
     data: ResultDataProps;
+    isLoading: boolean;
 }
 
 const Wrapper = ({ children }: { children: ReactNode }) => {
@@ -54,7 +55,7 @@ const formatLast6MonthsData = (
     }));
 };
 
-const DashboardModule = ({ data }: DashboardModuleProps) => {
+const DashboardModule = ({ data, isLoading }: DashboardModuleProps) => {
     const uniqueVisitors = data.last30Days.reduce(
         (acc, item) => acc + item.uniqueUsers,
         0
@@ -103,6 +104,7 @@ const DashboardModule = ({ data }: DashboardModuleProps) => {
                             data.prev30Days.uniqueUsers
                         )}
                         data={formatSummaryData(data.last30Days, "uniqueUsers")}
+                        isLoading={isLoading}
                     />
                     <SummaryCard
                         label="Orders"
@@ -110,6 +112,7 @@ const DashboardModule = ({ data }: DashboardModuleProps) => {
                         value={orders}
                         rate={comparison(orders, data.prev30Days.orders)}
                         data={formatSummaryData(data.last30Days, "orders")}
+                        isLoading={isLoading}
                     />
                     <SummaryCard
                         label="Earnings"
@@ -117,6 +120,7 @@ const DashboardModule = ({ data }: DashboardModuleProps) => {
                         value={`$${earnings.toFixed(2)}`}
                         rate={comparison(earnings, data.prev30Days.earnings)}
                         data={formatSummaryData(data.last30Days, "earnings")}
+                        isLoading={isLoading}
                     />
                     <SummaryCard
                         label={
@@ -159,6 +163,7 @@ const DashboardModule = ({ data }: DashboardModuleProps) => {
                         data={formatSummaryData(data.last30Days, "sessions")}
                         type="line"
                         size="large"
+                        isLoading={isLoading}
                     />
                     <SummaryCard
                         label="Page views"
@@ -168,6 +173,7 @@ const DashboardModule = ({ data }: DashboardModuleProps) => {
                         data={formatLast6MonthsData(data.last6Months)}
                         type="bar"
                         size="large"
+                        isLoading={isLoading}
                     />
                 </Wrapper>
                 <Wrapper>
@@ -176,6 +182,7 @@ const DashboardModule = ({ data }: DashboardModuleProps) => {
                         data={data.users}
                         type="pie"
                         size="large"
+                        isLoading={isLoading}
                     />
                 </Wrapper>
             </Wrapper>

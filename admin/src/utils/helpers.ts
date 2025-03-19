@@ -23,7 +23,10 @@ export const comparison = (thisData: number, lastData: number) => {
     }
 
     const difference = thisData - lastData;
-    const percentageDifference = (difference / Math.abs(thisData)) * 100;
+    const percentageDifference = (
+        (difference / Math.abs(thisData)) *
+        100
+    ).toFixed(2);
 
-    return percentageDifference;
+    return +percentageDifference;
 };
