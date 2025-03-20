@@ -11,6 +11,7 @@ import {
 import SummaryCard from "./components/SummaryCard";
 import type { DailySummary } from "@/types/Analytics";
 import type { ResultDataProps } from "@/store/apis/analyticsApi";
+import OrdersTreeView from "./components/OrdersTreeView";
 
 interface DashboardModuleProps {
     data: ResultDataProps;
@@ -177,6 +178,7 @@ const DashboardModule = ({ data, isLoading }: DashboardModuleProps) => {
                     />
                 </Wrapper>
                 <Wrapper>
+                    <OrdersTreeView />
                     <SummaryCard
                         label="Users by country"
                         data={data.users}

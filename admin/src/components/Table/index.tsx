@@ -190,6 +190,7 @@ const CustomPaginationActionsTable = ({
                                             ({ render }, colIndex) => (
                                                 <TableCell
                                                     key={colIndex}
+                                                    padding="none"
                                                     align={
                                                         colIndex > 1
                                                             ? "right"

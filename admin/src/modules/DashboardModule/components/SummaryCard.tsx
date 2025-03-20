@@ -63,9 +63,9 @@ const SummaryCard = ({
     return (
         <Loading
             isLoading={isLoading}
-            className={`flex-1 flex flex-col min-w-60 space-y-1 p-4 border rounded-lg bg-[#F5F6FA] dark:bg-[#0C1017] ${
+            className={`flex-1 flex flex-col min-w-60 space-y-1 p-4 border rounded-lg bg-[#F5F6FA] dark:border-0 dark:bg-darker ${
                 size !== "large" ? "max-h-48" : "min-w-96"
-            }`}
+            } ${type === "pie" && "max-w-0"}`}
         >
             <h5 className="text-sm">{label}</h5>
             {value && rate && (
