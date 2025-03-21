@@ -1,4 +1,5 @@
-import { useTheme, styled } from "@mui/material/styles";
+import { useState } from "react";
+import { useTheme, styled, alpha } from "@mui/material/styles";
 import {
     Box,
     Table,
@@ -12,8 +13,14 @@ import {
     TableRow,
     Paper,
     IconButton,
+    Checkbox,
+    Typography,
+    Toolbar,
+    Tooltip,
 } from "@mui/material";
 import {
+    Delete,
+    FilterList,
     FirstPage,
     KeyboardArrowLeft,
     KeyboardArrowRight,
@@ -114,6 +121,49 @@ const TablePaginationActions = (props: TablePaginationActionsProps) => {
     );
 };
 
+interface EnhancedTableToolbarProps {
+    numSelected: number;
+}
+
+function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
+    const { numSelected } = props;
+    return (
+        <Toolbar
+            sx={[
+                {
+                    pl: { sm: 2 },
+                    pr: { xs: 1, sm: 1 },
+                },
+                numSelected > 0 && {
+                    bgcolor: (theme: any) =>
+                        alpha(
+                            theme.palette.primary.main,
+                            theme.palette.action.activatedOpacity
+                        ),
+                },
+            ]}
+        >
+            {numSelected > 0 && (
+                <Typography
+                    sx={{ flex: "1 1 100%" }}
+                    color="inherit"
+                    variant="subtitle1"
+                    component="div"
+                >
+                    {numSelected} selected
+                </Typography>
+            )}
+            {numSelected > 0 && (
+                <Tooltip title="Delete">
+                    <IconButton>
+                        <Delete />
+                    </IconButton>
+                </Tooltip>
+            )}
+        </Toolbar>
+    );
+}
+
 interface CustomPaginationActionsTableProps {
     headerOptions: TableColumnProps[];
     rowData: any[];
@@ -128,6 +178,7 @@ const CustomPaginationActionsTable = ({
     isLoading,
 }: CustomPaginationActionsTableProps) => {
     const [{ skip, limit }, setPagination] = usePagination();
+    const [selected, setSelected] = useState<readonly number[]>([]);
 
     const handleChangePage = (
         event: React.MouseEvent<HTMLButtonElement> | null,
@@ -145,15 +196,59 @@ const CustomPaginationActionsTable = ({
         });
     };
 
+    const handleSelectAllClick = (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        if (event.target.checked) {
+            const newSelected = rowData.map((n) => n._id);
+            setSelected(newSelected);
+            return;
+        }
+        setSelected([]);
+    };
+
+    const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
+        const selectedIndex = selected.indexOf(id);
+        let newSelected: readonly number[] = [];
+
+        if (selectedIndex === -1) {
+            newSelected = newSelected.concat(selected, id);
+        } else if (selectedIndex === 0) {
+            newSelected = newSelected.concat(selected.slice(1));
+        } else if (selectedIndex === selected.length - 1) {
+            newSelected = newSelected.concat(selected.slice(0, -1));
+        } else if (selectedIndex > 0) {
+            newSelected = newSelected.concat(
+                selected.slice(0, selectedIndex),
+                selected.slice(selectedIndex + 1)
+            );
+        }
+        setSelected(newSelected);
+    };
+
     return (
         <Loading isLoading={isLoading}>
             <TableContainer
                 component={Paper}
                 className="text-text-light dark:text-text-dark"
             >
-                <Table sx={{ minWidth: 500 }}>
+                <Table>
                     <TableHead>
                         <TableRow>
+                            <StyledTableCell padding="checkbox">
+                                <Checkbox
+                                    color="primary"
+                                    indeterminate={
+                                        selected.length > 0 &&
+                                        selected.length < rowData.length
+                                    }
+                                    checked={
+                                        rowData.length > 0 &&
+                                        selected.length === rowData.length
+                                    }
+                                    onChange={handleSelectAllClick}
+                                />
+                            </StyledTableCell>
                             {headerOptions.map(({ label }, index) => {
                                 if (index <= 1) {
                                     return (
@@ -184,25 +279,46 @@ const CustomPaginationActionsTable = ({
                             </TableRow>
                         ) : (
                             (limit > 0 ? rowData.slice(0, limit) : rowData).map(
-                                (row, rowIndex) => (
-                                    <TableRow key={rowIndex}>
-                                        {headerOptions.map(
-                                            ({ render }, colIndex) => (
-                                                <TableCell
-                                                    key={colIndex}
-                                                    padding="none"
-                                                    align={
-                                                        colIndex > 1
-                                                            ? "right"
-                                                            : "left"
-                                                    }
-                                                >
-                                                    {render(row)}
-                                                </TableCell>
-                                            )
-                                        )}
-                                    </TableRow>
-                                )
+                                (row, rowIndex) => {
+                                    const isItemSelected = selected.includes(
+                                        row._id
+                                    );
+
+                                    return (
+                                        <TableRow
+                                            hover
+                                            key={rowIndex}
+                                            onClick={(event) =>
+                                                handleClick(event, row._id)
+                                            }
+                                            role="checkbox"
+                                            tabIndex={-1}
+                                            selected={isItemSelected}
+                                            sx={{ cursor: "pointer" }}
+                                        >
+                                            <TableCell padding="checkbox">
+                                                <Checkbox
+                                                    color="primary"
+                                                    checked={isItemSelected}
+                                                />
+                                            </TableCell>
+                                            {headerOptions.map(
+                                                ({ render }, colIndex) => (
+                                                    <TableCell
+                                                        key={colIndex}
+                                                        align={
+                                                            colIndex > 1
+                                                                ? "right"
+                                                                : "left"
+                                                        }
+                                                    >
+                                                        {render(row)}
+                                                    </TableCell>
+                                                )
+                                            )}
+                                        </TableRow>
+                                    );
+                                }
                             )
                         )}
                     </TableBody>
