@@ -17,7 +17,7 @@ const Footer = () => {
                     justifyContent: "space-between",
                 }}
             >
-                <div className="flex-1 flex justify-center py-8 md:py-20">
+                <div className="flex-1 flex justify-center py-8 px-8 md:py-20">
                     <div className="flex flex-col space-y-4">
                         <span>
                             <p>st. Człuchowska 92</p>
@@ -46,7 +46,7 @@ const Footer = () => {
                     }}
                 />
 
-                <div className="flex-1 flex flex-col space-y-4 py-8 md:py-20">
+                <div className="flex-1 flex flex-col space-y-4 py-8 px-8 md:py-20">
                     <img
                         src="/icons/logoWhite.svg"
                         alt="logo"
@@ -89,7 +89,7 @@ const Footer = () => {
                     }}
                 />
 
-                <div className="flex-1 flex justify-evenly py-8 md:py-20">
+                <div className="flex-1 flex justify-evenly py-8 px-8 md:py-20">
                     <div className="flex flex-col items-start">
                         <Link to="#">About</Link>
                         <Link to="#">Blogs</Link>
@@ -106,7 +106,6 @@ const Footer = () => {
             </Container>
 
             <Divider
-                orientation={isMobile ? "horizontal" : "vertical"}
                 flexItem
                 sx={{
                     borderColor: "#444",

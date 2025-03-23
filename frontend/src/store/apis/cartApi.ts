@@ -51,6 +51,7 @@ export const cartApi = apiSlice.injectEndpoints({
 
 export const {
     useGetUsersCartQuery,
+    useLazyGetUsersCartQuery,
     useGetUsersCartCountQuery,
     useEditUsersCartMutation,
 } = cartApi;

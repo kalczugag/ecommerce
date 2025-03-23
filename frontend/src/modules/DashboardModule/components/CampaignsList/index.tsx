@@ -27,7 +27,7 @@ const CampaignsList = ({ isToken }: CampaignsListProps) => {
                 populate:
                     "products.title,products.brand,products.description,products.imageUrl,products.price,products.discountPercent,products.discountedPrice",
             },
-            !isToken
+            true
         );
         return data;
     };
