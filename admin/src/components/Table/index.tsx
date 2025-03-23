@@ -235,20 +235,6 @@ const CustomPaginationActionsTable = ({
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <StyledTableCell padding="checkbox">
-                                <Checkbox
-                                    color="primary"
-                                    indeterminate={
-                                        selected.length > 0 &&
-                                        selected.length < rowData.length
-                                    }
-                                    checked={
-                                        rowData.length > 0 &&
-                                        selected.length === rowData.length
-                                    }
-                                    onChange={handleSelectAllClick}
-                                />
-                            </StyledTableCell>
                             {headerOptions.map(({ label }, index) => {
                                 if (index <= 1) {
                                     return (
@@ -279,46 +265,24 @@ const CustomPaginationActionsTable = ({
                             </TableRow>
                         ) : (
                             (limit > 0 ? rowData.slice(0, limit) : rowData).map(
-                                (row, rowIndex) => {
-                                    const isItemSelected = selected.includes(
-                                        row._id
-                                    );
-
-                                    return (
-                                        <TableRow
-                                            hover
-                                            key={rowIndex}
-                                            onClick={(event) =>
-                                                handleClick(event, row._id)
-                                            }
-                                            role="checkbox"
-                                            tabIndex={-1}
-                                            selected={isItemSelected}
-                                            sx={{ cursor: "pointer" }}
-                                        >
-                                            <TableCell padding="checkbox">
-                                                <Checkbox
-                                                    color="primary"
-                                                    checked={isItemSelected}
-                                                />
-                                            </TableCell>
-                                            {headerOptions.map(
-                                                ({ render }, colIndex) => (
-                                                    <TableCell
-                                                        key={colIndex}
-                                                        align={
-                                                            colIndex > 1
-                                                                ? "right"
-                                                                : "left"
-                                                        }
-                                                    >
-                                                        {render(row)}
-                                                    </TableCell>
-                                                )
-                                            )}
-                                        </TableRow>
-                                    );
-                                }
+                                (row, rowIndex) => (
+                                    <TableRow key={rowIndex}>
+                                        {headerOptions.map(
+                                            ({ render }, colIndex) => (
+                                                <TableCell
+                                                    key={colIndex}
+                                                    align={
+                                                        colIndex > 1
+                                                            ? "right"
+                                                            : "left"
+                                                    }
+                                                >
+                                                    {render(row)}
+                                                </TableCell>
+                                            )
+                                        )}
+                                    </TableRow>
+                                )
                             )
                         )}
                     </TableBody>
