@@ -57,15 +57,13 @@ const Header = ({ topLabel }: HeaderProps) => {
             >
                 <Container maxWidth="xl">
                     <Toolbar disableGutters>
-                        <div className="flex items-center md:flex-none md:flex">
-                            <Link
-                                to="/"
-                                className="flex items-center mr-2 flex-grow"
-                            >
-                                <Adb className="mr-1 text-black" />
-                                <span className="hidden font-mono font-bold text-xl tracking-[.3rem] text-black no-underline md:block">
-                                    LOGO
-                                </span>
+                        <div className="flex items-center">
+                            <Link to="/" className="mr-2 flex items-center">
+                                <img
+                                    src="/icons/logo.svg"
+                                    alt="logo"
+                                    style={{ height: "60px" }}
+                                />
                             </Link>
                         </div>
                         <CategoryContainer

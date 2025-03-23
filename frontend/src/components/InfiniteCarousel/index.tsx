@@ -95,10 +95,7 @@ const InfiniteCarousel = ({
                         <Button
                             sx={{
                                 color: textColor.primary,
-                                fontWeight: "bold",
-                                padding: 0,
                                 paddingY: 1,
-                                lineHeight: "normal",
                             }}
                             endIcon={<ArrowForward />}
                         >

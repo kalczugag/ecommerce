@@ -1,7 +1,3 @@
-import {
-    generateLastMonths,
-    generateRandomData,
-} from "@/utils/generateMonthDays";
 import { BarChart as Chart } from "@mui/x-charts";
 
 interface BarLineChartProps {
