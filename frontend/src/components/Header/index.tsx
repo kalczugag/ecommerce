@@ -5,6 +5,7 @@ import { Adb } from "@mui/icons-material";
 import IconButtonTools from "./IconButtonTools";
 import { useGetGroupedCategoriesQuery } from "@/store";
 import { CategoryContainer, CategoryList } from "./Categories";
+import CartDrawer from "../Cart/CartDrawer";
 
 interface HeaderProps {
     topLabel?: string;
@@ -83,6 +84,7 @@ const Header = ({ topLabel }: HeaderProps) => {
                     setOpen={setOpenCategories}
                 />
             )}
+            <CartDrawer />
         </>
     );
 };

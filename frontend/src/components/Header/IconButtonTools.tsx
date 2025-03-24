@@ -10,7 +10,7 @@ import {
     AssignmentReturned,
 } from "@mui/icons-material";
 import { AvatarAuth, AvatarMenuItemProps } from "./AvatarMenuItem";
-import CartIcon from "./CartIcon";
+import { CartIcon } from "@/components/Cart";
 import Search from "./Search";
 import AvatarMenu from "./AvatarMenu";
 import { useHandleMutation } from "@/hooks/useHandleMutation";
