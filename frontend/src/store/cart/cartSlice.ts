@@ -5,7 +5,7 @@ interface CartState {
 }
 
 const initialState: CartState = {
-    drawerOpen: true,
+    drawerOpen: false,
 };
 
 const cartSlice = createSlice({

@@ -37,11 +37,15 @@ export const cartApi = apiSlice.injectEndpoints({
         }),
 
         editUsersCart: builder.mutation<ApiResponseObject<Cart>, BodyProps>({
-            query: (cart) => ({
-                url: `/cart/${cart.cartId}`,
-                method: "PATCH",
-                body: cart,
-            }),
+            query: (cart) => {
+                console.log(cart);
+
+                return {
+                    url: `/cart/${cart.cartId}`,
+                    method: "PATCH",
+                    body: cart,
+                };
+            },
             invalidatesTags: (data, error, cart) => [
                 { type: "Cart", id: data?.result._id },
             ],
