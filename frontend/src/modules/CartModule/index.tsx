@@ -1,8 +1,3 @@
-import { useNavigate } from "react-router-dom";
-import { useAddOrderMutation, useEditUsersCartMutation } from "@/store";
-import useAuth from "@/hooks/useAuth";
-import { useHandleMutation } from "@/hooks/useHandleMutation";
-import { useAnalytics } from "@/hooks/useAnalytics";
 import DefaultLayout from "@/layouts/DefaultLayout";
 import Loading from "@/components/Loading";
 import CheckoutSummary from "./components/CheckoutSummary";

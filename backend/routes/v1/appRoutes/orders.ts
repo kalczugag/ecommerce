@@ -19,6 +19,13 @@ const orders = (router: express.Router) => {
         methods.create
     );
 
+    router.delete(
+        "/orders/:id",
+        passport.authenticate("jwt", { session: false }),
+        isOwner("order"),
+        methods.delete
+    );
+
     router.patch(
         "/orders/:id",
         passport.authenticate("jwt", { session: false }),
