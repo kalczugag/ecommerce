@@ -12,14 +12,12 @@ import { LoadingButton } from "@mui/lab";
 import ImagePicker from "./ImagePicker";
 import type { Sizes } from "..";
 import type { ProductResult } from "@/store";
-import type { ShortReviewsCount } from "@/types/Review";
 import SafeHtmlRender from "@/components/SafeHtmlRender";
 
 interface DetailsProductCardProps {
     data?: ProductResult;
     isLoading: boolean;
     editLoading: boolean;
-    rating: ShortReviewsCount;
     onAddToCart: (size: Sizes | null) => void;
 }
 
@@ -27,7 +25,6 @@ const DetailsProductCard = ({
     data,
     isLoading,
     editLoading,
-    rating,
     onAddToCart,
 }: DetailsProductCardProps) => {
     const [currSize, setCurrSize] = useState<Sizes | null>(null);
@@ -126,17 +123,15 @@ const DetailsProductCard = ({
                         <div className="flex flex-row items-center space-x-2">
                             <Rating
                                 name="half-rating"
-                                defaultValue={rating.value}
+                                value={data?.analytics.average}
                                 precision={0.5}
                                 sx={{
                                     color: "inherit",
                                 }}
+                                readOnly
                             />
-                            <span className="text-sm text-gray-500">
-                                {rating.value * 5} Ratings
-                            </span>
                             <span className="text-sm font-bold text-gray-600">
-                                {rating.count} reviews
+                                {data?.analytics.reviewCount} reviews
                             </span>
                         </div>
                     )}

@@ -37,7 +37,6 @@ const ProductCard = ({
     variant = "default", // TODO
     size = "md",
     badges,
-    showRating = false,
 }: ProductCardProps) => {
     const {
         _id,
@@ -47,6 +46,7 @@ const ProductCard = ({
         color,
         discountPercent,
         price,
+        analytics,
         description,
     } = data;
 
@@ -96,7 +96,7 @@ const ProductCard = ({
                 <h3 className={`font-bold ${isHovered && "opacity-80"}`}>
                     {title}
                 </h3>
-                <p className="text-sm">
+                <p className="text-xs opacity-80">
                     <SafeHtmlRender
                         htmlContent={
                             description?.slice(0, size === "sm" ? 35 : 50) +
@@ -105,7 +105,7 @@ const ProductCard = ({
                     />
                 </p>
                 <div className="text-sm text-gray-600">{color}</div>
-                {showRating && (
+                {analytics.reviewCount > 0 && (
                     <Box
                         display="flex"
                         alignItems="center"
@@ -114,7 +114,7 @@ const ProductCard = ({
                     >
                         <Rating
                             name="half-rating"
-                            defaultValue={2.5}
+                            value={analytics.average}
                             size="small"
                             precision={0.5}
                             readOnly
@@ -122,7 +122,9 @@ const ProductCard = ({
                                 color: "inherit",
                             }}
                         />
-                        <span className="text-xs font-semibold">(202)</span>
+                        <span className="text-xs font-semibold">
+                            ({analytics.reviewCount})
+                        </span>
                     </Box>
                 )}
                 <p className="font-semibold space-x-2">

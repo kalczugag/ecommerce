@@ -25,7 +25,7 @@ const CampaignsList = ({ isToken }: CampaignsListProps) => {
                 skip: pageParam,
                 limit: 2,
                 populate:
-                    "products.title,products.brand,products.description,products.imageUrl,products.price,products.discountPercent,products.discountedPrice",
+                    "products.title,products.brand,products.description,products.imageUrl,products.price,products.analytics,products.discountPercent,products.discountedPrice",
             },
             true
         );
@@ -56,7 +56,6 @@ const CampaignsList = ({ isToken }: CampaignsListProps) => {
                             data={product}
                             variant="highlighted"
                             isLoading={isFetching}
-                            showRating
                         />
                     ));
 

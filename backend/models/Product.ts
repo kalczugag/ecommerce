@@ -17,6 +17,11 @@ const productSchema = new mongoose.Schema<Product>({
         },
     ],
     quantity: { type: Number, required: false, default: 0 },
+    analytics: {
+        average: { type: Number, default: 0 },
+        reviewCount: { type: Number, default: 0 },
+        recentReviews: { type: mongoose.Schema.ObjectId, ref: "Review" },
+    },
     topLevelCategory: {
         type: mongoose.Schema.ObjectId,
         ref: "Category",
