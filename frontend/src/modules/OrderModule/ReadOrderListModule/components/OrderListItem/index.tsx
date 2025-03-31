@@ -36,7 +36,7 @@ const OrderListItem = ({ data, isLoading }: OrderListItemProps) => {
                 <div className="flex flex-col space-y-4">
                     <div className="flex flex-col space-y-2 justify-between md:space-y-0 md:items-center md:flex-row">
                         <h1 className="font-semibold text-2xl break-words">
-                            Order number: {data?._id}
+                            Order number: {data?.orderNumber}
                         </h1>
                         <Button
                             variant="outlined"

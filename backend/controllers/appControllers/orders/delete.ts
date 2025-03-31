@@ -2,6 +2,7 @@ import express from "express";
 import { isValidObjectId } from "mongoose";
 import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import { OrderModel } from "../../../models/Order";
+import { CounterModel } from "../../../models/Counter";
 
 export const deleteOrder = async (
     req: express.Request<{ id: string }>,
@@ -23,6 +24,10 @@ export const deleteOrder = async (
                 .status(404)
                 .json(errorResponse(null, "Order not found", 404));
         }
+
+        await CounterModel.findById("orderNumber").updateOne({
+            $inc: { seq: -1 },
+        });
 
         return res.json(successResponse(deletedOrder));
     } catch (error) {

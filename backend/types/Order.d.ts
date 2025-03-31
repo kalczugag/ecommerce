@@ -114,6 +114,7 @@ interface Shipment extends Document {
 interface Order {
     _id?: string;
     _user: string | User;
+    orderNumber: number;
     items: string[] | Item[];
     status?:
         | "placed"

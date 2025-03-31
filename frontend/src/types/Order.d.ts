@@ -76,6 +76,7 @@ interface Shipment {
 interface Order {
     _id?: string;
     _user: User;
+    orderNumber: number;
     items: Item[];
     status?:
         | "placed"
