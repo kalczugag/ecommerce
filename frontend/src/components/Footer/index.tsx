@@ -9,7 +9,7 @@ const Footer = () => {
     return (
         <footer className="flex flex-col bg-[#1A1A1A] text-white mt-auto print:hidden">
             <Container
-                maxWidth="xl"
+                maxWidth="lg"
                 disableGutters
                 sx={{
                     display: "flex",

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { AppBar, Toolbar, Typography, Container } from "@mui/material";
-import { Adb } from "@mui/icons-material";
 import IconButtonTools from "./IconButtonTools";
 import { useGetGroupedCategoriesQuery } from "@/store";
 import { CategoryContainer, CategoryList } from "./Categories";
@@ -56,7 +55,7 @@ const Header = ({ topLabel }: HeaderProps) => {
                     },
                 }}
             >
-                <Container maxWidth="xl">
+                <Container maxWidth="lg">
                     <Toolbar disableGutters>
                         <div className="flex items-center">
                             <Link to="/" className="mr-2 flex items-center">

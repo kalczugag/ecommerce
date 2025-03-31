@@ -41,7 +41,7 @@ const DefaultLayout = ({
                 </Box>
             )}
             <Container
-                maxWidth="xl"
+                maxWidth="lg"
                 sx={{ display: "flex", marginY: marginY ? "40px" : 0 }}
                 className={`${
                     direction === "column" ? "flex-col" : "flex-row"

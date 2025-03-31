@@ -31,7 +31,7 @@ const CheckoutLayout = ({ children }: CheckoutLayoutProps) => {
         activeStep !== "cancel" && activeStep !== "success";
 
     return (
-        <Container maxWidth="xl">
+        <Container maxWidth="lg">
             {showCheckoutStatus ? (
                 <Stepper
                     nonLinear

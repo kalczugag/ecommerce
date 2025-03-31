@@ -86,7 +86,7 @@ const CategoryList = ({ data, page, isOpen, setOpen }: CategoryListProps) => {
                     }}
                 >
                     <Container
-                        maxWidth="xl"
+                        maxWidth="lg"
                         sx={{
                             display: "flex",
                         }}

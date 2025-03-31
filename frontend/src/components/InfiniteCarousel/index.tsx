@@ -82,7 +82,7 @@ const InfiniteCarousel = ({
                     }}
                 >
                     <Container
-                        maxWidth="xl"
+                        maxWidth="lg"
                         sx={{
                             padding: 2,
                         }}
@@ -114,7 +114,7 @@ const InfiniteCarousel = ({
                 }}
             >
                 <Container
-                    maxWidth="xl"
+                    maxWidth="lg"
                     sx={{
                         padding: 2,
                     }}
