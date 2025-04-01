@@ -25,6 +25,7 @@ import Summary from "@/pages/Checkout/Summary";
 import AccountDetails from "@/pages/Account/Details";
 import AccountOverview from "@/pages/Account/Overview";
 import AccountPreferences from "@/pages/Account/Preferences";
+import Review from "@/pages/Review/Review";
 import NotFound from "@/pages/404";
 
 const App = () => {
@@ -42,6 +43,7 @@ const App = () => {
                     <Route path="/product/:id" element={<ProductDetails />} />
                     <Route element={<PrivateOutlet />}>
                         <Route path="/cart" element={<Cart />} />
+                        <Route path="/product-review" element={<Review />} />
                         <Route
                             path="/checkout/:orderId/*"
                             element={<Checkout />}

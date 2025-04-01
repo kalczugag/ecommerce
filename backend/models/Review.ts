@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { ProductModel } from "./Product";
+import { OrderModel } from "./Order";
 import type { Review } from "../types/Review";
 
 const reviewSchema = new mongoose.Schema<Review>(
@@ -7,6 +8,11 @@ const reviewSchema = new mongoose.Schema<Review>(
         _product: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Product",
+            required: true,
+        },
+        _order: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Order",
             required: true,
         },
         _user: {
@@ -25,6 +31,12 @@ reviewSchema.pre("validate", async function (next) {
 
     if (!productExists) {
         return next(new Error("Invalid product: Product does not exist."));
+    }
+
+    const orderExists = await OrderModel.exists({ _id: this._order });
+
+    if (!orderExists) {
+        return next(new Error("Invalid order: Order does not exist."));
     }
 
     next();

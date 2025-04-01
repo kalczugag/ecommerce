@@ -125,6 +125,7 @@ const OrderDetails = ({ data, isLoading }: OrderDetailsProps) => {
                     <ProductCard
                         key={index}
                         data={item as Item}
+                        orderId={data?._id || ""}
                         status={data?.status}
                         timestamp={data?.createdAt}
                         isLoading={isLoading}
