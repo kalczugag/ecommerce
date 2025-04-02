@@ -31,6 +31,7 @@ interface Item {
     _id?: string;
     _order?: string | Order;
     _product: string | Product;
+    reviewed?: boolean;
     name?: string;
     color?: string;
     size?: string;

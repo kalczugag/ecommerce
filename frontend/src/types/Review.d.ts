@@ -4,5 +4,7 @@ export interface Review {
     _order: string;
     _user: string;
     value: number;
-    message: string;
+    pros?: string[];
+    cons?: string[];
+    message?: string;
 }

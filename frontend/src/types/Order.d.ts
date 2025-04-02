@@ -13,6 +13,7 @@ interface Item {
     _id?: string;
     _order?: string | Order;
     _product: Product;
+    reviewed?: boolean;
     name?: string;
     color?: string;
     size?: string;

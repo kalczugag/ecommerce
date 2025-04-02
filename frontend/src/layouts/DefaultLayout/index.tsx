@@ -1,4 +1,4 @@
-import { HTMLAttributes, ReactNode } from "react";
+import { HTMLAttributes, ReactNode, useEffect } from "react";
 import { Container, Box } from "@mui/material";
 
 export interface DefaultLayoutProps extends HTMLAttributes<HTMLDivElement> {
@@ -24,6 +24,10 @@ const DefaultLayout = ({
     className,
     ...rest
 }: DefaultLayoutProps) => {
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
     return (
         <>
             {featuredElement && (

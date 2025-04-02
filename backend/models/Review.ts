@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { ProductModel } from "./Product";
 import { OrderModel } from "./Order";
 import type { Review } from "../types/Review";
+import { BaseItemModel } from "./BaseItem";
 
 const reviewSchema = new mongoose.Schema<Review>(
     {
@@ -21,12 +22,23 @@ const reviewSchema = new mongoose.Schema<Review>(
             required: true,
         },
         value: { type: Number, required: true, min: 0.5, max: 5 },
-        message: { type: String, required: true },
+        pros: { type: [String], required: false },
+        cons: { type: [String], required: false },
+        message: { type: String, required: false, maxlength: 500 },
     },
     { timestamps: true }
 );
 
 reviewSchema.pre("validate", async function (next) {
+    const isReviewed = await BaseItemModel.exists({
+        _product: this._product,
+        reviewed: true,
+    });
+
+    if (isReviewed) {
+        return next(new Error("Product already reviewed"));
+    }
+
     const productExists = await ProductModel.exists({ _id: this._product });
 
     if (!productExists) {
@@ -67,6 +79,13 @@ reviewSchema.post("save", async function (doc) {
             },
         },
     ]);
+
+    process.nextTick(async () => {
+        await BaseItemModel.updateOne(
+            { _product: doc._product },
+            { $set: { reviewed: true } }
+        );
+    });
 });
 
 export const ReviewModel = mongoose.model("Review", reviewSchema);

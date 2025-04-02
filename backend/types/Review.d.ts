@@ -8,7 +8,9 @@ export interface Review {
     _order: Order | string;
     _user: User;
     value: number;
-    message: string;
+    pros?: string[];
+    cons?: string[];
+    message?: string;
 }
 
 export interface AddReview extends Omit<Review, "_user"> {}

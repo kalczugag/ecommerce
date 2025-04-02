@@ -38,21 +38,24 @@ const ProductCard = ({ data, orderId, isLoading }: ProductCardProps) => {
                                 <p>Size: {data.size}</p>
                                 <p>SKU: {product.sku}</p>
                             </div>
-                            <Button
-                                variant="outlined"
-                                sx={{ maxWidth: 170 }}
-                                onClick={() =>
-                                    navigate({
-                                        pathname: "/product-review",
-                                        search: createSearchParams({
-                                            orderId: orderId,
-                                            productId: data._product._id || "",
-                                        }).toString(),
-                                    })
-                                }
-                            >
-                                Review this product
-                            </Button>
+                            {!data.reviewed && (
+                                <Button
+                                    variant="outlined"
+                                    sx={{ maxWidth: 170 }}
+                                    onClick={() =>
+                                        navigate({
+                                            pathname: "/product-review",
+                                            search: createSearchParams({
+                                                orderId: orderId,
+                                                productId:
+                                                    data._product._id || "",
+                                            }).toString(),
+                                        })
+                                    }
+                                >
+                                    Review this product
+                                </Button>
+                            )}
                         </div>
                     </div>
                     <div className="font-semibold">
