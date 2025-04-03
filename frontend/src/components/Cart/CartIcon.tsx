@@ -9,7 +9,6 @@ import {
     Paper,
     Divider,
     Button,
-    useMediaQuery,
 } from "@mui/material";
 import { LocalMallOutlined } from "@mui/icons-material";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -18,6 +17,7 @@ import useCart from "@/hooks/useCart";
 
 interface CartIconProps {
     count: number;
+    isMobile: boolean;
 }
 
 const CartBadge = styled(Badge)`
@@ -27,8 +27,7 @@ const CartBadge = styled(Badge)`
     }
 `;
 
-const CartIcon = ({ count }: CartIconProps) => {
-    const isMobile = useMediaQuery("(max-width: 1024px)");
+const CartIcon = ({ count, isMobile }: CartIconProps) => {
     const navigate = useNavigate();
     const { pathname } = useLocation();
     const [open, setOpen] = useState(false);
@@ -62,27 +61,55 @@ const CartIcon = ({ count }: CartIconProps) => {
 
     return (
         <div>
-            <IconButton
-                ref={anchorRef}
-                onClick={() => {
-                    navigate("/cart");
-                    setOpen(false);
-                }}
-                onMouseEnter={handleOpen}
-                onMouseLeave={handleClose}
-            >
-                <LocalMallOutlined />
-                <CartBadge
-                    badgeContent={count}
-                    sx={{
-                        "& .MuiBadge-badge": {
-                            color: "white",
-                            backgroundColor: "#ef4444",
-                        },
+            {isMobile ? (
+                <IconButton
+                    ref={anchorRef}
+                    onClick={() => {
+                        navigate("/cart");
+                        setOpen(false);
                     }}
-                    overlap="circular"
-                />
-            </IconButton>
+                    onMouseEnter={handleOpen}
+                    onMouseLeave={handleClose}
+                >
+                    <LocalMallOutlined />
+                    <CartBadge
+                        badgeContent={count}
+                        sx={{
+                            "& .MuiBadge-badge": {
+                                color: "white",
+                                backgroundColor: "#ef4444",
+                            },
+                        }}
+                        overlap="circular"
+                    />
+                </IconButton>
+            ) : (
+                <Button
+                    ref={anchorRef}
+                    onClick={() => {
+                        navigate("/cart");
+                        setOpen(false);
+                    }}
+                    onMouseEnter={handleOpen}
+                    onMouseLeave={handleClose}
+                    color="inherit"
+                    startIcon={<LocalMallOutlined />}
+                >
+                    Cart
+                    <CartBadge
+                        badgeContent={count}
+                        sx={{
+                            "& .MuiBadge-badge": {
+                                color: "white",
+                                backgroundColor: "#ef4444",
+                                right: -10,
+                            },
+                        }}
+                        overlap="circular"
+                    />
+                </Button>
+            )}
+
             {!isMobile && (
                 <Popper
                     open={open}

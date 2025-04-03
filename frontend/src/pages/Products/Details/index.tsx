@@ -9,7 +9,7 @@ import NotFound from "@/components/NotFound";
 const ProductDetails = () => {
     const { id } = useParams<{ id: string }>();
     const { data, isLoading, isError } = useGetProductByIdQuery(id || "");
-    const { data: rating } = useGetReviewsByProductIdQuery(id || "");
+    // const { data: rating } = useGetReviewsByProductIdQuery(id || "");
     const { trackEvent } = useAnalytics();
     useTitle(data?.result.title || (!isLoading ? "Product - Details" : ""));
 
@@ -31,10 +31,6 @@ const ProductDetails = () => {
     if (isError || (!isLoading && !data?.result)) return <NotFound />;
 
     const config = {
-        rating: {
-            count: rating?.result.count || 0,
-            value: rating?.result.value || 0,
-        },
         isLoading,
     };
 

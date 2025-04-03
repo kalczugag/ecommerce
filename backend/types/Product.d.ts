@@ -21,7 +21,13 @@ export interface Product {
     analytics: {
         average: number;
         reviewCount: number;
-        recentReviews?: Review[] | string[];
+        byStars: {
+            1: number;
+            2: number;
+            3: number;
+            4: number;
+            5: number;
+        };
     };
     featuredCampaigns: string[] | FeaturedCampaign[];
     topLevelCategory: string | Category;

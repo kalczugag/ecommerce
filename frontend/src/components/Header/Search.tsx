@@ -3,11 +3,15 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useGetAllProductsQuery } from "@/store";
 import useDebounce from "@/hooks/useDebounce";
 import { useAnalytics } from "@/hooks/useAnalytics";
-import { IconButton } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import { Close, Search as SearchIcon } from "@mui/icons-material";
 import SearchItem from "../SearchItem";
 
-const Search = () => {
+interface SearchProps {
+    isMobile: boolean;
+}
+
+const Search = ({ isMobile }: SearchProps) => {
     const navigate = useNavigate();
     const { trackEvent } = useAnalytics();
     const [isOpen, setIsOpen] = useState(false);
@@ -33,9 +37,19 @@ const Search = () => {
     return (
         <div className="hidden md:block">
             {!isOpen ? (
-                <IconButton onClick={() => setIsOpen(true)}>
-                    <SearchIcon />
-                </IconButton>
+                isMobile ? (
+                    <IconButton onClick={() => setIsOpen(true)}>
+                        <SearchIcon />
+                    </IconButton>
+                ) : (
+                    <Button
+                        onClick={() => setIsOpen(true)}
+                        startIcon={<SearchIcon />}
+                        color="inherit"
+                    >
+                        Search
+                    </Button>
+                )
             ) : (
                 <SearchItem
                     handleSubmit={handleSearch}

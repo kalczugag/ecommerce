@@ -1,9 +1,12 @@
 import { PersonOutlineOutlined } from "@mui/icons-material";
-import { IconButton, Menu, Tooltip } from "@mui/material";
+import { Button, IconButton, Menu, Tooltip } from "@mui/material";
 import { AvatarMenuItem, AvatarMenuItemProps } from "./AvatarMenuItem";
+import { useNavigate } from "react-router-dom";
 
 interface AvatarMenuProps {
     config: AvatarMenuItemProps[];
+    isAuth: boolean;
+    isMobile: boolean;
     anchorElUser: HTMLElement | null;
     handleOpenUserMenu: (event: React.MouseEvent<HTMLElement>) => void;
     handleCloseUserMenu: () => void;
@@ -11,17 +14,31 @@ interface AvatarMenuProps {
 
 const AvatarMenu = ({
     config,
+    isAuth,
+    isMobile,
     anchorElUser,
     handleOpenUserMenu,
     handleCloseUserMenu,
 }: AvatarMenuProps) => {
+    const navigate = useNavigate();
+
     return (
         <div>
-            <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu}>
-                    <PersonOutlineOutlined sx={{ fontSize: "24px" }} />
-                </IconButton>
-            </Tooltip>
+            {isMobile ? (
+                <Tooltip title="Open settings">
+                    <IconButton onClick={handleOpenUserMenu}>
+                        <PersonOutlineOutlined sx={{ fontSize: "24px" }} />
+                    </IconButton>
+                </Tooltip>
+            ) : (
+                <Button
+                    onClick={() => navigate("/login")}
+                    startIcon={<PersonOutlineOutlined />}
+                    color="inherit"
+                >
+                    Sign In
+                </Button>
+            )}
             <Menu
                 sx={{ mt: "45px" }}
                 id="menu-appbar"
@@ -35,7 +52,7 @@ const AvatarMenu = ({
                     vertical: "top",
                     horizontal: "right",
                 }}
-                open={Boolean(anchorElUser)}
+                open={isAuth && Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
                 PaperProps={{
                     elevation: 0,
