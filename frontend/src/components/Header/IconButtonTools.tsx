@@ -112,7 +112,6 @@ const AccountTools = () => {
                 handleCloseUserMenu={handleCloseUserMenu}
             />
             <Wishlist isMobile={isMobile} />
-            {/* <Search isMobile={isMobile} /> */}
             <CartIcon count={data?.result.count || 0} isMobile={isMobile} />
         </Box>
     );

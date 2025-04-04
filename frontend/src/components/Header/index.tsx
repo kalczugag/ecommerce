@@ -5,6 +5,8 @@ import IconButtonTools from "./IconButtonTools";
 import { useGetGroupedCategoriesQuery } from "@/store";
 import { CategoryContainer, CategoryList } from "./Categories";
 import CartDrawer from "../Cart/CartDrawer";
+import Search from "./Search";
+import MouseLeaveListener from "../MouseLeaveListener";
 
 interface HeaderProps {
     topLabel?: string;
@@ -62,27 +64,34 @@ const Header = ({ topLabel }: HeaderProps) => {
                                 <img
                                     src="/icons/logo.svg"
                                     alt="logo"
-                                    style={{ height: "60px" }}
+                                    style={{ height: "60px", width: "80px" }}
                                 />
                             </Link>
                         </div>
-                        <CategoryContainer
-                            data={data?.result}
-                            setOpen={setOpenCategories}
-                            openCategories={openCategories}
-                        />
+                        <MouseLeaveListener
+                            onMouseLeave={() =>
+                                setOpenCategories({ isOpen: false, page: "" })
+                            }
+                        >
+                            <CategoryContainer
+                                data={data?.result}
+                                setOpen={setOpenCategories}
+                                openCategories={openCategories}
+                            />
+                            {data?.result && (
+                                <CategoryList
+                                    data={data.result}
+                                    page={openCategories.page}
+                                    isOpen={openCategories.isOpen}
+                                    setOpen={setOpenCategories}
+                                />
+                            )}
+                        </MouseLeaveListener>
+                        <Search isMobile={false} />
                         <IconButtonTools />
                     </Toolbar>
                 </Container>
             </AppBar>
-            {data?.result && (
-                <CategoryList
-                    data={data.result}
-                    page={openCategories.page}
-                    isOpen={openCategories.isOpen}
-                    setOpen={setOpenCategories}
-                />
-            )}
             <CartDrawer />
         </>
     );

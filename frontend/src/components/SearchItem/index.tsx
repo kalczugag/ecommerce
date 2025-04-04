@@ -1,45 +1,56 @@
 import { Form, Field } from "react-final-form";
-import { InputAdornment, TextField } from "@mui/material";
-import { Search } from "@mui/icons-material";
+import { IconButton, InputAdornment, InputBase, Paper } from "@mui/material";
+import { Close, Search } from "@mui/icons-material";
 
 interface SearchItemProps {
     placeholder?: string;
     endAdornment?: JSX.Element;
+    handleOpen: () => void;
     handleSubmit: (value: { searchTerm: string }) => void;
 }
 
 const SearchItem = ({
     placeholder,
     endAdornment,
+    handleOpen,
     handleSubmit,
 }: SearchItemProps) => {
     return (
         <Form
             onSubmit={handleSubmit}
-            render={({ handleSubmit }) => (
-                <form onSubmit={handleSubmit} className="text-end">
+            render={({ handleSubmit, form }) => (
+                <form onSubmit={handleSubmit} className="text-end z-50">
                     <Field name="searchTerm">
-                        {(props) => (
-                            <TextField
-                                {...props.input}
-                                autoFocus
-                                placeholder={
-                                    placeholder ? placeholder : "Search"
-                                }
-                                sx={{ minWidth: "300px" }}
-                                variant="standard"
-                                onChange={props.input.onChange}
-                                slotProps={{
-                                    input: {
-                                        startAdornment: (
-                                            <InputAdornment position="start">
-                                                <Search />
-                                            </InputAdornment>
-                                        ),
-                                        endAdornment,
-                                    },
+                        {({ input }) => (
+                            <Paper
+                                sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    p: "2px 4px",
+                                    mx: 2,
                                 }}
-                            />
+                                elevation={0}
+                                variant="outlined"
+                            >
+                                <InputAdornment position="start">
+                                    <Search />
+                                </InputAdornment>
+                                <InputBase
+                                    {...input}
+                                    sx={{ flex: 1, ml: 1 }}
+                                    onFocus={handleOpen}
+                                    placeholder={placeholder || "Search"}
+                                    fullWidth
+                                />
+                                {input.value.length > 0 && (
+                                    <IconButton
+                                        onClick={() => form.reset()}
+                                        size="small"
+                                    >
+                                        <Close />
+                                    </IconButton>
+                                )}
+                            </Paper>
                         )}
                     </Field>
                 </form>

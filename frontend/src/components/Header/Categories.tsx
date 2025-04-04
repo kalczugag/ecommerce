@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { Box, Button, Container } from "@mui/material";
+import { Box, Button, Container, Divider } from "@mui/material";
 import type { GroupedCategories } from "@/types/Category";
 
 interface CategoryButtonProps {
@@ -56,39 +56,34 @@ const CategoryList = ({ data, page, isOpen, setOpen }: CategoryListProps) => {
 
     if (!topLevelCategory) return null;
 
-    const handleMouseLeave = (e: React.MouseEvent) => {
-        const target = e.relatedTarget as Element;
-        if (!target?.closest(".categories-container")) {
-            setOpen({ isOpen: false, page: "" });
-        }
-    };
-
-    const handleMouseEnter = () => {
-        isOpen && setOpen((prev) => ({ ...prev, isOpen: true }));
-    };
-
     const handleCloseCategories = () => {
         setOpen((prev) => ({ ...prev, isOpen: false }));
     };
 
     return (
-        <Box onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+        <Box>
             {isOpen && (
                 <Container
                     maxWidth={false}
                     disableGutters
                     sx={{
-                        position: "absolute",
+                        position: "fixed",
+                        top: 96.5,
+                        left: 0,
+                        width: "100vw",
                         backgroundColor: "white",
-                        padding: "20px",
                         borderBottom: "1px solid #e0e0e0",
-                        zIndex: 9999,
+                        pb: 2,
+                        zIndex: 10,
+                        overflow: "auto",
                     }}
                 >
+                    <Divider sx={{ mb: 2 }} />
                     <Container
                         maxWidth="lg"
                         sx={{
                             display: "flex",
+                            margin: "0 auto",
                         }}
                     >
                         {data.secondLevelCategories
@@ -167,11 +162,7 @@ interface CategoryContainerProps {
     >;
 }
 
-const CategoryContainer = ({
-    data,
-    openCategories,
-    setOpen,
-}: CategoryContainerProps) => {
+const CategoryContainer = ({ data, setOpen }: CategoryContainerProps) => {
     const handleMouseOver = (page: string) => {
         setOpen({ isOpen: true, page });
     };
@@ -182,7 +173,7 @@ const CategoryContainer = ({
 
     return (
         <Box
-            className="flex flex-grow"
+            className="flex"
             sx={{
                 "@media print": {
                     display: "none",

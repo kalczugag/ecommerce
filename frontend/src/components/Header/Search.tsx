@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useGetAllProductsQuery } from "@/store";
 import useDebounce from "@/hooks/useDebounce";
 import { useAnalytics } from "@/hooks/useAnalytics";
-import { Button, IconButton } from "@mui/material";
-import { Close, Search as SearchIcon } from "@mui/icons-material";
+import { Backdrop, Box, IconButton } from "@mui/material";
+import { Close } from "@mui/icons-material";
 import SearchItem from "../SearchItem";
 
 interface SearchProps {
@@ -16,10 +16,14 @@ const Search = ({ isMobile }: SearchProps) => {
     const { trackEvent } = useAnalytics();
     const [isOpen, setIsOpen] = useState(false);
     const [query, setQuery] = useSearchParams();
+    const containerRef = useRef<HTMLDivElement>(null);
 
     const { isSuccess } = useGetAllProductsQuery(query, {
         skip: !!query,
     });
+
+    const handleOpen = () => setIsOpen(true);
+    const handleClose = () => setIsOpen(false);
 
     const handleSearch = useDebounce((value: { searchTerm: string }) => {
         if (value.searchTerm === undefined) return;
@@ -28,40 +32,56 @@ const Search = ({ isMobile }: SearchProps) => {
         trackEvent("search_performed", { searchTerm: value.searchTerm });
 
         setQuery({ q: value.searchTerm });
+        handleClose();
     }, 250);
 
     useEffect(() => {
         if (isSuccess) navigate(`products?q=${query.get("q")}`);
     }, [isSuccess]);
 
+    useEffect(() => {
+        document.body.style.overflow = isOpen ? "hidden" : "";
+    }, [isOpen]);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (
+                containerRef.current &&
+                !containerRef.current.contains(event.target as Node)
+            ) {
+                handleClose();
+            }
+        };
+        if (isOpen) {
+            document.addEventListener("mousedown", handleClickOutside);
+        } else {
+            document.removeEventListener("mousedown", handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [isOpen]);
+
     return (
-        <div className="hidden md:block">
-            {!isOpen ? (
-                isMobile ? (
-                    <IconButton onClick={() => setIsOpen(true)}>
-                        <SearchIcon />
-                    </IconButton>
-                ) : (
-                    <Button
-                        onClick={() => setIsOpen(true)}
-                        startIcon={<SearchIcon />}
-                        color="inherit"
-                    >
-                        Search
-                    </Button>
-                )
-            ) : (
+        <Box sx={{ position: "relative", flex: 1 }} ref={containerRef}>
+            <Backdrop
+                open={isOpen}
+                sx={{ zIndex: (theme) => theme.zIndex.appBar - 1 }}
+                onClick={handleClose}
+            />
+            <Box
+                sx={{
+                    zIndex: (theme) => theme.zIndex.appBar + 1,
+                    position: "relative",
+                }}
+            >
                 <SearchItem
                     handleSubmit={handleSearch}
-                    endAdornment={
-                        <IconButton onClick={() => setIsOpen(false)}>
-                            <Close />
-                        </IconButton>
-                    }
-                    placeholder="Search product"
+                    handleOpen={handleOpen}
                 />
-            )}
-        </div>
+            </Box>
+        </Box>
     );
 };
 

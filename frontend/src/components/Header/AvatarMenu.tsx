@@ -32,11 +32,13 @@ const AvatarMenu = ({
                 </Tooltip>
             ) : (
                 <Button
-                    onClick={() => navigate("/login")}
+                    onClick={(e) =>
+                        isAuth ? handleOpenUserMenu(e) : navigate("/login")
+                    }
                     startIcon={<PersonOutlineOutlined />}
                     color="inherit"
                 >
-                    Sign In
+                    {isAuth ? "My account" : "Sign In"}
                 </Button>
             )}
             <Menu
