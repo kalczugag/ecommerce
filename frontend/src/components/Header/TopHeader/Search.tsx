@@ -3,9 +3,8 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useGetAllProductsQuery } from "@/store";
 import useDebounce from "@/hooks/useDebounce";
 import { useAnalytics } from "@/hooks/useAnalytics";
-import { Backdrop, Box, IconButton } from "@mui/material";
-import { Close } from "@mui/icons-material";
-import SearchItem from "../SearchItem";
+import { Backdrop, Box } from "@mui/material";
+import SearchItem from "../../SearchItem";
 
 interface SearchProps {
     isMobile: boolean;

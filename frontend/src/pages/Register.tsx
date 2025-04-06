@@ -9,6 +9,7 @@ import { RegisterInput, useRegisterMutation } from "@/store";
 import AuthModule from "@/modules/AuthModule";
 import RegisterForm from "@/forms/RegisterForm";
 import { Button, Divider } from "@mui/material";
+import { Save } from "@mui/icons-material";
 
 const Register = () => {
     useTitle("Sign Up");
@@ -62,7 +63,7 @@ const Register = () => {
                             type="submit"
                             variant="contained"
                             sx={{ bgcolor: "#1c2028" }}
-                            disabled={isLoading}
+                            loading={isLoading}
                             fullWidth
                         >
                             Sign up

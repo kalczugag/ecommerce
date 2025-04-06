@@ -9,6 +9,7 @@ import { useAnalytics } from "@/hooks/useAnalytics";
 import AuthModule from "@/modules/AuthModule";
 import LoginForm from "@/forms/LoginForm";
 import { Button, Divider } from "@mui/material";
+import { Save } from "@mui/icons-material";
 
 const Login = () => {
     useTitle("Sign In");
@@ -61,7 +62,7 @@ const Login = () => {
                             type="submit"
                             variant="contained"
                             sx={{ bgcolor: "#1c2028" }}
-                            disabled={isLoading}
+                            loading={isLoading}
                             fullWidth
                         >
                             Sign in

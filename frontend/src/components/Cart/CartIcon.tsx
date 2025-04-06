@@ -135,82 +135,62 @@ const CartIcon = ({ count, isMobile }: CartIconProps) => {
 
                                     <Loading isLoading={loading.get}>
                                         <div className="flex flex-col py-4 space-y-4 bg-[#EFEFF0] min-h-24 max-h-96 overflow-y-scroll">
-                                            {!isEmpty ? (
-                                                data?.result.items.map(
-                                                    (item) => (
-                                                        <div
-                                                            key={item._id}
-                                                            className="bg-white p-4 space-y-2"
-                                                        >
+                                            {data?.result.items.map((item) => (
+                                                <div
+                                                    key={item._id}
+                                                    className="bg-white p-4 space-y-2"
+                                                >
+                                                    <p>
+                                                        {item.quantity} item
+                                                        {item.quantity > 1 &&
+                                                            "s"}{" "}
+                                                        from{" "}
+                                                        <span className="font-semibold">
+                                                            {
+                                                                item._product
+                                                                    .brand
+                                                            }
+                                                        </span>
+                                                    </p>
+                                                    <Link
+                                                        to={`/product/${item._product._id}`}
+                                                        onClick={() =>
+                                                            setOpen(false)
+                                                        }
+                                                        className="flex justify-between space-x-4"
+                                                    >
+                                                        <img
+                                                            src={`${item._product.imageUrl[0]}?imwidth=100`}
+                                                            className="w-20 h-20 border object-top object-cover"
+                                                            alt={
+                                                                item._product
+                                                                    .title
+                                                            }
+                                                        />
+                                                        <div className="flex-1 text-gray-600 text-sm">
                                                             <p>
                                                                 {item.quantity}{" "}
-                                                                item
-                                                                {item.quantity >
-                                                                    1 &&
-                                                                    "s"}{" "}
-                                                                from{" "}
-                                                                <span className="font-semibold">
-                                                                    {
-                                                                        item
-                                                                            ._product
-                                                                            .brand
-                                                                    }
-                                                                </span>
-                                                            </p>
-                                                            <Link
-                                                                to={`/product/${item._product._id}`}
-                                                                onClick={() =>
-                                                                    setOpen(
-                                                                        false
-                                                                    )
+                                                                &times;{" "}
+                                                                {
+                                                                    item
+                                                                        ._product
+                                                                        .title
                                                                 }
-                                                                className="flex justify-between space-x-4"
-                                                            >
-                                                                <img
-                                                                    src={`${item._product.imageUrl[0]}?imwidth=100`}
-                                                                    className="w-20 h-20 border object-top object-cover"
-                                                                    alt={
-                                                                        item
-                                                                            ._product
-                                                                            .title
-                                                                    }
-                                                                />
-                                                                <div className="flex-1 text-gray-600 text-sm">
-                                                                    <p>
-                                                                        {
-                                                                            item.quantity
-                                                                        }{" "}
-                                                                        &times;{" "}
-                                                                        {
-                                                                            item
-                                                                                ._product
-                                                                                .title
-                                                                        }
-                                                                    </p>
-                                                                    <p>
-                                                                        Size:{" "}
-                                                                        {
-                                                                            item.size
-                                                                        }
-                                                                    </p>
-                                                                </div>
-                                                                <p className="text-xl font-semibold">
-                                                                    $
-                                                                    {item.total?.toFixed(
-                                                                        2
-                                                                    )}
-                                                                </p>
-                                                            </Link>
+                                                            </p>
+                                                            <p>
+                                                                Size:{" "}
+                                                                {item.size}
+                                                            </p>
                                                         </div>
-                                                    )
-                                                )
-                                            ) : (
-                                                <div className="flex justify-center items-center space-y-4">
-                                                    <h1 className="text-lg font-bold">
-                                                        Your cart is empty
-                                                    </h1>
+                                                        <p className="text-xl font-semibold">
+                                                            $
+                                                            {item.total?.toFixed(
+                                                                2
+                                                            )}
+                                                        </p>
+                                                    </Link>
                                                 </div>
-                                            )}
+                                            ))}
                                         </div>
                                     </Loading>
 
