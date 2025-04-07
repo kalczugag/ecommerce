@@ -22,25 +22,6 @@ const TopHeader = ({ topLabel }: TopHeaderProps) => {
                             />
                         </Link>
                     </div>
-                    {/* <MouseLeaveListener
-                        onMouseLeave={() =>
-                            setOpenCategories({ isOpen: false, page: "" })
-                        }
-                    >
-                        <CategoryContainer
-                            data={data?.result}
-                            setOpen={setOpenCategories}
-                            openCategories={openCategories}
-                        />
-                        {data?.result && (
-                            <CategoryList
-                                data={data.result}
-                                page={openCategories.page}
-                                isOpen={openCategories.isOpen}
-                                setOpen={setOpenCategories}
-                            />
-                        )}
-                    </MouseLeaveListener> */}
                     <Search isMobile={false} />
                     <IconButtonTools />
                 </Toolbar>

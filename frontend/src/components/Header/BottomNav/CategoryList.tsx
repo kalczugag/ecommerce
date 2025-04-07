@@ -1,49 +1,13 @@
-import { Link, useNavigate } from "react-router-dom";
-import { Box, Button, Container, Divider } from "@mui/material";
 import type { GroupedCategories } from "@/types/Category";
-
-interface CategoryButtonProps {
-    name: string;
-    onClick: () => void;
-    onMouseOver: (name: string) => void;
-}
-
-const CategoryButton = ({
-    name,
-    onClick,
-    onMouseOver,
-}: CategoryButtonProps) => {
-    const navigate = useNavigate();
-
-    const handleClick = () => {
-        navigate(name.toLowerCase());
-        onClick();
-    };
-
-    return (
-        <Button
-            onClick={handleClick}
-            onMouseOver={() => onMouseOver(name)}
-            sx={{
-                my: 2,
-                color: "black",
-                display: "block",
-            }}
-        >
-            {name}
-        </Button>
-    );
-};
+import { Box, Container, Divider } from "@mui/material";
+import { Link } from "react-router-dom";
 
 interface CategoryListProps {
     data?: GroupedCategories;
     page: string;
     isOpen: boolean;
     setOpen: React.Dispatch<
-        React.SetStateAction<{
-            isOpen: boolean;
-            page: string;
-        }>
+        React.SetStateAction<{ isOpen: boolean; page: string }>
     >;
 }
 
@@ -67,18 +31,17 @@ const CategoryList = ({ data, page, isOpen, setOpen }: CategoryListProps) => {
                     maxWidth={false}
                     disableGutters
                     sx={{
-                        position: "fixed",
-                        top: 96.5,
+                        position: "absolute",
+                        top: 129.5,
                         left: 0,
-                        width: "100vw",
                         backgroundColor: "white",
                         borderBottom: "1px solid #e0e0e0",
+                        pt: 2,
                         pb: 2,
                         zIndex: 10,
                         overflow: "auto",
                     }}
                 >
-                    <Divider sx={{ mb: 2 }} />
                     <Container
                         maxWidth="lg"
                         sx={{
@@ -148,50 +111,4 @@ const CategoryList = ({ data, page, isOpen, setOpen }: CategoryListProps) => {
     );
 };
 
-interface CategoryContainerProps {
-    data?: GroupedCategories;
-    openCategories: {
-        isOpen: boolean;
-        page: string;
-    };
-    setOpen: React.Dispatch<
-        React.SetStateAction<{
-            isOpen: boolean;
-            page: string;
-        }>
-    >;
-}
-
-const CategoryContainer = ({ data, setOpen }: CategoryContainerProps) => {
-    const handleMouseOver = (page: string) => {
-        setOpen({ isOpen: true, page });
-    };
-
-    const handleCloseCategories = () => {
-        setOpen((prev) => ({ ...prev, isOpen: false }));
-    };
-
-    return (
-        <Box
-            className="flex"
-            sx={{
-                "@media print": {
-                    display: "none",
-                },
-            }}
-        >
-            {(
-                data?.topLevelCategories || [{ name: "men" }, { name: "women" }]
-            ).map(({ name }, index) => (
-                <CategoryButton
-                    key={name + "_" + index}
-                    name={name}
-                    onMouseOver={handleMouseOver}
-                    onClick={handleCloseCategories}
-                />
-            ))}
-        </Box>
-    );
-};
-
-export { CategoryList, CategoryContainer };
+export default CategoryList;

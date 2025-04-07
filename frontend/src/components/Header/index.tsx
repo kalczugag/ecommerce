@@ -10,11 +10,6 @@ interface HeaderProps {
 }
 
 const Header = ({ topLabel }: HeaderProps) => {
-    const [openCategories, setOpenCategories] = useState({
-        isOpen: false,
-        page: "",
-    });
-
     const { data } = useGetGroupedCategoriesQuery({ sorted: true });
 
     return (
