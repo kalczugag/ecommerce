@@ -1,6 +1,7 @@
 import { useState } from "react";
 import {
     Box,
+    Button,
     FormControl,
     InputLabel,
     MenuItem,
@@ -8,7 +9,6 @@ import {
     Select,
     Skeleton,
 } from "@mui/material";
-import { LoadingButton } from "@mui/lab";
 import ImagePicker from "./ImagePicker";
 import type { Sizes } from "..";
 import type { ProductResult } from "@/store";
@@ -221,13 +221,14 @@ const DetailsProductCard = ({
                     )}
                 </div>
                 <div>
-                    <LoadingButton
+                    <Button
                         onClick={() => onAddToCart(currSize)}
-                        loading={editLoading || isLoading}
                         variant="contained"
+                        loading={editLoading || isLoading}
+                        loadingPosition="end"
                     >
                         Add to cart
-                    </LoadingButton>
+                    </Button>
                 </div>
                 <div className="text-gray-700 md:w-96">
                     {isLoading ? (

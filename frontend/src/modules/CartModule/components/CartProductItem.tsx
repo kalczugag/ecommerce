@@ -89,7 +89,8 @@ const CartProductItem = ({
                     <Button
                         variant="contained"
                         onClick={() => onDelete(data._id!)}
-                        disabled={isLoading}
+                        loading={isLoading}
+                        loadingPosition="end"
                     >
                         Remove
                     </Button>

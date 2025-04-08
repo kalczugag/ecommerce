@@ -64,6 +64,7 @@ const Register = () => {
                             variant="contained"
                             sx={{ bgcolor: "#1c2028" }}
                             loading={isLoading}
+                            loadingPosition="end"
                             fullWidth
                         >
                             Sign up

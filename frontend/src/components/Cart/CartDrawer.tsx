@@ -20,7 +20,7 @@ const CartDrawer = () => {
     const { drawerOpen } = useAppSelector((state) => state.cart);
     const {
         data,
-        loading,
+        loading, // change to loading object { get, add, edit } with id of element that is loading
         isEmpty,
         handleCheckout,
         handleQuantityChange,
@@ -117,7 +117,7 @@ const CartDrawer = () => {
                                     </div>
                                     <Button
                                         onClick={() => handleDelete(item._id!)}
-                                        disabled={loading.edit}
+                                        loading={loading.edit}
                                     >
                                         Remove
                                     </Button>
@@ -143,7 +143,9 @@ const CartDrawer = () => {
                     <Button
                         variant="contained"
                         onClick={handleCheckout}
-                        disabled={loading.add || loading.get}
+                        loading={loading.add}
+                        loadingPosition="end"
+                        disabled={loading.get}
                     >
                         Checkout
                     </Button>

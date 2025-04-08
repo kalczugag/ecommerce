@@ -12,7 +12,7 @@ const TopHeader = ({ topLabel }: TopHeaderProps) => {
     return (
         <>
             <Container maxWidth="lg">
-                <Toolbar disableGutters>
+                <Toolbar disableGutters id="back-to-top-anchor">
                     <div className="flex items-center">
                         <Link to="/" className="mr-2 flex items-center">
                             <img
