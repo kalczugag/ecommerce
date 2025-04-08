@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGetUsersCartCountQuery, useLogoutMutation } from "@/store";
 import useAuth from "@/hooks/useAuth";
-import { Box, MenuItem, Avatar } from "@mui/material";
+import { Box, MenuItem, Avatar, useMediaQuery } from "@mui/material";
 import {
     Logout,
     Inbox,
@@ -10,13 +10,14 @@ import {
     AssignmentReturned,
 } from "@mui/icons-material";
 import { AvatarAuth, AvatarMenuItemProps } from "./AvatarMenuItem";
-import CartIcon from "./CartIcon";
-import Search from "./Search";
+import { CartIcon } from "@/components/Cart";
+import Wishlist from "./Wishlist";
 import AvatarMenu from "./AvatarMenu";
 import { useHandleMutation } from "@/hooks/useHandleMutation";
 import { useAnalytics } from "@/hooks/useAnalytics";
 
 const AccountTools = () => {
+    const isMobile = useMediaQuery("(max-width: 1024px)");
     const navigate = useNavigate();
     const { token } = useAuth();
     const { handleMutation } = useHandleMutation();
@@ -98,15 +99,20 @@ const AccountTools = () => {
     ];
 
     return (
-        <Box sx={{ flexGrow: 0 }} className="flex space-x-2">
+        <Box
+            sx={{ flexGrow: 0 }}
+            className="flex items-center space-x-2 md:space-x-4"
+        >
             <AvatarMenu
                 config={config}
+                isAuth={Boolean(token)}
+                isMobile={isMobile}
                 anchorElUser={anchorElUser}
                 handleOpenUserMenu={handleOpenUserMenu}
                 handleCloseUserMenu={handleCloseUserMenu}
             />
-            <Search />
-            <CartIcon count={data?.result.count || 0} />
+            <Wishlist isMobile={isMobile} />
+            <CartIcon count={data?.result.count || 0} isMobile={isMobile} />
         </Box>
     );
 };

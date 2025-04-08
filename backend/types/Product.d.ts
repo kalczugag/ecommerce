@@ -1,6 +1,7 @@
 import type { ParsedQs } from "qs";
 import type { Category } from "./Category";
 import type { FeaturedCampaign } from "./FeaturedCampaign";
+import type { Review } from "./Review";
 
 export interface Product {
     _id?: string;
@@ -17,6 +18,17 @@ export interface Product {
         quantity: number;
     }[];
     quantity: number;
+    analytics: {
+        average: number;
+        reviewCount: number;
+        byStars: {
+            1: number;
+            2: number;
+            3: number;
+            4: number;
+            5: number;
+        };
+    };
     featuredCampaigns: string[] | FeaturedCampaign[];
     topLevelCategory: string | Category;
     secondLevelCategory: string | Category;

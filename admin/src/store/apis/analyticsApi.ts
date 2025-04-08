@@ -5,7 +5,7 @@ import {
     DailySummaryQueryParams,
 } from "@/types/Analytics";
 
-interface ResultDataProps {
+export interface ResultDataProps {
     todayOrDate: DailySummary[];
     last30Days: DailySummary[];
     last6Months: {
@@ -16,6 +16,19 @@ interface ResultDataProps {
     users: {
         total: number;
         byCountry: SummaryByCountry[];
+    };
+    prev30Days: {
+        uniqueUsers: number;
+        orders: number;
+        earnings: number;
+        sessions: {
+            direct: number;
+            organic: number;
+            referral: number;
+        };
+    };
+    prev6Months: {
+        pageViews: number;
     };
 }
 

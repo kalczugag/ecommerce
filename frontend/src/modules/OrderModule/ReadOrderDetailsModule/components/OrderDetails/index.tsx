@@ -77,7 +77,7 @@ const OrderDetails = ({ data, isLoading }: OrderDetailsProps) => {
                             sx={{ display: "inline-block" }}
                         />
                     ) : (
-                        data?._id
+                        data?.orderNumber
                     )}
                 </h1>
                 {data?.status !== "canceled" && data?.status !== "returned" && (
@@ -125,6 +125,7 @@ const OrderDetails = ({ data, isLoading }: OrderDetailsProps) => {
                     <ProductCard
                         key={index}
                         data={item as Item}
+                        orderId={data?._id || ""}
                         status={data?.status}
                         timestamp={data?.createdAt}
                         isLoading={isLoading}

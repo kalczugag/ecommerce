@@ -15,6 +15,11 @@ export interface Product {
         quantity: number;
     }[];
     quantity: number;
+    analytics: {
+        average: number;
+        reviewCount: number;
+        recentReviews?: Review[] | string[];
+    };
     topLevelCategory: string;
     secondLevelCategory: string;
     thirdLevelCategory: string;

@@ -41,6 +41,7 @@ const DonutChart = ({ total, byCountry }: DonutChartProps) => {
         color: colors[index] || colors[colors.length - 1],
         flag: item.flag,
     }));
+
     return (
         <Box
             sx={{
@@ -81,7 +82,7 @@ const DonutChart = ({ total, byCountry }: DonutChartProps) => {
                 <Box
                     sx={{
                         position: "absolute",
-                        top: "50%",
+                        top: "33%",
                         left: "50%",
                         transform: "translate(-50%, -50%)",
                         textAlign: "center",
@@ -109,7 +110,6 @@ const DonutChart = ({ total, byCountry }: DonutChartProps) => {
                                 mb: 2,
                             }}
                         >
-                            {/* Country Flag */}
                             <Box
                                 component="img"
                                 src={item.flag}
@@ -153,10 +153,10 @@ const DonutChart = ({ total, byCountry }: DonutChartProps) => {
                                     sx={{
                                         width: "100%",
                                         height: 8,
-                                        backgroundColor: "#E0E0E0",
                                         borderRadius: 4,
                                         overflow: "hidden",
                                     }}
+                                    className="bg-[#E0E0E0] dark:bg-dark-primary"
                                 >
                                     <Box
                                         sx={{

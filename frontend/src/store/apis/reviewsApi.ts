@@ -1,18 +1,26 @@
+import { Review } from "@/types/Review";
 import { apiSlice } from "./apiSlice";
-import type { ShortReviewsCount } from "@/types/Review";
 
 export const reviewsApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        getReviewsByProductId: builder.query<
-            ApiResponseObject<ShortReviewsCount>,
-            string
-        >({
-            query: (id) => ({
-                url: `/reviews/${id}`,
-                method: "GET",
+        getReviewsByProductId: builder.query<ApiResponseObject<Review>, string>(
+            {
+                query: (id) => ({
+                    url: `/reviews/${id}`,
+                    method: "GET",
+                }),
+            }
+        ),
+
+        addReview: builder.mutation<ApiResponseObject<Review>, Review>({
+            query: (values) => ({
+                url: "/reviews",
+                method: "POST",
+                body: values,
             }),
         }),
     }),
 });
 
-export const { useGetReviewsByProductIdQuery } = reviewsApi;
+export const { useGetReviewsByProductIdQuery, useAddReviewMutation } =
+    reviewsApi;

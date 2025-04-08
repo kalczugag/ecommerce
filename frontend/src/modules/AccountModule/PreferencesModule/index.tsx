@@ -1,10 +1,10 @@
 import { Form } from "react-final-form";
 import { useUpdateUserMutation } from "@/store";
 import { enqueueSnackbar } from "notistack";
-import { LoadingButton } from "@mui/lab";
 import AccountLayout from "@/layouts/AccountLayout";
 import MultiSelect from "./components/MultiSelect";
 import Loading from "@/components/Loading";
+import { Button } from "@mui/material";
 
 interface PreferencesModuleProps {
     config: {
@@ -54,7 +54,7 @@ const PreferencesModule = ({ config }: PreferencesModuleProps) => {
                                 data={data}
                                 isLoading={isInitialLoading}
                             />
-                            <LoadingButton
+                            <Button
                                 type="submit"
                                 variant="contained"
                                 loading={isLoading}
@@ -65,7 +65,7 @@ const PreferencesModule = ({ config }: PreferencesModuleProps) => {
                                 }
                             >
                                 Save
-                            </LoadingButton>
+                            </Button>
                         </div>
                     </form>
                 )}

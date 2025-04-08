@@ -3,9 +3,14 @@ import { ReactNode } from "react";
 interface RowProps {
     label?: string;
     children: ReactNode;
+    orientation?: "row" | "column";
+    className?: string;
 }
 
-const Row = ({ label, children }: RowProps) => {
+const Row = ({ label, children, orientation = "row", className }: RowProps) => {
+    const orientationClass =
+        orientation === "row" ? "flex-row space-x-2" : "flex-col space-y-2";
+
     return (
         <>
             {label ? (
@@ -14,7 +19,9 @@ const Row = ({ label, children }: RowProps) => {
                     <div className="flex space-x-2">{children}</div>
                 </div>
             ) : (
-                <div className="flex space-x-2">{children}</div>
+                <div className={`flex ${orientationClass} ${className}`}>
+                    {children}
+                </div>
             )}
         </>
     );

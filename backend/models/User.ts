@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { SummaryModel } from "./Summary";
 import { CartModel } from "./Cart";
 import { getStartOfThisWeek } from "../utils/helpers";
 import type { Locale, User } from "../types/User";
@@ -106,24 +105,6 @@ userSchema.post("save", async function (doc) {
             doc._cart = newCart._id;
             await doc.save();
         }
-
-        const userDate = new Date(doc.createdAt);
-        const startOfWeek = getStartOfThisWeek();
-
-        const summary = await SummaryModel.findOneAndUpdate(
-            {},
-            { $setOnInsert: { createdAt: new Date() } },
-            { upsert: true, new: true }
-        );
-
-        summary.users.count += 1;
-
-        const isThisWeek = userDate >= startOfWeek;
-        if (isThisWeek) {
-            summary.users.thisWeek += 1;
-        }
-
-        await summary.save();
     } catch (error) {
         console.error(
             "Error creating cart or updating summary after user save:",

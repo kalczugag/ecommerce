@@ -11,6 +11,8 @@
         },
         "module": "ESNext",
         "skipLibCheck": true,
+        "typeRoots": ["node_modules/@types"],
+        "types": ["prop-types"],
 
         /* Bundler mode */
         "moduleResolution": "bundler",

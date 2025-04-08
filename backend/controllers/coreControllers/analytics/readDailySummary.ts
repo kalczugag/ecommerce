@@ -7,17 +7,24 @@ import type {
 } from "../../../types/Analytics";
 import { UserModel } from "../../../models/User";
 import { SummaryByCountryModel } from "../../../models/Analytics/SummaryByCountry";
+import { redisClient } from "../../../config/redis";
 
 export const getDailySummary = async (
     req: express.Request<{}, {}, {}, DailySummaryQueryParams>,
     res: express.Response
 ) => {
-    const { date, today, last30Days, last6Months } = req.query;
+    const { date, today, last30Days, last6Months, prev30Days, prev6Months } =
+        req.query;
+
+    const cacheKey = res.locals.cacheKey;
 
     try {
         let query;
         let last30DaysData: DailySummary[] = [];
         let last6MonthsData = [];
+        let prev30DaysData: Record<string, number | Record<string, number>> =
+            {};
+        let prev6MonthsData: Record<string, number> = {};
 
         const users = await Promise.all([
             UserModel.countDocuments(),
@@ -70,8 +77,79 @@ export const getDailySummary = async (
                     },
                 },
             ]);
+        }
 
-            last6MonthsData = JSON.parse(JSON.stringify(last6MonthsData));
+        if (prev30Days) {
+            const endDate = new Date();
+            const startDate = new Date();
+            startDate.setDate(startDate.getDate() - 30);
+            endDate.setDate(endDate.getDate() - 60);
+
+            const prev30Days = await DailySummaryModel.find({
+                date: { $gte: startDate, $lt: endDate },
+            });
+
+            if (prev30Days.length === 0) {
+                prev30DaysData = {
+                    uniqueUsers: 0,
+                    orders: 0,
+                    earnings: 0,
+                    sessions: {
+                        direct: 0,
+                        organic: 0,
+                        referral: 0,
+                    },
+                };
+            } else {
+                prev30DaysData.uniqueUsers = prev30Days.reduce(
+                    (acc, item) => acc + item.uniqueUsers,
+                    0
+                );
+                prev30DaysData.orders = prev30Days.reduce(
+                    (acc, item) => acc + item.orders,
+                    0
+                );
+                prev30DaysData.earnings = prev30Days.reduce(
+                    (acc, item) => acc + item.earnings,
+                    0
+                );
+                prev30DaysData.sessions = {
+                    direct: prev30Days.reduce(
+                        (acc, item) => acc + item.sessions.direct,
+                        0
+                    ),
+                    organic: prev30Days.reduce(
+                        (acc, item) => acc + item.sessions.organic,
+                        0
+                    ),
+                    referral: prev30Days.reduce(
+                        (acc, item) => acc + item.sessions.referral,
+                        0
+                    ),
+                };
+            }
+        }
+
+        if (prev6Months) {
+            const endDate = new Date();
+            const startDate = new Date();
+            startDate.setDate(startDate.getMonth());
+            endDate.setDate(endDate.getMonth() - 6);
+
+            const prev6Months = await DailySummaryModel.find({
+                date: { $gte: startDate, $lt: endDate },
+            });
+
+            if (prev6Months.length === 0) {
+                prev6MonthsData = {
+                    pageViews: 0,
+                };
+            } else {
+                prev6MonthsData.pageViews = prev6Months.reduce(
+                    (acc, item) => acc + item.pageViews,
+                    0
+                );
+            }
         }
 
         if (today || date) {
@@ -115,14 +193,18 @@ export const getDailySummary = async (
                 .json(errorResponse(null, "No data found", 404));
         }
 
-        return res.status(201).json(
-            successResponse({
-                todayOrDate: query || null,
-                users,
-                last30Days: last30DaysData,
-                last6Months: last6MonthsData,
-            })
-        );
+        const response = successResponse({
+            todayOrDate: query || null,
+            users,
+            last30Days: last30DaysData,
+            last6Months: last6MonthsData,
+            prev30Days: prev30DaysData,
+            prev6Months: prev6MonthsData,
+        });
+
+        await redisClient.set(cacheKey, JSON.stringify(response), "EX", 300);
+
+        return res.status(201).json(response);
     } catch (error) {
         console.error(error);
         return res

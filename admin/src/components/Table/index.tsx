@@ -1,4 +1,5 @@
-import { useTheme, styled } from "@mui/material/styles";
+import { useState } from "react";
+import { useTheme, styled, alpha } from "@mui/material/styles";
 import {
     Box,
     Table,
@@ -12,8 +13,14 @@ import {
     TableRow,
     Paper,
     IconButton,
+    Checkbox,
+    Typography,
+    Toolbar,
+    Tooltip,
 } from "@mui/material";
 import {
+    Delete,
+    FilterList,
     FirstPage,
     KeyboardArrowLeft,
     KeyboardArrowRight,
@@ -114,6 +121,49 @@ const TablePaginationActions = (props: TablePaginationActionsProps) => {
     );
 };
 
+interface EnhancedTableToolbarProps {
+    numSelected: number;
+}
+
+function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
+    const { numSelected } = props;
+    return (
+        <Toolbar
+            sx={[
+                {
+                    pl: { sm: 2 },
+                    pr: { xs: 1, sm: 1 },
+                },
+                numSelected > 0 && {
+                    bgcolor: (theme: any) =>
+                        alpha(
+                            theme.palette.primary.main,
+                            theme.palette.action.activatedOpacity
+                        ),
+                },
+            ]}
+        >
+            {numSelected > 0 && (
+                <Typography
+                    sx={{ flex: "1 1 100%" }}
+                    color="inherit"
+                    variant="subtitle1"
+                    component="div"
+                >
+                    {numSelected} selected
+                </Typography>
+            )}
+            {numSelected > 0 && (
+                <Tooltip title="Delete">
+                    <IconButton>
+                        <Delete />
+                    </IconButton>
+                </Tooltip>
+            )}
+        </Toolbar>
+    );
+}
+
 interface CustomPaginationActionsTableProps {
     headerOptions: TableColumnProps[];
     rowData: any[];
@@ -128,6 +178,7 @@ const CustomPaginationActionsTable = ({
     isLoading,
 }: CustomPaginationActionsTableProps) => {
     const [{ skip, limit }, setPagination] = usePagination();
+    const [selected, setSelected] = useState<readonly number[]>([]);
 
     const handleChangePage = (
         event: React.MouseEvent<HTMLButtonElement> | null,
@@ -145,13 +196,43 @@ const CustomPaginationActionsTable = ({
         });
     };
 
+    const handleSelectAllClick = (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        if (event.target.checked) {
+            const newSelected = rowData.map((n) => n._id);
+            setSelected(newSelected);
+            return;
+        }
+        setSelected([]);
+    };
+
+    const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
+        const selectedIndex = selected.indexOf(id);
+        let newSelected: readonly number[] = [];
+
+        if (selectedIndex === -1) {
+            newSelected = newSelected.concat(selected, id);
+        } else if (selectedIndex === 0) {
+            newSelected = newSelected.concat(selected.slice(1));
+        } else if (selectedIndex === selected.length - 1) {
+            newSelected = newSelected.concat(selected.slice(0, -1));
+        } else if (selectedIndex > 0) {
+            newSelected = newSelected.concat(
+                selected.slice(0, selectedIndex),
+                selected.slice(selectedIndex + 1)
+            );
+        }
+        setSelected(newSelected);
+    };
+
     return (
         <Loading isLoading={isLoading}>
             <TableContainer
                 component={Paper}
                 className="text-text-light dark:text-text-dark"
             >
-                <Table sx={{ minWidth: 500 }}>
+                <Table>
                     <TableHead>
                         <TableRow>
                             {headerOptions.map(({ label }, index) => {

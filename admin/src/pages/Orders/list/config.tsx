@@ -36,7 +36,9 @@ export const tableConfig: TableColumnProps<RowProps>[] = [
     {
         label: "Order",
         render: (row) => (
-            <UnderlineLink to={`/orders/${row._id}`}>{row._id}</UnderlineLink>
+            <UnderlineLink to={`/orders/${row._id}`}>
+                {row.orderNumber}
+            </UnderlineLink>
         ),
     },
     {

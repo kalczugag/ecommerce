@@ -31,6 +31,7 @@ interface Item {
     _id?: string;
     _order?: string | Order;
     _product: string | Product;
+    reviewed?: boolean;
     name?: string;
     color?: string;
     size?: string;
@@ -114,6 +115,7 @@ interface Shipment extends Document {
 interface Order {
     _id?: string;
     _user: string | User;
+    orderNumber: number;
     items: string[] | Item[];
     status?:
         | "placed"

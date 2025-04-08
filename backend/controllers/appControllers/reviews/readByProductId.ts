@@ -1,10 +1,14 @@
 import express from "express";
 import { isValidObjectId } from "mongoose";
+import { MongooseQueryParser } from "mongoose-query-parser";
 import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import { ReviewModel } from "../../../models/Review";
+import type { PaginatedReviews } from "../../../types/Review";
+
+const parser = new MongooseQueryParser();
 
 export const getReviewsByProduct = async (
-    req: express.Request<{ id: string }>,
+    req: express.Request<{ id: string }, {}, {}, PaginatedReviews>,
     res: express.Response
 ) => {
     const { id } = req.params;
@@ -15,28 +19,35 @@ export const getReviewsByProduct = async (
             .json(errorResponse(null, "Invalid product ID format", 400));
     }
 
-    try {
-        const result = await ReviewModel.aggregate([
-            {
-                $match: { _product: id },
-            },
-            {
-                $group: {
-                    _id: "$_product",
-                    totalDocuments: { $sum: 1 },
-                    averageRating: { $avg: "$value" },
-                },
-            },
-        ]);
+    const parsedQuery = parser.parse(req.query);
 
-        const { averageRating, totalDocuments } = result[0] || {
-            averageRating: 0,
-            totalDocuments: 0,
-        };
+    const page = parsedQuery.skip
+        ? parseInt(parsedQuery.skip as unknown as string, 10)
+        : 0;
+    const pageSize = parsedQuery.limit
+        ? parseInt(parsedQuery.limit as unknown as string, 10)
+        : 10;
+
+    try {
+        const reviews = await ReviewModel.find({ _product: id })
+            .select(parsedQuery.select)
+            .sort(parsedQuery.sort || { createdAt: -1 })
+            .skip(page * pageSize)
+            .limit(pageSize)
+            .exec();
+        const totalDocuments = await ReviewModel.countDocuments({
+            _product: id,
+        });
+
+        if (!reviews) {
+            return res
+                .status(404)
+                .json(errorResponse(null, "Product reviews not found", 404));
+        }
 
         return res
             .status(200)
-            .json(successResponse(averageRating, "OK", 200, totalDocuments));
+            .json(successResponse(reviews, "OK", 200, totalDocuments));
     } catch (error) {
         console.error(error);
         return res

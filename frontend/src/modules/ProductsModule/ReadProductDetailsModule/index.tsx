@@ -1,30 +1,34 @@
-import { useEditUsersCartMutation, ProductResult } from "@/store";
+import { useEditUsersCartMutation, ProductResult, setDrawer } from "@/store";
 import { useSnackbar } from "notistack";
 import useAuth from "@/hooks/useAuth";
+import { useAppDispatch } from "@/hooks/useStore";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import { useHandleMutation } from "@/hooks/useHandleMutation";
 import DefaultLayout from "@/layouts/DefaultLayout";
 import DetailsProductCard from "./components/DetailsProductCard";
-import type { ShortReviewsCount } from "@/types/Review";
 
 export type Sizes = string;
 
 interface ReadProductModuleProps {
     config: {
-        rating: ShortReviewsCount;
         isLoading: boolean;
     };
     data?: ProductResult;
 }
 
 const ReadProductModule = ({ config, data }: ReadProductModuleProps) => {
-    const { rating, isLoading } = config;
+    const { isLoading } = config;
+    const dispatch = useAppDispatch();
     const { cartId, token } = useAuth();
     const { enqueueSnackbar } = useSnackbar();
     const { trackEvent } = useAnalytics();
     const { handleMutation } = useHandleMutation();
 
     const [editCart, { isLoading: editLoading }] = useEditUsersCartMutation();
+
+    const toggleDrawer = (newOpen: boolean) => {
+        dispatch(setDrawer(newOpen));
+    };
 
     const handleAddToCart = async (size: Sizes | null) => {
         if (!size) {
@@ -51,11 +55,13 @@ const ReadProductModule = ({ config, data }: ReadProductModuleProps) => {
                     },
                     mutation: editCart,
                     onSuccess: () => {
+                        toggleDrawer(true);
                         trackEvent("add_to_cart", {
                             _cart: cartId,
                             _product: data._id,
                         });
                     },
+                    snackbar: false,
                 });
             }
         } else {
@@ -71,7 +77,6 @@ const ReadProductModule = ({ config, data }: ReadProductModuleProps) => {
                 data={data}
                 isLoading={isLoading}
                 editLoading={editLoading}
-                rating={rating}
                 onAddToCart={handleAddToCart}
             />
         </DefaultLayout>

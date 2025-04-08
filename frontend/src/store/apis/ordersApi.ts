@@ -59,6 +59,16 @@ export const ordersApi = apiSlice.injectEndpoints({
             }),
         }),
 
+        deleteOrder: builder.mutation<ApiResponseObject<Order>, string>({
+            query: (id) => ({
+                url: `/orders/${id}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: (result, error, id) => [
+                { type: "Orders", id: id },
+            ],
+        }),
+
         updateOrder: builder.mutation<ApiResponseObject<Order>, UpdateOrder>({
             query: (order) => ({
                 url: `/orders/${order._id}`,
@@ -77,5 +87,6 @@ export const {
     useLazyGetOrdersByUserIdQuery,
     useGetOrdersByUserIdQuery,
     useAddOrderMutation,
+    useDeleteOrderMutation,
     useUpdateOrderMutation,
 } = ordersApi;

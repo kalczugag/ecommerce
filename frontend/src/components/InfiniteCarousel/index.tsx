@@ -82,7 +82,7 @@ const InfiniteCarousel = ({
                     }}
                 >
                     <Container
-                        maxWidth="xl"
+                        maxWidth="lg"
                         sx={{
                             padding: 2,
                         }}
@@ -95,10 +95,7 @@ const InfiniteCarousel = ({
                         <Button
                             sx={{
                                 color: textColor.primary,
-                                fontWeight: "bold",
-                                padding: 0,
                                 paddingY: 1,
-                                lineHeight: "normal",
                             }}
                             endIcon={<ArrowForward />}
                         >
@@ -117,7 +114,7 @@ const InfiniteCarousel = ({
                 }}
             >
                 <Container
-                    maxWidth="xl"
+                    maxWidth="lg"
                     sx={{
                         padding: 2,
                     }}

@@ -49,6 +49,8 @@ interface DailySummaryQueryParams {
     today?: boolean;
     last30Days?: boolean;
     last6Months?: boolean;
+    prev30Days?: boolean;
+    prev6Months?: boolean;
 }
 
 export {

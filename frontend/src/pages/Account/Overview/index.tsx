@@ -12,11 +12,11 @@ const AccountOverview = () => {
         <DefaultLayout
             marginY={false}
             topContent={<h1 className="text-2xl font-bold">Hello!</h1>}
-            className="text-center"
+            className="flex flex-col items-center"
         >
             <p>This is your account overview</p>
             <p>Here you can manage your orders, preferences and more</p>
-            <div className=" mt-10">
+            <div className="mt-10">
                 <Button
                     color="inherit"
                     variant="outlined"

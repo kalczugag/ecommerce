@@ -45,8 +45,6 @@ const DeliveryMethodForm = ({
     orderDeliveryCost,
     isLoading,
 }: DeliveryMethodFormProps) => {
-    console.log(content);
-
     return (
         <FormControl disabled={isLoading}>
             <div className="space-y-4">

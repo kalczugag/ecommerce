@@ -1,36 +1,38 @@
 import { useState } from "react";
 import {
     Box,
+    Button,
     FormControl,
+    IconButton,
     InputLabel,
     MenuItem,
     Rating,
     Select,
     Skeleton,
 } from "@mui/material";
-import { LoadingButton } from "@mui/lab";
 import ImagePicker from "./ImagePicker";
 import type { Sizes } from "..";
 import type { ProductResult } from "@/store";
-import type { ShortReviewsCount } from "@/types/Review";
 import SafeHtmlRender from "@/components/SafeHtmlRender";
+import { Favorite, FavoriteBorder } from "@mui/icons-material";
 
 interface DetailsProductCardProps {
     data?: ProductResult;
+    favorite?: boolean;
     isLoading: boolean;
     editLoading: boolean;
-    rating: ShortReviewsCount;
     onAddToCart: (size: Sizes | null) => void;
 }
 
 const DetailsProductCard = ({
     data,
+    favorite,
     isLoading,
     editLoading,
-    rating,
     onAddToCart,
 }: DetailsProductCardProps) => {
     const [currSize, setCurrSize] = useState<Sizes | null>(null);
+    const [isHeartHovered, setIsHeartHovered] = useState(false);
 
     const price = data ? +data.price.toFixed(2) : 0;
     let discountedPrice: number | undefined;
@@ -126,26 +128,24 @@ const DetailsProductCard = ({
                         <div className="flex flex-row items-center space-x-2">
                             <Rating
                                 name="half-rating"
-                                defaultValue={rating.value}
+                                value={data?.analytics.average}
                                 precision={0.5}
                                 sx={{
                                     color: "inherit",
                                 }}
+                                readOnly
                             />
-                            <span className="text-sm text-gray-500">
-                                {rating.value * 5} Ratings
-                            </span>
                             <span className="text-sm font-bold text-gray-600">
-                                {rating.count} reviews
+                                {data?.analytics.reviewCount} reviews
                             </span>
                         </div>
                     )}
                 </div>
-                <div>
+                <div className="flex space-x-2">
                     {isLoading ? (
                         <Skeleton />
                     ) : (
-                        <Box sx={{ maxWidth: 300 }}>
+                        <Box sx={{ maxWidth: 300, flex: 1 }}>
                             <FormControl fullWidth>
                                 <InputLabel id="size-label">Size</InputLabel>
 
@@ -224,15 +224,47 @@ const DetailsProductCard = ({
                             </FormControl>
                         </Box>
                     )}
+                    <IconButton
+                        onMouseOver={() => setIsHeartHovered(true)}
+                        onMouseOut={() => setIsHeartHovered(false)}
+                        disableFocusRipple
+                        sx={{
+                            backgroundColor: "transparent",
+                            color: "black",
+                            borderRadius: 0,
+                            width: 56,
+                            border: "1px solid black",
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                transition: "transform 0.2s ease",
+                                transform:
+                                    isHeartHovered || favorite
+                                        ? "scale(1.2)"
+                                        : "scale(1)",
+                            }}
+                        >
+                            {isHeartHovered || favorite ? (
+                                <Favorite />
+                            ) : (
+                                <FavoriteBorder />
+                            )}
+                        </Box>
+                    </IconButton>
                 </div>
                 <div>
-                    <LoadingButton
+                    <Button
                         onClick={() => onAddToCart(currSize)}
-                        loading={editLoading || isLoading}
                         variant="contained"
+                        loading={editLoading || isLoading}
+                        loadingPosition="end"
                     >
                         Add to cart
-                    </LoadingButton>
+                    </Button>
                 </div>
                 <div className="text-gray-700 md:w-96">
                     {isLoading ? (

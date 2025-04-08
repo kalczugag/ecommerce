@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import _ from "lodash";
+import { CounterModel } from "../../models/Counter";
 import type { Order, ShippingAddress } from "../../types/Order";
 
 export const shippingAddressSchema = new mongoose.Schema<ShippingAddress>({
@@ -17,6 +18,7 @@ const orderSchema = new mongoose.Schema<Order>(
             ref: "User",
             required: true,
         },
+        orderNumber: { type: Number, unique: true },
         items: [
             {
                 type: mongoose.Schema.Types.ObjectId,
@@ -78,36 +80,23 @@ const orderSchema = new mongoose.Schema<Order>(
     { timestamps: true }
 );
 
-//not actual
-// orderSchema.post("save", async (doc) => {
-//     try {
-//         const orderTotal =
-//             doc.subTotal +
-//             doc.tax -
-//             doc.discount +
-//             (doc._shipment as Shipment).shippingCost;
-//         const orderDate = new Date(new Date(doc.get("createdAt")));
-//         const startOfWeek = getStartOfThisWeek();
-//         const totalItems = _.sumBy(doc.items as Item[], "quantity");
-//         const summary = await SummaryModel.findOneAndUpdate(
-//             {},
-//             { $setOnInsert: { createdAt: new Date() } },
-//             { upsert: true, new: true }
-//         );
-//         const isThisWeek = orderDate >= startOfWeek;
-//         summary.orders.total += orderTotal;
-//         summary.orders.count += 1;
-//         summary.orders.itemsCount += totalItems;
-//         // if (doc.paymentStatus === "paid") {
-//         //     summary.orders.paid += orderTotal;
-//         // }
-//         if (isThisWeek) {
-//             summary.orders.thisWeek += orderTotal;
-//         }
-//         await summary.save();
-//     } catch (error) {
-//         console.error("Error updating summary after order save:", error);
-//     }
-// });
+orderSchema.pre("save", async function (next) {
+    if (!this.orderNumber) {
+        try {
+            const counter = await CounterModel.findByIdAndUpdate(
+                { _id: "orderNumber" },
+                { $inc: { seq: 1 } },
+                { new: true, upsert: true }
+            );
+
+            this.orderNumber = counter.seq;
+            console.log(this.orderNumber);
+        } catch (error: any) {
+            return next(error);
+        }
+    }
+
+    next();
+});
 
 export const OrderModel = mongoose.model("Order", orderSchema);
