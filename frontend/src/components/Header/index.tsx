@@ -1,13 +1,6 @@
 import { ReactElement, useState } from "react";
 import { useGetGroupedCategoriesQuery } from "@/store";
-import {
-    AppBar,
-    Box,
-    Fab,
-    Fade,
-    Toolbar,
-    useScrollTrigger,
-} from "@mui/material";
+import { AppBar, Box, Fab, Fade, useScrollTrigger } from "@mui/material";
 import TopHeader from "./TopHeader";
 import FeaturedBar from "./FeaturedBar";
 import BottomNav from "./BottomNav";
@@ -43,7 +36,7 @@ const ScrollTop = ({ window, children }: ScrollTopProps) => {
             <Box
                 onClick={handleClick}
                 role="presentation"
-                sx={{ position: "fixed", bottom: 16, right: 16, zIndex: 150 }}
+                sx={{ position: "fixed", bottom: 16, right: 16, zIndex: 50 }}
             >
                 {children}
             </Box>

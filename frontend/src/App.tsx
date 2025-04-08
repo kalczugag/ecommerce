@@ -3,8 +3,10 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 import { Route, Routes } from "react-router-dom";
+import { CookiesProvider } from "react-cookie";
 import { ThemeProvider } from "@mui/material";
 import appTheme from "./styles/theme/app";
+import CookieConsent from "@/components/CookieConsent";
 import PrivateOutlet from "@/pages/Outlets/PrivateOutlet";
 import TrackEventsOutlet from "@/pages/Outlets/TrackEventsOutlet";
 import AccountOutlet from "@/pages/Outlets/AccountOutlet";
@@ -31,58 +33,70 @@ import NotFound from "@/pages/404";
 
 const App = () => {
     return (
-        <ThemeProvider theme={appTheme}>
-            <Routes>
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route element={<TrackEventsOutlet />}>
-                    <Route index element={<Dashboard />} />
-                    <Route
-                        path="/:topLevel/:secondLevel?/:thirdLevel?"
-                        element={<Catalog />}
-                    />
-                    <Route path="/product/:id" element={<ProductDetails />} />
-                    <Route path="/wishlist" element={<Wishlist />} />
-                    <Route element={<PrivateOutlet />}>
-                        <Route path="/cart" element={<Cart />} />
-                        <Route path="/product-review" element={<Review />} />
+        <CookiesProvider>
+            <ThemeProvider theme={appTheme}>
+                <Routes>
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route element={<TrackEventsOutlet />}>
+                        <Route index element={<Dashboard />} />
                         <Route
-                            path="/checkout/:orderId/*"
-                            element={<Checkout />}
-                        >
-                            <Route path="delivery" element={<Delivery />} />
-                            <Route path="summary" element={<Summary />} />
-                        </Route>
-                        <Route path="/account" element={<AccountOutlet />}>
-                            <Route path="orders" element={<OrdersList />} />
+                            path="/:topLevel/:secondLevel?/:thirdLevel?"
+                            element={<Catalog />}
+                        />
+                        <Route
+                            path="/product/:id"
+                            element={<ProductDetails />}
+                        />
+                        <Route path="/wishlist" element={<Wishlist />} />
+                        <Route element={<PrivateOutlet />}>
+                            <Route path="/cart" element={<Cart />} />
                             <Route
-                                path="orders/:id"
-                                element={<OrderDetails />}
+                                path="/product-review"
+                                element={<Review />}
                             />
                             <Route
-                                path="orders/:id/return"
-                                element={<OrderReturn />}
-                            />
-                            <Route path="returns" element={<ReturnsList />} />
-                            <Route
-                                path="returns/:id"
-                                element={<ReturnDetails />}
-                            />
-                            <Route index element={<AccountOverview />} />
-                            <Route
-                                path="details"
-                                element={<AccountDetails />}
-                            />
-                            <Route
-                                path="preferences"
-                                element={<AccountPreferences />}
-                            />
+                                path="/checkout/:orderId/*"
+                                element={<Checkout />}
+                            >
+                                <Route path="delivery" element={<Delivery />} />
+                                <Route path="summary" element={<Summary />} />
+                            </Route>
+                            <Route path="/account" element={<AccountOutlet />}>
+                                <Route path="orders" element={<OrdersList />} />
+                                <Route
+                                    path="orders/:id"
+                                    element={<OrderDetails />}
+                                />
+                                <Route
+                                    path="orders/:id/return"
+                                    element={<OrderReturn />}
+                                />
+                                <Route
+                                    path="returns"
+                                    element={<ReturnsList />}
+                                />
+                                <Route
+                                    path="returns/:id"
+                                    element={<ReturnDetails />}
+                                />
+                                <Route index element={<AccountOverview />} />
+                                <Route
+                                    path="details"
+                                    element={<AccountDetails />}
+                                />
+                                <Route
+                                    path="preferences"
+                                    element={<AccountPreferences />}
+                                />
+                            </Route>
                         </Route>
                     </Route>
-                </Route>
-                <Route path="*" element={<NotFound />} />
-            </Routes>
-        </ThemeProvider>
+                    <Route path="*" element={<NotFound />} />
+                </Routes>
+                <CookieConsent />
+            </ThemeProvider>
+        </CookiesProvider>
     );
 };
 

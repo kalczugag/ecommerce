@@ -26,7 +26,7 @@
         "moment-business-days": "github:eduolalo/moment-business-days#master",
         "notistack": "^3.0.1",
         "react": "^18.3.1",
-        "react-cookie-consent": "^9.0.0",
+        "react-cookie": "^8.0.1",
         "react-copy-to-clipboard": "^5.1.0",
         "react-dom": "^18.3.1",
         "react-final-form": "^6.5.9",
