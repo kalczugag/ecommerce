@@ -43,7 +43,7 @@ const ScrollTop = ({ window, children }: ScrollTopProps) => {
             <Box
                 onClick={handleClick}
                 role="presentation"
-                sx={{ position: "fixed", bottom: 16, right: 16, zIndex: 50 }}
+                sx={{ position: "fixed", bottom: 16, right: 16, zIndex: 150 }}
             >
                 {children}
             </Box>
@@ -76,7 +76,6 @@ const Header = ({ topLabel, ...props }: HeaderProps) => {
                 <TopHeader />
                 <BottomNav data={data?.result} />
             </AppBar>
-            <Toolbar id="back-to-top-anchor" />
             <ScrollTop {...props}>
                 <Fab size="small" aria-label="scroll back to top">
                     <KeyboardArrowUp />
