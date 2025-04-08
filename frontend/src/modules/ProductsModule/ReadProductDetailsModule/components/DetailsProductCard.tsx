@@ -3,6 +3,7 @@ import {
     Box,
     Button,
     FormControl,
+    IconButton,
     InputLabel,
     MenuItem,
     Rating,
@@ -13,9 +14,11 @@ import ImagePicker from "./ImagePicker";
 import type { Sizes } from "..";
 import type { ProductResult } from "@/store";
 import SafeHtmlRender from "@/components/SafeHtmlRender";
+import { Favorite, FavoriteBorder } from "@mui/icons-material";
 
 interface DetailsProductCardProps {
     data?: ProductResult;
+    favorite?: boolean;
     isLoading: boolean;
     editLoading: boolean;
     onAddToCart: (size: Sizes | null) => void;
@@ -23,11 +26,13 @@ interface DetailsProductCardProps {
 
 const DetailsProductCard = ({
     data,
+    favorite,
     isLoading,
     editLoading,
     onAddToCart,
 }: DetailsProductCardProps) => {
     const [currSize, setCurrSize] = useState<Sizes | null>(null);
+    const [isHeartHovered, setIsHeartHovered] = useState(false);
 
     const price = data ? +data.price.toFixed(2) : 0;
     let discountedPrice: number | undefined;
@@ -136,11 +141,11 @@ const DetailsProductCard = ({
                         </div>
                     )}
                 </div>
-                <div>
+                <div className="flex space-x-2">
                     {isLoading ? (
                         <Skeleton />
                     ) : (
-                        <Box sx={{ maxWidth: 300 }}>
+                        <Box sx={{ maxWidth: 300, flex: 1 }}>
                             <FormControl fullWidth>
                                 <InputLabel id="size-label">Size</InputLabel>
 
@@ -219,6 +224,37 @@ const DetailsProductCard = ({
                             </FormControl>
                         </Box>
                     )}
+                    <IconButton
+                        onMouseOver={() => setIsHeartHovered(true)}
+                        onMouseOut={() => setIsHeartHovered(false)}
+                        disableFocusRipple
+                        sx={{
+                            backgroundColor: "transparent",
+                            color: "black",
+                            borderRadius: 0,
+                            width: 56,
+                            border: "1px solid black",
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                transition: "transform 0.2s ease",
+                                transform:
+                                    isHeartHovered || favorite
+                                        ? "scale(1.2)"
+                                        : "scale(1)",
+                            }}
+                        >
+                            {isHeartHovered || favorite ? (
+                                <Favorite />
+                            ) : (
+                                <FavoriteBorder />
+                            )}
+                        </Box>
+                    </IconButton>
                 </div>
                 <div>
                     <Button

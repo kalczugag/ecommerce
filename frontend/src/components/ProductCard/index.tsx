@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import { Box, Rating } from "@mui/material";
+import { Box, IconButton, Rating } from "@mui/material";
+import { Favorite, FavoriteBorder } from "@mui/icons-material";
 import { TColors, colors } from "@/constants/colors";
 import type { Product } from "@/types/Product";
 import { useState } from "react";
@@ -7,6 +8,7 @@ import SafeHtmlRender from "../SafeHtmlRender";
 
 interface ProductCardProps {
     data: Product;
+    favorite?: boolean;
     isLoading: boolean;
     variant?: "default" | "highlighted";
     size?: "sm" | "md" | "lg";
@@ -33,10 +35,15 @@ const sizes = {
 
 const ProductCard = ({
     data,
+    favorite,
     isLoading,
     variant = "default", // TODO
     size = "md",
-    badges,
+    badges = [
+        {
+            title: "New",
+        },
+    ],
 }: ProductCardProps) => {
     const {
         _id,
@@ -51,10 +58,10 @@ const ProductCard = ({
     } = data;
 
     const [isHovered, setIsHovered] = useState(false);
+    const [isHeartHovered, setIsHeartHovered] = useState(false);
 
     return (
-        <Link
-            to={`/product/${_id}`}
+        <Box
             className={`flex flex-col ${
                 variant === "default" ? "" : "items-center justify-center"
             } ${isLoading && "pointer-events-none"}`}
@@ -65,12 +72,49 @@ const ProductCard = ({
             onMouseLeave={() => setIsHovered(false)}
         >
             <div className={`relative ${size === "sm" && "text-center"}`}>
-                <img
-                    src={`${imageUrl[0]}?imwidth=${sizes[size].width}`}
-                    alt={title}
-                    loading="lazy"
-                    className={`max-h-[${sizes[size].width}px]`}
-                />
+                <Link to={`/product/${_id}`}>
+                    <img
+                        src={`${imageUrl[0]}?imwidth=${sizes[size].width}`}
+                        alt={title}
+                        loading="lazy"
+                        className={`max-h-[${sizes[size].width}px]`}
+                    />
+                </Link>
+                <div
+                    className="absolute top-2 right-0"
+                    onClick={(e) => e.stopPropagation()}
+                    onMouseOver={() => setIsHeartHovered(true)}
+                    onMouseLeave={() => setIsHeartHovered(false)}
+                >
+                    <IconButton
+                        disableRipple
+                        disableFocusRipple
+                        sx={{
+                            backgroundColor: "white",
+                            color: "black",
+                            borderRadius: 0,
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                transition: "transform 0.2s ease",
+                                transform:
+                                    isHeartHovered || favorite
+                                        ? "scale(1.2)"
+                                        : "scale(1)",
+                            }}
+                        >
+                            {isHeartHovered || favorite ? (
+                                <Favorite />
+                            ) : (
+                                <FavoriteBorder />
+                            )}
+                        </Box>
+                    </IconButton>
+                </div>
                 {badges && (
                     <div className="absolute bottom-2 left-2 z-10 flex space-x-1">
                         {badges.map(({ title, bgColor, textColor }, index) => (
@@ -92,7 +136,7 @@ const ProductCard = ({
                     </div>
                 )}
             </div>
-            <div className="flex flex-col py-4 w-full">
+            <Link to={`/product/${_id}`} className="flex flex-col py-4 w-full">
                 <h3 className={`font-bold ${isHovered && "opacity-80"}`}>
                     {title}
                 </h3>
@@ -143,8 +187,8 @@ const ProductCard = ({
                         "$" + price
                     )}
                 </p>
-            </div>
-        </Link>
+            </Link>
+        </Box>
     );
 };
 
