@@ -39,11 +39,7 @@ const ProductCard = ({
     isLoading,
     variant = "default", // TODO
     size = "md",
-    badges = [
-        {
-            title: "New",
-        },
-    ],
+    badges,
 }: ProductCardProps) => {
     const {
         _id,

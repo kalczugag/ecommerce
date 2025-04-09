@@ -12,9 +12,11 @@ import {
 } from "@mui/material";
 import ImagePicker from "./ImagePicker";
 import type { Sizes } from "..";
-import type { ProductResult } from "@/store";
+import { useUpdateWishlistMutation, type ProductResult } from "@/store";
 import SafeHtmlRender from "@/components/SafeHtmlRender";
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
+import { useHandleMutation } from "@/hooks/useHandleMutation";
+import useAuth from "@/hooks/useAuth";
 
 interface DetailsProductCardProps {
     data?: ProductResult;
@@ -23,6 +25,8 @@ interface DetailsProductCardProps {
     editLoading: boolean;
     onAddToCart: (size: Sizes | null) => void;
 }
+
+const KEY = "wishlist";
 
 const DetailsProductCard = ({
     data,
@@ -34,6 +38,13 @@ const DetailsProductCard = ({
     const [currSize, setCurrSize] = useState<Sizes | null>(null);
     const [isHeartHovered, setIsHeartHovered] = useState(false);
 
+    const isFavorite = Boolean(
+        JSON.parse(localStorage.getItem("wishlist") || "[]").includes(data?._id)
+    );
+    const { token } = useAuth();
+    const { handleMutation } = useHandleMutation();
+    const [updateWishlist] = useUpdateWishlistMutation();
+
     const price = data ? +data.price.toFixed(2) : 0;
     let discountedPrice: number | undefined;
 
@@ -42,6 +53,57 @@ const DetailsProductCard = ({
             ? +data.discountedPrice.toFixed(2)
             : +(price - (price * data.discountPercent) / 100).toFixed(2);
     }
+
+    const addToWishlistLocally = async (productId: string) => {
+        const stored: string[] = JSON.parse(localStorage.getItem(KEY) || "[]");
+
+        if (!stored.includes(productId)) {
+            stored.push(productId);
+            localStorage.setItem(KEY, JSON.stringify(stored));
+        }
+
+        return {
+            statusCode: 200,
+            message: "Product added to wishlist locally",
+        };
+    };
+
+    const removeFromWishlistLocally = async (productId: string) => {
+        const stored: string[] = JSON.parse(localStorage.getItem(KEY) || "[]");
+
+        if (stored.includes(productId)) {
+            const index = stored.indexOf(productId);
+            if (index > -1) {
+                stored.splice(index, 1);
+            }
+            localStorage.setItem(KEY, JSON.stringify(stored));
+        }
+
+        return {
+            statusCode: 200,
+            message: "Product added to wishlist locally",
+        };
+    };
+
+    const handleAddToFavorite = () => {
+        handleMutation({
+            mutation: updateWishlist,
+            localAction: addToWishlistLocally,
+            isAuthenticated: Boolean(token),
+            values: data?._id || "",
+            snackbar: false,
+        });
+    };
+
+    const handleRemoveFromFavorite = () => {
+        handleMutation({
+            mutation: updateWishlist,
+            localAction: removeFromWishlistLocally,
+            isAuthenticated: Boolean(token),
+            values: data?._id || "",
+            snackbar: false,
+        });
+    };
 
     return (
         <div className="flex flex-col space-x-0 md:flex-row md:space-x-10">
@@ -143,125 +205,147 @@ const DetailsProductCard = ({
                 </div>
                 <div className="flex space-x-2">
                     {isLoading ? (
-                        <Skeleton />
+                        <>
+                            <Skeleton variant="text" width={150} height={50} />
+                            <Skeleton variant="text" width={50} height={50} />
+                        </>
                     ) : (
-                        <Box sx={{ maxWidth: 300, flex: 1 }}>
-                            <FormControl fullWidth>
-                                <InputLabel id="size-label">Size</InputLabel>
+                        <>
+                            <Box sx={{ maxWidth: 300, flex: 1 }}>
+                                <FormControl fullWidth>
+                                    <InputLabel id="size-label">
+                                        Size
+                                    </InputLabel>
 
-                                {/* TODO: simplify */}
+                                    {/* TODO: simplify */}
 
-                                <Select
-                                    labelId="size-label"
-                                    id="size-select"
-                                    value={currSize}
-                                    label="Size"
-                                    onChange={(e) =>
-                                        setCurrSize(e.target.value as Sizes)
-                                    }
-                                    renderValue={(selected) => {
-                                        const selectedSize = data?.size.find(
-                                            (size) => size.name === selected
-                                        );
-                                        return (
-                                            <Box
+                                    <Select
+                                        labelId="size-label"
+                                        id="size-select"
+                                        value={currSize}
+                                        label="Size"
+                                        onChange={(e) =>
+                                            setCurrSize(e.target.value as Sizes)
+                                        }
+                                        renderValue={(selected) => {
+                                            const selectedSize =
+                                                data?.size.find(
+                                                    (size) =>
+                                                        size.name === selected
+                                                );
+                                            return (
+                                                <Box
+                                                    sx={{
+                                                        display: "flex",
+                                                        justifyContent:
+                                                            "space-between",
+                                                        width: "100%",
+                                                    }}
+                                                >
+                                                    <span>{selected}</span>
+                                                    {selectedSize &&
+                                                    selectedSize.quantity < 5 &&
+                                                    selectedSize.quantity !==
+                                                        0 ? (
+                                                        <span
+                                                            style={{
+                                                                color: "gray",
+                                                            }}
+                                                        >
+                                                            {
+                                                                selectedSize.quantity
+                                                            }{" "}
+                                                            pcs. left
+                                                        </span>
+                                                    ) : selectedSize &&
+                                                      selectedSize.quantity ===
+                                                          0 ? (
+                                                        <span
+                                                            style={{
+                                                                color: "red",
+                                                            }}
+                                                        >
+                                                            Out of stock
+                                                        </span>
+                                                    ) : null}
+                                                </Box>
+                                            );
+                                        }}
+                                    >
+                                        {data?.size.map((size, index) => (
+                                            <MenuItem
+                                                key={size.name + "_" + index}
+                                                value={size.name}
                                                 sx={{
                                                     display: "flex",
                                                     justifyContent:
                                                         "space-between",
-                                                    width: "100%",
                                                 }}
+                                                disabled={size.quantity === 0}
                                             >
-                                                <span>{selected}</span>
-                                                {selectedSize &&
-                                                selectedSize.quantity < 5 &&
-                                                selectedSize.quantity !== 0 ? (
-                                                    <span
-                                                        style={{
-                                                            color: "gray",
-                                                        }}
-                                                    >
-                                                        {selectedSize.quantity}{" "}
-                                                        pcs. left
+                                                <span>{size.name}</span>
+                                                {size.quantity < 5 &&
+                                                size.quantity !== 0 ? (
+                                                    <span className="text-gray-500">
+                                                        {size.quantity} pcs.
+                                                        left
                                                     </span>
-                                                ) : selectedSize &&
-                                                  selectedSize.quantity ===
-                                                      0 ? (
-                                                    <span
-                                                        style={{ color: "red" }}
-                                                    >
+                                                ) : size.quantity === 0 ? (
+                                                    <span className="text-red-500">
                                                         Out of stock
                                                     </span>
                                                 ) : null}
-                                            </Box>
-                                        );
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </Box>
+                            <IconButton
+                                onMouseOver={() => setIsHeartHovered(true)}
+                                onMouseOut={() => setIsHeartHovered(false)}
+                                onClick={() =>
+                                    isFavorite
+                                        ? handleRemoveFromFavorite()
+                                        : handleAddToFavorite()
+                                }
+                                disableFocusRipple
+                                disableRipple
+                                sx={{
+                                    backgroundColor: "transparent",
+                                    color: "black",
+                                    borderRadius: 0,
+                                    width: 56,
+                                    border: "1px solid black",
+                                }}
+                            >
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        transition: "transform 0.2s ease",
+                                        transform:
+                                            isHeartHovered || isFavorite
+                                                ? "scale(1.2)"
+                                                : "scale(1)",
                                     }}
                                 >
-                                    {data?.size.map((size, index) => (
-                                        <MenuItem
-                                            key={size.name + "_" + index}
-                                            value={size.name}
-                                            sx={{
-                                                display: "flex",
-                                                justifyContent: "space-between",
-                                            }}
-                                            disabled={size.quantity === 0}
-                                        >
-                                            <span>{size.name}</span>
-                                            {size.quantity < 5 &&
-                                            size.quantity !== 0 ? (
-                                                <span className="text-gray-500">
-                                                    {size.quantity} pcs. left
-                                                </span>
-                                            ) : size.quantity === 0 ? (
-                                                <span className="text-red-500">
-                                                    Out of stock
-                                                </span>
-                                            ) : null}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Box>
+                                    {isHeartHovered || isFavorite ? (
+                                        <Favorite />
+                                    ) : (
+                                        <FavoriteBorder />
+                                    )}
+                                </Box>
+                            </IconButton>
+                        </>
                     )}
-                    <IconButton
-                        onMouseOver={() => setIsHeartHovered(true)}
-                        onMouseOut={() => setIsHeartHovered(false)}
-                        disableFocusRipple
-                        sx={{
-                            backgroundColor: "transparent",
-                            color: "black",
-                            borderRadius: 0,
-                            width: 56,
-                            border: "1px solid black",
-                        }}
-                    >
-                        <Box
-                            sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                transition: "transform 0.2s ease",
-                                transform:
-                                    isHeartHovered || favorite
-                                        ? "scale(1.2)"
-                                        : "scale(1)",
-                            }}
-                        >
-                            {isHeartHovered || favorite ? (
-                                <Favorite />
-                            ) : (
-                                <FavoriteBorder />
-                            )}
-                        </Box>
-                    </IconButton>
                 </div>
                 <div>
                     <Button
                         onClick={() => onAddToCart(currSize)}
                         variant="contained"
                         loading={editLoading || isLoading}
-                        loadingPosition="end"
+                        loadingPosition={isLoading ? undefined : "end"}
                     >
                         Add to cart
                     </Button>

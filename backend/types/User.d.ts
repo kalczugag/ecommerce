@@ -1,7 +1,8 @@
+import type { ParsedQs } from "qs";
 import type { Cart } from "./Cart";
 import type { ShippingAddress } from "./Order";
 import type { Role } from "./Role";
-import type { ParsedQs } from "qs";
+import type { Wishlist } from "./Wishlist";
 
 export interface Locale {
     is_eu?: boolean;
@@ -28,6 +29,7 @@ export interface Locale {
 export interface User {
     _id?: string;
     _cart: string | Cart;
+    _wishlist: string | Wishlist;
     _role: Role | string;
     firstName: string;
     lastName: string;
