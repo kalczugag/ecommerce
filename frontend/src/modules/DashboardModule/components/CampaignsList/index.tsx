@@ -24,6 +24,7 @@ const CampaignsList = ({ isToken }: CampaignsListProps) => {
             {
                 skip: pageParam,
                 limit: 2,
+                favorite: true,
                 populate:
                     "products.title,products.brand,products.description,products.imageUrl,products.price,products.analytics,products.discountPercent,products.discountedPrice",
             },

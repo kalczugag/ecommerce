@@ -18,6 +18,7 @@ interface ApiResponseObject<T> {
 
 interface Paginate {
     category?: string;
+    favorite?: boolean;
     sorted?: boolean;
     skip?: number;
     limit?: number;

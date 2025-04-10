@@ -35,7 +35,6 @@ const sizes = {
 
 const ProductCard = ({
     data,
-    favorite,
     isLoading,
     variant = "default", // TODO
     size = "md",
@@ -45,6 +44,7 @@ const ProductCard = ({
         _id,
         title,
         discountedPrice,
+        isFavorite,
         imageUrl,
         color,
         discountPercent,
@@ -98,12 +98,12 @@ const ProductCard = ({
                                 justifyContent: "center",
                                 transition: "transform 0.2s ease",
                                 transform:
-                                    isHeartHovered || favorite
+                                    isHeartHovered || isFavorite
                                         ? "scale(1.2)"
                                         : "scale(1)",
                             }}
                         >
-                            {isHeartHovered || favorite ? (
+                            {isHeartHovered || isFavorite ? (
                                 <Favorite />
                             ) : (
                                 <FavoriteBorder />
@@ -145,7 +145,7 @@ const ProductCard = ({
                     />
                 </p>
                 <div className="text-sm text-gray-600">{color}</div>
-                {analytics.reviewCount > 0 && (
+                {analytics?.reviewCount > 0 && (
                     <Box
                         display="flex"
                         alignItems="center"

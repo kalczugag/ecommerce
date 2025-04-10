@@ -4,6 +4,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
 import { useLazyGetAllProductsQuery } from "@/store";
 import ProductCard from "@/components/ProductCard";
+import useAuth from "@/hooks/useAuth";
 
 interface ProductsListProps {
     category: string;
@@ -25,6 +26,7 @@ const ProductsList = ({ category, setIsFetching }: ProductsListProps) => {
             skip: pageParam,
             limit: 8,
             category,
+            favorite: true,
             ...filters,
         });
         return data;

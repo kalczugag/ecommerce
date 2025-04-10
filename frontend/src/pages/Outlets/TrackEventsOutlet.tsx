@@ -15,9 +15,9 @@ const TrackEventsOutlet = () => {
     const isAuthLocation =
         location.pathname === "/login" || location.pathname === "/register";
 
-    useRefreshTokenQuery(undefined, {
-        skip: !!token || isAuthLocation,
-    });
+    // useRefreshTokenQuery(undefined, {
+    //     skip: !!token || isAuthLocation,
+    // });
 
     useEffect(() => {
         trackEvent("page_view", {

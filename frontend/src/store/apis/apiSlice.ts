@@ -36,32 +36,32 @@ const baseQueryWithReauth = async (
 ) => {
     let result = await baseQuery(args, api, extraOptions);
 
-    if (result?.error?.status === 403) {
-        const refreshResult = await baseQuery(
-            "/auth/refresh",
-            api,
-            extraOptions
-        );
+    // if (result?.error?.status === 403) {
+    //     const refreshResult = await baseQuery(
+    //         "/auth/refresh",
+    //         api,
+    //         extraOptions
+    //     );
 
-        if (refreshResult?.data) {
-            const state = api.getState() as RootState;
-            const expires = state.auth.expires;
+    //     if (refreshResult?.data) {
+    //         const state = api.getState() as RootState;
+    //         const expires = state.auth.expires;
 
-            api.dispatch(
-                setCredentials({
-                    token: (refreshResult.data as { token: string }).token,
-                    isAdmin: state.auth.isAdmin,
-                    cartId: state.auth.cartId,
-                    userId: state.auth.userId,
-                    expires,
-                })
-            );
+    //         api.dispatch(
+    //             setCredentials({
+    //                 token: (refreshResult.data as { token: string }).token,
+    //                 isAdmin: state.auth.isAdmin,
+    //                 cartId: state.auth.cartId,
+    //                 userId: state.auth.userId,
+    //                 expires,
+    //             })
+    //         );
 
-            result = await baseQuery(args, api, extraOptions);
-        } else {
-            api.dispatch(logOut());
-        }
-    }
+    //         result = await baseQuery(args, api, extraOptions);
+    //     } else {
+    //         api.dispatch(logOut());
+    //     }
+    // }
 
     return result;
 };

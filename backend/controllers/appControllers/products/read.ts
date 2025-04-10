@@ -3,8 +3,10 @@ import { MongooseQueryParser } from "mongoose-query-parser";
 import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import { ProductModel } from "../../../models/Product";
 import { CategoryModel } from "../../../models/Categories";
-import { PaginatedProducts } from "../../../types/Product";
-import { Category } from "../../../types/Category";
+import { WishlistModel } from "../../../models/Wishlist";
+import type { PaginatedProducts, Product } from "../../../types/Product";
+import type { Category } from "../../../types/Category";
+import type { User } from "../../../types/User";
 
 const parser = new MongooseQueryParser();
 
@@ -16,7 +18,8 @@ export const getAllProducts = async (
     req: express.Request<{}, {}, {}, PaginatedProducts>,
     res: express.Response
 ) => {
-    const { random, category, ...rest } = req.query;
+    const { random, category, favorite, ...rest } = req.query;
+    const user = req.user ? (req.user as User) : null;
     const parsedQuery = parser.parse(rest);
 
     const page = parsedQuery.skip
@@ -123,20 +126,35 @@ export const getAllProducts = async (
         const combinedFilters = { ...query, ...parsedQuery.filter };
         const isQuery = query ? combinedFilters : parsedQuery.filter;
 
-        const products = await ProductModel.find(isQuery)
+        const totalDocuments = await ProductModel.countDocuments(isQuery);
+
+        let products = await ProductModel.find(isQuery)
             .populate("topLevelCategory secondLevelCategory thirdLevelCategory")
             .select(parsedQuery.select)
             .sort(parsedQuery.sort)
             .skip(page * pageSize)
             .limit(pageSize)
+            .lean()
             .exec();
-
-        const totalDocuments = await ProductModel.countDocuments(isQuery);
 
         if (!products || products.length === 0) {
             return res
                 .status(404)
                 .json(errorResponse(null, "No products", 404));
+        }
+
+        if (user) {
+            const wishlist = await WishlistModel.findById(user._wishlist, {
+                products: 1,
+            });
+            const wishlistedSet = new Set(
+                wishlist?.products?.map((p) => p.toString())
+            );
+
+            products = products.map((prod) => ({
+                ...(prod ?? prod),
+                isFavorite: wishlistedSet.has(prod._id.toString()),
+            }));
         }
 
         const hasMore = (page + 1) * pageSize < totalDocuments;

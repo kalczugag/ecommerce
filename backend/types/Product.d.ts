@@ -41,6 +41,7 @@ export interface PaginatedProducts extends ParsedQs {
     search?: { search: string };
     sort?: string;
     category?: string;
+    favorite?: boolean;
     page: number;
     pageSize: number;
 }
