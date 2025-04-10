@@ -3,6 +3,7 @@ import { isValidObjectId } from "mongoose";
 import { MongooseQueryParser } from "mongoose-query-parser";
 import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import { ProductModel } from "../../../models/Product";
+import { WishlistModel } from "../../../models/Wishlist";
 
 const parser = new MongooseQueryParser();
 

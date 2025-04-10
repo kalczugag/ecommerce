@@ -45,8 +45,6 @@ export const getAllCampaigns = async (
             .lean()
             .exec();
 
-        console.log(user);
-
         if (user) {
             const wishlist = await WishlistModel.findById(user._wishlist, {
                 products: 1,
@@ -55,9 +53,12 @@ export const getAllCampaigns = async (
                 wishlist?.products?.map((p) => p.toString())
             );
 
-            campaigns = campaigns.map((prod) => ({
-                ...(prod ?? prod),
-                isFavorite: wishlistedSet.has(prod._id.toString()),
+            campaigns = campaigns.map((campaign) => ({
+                ...campaign,
+                products: campaign.products.map((prod: any) => ({
+                    ...prod,
+                    isFavorite: wishlistedSet.has(prod._id.toString()),
+                })),
             }));
         }
 

@@ -17,12 +17,12 @@ export const wishlistApi = apiSlice.injectEndpoints({
 
         updateWishlist: builder.mutation<
             ApiResponseObject<{ _id: string }>,
-            string
+            { productId: string; type: "add" | "remove" }
         >({
-            query: (productId) => ({
+            query: (values) => ({
                 url: "/wishlist",
                 method: "PATCH",
-                body: { productId },
+                body: values,
             }),
             invalidatesTags: (data) => [
                 { type: "Wishlist", id: data?.result._id },

@@ -5,10 +5,10 @@ import { WishlistModel } from "../../../models/Wishlist";
 import type { User } from "../../../types/User";
 
 export const updateWishlist = async (
-    req: express.Request<{}, {}, { productId: string }>,
+    req: express.Request<{}, {}, { productId: string; type: "add" | "remove" }>,
     res: express.Response
 ) => {
-    const { productId } = req.body;
+    const { productId, type } = req.body;
     const user = req.user as User;
 
     if (!isValidObjectId(productId)) {
@@ -26,9 +26,14 @@ export const updateWishlist = async (
     }
 
     try {
+        const update =
+            type === "add"
+                ? { $addToSet: { products: productId } }
+                : { $pull: { products: productId } };
+
         const updatedWishlist = await WishlistModel.findByIdAndUpdate(
             user._wishlist,
-            { $addToSet: { products: productId } },
+            update,
             { new: true, runValidators: true }
         );
 

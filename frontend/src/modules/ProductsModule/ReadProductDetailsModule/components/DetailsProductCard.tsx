@@ -20,7 +20,6 @@ import useAuth from "@/hooks/useAuth";
 
 interface DetailsProductCardProps {
     data?: ProductResult;
-    favorite?: boolean;
     isLoading: boolean;
     editLoading: boolean;
     onAddToCart: (size: Sizes | null) => void;
@@ -30,7 +29,6 @@ const KEY = "wishlist";
 
 const DetailsProductCard = ({
     data,
-    favorite,
     isLoading,
     editLoading,
     onAddToCart,
@@ -54,24 +52,16 @@ const DetailsProductCard = ({
             : +(price - (price * data.discountPercent) / 100).toFixed(2);
     }
 
-    const addToWishlistLocally = async (productId: string) => {
+    const triggerWishlistLocally = async (
+        productId: string,
+        action: "add" | "remove"
+    ) => {
         const stored: string[] = JSON.parse(localStorage.getItem(KEY) || "[]");
 
-        if (!stored.includes(productId)) {
+        if (action === "add" && !stored.includes(productId)) {
             stored.push(productId);
             localStorage.setItem(KEY, JSON.stringify(stored));
-        }
-
-        return {
-            statusCode: 200,
-            message: "Product added to wishlist locally",
-        };
-    };
-
-    const removeFromWishlistLocally = async (productId: string) => {
-        const stored: string[] = JSON.parse(localStorage.getItem(KEY) || "[]");
-
-        if (stored.includes(productId)) {
+        } else if (action === "remove" && stored.includes(productId)) {
             const index = stored.indexOf(productId);
             if (index > -1) {
                 stored.splice(index, 1);
@@ -81,26 +71,21 @@ const DetailsProductCard = ({
 
         return {
             statusCode: 200,
-            message: "Product added to wishlist locally",
+            message: "Success",
         };
     };
 
-    const handleAddToFavorite = () => {
-        handleMutation({
-            mutation: updateWishlist,
-            localAction: addToWishlistLocally,
-            isAuthenticated: Boolean(token),
-            values: data?._id || "",
-            snackbar: false,
-        });
-    };
+    const handleAddToFavorite = (action: "add" | "remove") => {
+        const fn = () => triggerWishlistLocally(data?._id || "", action);
 
-    const handleRemoveFromFavorite = () => {
         handleMutation({
             mutation: updateWishlist,
-            localAction: removeFromWishlistLocally,
+            localAction: fn,
             isAuthenticated: Boolean(token),
-            values: data?._id || "",
+            values: {
+                productId: data?._id || "",
+                type: action,
+            },
             snackbar: false,
         });
     };
@@ -304,9 +289,9 @@ const DetailsProductCard = ({
                                 onMouseOver={() => setIsHeartHovered(true)}
                                 onMouseOut={() => setIsHeartHovered(false)}
                                 onClick={() =>
-                                    isFavorite
-                                        ? handleRemoveFromFavorite()
-                                        : handleAddToFavorite()
+                                    handleAddToFavorite(
+                                        isFavorite ? "remove" : "add"
+                                    )
                                 }
                                 disableFocusRipple
                                 disableRipple
