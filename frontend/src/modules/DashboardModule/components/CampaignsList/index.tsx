@@ -1,14 +1,13 @@
+import { useEffect, useState } from "react";
+import useAuth from "@/hooks/useAuth";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
-import { useLazyGetFeaturedCampaignQuery } from "@/store";
+import {
+    useLazyGetFeaturedCampaignQuery,
+    useUpdateWishlistMutation,
+} from "@/store";
 import InfiniteCarousel from "@/components/InfiniteCarousel";
 import ProductCard from "@/components/ProductCard";
-import { useEffect } from "react";
-
-const options = {
-    populate:
-        "products.title,products.brand,products.description,products.imageUrl,products.price,products.discountPercent,products.discountedPrice",
-};
 
 interface CampaignsListProps {
     isToken: boolean;
@@ -16,8 +15,14 @@ interface CampaignsListProps {
 
 const CampaignsList = ({ isToken }: CampaignsListProps) => {
     const { ref, inView } = useInView();
+    const { token } = useAuth();
+    const [wishlist, setWishlist] = useState<string[]>(() => {
+        const stored = localStorage.getItem("wishlist");
+        return stored ? JSON.parse(stored) : [];
+    });
 
     const [triggerFetch] = useLazyGetFeaturedCampaignQuery();
+    const [updateWishlist] = useUpdateWishlistMutation();
 
     const fetchCampaigns = async ({ pageParam }: { pageParam: number }) => {
         const { data } = await triggerFetch(
@@ -40,6 +45,31 @@ const CampaignsList = ({ isToken }: CampaignsListProps) => {
             lastPage?.hasMore ? lastPage?.nextCursor : undefined,
     });
 
+    const handleWishlist = (productId: string, action: "add" | "remove") => {
+        if (!data || !productId) return;
+
+        if (token) {
+            updateWishlist({ productId, type: action });
+        }
+
+        setWishlist((prevWishlist) => {
+            let updated: string[];
+
+            if (action === "add" && !prevWishlist.includes(productId)) {
+                updated = [...prevWishlist, productId];
+            } else if (action === "remove") {
+                updated = prevWishlist.filter((id) => id !== productId);
+            } else {
+                updated = prevWishlist;
+            }
+
+            localStorage.setItem("wishlist", JSON.stringify(updated));
+            return updated;
+        });
+    };
+
+    const isFavorite = (productId: string) => wishlist.includes(productId);
+
     useEffect(() => {
         if (inView) {
             fetchNextPage();
@@ -56,6 +86,8 @@ const CampaignsList = ({ isToken }: CampaignsListProps) => {
                             data={product}
                             variant="highlighted"
                             isLoading={isFetching}
+                            isFavorite={isFavorite}
+                            onWishlistTrigger={handleWishlist}
                         />
                     ));
 

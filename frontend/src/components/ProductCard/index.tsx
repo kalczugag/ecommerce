@@ -8,7 +8,6 @@ import SafeHtmlRender from "../SafeHtmlRender";
 
 interface ProductCardProps {
     data: Product;
-    favorite?: boolean;
     isLoading: boolean;
     variant?: "default" | "highlighted";
     size?: "sm" | "md" | "lg";
@@ -18,6 +17,8 @@ interface ProductCardProps {
         textColor?: TColors;
     }[];
     showRating?: boolean;
+    isFavorite?: (productId: string) => boolean;
+    onWishlistTrigger?: (productId: string, action: "add" | "remove") => void;
 }
 
 // in pixels
@@ -35,19 +36,17 @@ const sizes = {
 
 const ProductCard = ({
     data,
-    favorite,
     isLoading,
     variant = "default", // TODO
     size = "md",
-    badges = [
-        {
-            title: "New",
-        },
-    ],
+    isFavorite: favoriteLocal,
+    badges,
+    onWishlistTrigger,
 }: ProductCardProps) => {
     const {
         _id,
         title,
+        isFavorite: favoriteDb,
         discountedPrice,
         imageUrl,
         color,
@@ -59,6 +58,8 @@ const ProductCard = ({
 
     const [isHovered, setIsHovered] = useState(false);
     const [isHeartHovered, setIsHeartHovered] = useState(false);
+
+    const isFavorite = favoriteLocal ? favoriteLocal(_id || "") : favoriteDb;
 
     return (
         <Box
@@ -89,6 +90,13 @@ const ProductCard = ({
                     <IconButton
                         disableRipple
                         disableFocusRipple
+                        onClick={() =>
+                            onWishlistTrigger &&
+                            onWishlistTrigger(
+                                data._id || "",
+                                isFavorite ? "remove" : "add"
+                            )
+                        }
                         sx={{
                             backgroundColor: "white",
                             color: "black",
@@ -102,12 +110,12 @@ const ProductCard = ({
                                 justifyContent: "center",
                                 transition: "transform 0.2s ease",
                                 transform:
-                                    isHeartHovered || favorite
+                                    isHeartHovered || isFavorite
                                         ? "scale(1.2)"
                                         : "scale(1)",
                             }}
                         >
-                            {isHeartHovered || favorite ? (
+                            {isHeartHovered || isFavorite ? (
                                 <Favorite />
                             ) : (
                                 <FavoriteBorder />
@@ -149,7 +157,7 @@ const ProductCard = ({
                     />
                 </p>
                 <div className="text-sm text-gray-600">{color}</div>
-                {analytics.reviewCount > 0 && (
+                {analytics?.reviewCount > 0 && (
                     <Box
                         display="flex"
                         alignItems="center"

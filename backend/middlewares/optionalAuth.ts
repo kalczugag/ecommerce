@@ -12,6 +12,6 @@ export const optionalAuth = (
         if (err) return next(err);
         if (user) req.user = user;
 
-        next();
+        return next();
     })(req, res, next);
 };

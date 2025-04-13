@@ -9,7 +9,9 @@ interface UseHandleMutationProps<TValues, TResult, TError = unknown> {
     snackbar?: boolean;
     successMessage?: string;
     errorMessage?: string;
+    isAuthenticated?: boolean;
     mutation: MutationTrigger;
+    localAction?: (values: TValues) => Promise<TResult>;
     onSuccess?: (result: TResult) => void;
     onError?: (error: TError) => void;
 }
@@ -32,6 +34,8 @@ export const useHandleMutation = () => {
         const {
             values,
             mutation,
+            localAction,
+            isAuthenticated,
             snackbar = true,
             successMessage,
             errorMessage,
@@ -41,9 +45,14 @@ export const useHandleMutation = () => {
 
         let finalSuccessMessage = successMessage;
         let finalErrorMessage = errorMessage;
+        let result: any;
 
         try {
-            const result = await mutation(values).unwrap();
+            if (!isAuthenticated && localAction) {
+                result = await localAction(values as TValues);
+            } else {
+                result = await mutation(values).unwrap();
+            }
 
             if (!successMessage && !errorMessage) {
                 if (result.statusCode < 400) {

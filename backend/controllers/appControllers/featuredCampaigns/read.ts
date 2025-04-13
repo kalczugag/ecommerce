@@ -4,6 +4,7 @@ import { FeaturedCampaignModel } from "../../../models/FeaturedCampaign";
 import { CategoryModel } from "../../../models/Categories";
 import { MongooseQueryParser } from "mongoose-query-parser";
 import type { User } from "../../../types/User";
+import { WishlistModel } from "../../../models/Wishlist";
 
 const parser = new MongooseQueryParser();
 
@@ -34,13 +35,31 @@ export const getAllCampaigns = async (
             : {};
         const combined = { ...parsedQuery.filter, ...preferences };
 
-        const campaigns = await FeaturedCampaignModel.find(combined)
+        let campaigns = await FeaturedCampaignModel.find(combined)
             .populate(parsedQuery.populate)
             .select(parsedQuery.select)
             .sort(parsedQuery.sort)
             .skip(page * pageSize)
             .limit(pageSize)
+            .lean()
             .exec();
+
+        if (user) {
+            const wishlist = await WishlistModel.findById(user._wishlist, {
+                products: 1,
+            });
+            const wishlistedSet = new Set(
+                wishlist?.products?.map((p) => p.toString())
+            );
+
+            campaigns = campaigns.map((campaign) => ({
+                ...campaign,
+                products: campaign.products.map((prod: any) => ({
+                    ...prod,
+                    isFavorite: wishlistedSet.has(prod._id.toString()),
+                })),
+            }));
+        }
 
         const totalDocuments = await FeaturedCampaignModel.countDocuments(
             parsedQuery.filter

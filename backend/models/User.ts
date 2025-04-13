@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import { CartModel } from "./Cart";
-import { getStartOfThisWeek } from "../utils/helpers";
 import type { Locale, User } from "../types/User";
 import type { ShippingAddress } from "../types/Order";
+import { WishlistModel } from "./Wishlist";
 
 const addressSchema = new mongoose.Schema<ShippingAddress>(
     {
@@ -53,6 +53,7 @@ const refreshTokenSchema = new mongoose.Schema<User["refreshToken"]>(
 const userSchema = new mongoose.Schema<User>(
     {
         _cart: { type: mongoose.Schema.Types.ObjectId, ref: "Cart" },
+        _wishlist: { type: mongoose.Schema.Types.ObjectId, ref: "Wishlist" },
         firstName: { type: String, required: true },
         lastName: { type: String, required: true },
         preferences: [
@@ -103,6 +104,16 @@ userSchema.post("save", async function (doc) {
             });
 
             doc._cart = newCart._id;
+            await doc.save();
+        }
+
+        if (!doc._wishlist) {
+            const newWishlist = await WishlistModel.create({
+                _user: doc._id,
+                products: [],
+            });
+
+            doc._wishlist = newWishlist._id;
             await doc.save();
         }
     } catch (error) {

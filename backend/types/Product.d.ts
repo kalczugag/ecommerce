@@ -18,6 +18,7 @@ export interface Product {
         quantity: number;
     }[];
     quantity: number;
+    isFavorite?: boolean;
     analytics: {
         average: number;
         reviewCount: number;

@@ -13,6 +13,7 @@ import featuredCampaigns from "./appRoutes/featuredCampaigns";
 import payment from "./appRoutes/payment";
 import deliveryMethods from "./appRoutes/deliveryMethods";
 import returns from "./appRoutes/returns";
+import wishlist from "./appRoutes/wishlist";
 
 const router = express.Router();
 
@@ -30,6 +31,7 @@ export default (): express.Router => {
     payment(router);
     deliveryMethods(router);
     returns(router);
+    wishlist(router);
 
     return router;
 };
