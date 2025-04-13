@@ -1,4 +1,10 @@
-import { useEditUsersCartMutation, ProductResult, setDrawer } from "@/store";
+import { useState } from "react";
+import {
+    useEditUsersCartMutation,
+    ProductResult,
+    setDrawer,
+    useUpdateWishlistMutation,
+} from "@/store";
 import { useSnackbar } from "notistack";
 import useAuth from "@/hooks/useAuth";
 import { useAppDispatch } from "@/hooks/useStore";
@@ -23,8 +29,13 @@ const ReadProductModule = ({ config, data }: ReadProductModuleProps) => {
     const { enqueueSnackbar } = useSnackbar();
     const { trackEvent } = useAnalytics();
     const { handleMutation } = useHandleMutation();
+    const [wishlist, setWishlist] = useState<string[]>(() => {
+        const stored = localStorage.getItem("wishlist");
+        return stored ? JSON.parse(stored) : [];
+    });
 
     const [editCart, { isLoading: editLoading }] = useEditUsersCartMutation();
+    const [updateWishlist] = useUpdateWishlistMutation();
 
     const toggleDrawer = (newOpen: boolean) => {
         dispatch(setDrawer(newOpen));
@@ -71,13 +82,42 @@ const ReadProductModule = ({ config, data }: ReadProductModuleProps) => {
         }
     };
 
+    const handleWishlist = (action: "add" | "remove") => {
+        if (!data || !data._id) return;
+
+        const productId = data._id;
+
+        if (token) {
+            updateWishlist({ productId, type: action });
+        }
+
+        setWishlist((prevWishlist) => {
+            let updated: string[];
+
+            if (action === "add" && !prevWishlist.includes(productId)) {
+                updated = [...prevWishlist, productId];
+            } else if (action === "remove") {
+                updated = prevWishlist.filter((id) => id !== productId);
+            } else {
+                updated = prevWishlist;
+            }
+
+            localStorage.setItem("wishlist", JSON.stringify(updated));
+            return updated;
+        });
+    };
+
+    const isFavorite = wishlist.includes(data?._id ?? "");
+
     return (
         <DefaultLayout className="items-center">
             <DetailsProductCard
-                data={data}
+                data={data as any}
                 isLoading={isLoading}
+                isFavorite={isFavorite}
                 editLoading={editLoading}
                 onAddToCart={handleAddToCart}
+                onWishlistTrigger={handleWishlist}
             />
         </DefaultLayout>
     );

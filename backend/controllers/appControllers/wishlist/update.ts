@@ -47,7 +47,7 @@ export const updateWishlist = async (
             .status(200)
             .json(
                 successResponse(
-                    { _id: updatedWishlist._id },
+                    { _id: productId },
                     "Wishlist updated successfully"
                 )
             );

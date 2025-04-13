@@ -8,7 +8,6 @@ import SafeHtmlRender from "../SafeHtmlRender";
 
 interface ProductCardProps {
     data: Product;
-    favorite?: boolean;
     isLoading: boolean;
     variant?: "default" | "highlighted";
     size?: "sm" | "md" | "lg";
@@ -18,6 +17,8 @@ interface ProductCardProps {
         textColor?: TColors;
     }[];
     showRating?: boolean;
+    isFavorite?: (productId: string) => boolean;
+    onWishlistTrigger?: (productId: string, action: "add" | "remove") => void;
 }
 
 // in pixels
@@ -38,13 +39,15 @@ const ProductCard = ({
     isLoading,
     variant = "default", // TODO
     size = "md",
+    isFavorite: favoriteLocal,
     badges,
+    onWishlistTrigger,
 }: ProductCardProps) => {
     const {
         _id,
         title,
+        isFavorite: favoriteDb,
         discountedPrice,
-        isFavorite,
         imageUrl,
         color,
         discountPercent,
@@ -55,6 +58,8 @@ const ProductCard = ({
 
     const [isHovered, setIsHovered] = useState(false);
     const [isHeartHovered, setIsHeartHovered] = useState(false);
+
+    const isFavorite = favoriteLocal ? favoriteLocal(_id || "") : favoriteDb;
 
     return (
         <Box
@@ -85,6 +90,13 @@ const ProductCard = ({
                     <IconButton
                         disableRipple
                         disableFocusRipple
+                        onClick={() =>
+                            onWishlistTrigger &&
+                            onWishlistTrigger(
+                                data._id || "",
+                                isFavorite ? "remove" : "add"
+                            )
+                        }
                         sx={{
                             backgroundColor: "white",
                             color: "black",

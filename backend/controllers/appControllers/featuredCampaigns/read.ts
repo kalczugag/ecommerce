@@ -13,8 +13,7 @@ export const getAllCampaigns = async (
     res: express.Response
 ) => {
     const user = req.user ? (req.user as User) : null;
-    const { favorite, ...rest } = req.query;
-    const parsedQuery = parser.parse(rest);
+    const parsedQuery = parser.parse(req.query);
 
     const page = parsedQuery.skip
         ? parseInt(parsedQuery.skip as unknown as string, 10)

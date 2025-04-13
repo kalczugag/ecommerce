@@ -8,7 +8,7 @@ export const campaignsApi = apiSlice.injectEndpoints({
             ApiResponseArray<FeaturedCampaign>,
             Paginate | void
         >({
-            query: ({ skip, limit, favorite, ...rest }: Paginate = {}) => {
+            query: ({ skip, limit, ...rest }: Paginate = {}) => {
                 let queryParams: Record<string, any> = {};
 
                 if (skip !== undefined) {
@@ -16,9 +16,6 @@ export const campaignsApi = apiSlice.injectEndpoints({
                 }
                 if (limit !== undefined) {
                     queryParams.limit = limit.toString();
-                }
-                if (favorite !== undefined) {
-                    queryParams.favorite = favorite.toString();
                 }
                 // if (populate !== undefined) {
                 //     queryParams.populate = populate.toString();

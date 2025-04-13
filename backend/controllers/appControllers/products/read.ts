@@ -18,7 +18,7 @@ export const getAllProducts = async (
     req: express.Request<{}, {}, {}, PaginatedProducts>,
     res: express.Response
 ) => {
-    const { random, category, favorite, ...rest } = req.query;
+    const { random, category, ...rest } = req.query;
     const user = req.user ? (req.user as User) : null;
     const parsedQuery = parser.parse(rest);
 

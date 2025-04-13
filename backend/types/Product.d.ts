@@ -18,6 +18,7 @@ export interface Product {
         quantity: number;
     }[];
     quantity: number;
+    isFavorite?: boolean;
     analytics: {
         average: number;
         reviewCount: number;
@@ -41,7 +42,6 @@ export interface PaginatedProducts extends ParsedQs {
     search?: { search: string };
     sort?: string;
     category?: string;
-    favorite?: boolean;
     page: number;
     pageSize: number;
 }

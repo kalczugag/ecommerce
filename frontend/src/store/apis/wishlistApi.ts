@@ -25,7 +25,7 @@ export const wishlistApi = apiSlice.injectEndpoints({
                 body: values,
             }),
             invalidatesTags: (data) => [
-                { type: "Wishlist", id: data?.result._id },
+                { type: "Products", id: data?.result._id },
             ],
         }),
     }),

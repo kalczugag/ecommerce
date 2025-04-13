@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useGetProductByIdQuery, useGetReviewsByProductIdQuery } from "@/store";
+import { useGetProductByIdQuery } from "@/store";
 import { useTitle } from "@/hooks/useTitle";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import ReadProductDetailsModule from "@/modules/ProductsModule/ReadProductDetailsModule";
@@ -9,7 +9,6 @@ import NotFound from "@/components/NotFound";
 const ProductDetails = () => {
     const { id } = useParams<{ id: string }>();
     const { data, isLoading, isError } = useGetProductByIdQuery(id || "");
-    // const { data: rating } = useGetReviewsByProductIdQuery(id || "");
     const { trackEvent } = useAnalytics();
     useTitle(data?.result.title || (!isLoading ? "Product - Details" : ""));
 

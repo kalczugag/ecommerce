@@ -1,10 +1,10 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
-import { useLazyGetAllProductsQuery } from "@/store";
-import ProductCard from "@/components/ProductCard";
 import useAuth from "@/hooks/useAuth";
+import { useLazyGetAllProductsQuery, useUpdateWishlistMutation } from "@/store";
+import ProductCard from "@/components/ProductCard";
 
 interface ProductsListProps {
     category: string;
@@ -16,8 +16,15 @@ const ProductsList = ({ category, setIsFetching }: ProductsListProps) => {
         threshold: 0,
         rootMargin: "200px",
     });
+    const [wishlist, setWishlist] = useState<string[]>(() => {
+        const stored = localStorage.getItem("wishlist");
+        return stored ? JSON.parse(stored) : [];
+    });
+    const { token } = useAuth();
     const [searchParams] = useSearchParams();
+
     const [triggerFetch] = useLazyGetAllProductsQuery();
+    const [updateWishlist] = useUpdateWishlistMutation();
 
     const filters = Object.fromEntries(searchParams.entries());
 
@@ -26,7 +33,6 @@ const ProductsList = ({ category, setIsFetching }: ProductsListProps) => {
             skip: pageParam,
             limit: 8,
             category,
-            favorite: true,
             ...filters,
         });
         return data;
@@ -39,6 +45,31 @@ const ProductsList = ({ category, setIsFetching }: ProductsListProps) => {
         getNextPageParam: (lastPage, pages) =>
             lastPage?.hasMore ? lastPage?.nextCursor : undefined,
     });
+
+    const handleWishlist = (productId: string, action: "add" | "remove") => {
+        if (!data || !productId) return;
+
+        if (token) {
+            updateWishlist({ productId, type: action });
+        }
+
+        setWishlist((prevWishlist) => {
+            let updated: string[];
+
+            if (action === "add" && !prevWishlist.includes(productId)) {
+                updated = [...prevWishlist, productId];
+            } else if (action === "remove") {
+                updated = prevWishlist.filter((id) => id !== productId);
+            } else {
+                updated = prevWishlist;
+            }
+
+            localStorage.setItem("wishlist", JSON.stringify(updated));
+            return updated;
+        });
+    };
+
+    const isFavorite = (productId: string) => wishlist.includes(productId);
 
     useEffect(() => {
         if (inView) {
@@ -58,6 +89,8 @@ const ProductsList = ({ category, setIsFetching }: ProductsListProps) => {
                         key={product._id}
                         data={product}
                         isLoading={isFetching}
+                        isFavorite={isFavorite}
+                        onWishlistTrigger={handleWishlist}
                         size="lg"
                     />
                 ))

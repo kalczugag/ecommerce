@@ -7,7 +7,7 @@ import { hasRole, optionalAuth } from "../../../middlewares";
 const products = (router: express.Router) => {
     router.get("/products", optionalAuth, methods.read);
 
-    router.get("/products/id/:id", methods.readById);
+    router.get("/products/id/:id", optionalAuth, methods.readById);
 
     router.get("/products/featured", optionalAuth, methods.readFeatured);
 
