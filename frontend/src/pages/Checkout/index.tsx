@@ -1,5 +1,5 @@
-import { useCallback, useEffect } from "react";
-import { Outlet, useParams } from "react-router-dom";
+import { useCallback, useEffect, useRef } from "react";
+import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useGetOrderByIdQuery, useDeleteOrderMutation } from "@/store";
 import { useTitle } from "@/hooks/useTitle";
 import { useHandleMutation } from "@/hooks/useHandleMutation";
@@ -14,17 +14,21 @@ const Checkout = () => {
     const { data, isError, isLoading } = useGetOrderByIdQuery(orderId || "");
     const [deleteOrder] = useDeleteOrderMutation();
     const { handleMutation } = useHandleMutation();
+    const location = useLocation();
+
+    const isRedirectingToStripe = useRef(false);
+    const prevLocation = useRef(location.pathname);
 
     useTitle("Checkout");
 
     const handleUnloadOrder = useCallback(() => {
-        if (orderId)
+        if (orderId && !isRedirectingToStripe.current)
             handleMutation({
                 mutation: deleteOrder,
                 values: orderId,
                 snackbar: false,
             });
-    }, [orderId]);
+    }, [deleteOrder, handleMutation, orderId]);
 
     useEffect(() => {
         window.addEventListener("beforeunload", handleUnloadOrder);
@@ -32,13 +36,27 @@ const Checkout = () => {
         return () => {
             window.removeEventListener("beforeunload", handleUnloadOrder);
         };
-    }, [handleUnloadOrder]);
+    }, []);
 
     useEffect(() => {
-        return () => {
+        const currentPath = location.pathname;
+        const wasOnCheckout = prevLocation.current.includes("/checkout");
+        const isStillOnCheckout = currentPath.includes("/checkout");
+
+        if (
+            wasOnCheckout &&
+            !isStillOnCheckout &&
+            !isRedirectingToStripe.current
+        ) {
             handleUnloadOrder();
-        };
-    }, [handleUnloadOrder]);
+        }
+
+        prevLocation.current = currentPath;
+    }, [handleUnloadOrder, location.pathname]);
+
+    const prepareStripeRedirect = useCallback(() => {
+        isRedirectingToStripe.current = true;
+    }, []);
 
     if (isError || (!isLoading && !data?.result)) return <NotFound />;
 
@@ -48,6 +66,7 @@ const Checkout = () => {
             steps={checkoutSteps}
             isError={isError}
             isLoading={isLoading}
+            onStripeRedirect={prepareStripeRedirect}
         >
             <CheckoutLayout>
                 <Loading isLoading={isLoading}>

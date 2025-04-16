@@ -90,7 +90,6 @@ orderSchema.pre("save", async function (next) {
             );
 
             this.orderNumber = counter.seq;
-            console.log(this.orderNumber);
         } catch (error: any) {
             return next(error);
         }

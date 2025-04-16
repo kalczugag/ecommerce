@@ -13,7 +13,7 @@ const stripePromise = loadStripe(
 );
 
 const SummaryModule = () => {
-    const { order, isLoading } = useOrder();
+    const { order, isLoading, onStripeRedirect } = useOrder();
     const { shipmentTotal } = processShipments(order?.shipments || []);
     const [createPayment, { isLoading: paymentLoading }] =
         useCreatePaymentMutation();
@@ -32,6 +32,10 @@ const SummaryModule = () => {
             const { data } = await createPayment(order!);
 
             if (data?.result) {
+                if (onStripeRedirect) {
+                    onStripeRedirect();
+                }
+
                 const stripe = await stripePromise;
                 await stripe?.redirectToCheckout({
                     sessionId: data.result,

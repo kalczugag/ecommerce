@@ -2,6 +2,9 @@ import express from "express";
 import { isValidObjectId } from "mongoose";
 import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import { OrderModel } from "../../../models/Order";
+import { CounterModel } from "../../../models/Counter";
+import { ShipmentModel } from "../../../models/Order/Shipment";
+import { PaymentModel } from "../../../models/Order/Payment";
 
 export const deleteOrder = async (
     req: express.Request<{ id: string }>,
@@ -22,6 +25,22 @@ export const deleteOrder = async (
             return res
                 .status(404)
                 .json(errorResponse(null, "Order not found", 404));
+        }
+
+        await CounterModel.findById("orderNumber").updateOne({
+            $inc: { seq: -1 },
+        });
+
+        if (deletedOrder.shipments.length > 0) {
+            await ShipmentModel.deleteMany({
+                _id: { $in: deletedOrder.shipments },
+            });
+        }
+
+        if (deletedOrder.payments.length > 0) {
+            await PaymentModel.deleteMany({
+                _id: { $in: deletedOrder.payments },
+            });
         }
 
         return res.json(successResponse(deletedOrder));

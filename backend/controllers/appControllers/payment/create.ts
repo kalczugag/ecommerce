@@ -130,8 +130,8 @@ export const createCheckoutSession = async (
                 },
             },
             shipping_options: createShippingOptions(),
-            success_url: `${url}/account/orders/${order._id}?status=confirmed`,
-            cancel_url: `${url}/account/orders/${order._id}?status=canceled`,
+            success_url: `${url}/account/orders/${order._id}?success=true`,
+            cancel_url: `${url}/account/orders?cancelled=true`,
         });
 
         return res.json(successResponse(session.id));

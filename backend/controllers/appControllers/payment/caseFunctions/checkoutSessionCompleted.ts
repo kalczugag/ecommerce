@@ -19,23 +19,22 @@ export const handleCheckoutSessionCompleted = async (
     }
 
     try {
-        const order = await OrderModel.findByIdAndUpdate(
-            orderId,
-            {
-                status: "completed",
-            },
-            { new: true }
-        )
-            .populate("_user", "firstName lastName phone address")
-            .populate("shipments")
-            .populate({
-                path: "items",
-                populate: {
-                    path: "_product",
-                    model: "Product",
+        const order = await OrderModel.findById(orderId);
+        if (order) {
+            order.status = "confirmed";
+            await order.save();
+            await order.populate([
+                { path: "_user", select: "firstName lastName phone address" },
+                { path: "shipments" },
+                {
+                    path: "items",
+                    populate: {
+                        path: "_product",
+                        model: "Product",
+                    },
                 },
-            })
-            .exec();
+            ]);
+        }
 
         if (!order) {
             throw new Error("Order not found");

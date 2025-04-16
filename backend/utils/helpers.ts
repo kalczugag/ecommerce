@@ -1,7 +1,7 @@
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import moment from "moment";
-import { User } from "../types/User";
+import type { User } from "../types/User";
 
 /**
  * Validates a password by comparing it with a hash and a salt.
