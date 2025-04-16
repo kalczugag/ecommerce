@@ -2,15 +2,17 @@ import { cloneElement, isValidElement, ReactElement, ReactNode } from "react";
 import { Form, FormSpy } from "react-final-form";
 import arrayMutators from "final-form-arrays";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@mui/material";
+import { Button, Divider } from "@mui/material";
 import Loading from "../Loading";
 import AlertDialog from "../AlertDialog";
 import Review from "../Review";
+import FormValuesDisplay from "../FormValuesDisplay";
 
 interface UpdateModalProps {
     formElements: ReactNode;
     initialValues: any;
     isLoading: boolean;
+    formValuesDisplay?: boolean;
     handleSubmit: (values: any) => void;
 }
 
@@ -19,6 +21,7 @@ const UpdateForm = ({
     initialValues,
     formElements,
     isLoading,
+    formValuesDisplay,
 }: UpdateModalProps) => {
     const navigate = useNavigate();
 
@@ -34,18 +37,38 @@ const UpdateForm = ({
                     <form onSubmit={handleSubmit}>
                         <FormSpy subscription={{ values: true }}>
                             {({ values }) => (
-                                <>
-                                    {isValidElement(formElements) ? (
-                                        cloneElement(
-                                            formElements as ReactElement,
-                                            {
-                                                formValues: values,
-                                            }
-                                        )
-                                    ) : (
-                                        <div />
+                                <div
+                                    className={
+                                        formValuesDisplay
+                                            ? "flex flex-col md:flex-row"
+                                            : ""
+                                    }
+                                >
+                                    <div className="flex-1">
+                                        {isValidElement(formElements) ? (
+                                            cloneElement(
+                                                formElements as ReactElement,
+                                                {
+                                                    formValues: values,
+                                                }
+                                            )
+                                        ) : (
+                                            <div />
+                                        )}
+                                    </div>
+                                    {formValuesDisplay && (
+                                        <>
+                                            <Divider
+                                                flexItem
+                                                orientation="vertical"
+                                                sx={{ mx: 2 }}
+                                            />
+                                            <FormValuesDisplay
+                                                values={values}
+                                            />
+                                        </>
                                     )}
-                                </>
+                                </div>
                             )}
                         </FormSpy>
                         <div className="flex space-x-2 mt-8">

@@ -65,6 +65,7 @@ const ProductsEdit = () => {
                     isLoading={
                         productsLoading || categoriesLoading || result.isLoading
                     }
+                    formValuesDisplay
                     formElements={
                         <ProductForm
                             data={categoriesData?.result}
