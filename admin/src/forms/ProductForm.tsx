@@ -1,4 +1,5 @@
-import { Field } from "react-final-form";
+import { useEffect } from "react";
+import { Field, useForm } from "react-final-form";
 import {
     Button,
     FormControl,
@@ -32,15 +33,79 @@ interface CustomerFormProps {
     isLoading: boolean;
 }
 
+const DiscountedPriceField = () => {
+    const form = useForm();
+
+    useEffect(() => {
+        const unsubscribe = form.subscribe(
+            ({ values }) => {
+                const price = Number(values.price) || 0;
+                const discountPercent =
+                    Number(values.discountPercent) > 100
+                        ? 100
+                        : Number(values.discountPercent) || 0;
+
+                if (price && discountPercent) {
+                    const calculatedDiscountedPrice =
+                        price - (price * discountPercent) / 100;
+
+                    if (
+                        calculatedDiscountedPrice !==
+                        Number(values.discountedPrice)
+                    ) {
+                        form.change(
+                            "discountedPrice",
+                            calculatedDiscountedPrice.toFixed(2)
+                        );
+                    }
+                } else if (price && values.discountedPrice !== price) {
+                    form.change("discountedPrice", price.toFixed(2));
+                }
+            },
+            { values: true }
+        );
+
+        return unsubscribe;
+    }, [form]);
+
+    return (
+        <Field name="discountedPrice" type="number">
+            {(props) => (
+                <TextField
+                    type="number"
+                    label="Discounted Price"
+                    slotProps={{
+                        input: {
+                            startAdornment: (
+                                <InputAdornment position="start">
+                                    $
+                                </InputAdornment>
+                            ),
+                            readOnly: true,
+                        },
+                    }}
+                    name={props.input.name}
+                    value={props.input.value}
+                    onChange={props.input.onChange}
+                    error={props.meta.error && props.meta.touched}
+                    helperText={
+                        props.meta.error && props.meta.touched
+                            ? props.meta.error
+                            : null
+                    }
+                    fullWidth
+                />
+            )}
+        </Field>
+    );
+};
+
 const ProductForm = ({
     data,
     isLoading,
     isUpdateForm,
     formValues,
 }: CustomerFormProps) => {
-    const price = formValues?.price || 0;
-    const discountPercent = formValues?.discountPercent || 0;
-    const discountedPrice = price - (price * discountPercent) / 100;
     const quantity = formValues?.size?.length
         ? formValues.size.reduce(
               (acc, size) => acc + Number(size.quantity || 0),
@@ -177,9 +242,7 @@ const ProductForm = ({
                                         </InputAdornment>
                                     ),
                                 },
-                            }}
-                            inputProps={{
-                                min: 0,
+                                htmlInput: { min: 0 },
                             }}
                             name={props.input.name}
                             value={props.input.value}
@@ -216,10 +279,7 @@ const ProductForm = ({
                                         </InputAdornment>
                                     ),
                                 },
-                            }}
-                            inputProps={{
-                                min: 0,
-                                max: 100,
+                                htmlInput: { min: 0, max: 100 },
                             }}
                             error={props.meta.error && props.meta.touched}
                             helperText={
@@ -232,53 +292,10 @@ const ProductForm = ({
                         />
                     )}
                 </Field>
-                <Field name="discountedPrice" type="number">
-                    {(props) => (
-                        <TextField
-                            type="number"
-                            label="Discounted Price"
-                            slotProps={{
-                                input: {
-                                    startAdornment: (
-                                        <InputAdornment position="start">
-                                            $
-                                        </InputAdornment>
-                                    ),
-                                    readOnly: true,
-                                },
-                            }}
-                            name={props.input.name}
-                            value={discountedPrice}
-                            error={props.meta.error && props.meta.touched}
-                            helperText={
-                                props.meta.error && props.meta.touched
-                                    ? props.meta.error
-                                    : null
-                            }
-                            fullWidth
-                        />
-                    )}
-                </Field>
+                {DiscountedPriceField()}
             </Row>
             <Field name="description" type="textarea">
-                {(props) => (
-                    <ReactQuill {...props.input} />
-                    // <TextField
-                    //     label="Description"
-                    //     name={props.input.name}
-                    //     value={props.input.value}
-                    //     onChange={props.input.onChange}
-                    //     error={props.meta.error && props.meta.touched}
-                    //     helperText={
-                    //         props.meta.error && props.meta.touched
-                    //             ? props.meta.error
-                    //             : null
-                    //     }
-                    //     disabled={isLoading}
-                    //     multiline
-                    //     fullWidth
-                    // />
-                )}
+                {(props) => <ReactQuill {...props.input} />}
             </Field>
             <Row label="Sizes" direction="column">
                 <FieldArray name="size">

@@ -8,9 +8,10 @@ import {
     Divider,
     Grid,
     Paper,
+    IconButton,
 } from "@mui/material";
 import Slider from "react-slick";
-import { Star, Inventory } from "@mui/icons-material";
+import { Star, Inventory, CropFree } from "@mui/icons-material";
 import type { Product } from "@/types/Product";
 
 interface ProductCardProps {
@@ -49,6 +50,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
                 boxShadow: 3,
                 borderRadius: 2,
                 overflow: "hidden",
+                height: "100%",
             }}
         >
             <Box sx={{ position: "relative" }}>
@@ -85,6 +87,19 @@ const ProductCard = ({ product }: ProductCardProps) => {
                         />
                     )}
                 </Slider>
+                <IconButton
+                    sx={{
+                        position: "absolute",
+                        bottom: 4,
+                        right: 4,
+                        backgroundColor: "white",
+                        "&:hover": {
+                            backgroundColor: "white",
+                        },
+                    }}
+                >
+                    <CropFree />
+                </IconButton>
             </Box>
 
             <CardContent sx={{ p: 3 }}>
@@ -156,29 +171,38 @@ const ProductCard = ({ product }: ProductCardProps) => {
                         component="span"
                         sx={{ fontWeight: "bold", mr: 1 }}
                     >
-                        ${product.discountedPrice ?? "0.00"}
+                        $
+                        {product.discountedPrice
+                            ? product.discountedPrice
+                            : product.price}
                     </Typography>
-                    {product.price && (
-                        <Typography
-                            variant="body1"
-                            component="span"
-                            sx={{
-                                textDecoration: "line-through",
-                                color: "text.secondary",
-                                mr: 1,
-                            }}
-                        >
-                            ${product.price}
-                        </Typography>
-                    )}
-                    {product.discountPercent && (
-                        <Chip
-                            size="small"
-                            label={`${product.discountPercent}% OFF`}
-                            color="error"
-                            sx={{ fontSize: 11, fontWeight: "bold" }}
-                        />
-                    )}
+
+                    {product.price &&
+                        product.discountedPrice &&
+                        product.discountedPrice < product.price && (
+                            <Typography
+                                variant="body1"
+                                component="span"
+                                sx={{
+                                    textDecoration: "line-through",
+                                    color: "text.secondary",
+                                    mr: 1,
+                                }}
+                            >
+                                ${Number(product.price).toFixed(2)}
+                            </Typography>
+                        )}
+
+                    {product.price &&
+                        product.discountedPrice &&
+                        product.discountedPrice < product.price && (
+                            <Chip
+                                size="small"
+                                label={`${product.discountPercent}% OFF`}
+                                color="error"
+                                sx={{ fontSize: 11, fontWeight: "bold" }}
+                            />
+                        )}
                 </Box>
 
                 <Divider sx={{ my: 2 }} />
@@ -275,7 +299,12 @@ const ProductCard = ({ product }: ProductCardProps) => {
                             }}
                         />
                         <Typography variant="body2" color="text.secondary">
-                            Total: {product.quantity ?? 0} units
+                            Total:{" "}
+                            {product.size?.reduce(
+                                (a, b) => a + b.quantity,
+                                0
+                            ) ?? 0}{" "}
+                            units
                         </Typography>
                     </Box>
                 </Box>
