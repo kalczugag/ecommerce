@@ -1,6 +1,6 @@
 import { Fragment, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { toggleSidebar } from "@/store";
+import { toggleSidebar, toggleCollapsed } from "@/store";
 import { useAppDispatch, useAppSelector } from "@/hooks/useStore";
 import {
     Box,
@@ -12,9 +12,19 @@ import {
     ListItemButton,
     ListItemIcon,
     ListItemText,
+    IconButton,
+    Tooltip,
     useMediaQuery,
 } from "@mui/material";
-import { Inbox, Mail, ExpandLess, ExpandMore, Adb } from "@mui/icons-material";
+import {
+    Inbox,
+    Mail,
+    ExpandLess,
+    ExpandMore,
+    Adb,
+    ChevronLeft,
+    ChevronRight,
+} from "@mui/icons-material";
 import Copyright from "../Copyright";
 
 export interface NavLink {
@@ -38,11 +48,17 @@ const NavLinksMenu = ({ links }: NavLinksMenuProps) => {
     const navigate = useNavigate();
     const { pathname } = useLocation();
     const isMobile = useMediaQuery("(max-width: 1024px)");
-    const { isOpen: showDrawer } = useAppSelector((state) => state.sidebar);
+    const { isOpen: showDrawer, collapsed } = useAppSelector(
+        (state) => state.sidebar
+    );
 
     const [activeKeys, setActiveKeys] = useState<string[]>([]);
 
     const collapseAll = () => setActiveKeys([]);
+
+    const toggleCollapse = () => {
+        dispatch(toggleCollapsed(!collapsed));
+    };
 
     const handleClick = (link: NavLink, isSubLink: boolean = false) => {
         if (link.to) {
@@ -67,24 +83,48 @@ const NavLinksMenu = ({ links }: NavLinksMenuProps) => {
 
     const DrawerList = (
         <Box
-            width={250}
-            role="presentaion"
-            className="py-6 bg-dark-primary text-text-dark dark:bg-darker h-full"
+            width={collapsed ? 70 : 250}
+            role="presentation"
+            className="py-6 bg-dark-primary text-text-dark dark:bg-darker h-full relative transition-all duration-300"
         >
+            {!isMobile && (
+                <IconButton
+                    onClick={toggleCollapse}
+                    size="small"
+                    sx={{
+                        position: "absolute",
+                        right: "-10px",
+                        top: "20px",
+                        backgroundColor: "background.paper",
+                        boxShadow: 1,
+                        zIndex: 1,
+                        "&:hover": {
+                            backgroundColor: "action.hover",
+                        },
+                    }}
+                >
+                    {collapsed ? <ChevronRight /> : <ChevronLeft />}
+                </IconButton>
+            )}
+
             <div
-                className="flex items-center px-6 mb-10"
+                className={`flex items-center ${
+                    collapsed ? "justify-center px-2" : "px-6"
+                } mb-10`}
                 onClick={() => {
                     toggleDrawer(false);
                     collapseAll();
                 }}
             >
-                <Adb className="mr-1" />
-                <Link
-                    to="/"
-                    className="font-mono font-bold text-xl tracking-[.3rem] no-underline"
-                >
-                    LOGO
-                </Link>
+                <Adb className={collapsed ? "mx-auto" : "mr-1"} />
+                {!collapsed && (
+                    <Link
+                        to="/"
+                        className="font-mono font-bold text-xl tracking-[.3rem] no-underline"
+                    >
+                        LOGO
+                    </Link>
+                )}
             </div>
             {links.map((section, index) => (
                 <Fragment key={section.sectionLabel}>
@@ -92,16 +132,19 @@ const NavLinksMenu = ({ links }: NavLinksMenuProps) => {
                         <Divider
                             sx={{
                                 marginBottom: "16px",
-                                marginLeft: "16px",
+                                marginLeft: collapsed ? "0" : "16px",
+                                marginRight: collapsed ? "0" : undefined,
                                 borderColor: "#6b7280",
                             }}
                         />
                     )}
                     <List
                         subheader={
-                            <h5 className="px-4 text-gray-400 text-sm font-semibold">
-                                {section.sectionLabel}
-                            </h5>
+                            !collapsed && (
+                                <h5 className="px-4 text-gray-400 text-sm font-semibold">
+                                    {section.sectionLabel}
+                                </h5>
+                            )
                         }
                     >
                         {section.elements.map((link, index) => {
@@ -111,33 +154,65 @@ const NavLinksMenu = ({ links }: NavLinksMenuProps) => {
 
                             return (
                                 <Fragment key={link.key}>
-                                    <ListItem disablePadding>
-                                        <ListItemButton
-                                            onClick={() => handleClick(link)}
+                                    <ListItem
+                                        disablePadding={
+                                            collapsed ? false : true
+                                        }
+                                    >
+                                        <Tooltip
+                                            title={collapsed ? link.label : ""}
+                                            placement="right"
+                                            disableHoverListener={!collapsed}
                                         >
-                                            <ListItemIcon
-                                                sx={{ color: "#e5e5e5" }}
+                                            <ListItemButton
+                                                onClick={() =>
+                                                    handleClick(link)
+                                                }
+                                                sx={{
+                                                    minHeight: 48,
+                                                    justifyContent: collapsed
+                                                        ? "center"
+                                                        : "initial",
+                                                    px: collapsed ? 1 : 2,
+                                                }}
                                             >
-                                                {link.icon ? (
-                                                    link.icon
-                                                ) : index % 2 === 0 ? (
-                                                    <Inbox />
-                                                ) : (
-                                                    <Mail />
+                                                <ListItemIcon
+                                                    sx={{
+                                                        color: "#e5e5e5",
+                                                        minWidth: collapsed
+                                                            ? 0
+                                                            : 40,
+                                                        mr: collapsed
+                                                            ? "auto"
+                                                            : 2,
+                                                        justifyContent:
+                                                            "center",
+                                                    }}
+                                                >
+                                                    {link.icon ? (
+                                                        link.icon
+                                                    ) : index % 2 === 0 ? (
+                                                        <Inbox />
+                                                    ) : (
+                                                        <Mail />
+                                                    )}
+                                                </ListItemIcon>
+                                                {!collapsed && (
+                                                    <ListItemText
+                                                        primary={link.label}
+                                                    />
                                                 )}
-                                            </ListItemIcon>
-                                            <ListItemText
-                                                primary={link.label}
-                                            />
-                                            {hasSubLinks &&
-                                                (isOpen ? (
-                                                    <ExpandLess />
-                                                ) : (
-                                                    <ExpandMore />
-                                                ))}
-                                        </ListItemButton>
+                                                {!collapsed &&
+                                                    hasSubLinks &&
+                                                    (isOpen ? (
+                                                        <ExpandLess />
+                                                    ) : (
+                                                        <ExpandMore />
+                                                    ))}
+                                            </ListItemButton>
+                                        </Tooltip>
                                     </ListItem>
-                                    {hasSubLinks && (
+                                    {hasSubLinks && !collapsed && (
                                         <Collapse
                                             in={isOpen}
                                             timeout="auto"
@@ -210,7 +285,7 @@ const NavLinksMenu = ({ links }: NavLinksMenuProps) => {
                     </List>
                 </Fragment>
             ))}
-            <Copyright />
+            {!collapsed && <Copyright />}
         </Box>
     );
 
