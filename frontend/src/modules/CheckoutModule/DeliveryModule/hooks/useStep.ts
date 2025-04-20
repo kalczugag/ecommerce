@@ -1,26 +1,31 @@
-import { useOrder } from "@/contexts/OrderContext";
-import { useNavigate, useParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
+import { checkoutSteps } from "@/constants/checkoutSteps";
 
 const useStep = (): [
-    step: string | undefined,
+    step: string,
     nextStep: () => void,
     prevStep: () => void
 ] => {
-    const navigate = useNavigate();
-    const { order, steps } = useOrder();
-    const { "*": step } = useParams<{
-        "*": string;
-    }>();
+    const [searchParams, setSearchParams] = useSearchParams();
 
-    const activeStep = steps.indexOf(step!);
+    const step = searchParams.get("step") || checkoutSteps[0];
+    const activeStep = step ? checkoutSteps.indexOf(step) : 0;
 
     const nextStep = () => {
-        navigate(`/checkout/${order?._id}/${steps[activeStep + 1]}`);
+        if (activeStep < checkoutSteps.length - 1) {
+            setSearchParams(
+                { step: checkoutSteps[activeStep + 1] },
+                { replace: true }
+            );
+        }
     };
 
     const prevStep = () => {
         if (activeStep > 0) {
-            navigate(`/checkout/${order?._id}/${steps[activeStep - 1]}`);
+            setSearchParams(
+                { step: checkoutSteps[activeStep - 1] },
+                { replace: true }
+            );
         }
     };
 

@@ -1,6 +1,5 @@
 import { Form } from "react-final-form";
-import { useUpdateOrderMutation, useUpdateUserMutation } from "@/store";
-import { useOrder } from "@/contexts/OrderContext";
+import { useUpdateUserMutation } from "@/store";
 import DeliveryForm from "@/forms/DeliveryForm";
 import AdditionalInfoForm from "@/forms/AdditionalInfoForm";
 import DeliveryMethodForm from "@/forms/DeliveryMethodForm";
@@ -8,7 +7,8 @@ import useStep from "./hooks/useStep";
 import { Button, Divider } from "@mui/material";
 import type { ShippingAddress } from "@/types/Order";
 import type { DeliveryMethod, Provider } from "@/types/DeliveryMethod";
-import { processShipments } from "@/utils/processFunctions";
+import useAuth from "@/hooks/useAuth";
+import { useAppSelector } from "@/hooks/useStore";
 
 interface DeliveryFormProps {
     _id: string;
@@ -41,19 +41,12 @@ const findProviderById = (
 };
 
 const DeliveryModule = ({ data, isDeliveryLoading }: DeliveryModuleProps) => {
-    const { order, isLoading } = useOrder();
+    const { products, total } = useAppSelector((state) => state.checkout);
+    const { userId } = useAuth();
     const [_, nextStep] = useStep();
-    const [updateOrder, { isLoading: isUpdatingOrder }] =
-        useUpdateOrderMutation();
     const [updateUser, { isLoading: isUpdatingUser }] = useUpdateUserMutation();
-    const { isMoreThanOne, shipments } = processShipments(
-        order?.shipments || []
-    );
 
     const handleSubmit = async (values: DeliveryFormProps) => {
-        if (!order) return;
-
-        const userId = order._user._id;
         const selectedProvider = findProviderById(data, values._deliveryMethod);
 
         if (values.shippingAddress && userId) {
@@ -63,47 +56,41 @@ const DeliveryModule = ({ data, isDeliveryLoading }: DeliveryModuleProps) => {
             });
         }
 
-        await updateOrder({
-            _id: order._id || "",
-            shipments: [
-                {
-                    _order: order._id!,
-                    shipFrom: {
-                        street: "Człuchowska 92",
-                        city: "Warsaw",
-                        state: "Masovian",
-                        postalCode: "01-360",
-                        country: "Poland",
-                    },
-                    shipTo: values.shippingAddress,
-                    _deliveryMethod: values._deliveryMethod,
-                    shippingCost:
-                        (order?.total || 0) > 100 ? 0 : selectedProvider?.price,
-                    itemsDelivered: 0,
+        const shipmentsData = [
+            {
+                shipFrom: {
+                    street: "Człuchowska 92",
+                    city: "Warsaw",
+                    state: "Masovian",
+                    postalCode: "01-360",
+                    country: "Poland",
                 },
-            ],
+                shipTo: values.shippingAddress,
+                _deliveryMethod: values._deliveryMethod,
+                shippingCost: total > 100 ? 0 : selectedProvider?.price,
+                itemsDelivered: 0,
+            },
+        ];
+
+        const orderData = {
+            items: products,
             shippingAddress: values.shippingAddress,
             billingAddress: values.sameAsShipping
                 ? values.shippingAddress
                 : values.billingAddress,
-        });
+        };
 
-        if (!isUpdatingOrder && !isUpdatingUser && values.shippingAddress)
-            nextStep();
+        if (!isUpdatingUser && values.shippingAddress) nextStep();
     };
 
-    const loading =
-        isLoading || isUpdatingOrder || isUpdatingUser || isDeliveryLoading;
+    const loading = isUpdatingUser || isDeliveryLoading;
 
     return (
         <Form
             onSubmit={handleSubmit}
             initialValues={{
-                ...order?._user,
-                shippingAddress: order?._user?.address,
-                _deliveryMethod: isMoreThanOne
-                    ? shipments[0]?._deliveryMethod
-                    : shipments[0]?._deliveryMethod,
+                // ...order?._user,
+                // shippingAddress: order?._user?.address,
                 sameAsShipping: true,
             }}
             subscription={{
@@ -125,9 +112,7 @@ const DeliveryModule = ({ data, isDeliveryLoading }: DeliveryModuleProps) => {
                                 <DeliveryMethodForm
                                     content={data}
                                     orderDeliveryCost={
-                                        (order?.total || 0) > 100
-                                            ? 0
-                                            : undefined
+                                        total > 100 ? 0 : undefined
                                     }
                                     isLoading={loading}
                                 />
@@ -152,7 +137,7 @@ const DeliveryModule = ({ data, isDeliveryLoading }: DeliveryModuleProps) => {
                                 sx={{ mt: 4 }}
                                 variant="contained"
                                 type="submit"
-                                disabled={isUpdatingOrder || isUpdatingUser}
+                                disabled={isUpdatingUser}
                             >
                                 Use this address
                             </Button>

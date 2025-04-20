@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import { useOrder } from "@/contexts/OrderContext";
 import {
     Skeleton,
     Container,
@@ -8,24 +7,22 @@ import {
     Stepper,
     useMediaQuery,
 } from "@mui/material";
-import useStep from "@/modules/CheckoutModule/DeliveryModule/hooks/useStep";
 import { orderStatuses } from "@/constants/orderStatuses";
+import { checkoutSteps } from "@/constants/checkoutSteps";
+import { useSearchParams } from "react-router-dom";
 
 interface CheckoutLayoutProps {
     children: ReactNode;
 }
 
 const CheckoutLayout = ({ children }: CheckoutLayoutProps) => {
-    const { steps, order, isLoading } = useOrder();
-    const [activeStep] = useStep();
     const isMobile = useMediaQuery("(max-width: 1024px)");
+    const [searchParams] = useSearchParams();
 
+    const activeStep = searchParams.get("step");
     const orderSteps = Object.values(orderStatuses);
 
-    const activeCheckoutStepIndex = steps.indexOf(activeStep || "");
-    const activeOrderStepIndex = order
-        ? Object.keys(orderStatuses).indexOf(order.status || "")
-        : -1;
+    const activeCheckoutStepIndex = checkoutSteps.indexOf(activeStep || "");
 
     const showCheckoutStatus =
         activeStep !== "cancel" && activeStep !== "success";
@@ -38,32 +35,26 @@ const CheckoutLayout = ({ children }: CheckoutLayoutProps) => {
                     activeStep={activeCheckoutStepIndex}
                     sx={{ marginY: "24px" }}
                 >
-                    {steps.map((label, index) => (
+                    {checkoutSteps.map((label, index) => (
                         <Step
                             key={label}
                             completed={index < activeCheckoutStepIndex}
                         >
-                            {isLoading ? (
-                                <Skeleton width={80} height={30} />
-                            ) : (
-                                <StepLabel color="inherit">{label}</StepLabel>
-                            )}
+                            <StepLabel color="inherit">{label}</StepLabel>
                         </Step>
                     ))}
                 </Stepper>
             ) : (
                 <Stepper
                     nonLinear
-                    activeStep={activeOrderStepIndex}
+                    activeStep={activeCheckoutStepIndex}
                     sx={{ marginY: "24px" }}
                 >
                     {isMobile ? (
                         <Step>
-                            {isLoading ? (
-                                <Skeleton width={80} height={30} />
-                            ) : (
-                                <StepLabel>Status: {order?.status}</StepLabel>
-                            )}
+                            <StepLabel>
+                                Status: {activeCheckoutStepIndex}
+                            </StepLabel>
                         </Step>
                     ) : (
                         orderSteps.map((label, index) => {
@@ -72,30 +63,19 @@ const CheckoutLayout = ({ children }: CheckoutLayoutProps) => {
                             return (
                                 <Step
                                     key={label}
-                                    completed={index < activeOrderStepIndex}
+                                    completed={index < activeCheckoutStepIndex}
                                 >
-                                    {isLoading ? (
-                                        <Skeleton width={80} height={30} />
-                                    ) : (
-                                        <StepLabel color="inherit">
-                                            {label}
-                                        </StepLabel>
-                                    )}
+                                    <StepLabel color="inherit">
+                                        {label}
+                                    </StepLabel>
                                 </Step>
                             );
                         })
                     )}
                 </Stepper>
             )}
-            {isLoading ? (
-                <div className="flex flex-col -space-y-16">
-                    <Skeleton height={150} width={isMobile ? "100%" : 350} />
-                    <Skeleton height={240} />
-                    <Skeleton height={240} />
-                </div>
-            ) : (
-                children
-            )}
+
+            {children}
         </Container>
     );
 };

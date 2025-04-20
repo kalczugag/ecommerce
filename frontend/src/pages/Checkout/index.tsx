@@ -1,79 +1,63 @@
-import { useCallback, useEffect, useRef } from "react";
-import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
-import { useGetOrderByIdQuery, useDeleteOrderMutation } from "@/store";
+import { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import { initializeCheckout } from "@/store";
 import { useTitle } from "@/hooks/useTitle";
-import { useHandleMutation } from "@/hooks/useHandleMutation";
-import { checkoutSteps } from "@/constants/checkoutSteps";
-import { OrderProvider } from "@/contexts/OrderContext";
+import { useAppDispatch, useAppSelector } from "@/hooks/useStore";
+import useCart from "@/hooks/useCart";
 import CheckoutLayout from "@/layouts/CheckoutLayout";
-import NotFound from "@/components/NotFound";
 import Loading from "@/components/Loading";
+import Delivery from "./Delivery";
+import Summary from "./Summary";
 
 const Checkout = () => {
-    const { orderId } = useParams<{ orderId: string }>();
-    const { data, isError, isLoading } = useGetOrderByIdQuery(orderId || "");
-    const [deleteOrder] = useDeleteOrderMutation();
-    const { handleMutation } = useHandleMutation();
-    const location = useLocation();
-
-    const isRedirectingToStripe = useRef(false);
-    const prevLocation = useRef(location.pathname);
+    const dispatch = useAppDispatch();
+    const [searchParams] = useSearchParams();
+    const { initialized } = useAppSelector((state) => state.checkout);
+    const { data, loading } = useCart();
 
     useTitle("Checkout");
 
-    const handleUnloadOrder = useCallback(() => {
-        if (orderId && !isRedirectingToStripe.current)
-            handleMutation({
-                mutation: deleteOrder,
-                values: orderId,
-                snackbar: false,
-            });
-    }, [deleteOrder, handleMutation, orderId]);
+    const currentStep = searchParams.get("step") || "delivery";
 
     useEffect(() => {
-        window.addEventListener("beforeunload", handleUnloadOrder);
+        if (data?.result && !initialized) {
+            const { items, subTotal, discount, deliveryCost, total } =
+                data.result;
+
+            dispatch(
+                initializeCheckout({
+                    products: items,
+                    subTotal,
+                    discount,
+                    deliveryCost,
+                    total,
+                })
+            );
+        }
+    }, [data?.result]);
+
+    useEffect(() => {
+        const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+            e.preventDefault();
+            e.returnValue =
+                "You have unsaved changes. Are you sure you want to leave?";
+            return e.returnValue;
+        };
+
+        window.addEventListener("beforeunload", handleBeforeUnload);
 
         return () => {
-            window.removeEventListener("beforeunload", handleUnloadOrder);
+            window.removeEventListener("beforeunload", handleBeforeUnload);
         };
     }, []);
 
-    useEffect(() => {
-        const currentPath = location.pathname;
-        const wasOnCheckout = prevLocation.current.includes("/checkout");
-        const isStillOnCheckout = currentPath.includes("/checkout");
-
-        if (
-            wasOnCheckout &&
-            !isStillOnCheckout &&
-            !isRedirectingToStripe.current
-        ) {
-            handleUnloadOrder();
-        }
-
-        prevLocation.current = currentPath;
-    }, [handleUnloadOrder, location.pathname]);
-
-    const prepareStripeRedirect = useCallback(() => {
-        isRedirectingToStripe.current = true;
-    }, []);
-
-    if (isError || (!isLoading && !data?.result)) return <NotFound />;
-
     return (
-        <OrderProvider
-            order={data?.result}
-            steps={checkoutSteps}
-            isError={isError}
-            isLoading={isLoading}
-            onStripeRedirect={prepareStripeRedirect}
-        >
-            <CheckoutLayout>
-                <Loading isLoading={isLoading}>
-                    <Outlet />
-                </Loading>
-            </CheckoutLayout>
-        </OrderProvider>
+        <CheckoutLayout>
+            <Loading isLoading={loading.get}>
+                {currentStep === "delivery" && <Delivery />}
+                {currentStep === "summary" && <Summary />}
+            </Loading>
+        </CheckoutLayout>
     );
 };
 

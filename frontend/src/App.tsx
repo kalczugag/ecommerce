@@ -58,18 +58,9 @@ const App = () => {
                                     element={<Review />}
                                 />
                                 <Route
-                                    path="/checkout/:orderId/*"
+                                    path="/checkout"
                                     element={<Checkout />}
-                                >
-                                    <Route
-                                        path="delivery"
-                                        element={<Delivery />}
-                                    />
-                                    <Route
-                                        path="summary"
-                                        element={<Summary />}
-                                    />
-                                </Route>
+                                />
                                 <Route
                                     path="/account"
                                     element={<AccountOutlet />}
