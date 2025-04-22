@@ -156,6 +156,22 @@ interface ReturnOrder {
     updatedAt?: Date;
 }
 
+interface CreateOrder {
+    orderData: {
+        _user: string;
+        _cart: string;
+        shippingAddress: ShippingAddress;
+        billingAddress: ShippingAddress;
+        notes?: OrderNote[];
+    };
+    shipmentData: {
+        shipFrom: ShippingAddress;
+        shipTo: ShippingAddress;
+        _deliveryMethod: string;
+        notes?: OrderNote[];
+    };
+}
+
 interface UpdateOrder extends Omit<Order, "_user" | "shipments"> {
     _user?: string;
     shipment: string;
@@ -179,5 +195,6 @@ export {
     UpdateOrderNote,
     ReturnOrder,
     UpdateOrder,
+    CreateOrder,
     PaginatedOrders,
 };
