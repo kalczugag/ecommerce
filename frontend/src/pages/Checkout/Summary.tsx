@@ -6,7 +6,7 @@ const Summary = () => {
     const [_, setSearchParams] = useSearchParams();
 
     useEffect(() => {
-        setSearchParams({ step: "delivery" });
+        setSearchParams({ step: "summary" });
     }, []);
 
     return <SummaryModule />;

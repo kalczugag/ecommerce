@@ -1,14 +1,13 @@
 import { Form } from "react-final-form";
-import { useUpdateUserMutation } from "@/store";
+import { updateCheckout, useUpdateUserMutation } from "@/store";
 import DeliveryForm from "@/forms/DeliveryForm";
 import AdditionalInfoForm from "@/forms/AdditionalInfoForm";
 import DeliveryMethodForm from "@/forms/DeliveryMethodForm";
 import useStep from "./hooks/useStep";
+import { useAppDispatch, useAppSelector } from "@/hooks/useStore";
 import { Button, Divider } from "@mui/material";
 import type { ShippingAddress } from "@/types/Order";
 import type { DeliveryMethod, Provider } from "@/types/DeliveryMethod";
-import useAuth from "@/hooks/useAuth";
-import { useAppSelector } from "@/hooks/useStore";
 
 interface DeliveryFormProps {
     _id: string;
@@ -41,17 +40,30 @@ const findProviderById = (
 };
 
 const DeliveryModule = ({ data, isDeliveryLoading }: DeliveryModuleProps) => {
-    const { products, total } = useAppSelector((state) => state.checkout);
-    const { userId } = useAuth();
+    const dispatch = useAppDispatch();
+    const { products, total, userData, shippingAddress, billingAddress } =
+        useAppSelector((state) => state.checkout);
     const [_, nextStep] = useStep();
     const [updateUser, { isLoading: isUpdatingUser }] = useUpdateUserMutation();
 
     const handleSubmit = async (values: DeliveryFormProps) => {
         const selectedProvider = findProviderById(data, values._deliveryMethod);
 
-        if (values.shippingAddress && userId) {
+        if (values.shippingAddress && userData?._id) {
+            dispatch(
+                updateCheckout({
+                    _deliveryMethod: values._deliveryMethod,
+                    deliveryCost: selectedProvider?.price,
+                    total: total + (selectedProvider?.price || 0),
+                    shippingAddress: values.shippingAddress,
+                    billingAddress: values.sameAsShipping
+                        ? values.shippingAddress
+                        : values.billingAddress,
+                })
+            );
+
             await updateUser({
-                _id: userId,
+                _id: userData._id,
                 address: values.shippingAddress,
             });
         }
@@ -65,7 +77,7 @@ const DeliveryModule = ({ data, isDeliveryLoading }: DeliveryModuleProps) => {
                     postalCode: "01-360",
                     country: "Poland",
                 },
-                shipTo: values.shippingAddress,
+                shipTo: shippingAddress,
                 _deliveryMethod: values._deliveryMethod,
                 shippingCost: total > 100 ? 0 : selectedProvider?.price,
                 itemsDelivered: 0,
@@ -74,13 +86,11 @@ const DeliveryModule = ({ data, isDeliveryLoading }: DeliveryModuleProps) => {
 
         const orderData = {
             items: products,
-            shippingAddress: values.shippingAddress,
-            billingAddress: values.sameAsShipping
-                ? values.shippingAddress
-                : values.billingAddress,
+            shippingAddress: shippingAddress,
+            billingAddress: billingAddress,
         };
 
-        if (!isUpdatingUser && values.shippingAddress) nextStep();
+        if (!isUpdatingUser && shippingAddress) nextStep();
     };
 
     const loading = isUpdatingUser || isDeliveryLoading;
@@ -89,8 +99,9 @@ const DeliveryModule = ({ data, isDeliveryLoading }: DeliveryModuleProps) => {
         <Form
             onSubmit={handleSubmit}
             initialValues={{
-                // ...order?._user,
-                // shippingAddress: order?._user?.address,
+                firstName: userData?.firstName,
+                lastName: userData?.lastName,
+                shippingAddress: userData?.address,
                 sameAsShipping: true,
             }}
             subscription={{

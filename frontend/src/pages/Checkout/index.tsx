@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { initializeCheckout } from "@/store";
+import { initializeCheckout, setUser, useGetCurrentUserQuery } from "@/store";
 import { useTitle } from "@/hooks/useTitle";
 import { useAppDispatch, useAppSelector } from "@/hooks/useStore";
 import useCart from "@/hooks/useCart";
@@ -14,6 +14,8 @@ const Checkout = () => {
     const [searchParams] = useSearchParams();
     const { initialized } = useAppSelector((state) => state.checkout);
     const { data, loading } = useCart();
+    const { data: userData, isLoading: isUserLoading } =
+        useGetCurrentUserQuery();
 
     useTitle("Checkout");
 
@@ -37,23 +39,29 @@ const Checkout = () => {
     }, [data?.result]);
 
     useEffect(() => {
-        const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-            e.preventDefault();
-            e.returnValue =
-                "You have unsaved changes. Are you sure you want to leave?";
-            return e.returnValue;
-        };
+        if (!isUserLoading && userData) {
+            dispatch(setUser(userData));
+        }
+    }, [userData]);
 
-        window.addEventListener("beforeunload", handleBeforeUnload);
+    // useEffect(() => {
+    //     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+    //         e.preventDefault();
+    //         e.returnValue =
+    //             "You have unsaved changes. Are you sure you want to leave?";
+    //         return e.returnValue;
+    //     };
 
-        return () => {
-            window.removeEventListener("beforeunload", handleBeforeUnload);
-        };
-    }, []);
+    //     window.addEventListener("beforeunload", handleBeforeUnload);
+
+    //     return () => {
+    //         window.removeEventListener("beforeunload", handleBeforeUnload);
+    //     };
+    // }, []);
 
     return (
         <CheckoutLayout>
-            <Loading isLoading={loading.get}>
+            <Loading isLoading={loading.get || isUserLoading}>
                 {currentStep === "delivery" && <Delivery />}
                 {currentStep === "summary" && <Summary />}
             </Loading>
