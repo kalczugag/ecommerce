@@ -1,13 +1,13 @@
 import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { initializeCheckout, setUser, useGetCurrentUserQuery } from "@/store";
-import { useTitle } from "@/hooks/useTitle";
 import { useAppDispatch, useAppSelector } from "@/hooks/useStore";
 import useCart from "@/hooks/useCart";
 import CheckoutLayout from "@/layouts/CheckoutLayout";
 import Loading from "@/components/Loading";
 import Delivery from "./Delivery";
 import Summary from "./Summary";
+import { checkoutSteps } from "@/constants/checkoutSteps";
 
 const Checkout = () => {
     const dispatch = useAppDispatch();
@@ -17,9 +17,7 @@ const Checkout = () => {
     const { data: userData, isLoading: isUserLoading } =
         useGetCurrentUserQuery();
 
-    useTitle("Checkout");
-
-    const currentStep = searchParams.get("step") || "delivery";
+    const currentStep = searchParams.get("step") || checkoutSteps[0];
 
     useEffect(() => {
         if (data?.result && !initialized) {

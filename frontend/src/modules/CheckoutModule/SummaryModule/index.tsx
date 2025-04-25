@@ -1,20 +1,31 @@
 import { loadStripe } from "@stripe/stripe-js";
-import { useCreatePaymentMutation } from "@/store";
+import { useAddOrderMutation, useCreatePaymentMutation } from "@/store";
+import { useAppSelector } from "@/hooks/useStore";
 import CartProductItem from "@/modules/CartModule/components/CartProductItem";
 import CheckoutSummary from "@/modules/CartModule/components/CheckoutSummary";
 import Contact from "./components/Contact";
 import Box from "@/components/Box";
 import type { Cart } from "@/types/Cart";
-import { useAppSelector } from "@/hooks/useStore";
+import type { CreateOrder } from "@/types/Order";
 
 const stripePromise = loadStripe(
     "pk_test_51QAVfFCeAQbmOrQrs7FGHSpQGIkEEVEVHULiWMWYAIoBy1cGNYlmVSvQxy648SjYHG5JcDD01J3YIz5tuJCoeyoV003GfOyfFz"
 );
 
 const SummaryModule = () => {
-    const { products, userData, subTotal, discount, deliveryCost, total } =
-        useAppSelector((state) => state.checkout);
+    const {
+        products,
+        userData,
+        subTotal,
+        discount,
+        shippingAddress,
+        billingAddress,
+        _deliveryMethod,
+        deliveryCost,
+        total,
+    } = useAppSelector((state) => state.checkout);
 
+    const [createOrder, { isLoading: orderLoading }] = useAddOrderMutation();
     const [createPayment, { isLoading: paymentLoading }] =
         useCreatePaymentMutation();
 
@@ -28,17 +39,48 @@ const SummaryModule = () => {
     };
 
     const handleCheckout = async () => {
-        // try {
-        //     const { data } = await createPayment(order!);
-        //     if (data?.result) {
-        //         const stripe = await stripePromise;
-        //         await stripe?.redirectToCheckout({
-        //             sessionId: data.result,
-        //         });
-        //     }
-        // } catch (err) {
-        //     console.error("Checkout error:", err);
-        // }
+        const orderData: CreateOrder = {
+            orderData: {
+                _user: userData?._id || "",
+                _cart: (userData?._cart as string) || "",
+                shippingAddress: shippingAddress!,
+                billingAddress: billingAddress!,
+            },
+            shipmentData: {
+                shipFrom: {
+                    street: "Człuchowska 92",
+                    city: "Warsaw",
+                    state: "Masovian",
+                    postalCode: "01-360",
+                    country: "Poland",
+                },
+                shipTo: shippingAddress!,
+                _deliveryMethod: _deliveryMethod!,
+            },
+        };
+
+        try {
+            const { data: order } = await createOrder(orderData);
+
+            if (!order?.result._id) {
+                return;
+            }
+
+            console.log(order?.result._id);
+
+            const { data } = await createPayment({
+                orderId: order?.result._id,
+            });
+
+            if (data?.result) {
+                const stripe = await stripePromise;
+                await stripe?.redirectToCheckout({
+                    sessionId: data.result,
+                });
+            }
+        } catch (err) {
+            console.error("Checkout error:", err);
+        }
     };
 
     return (
@@ -65,7 +107,7 @@ const SummaryModule = () => {
                 </div>
                 <CheckoutSummary
                     data={cartProps}
-                    isLoading={paymentLoading}
+                    isLoading={orderLoading || paymentLoading}
                     handleCheckout={handleCheckout}
                     isSummary
                 />

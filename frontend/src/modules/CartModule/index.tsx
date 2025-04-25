@@ -32,7 +32,7 @@ const CartModule = () => {
                         </div>
                         <CheckoutSummary
                             data={data.result}
-                            isLoading={loading.get || loading.add}
+                            isLoading={loading.get}
                             handleCheckout={handleCheckout}
                         />
                     </div>
