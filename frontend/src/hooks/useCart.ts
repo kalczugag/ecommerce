@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import {
-    useAddOrderMutation,
     useEditUsersCartMutation,
     useGetUsersCartQuery,
     setDrawer,
@@ -23,7 +22,6 @@ const useCart = (condition = true) => {
     const { trackEvent } = useAnalytics();
 
     const [editCart, { isLoading: editLoading }] = useEditUsersCartMutation();
-    const [addOrder, { isLoading: addLoading }] = useAddOrderMutation();
 
     const toggleDrawer = (newOpen: boolean) => {
         dispatch(setDrawer(newOpen));
@@ -43,7 +41,6 @@ const useCart = (condition = true) => {
     };
 
     const handleDelete = async (id: string) => {
-        console.log(data);
         handleMutation({
             values: {
                 cartId: data?.result._id,
@@ -66,27 +63,12 @@ const useCart = (condition = true) => {
             navigate("/login");
         }
 
-        const productIds = data?.result.items.map((item) => item._id!);
-
-        const orderPayload = {
-            items: productIds!,
-            subTotal: data!.result.subTotal,
-            discount: data?.result.discount,
-            total: data!.result.total,
-        };
-
         try {
-            const result = await addOrder(orderPayload);
-            const orderId = result.data?.result._id;
-
-            if (orderId) {
-                trackEvent("begin_checkout", {
-                    _cart: data?.result._id,
-                    _order: orderId,
-                });
-                navigate(`/checkout/${orderId}/delivery`);
-                toggleDrawer(false);
-            }
+            // trackEvent("begin_checkout", {
+            //     _cart: data?.result._id,
+            // });
+            navigate("/checkout");
+            toggleDrawer(false);
         } catch (error) {
             console.error("Error while adding order:", error);
         }
@@ -96,7 +78,7 @@ const useCart = (condition = true) => {
 
     const loading = {
         edit: editLoading,
-        add: addLoading,
+        // add: addLoading,
         get: isFetching,
     };
 

@@ -1,13 +1,15 @@
 import { apiSlice } from "./apiSlice";
-import type { Order } from "@/types/Order";
 
 export const paymentApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        createPayment: builder.mutation<ApiResponseObject<string>, Order>({
-            query: (order) => ({
+        createPayment: builder.mutation<
+            ApiResponseObject<string>,
+            { orderId: string }
+        >({
+            query: (values) => ({
                 url: "/checkout",
                 method: "POST",
-                body: order,
+                body: values,
             }),
         }),
     }),

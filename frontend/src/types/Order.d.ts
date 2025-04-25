@@ -102,12 +102,20 @@ interface Order {
     updatedAt?: Date;
 }
 
-interface AddOrder
-    extends Omit<
-        Order,
-        "_user" | "shippingAddress" | "billingAddress" | "tax" | "shipments"
-    > {
-    items: string[];
+interface CreateOrder {
+    orderData: {
+        _user: string;
+        _cart: string;
+        shippingAddress: ShippingAddress;
+        billingAddress: ShippingAddress;
+        notes?: OrderNote[];
+    };
+    shipmentData: {
+        shipFrom: ShippingAddress;
+        shipTo: ShippingAddress;
+        _deliveryMethod: string;
+        notes?: OrderNote[];
+    };
 }
 
 interface UpdateOrder {
@@ -129,6 +137,6 @@ export {
     Payment,
     Order,
     OrderNote,
-    AddOrder,
+    CreateOrder,
     UpdateOrder,
 };

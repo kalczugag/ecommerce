@@ -37,6 +37,7 @@ const ProductAdd = () => {
                 <CreateForm
                     handleSubmit={handleSubmit}
                     isLoading={result.isLoading}
+                    formValuesDisplay
                     formElements={
                         <ProductForm
                             data={data?.result}

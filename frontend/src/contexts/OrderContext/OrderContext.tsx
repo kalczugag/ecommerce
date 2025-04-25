@@ -1,4 +1,4 @@
-import { createContext, ReactNode } from "react";
+import { createContext, ReactNode, useRef } from "react";
 import type { Order } from "@/types/Order";
 
 export interface OrderContextProps {
@@ -6,6 +6,7 @@ export interface OrderContextProps {
     steps: string[];
     isLoading: boolean;
     isError: boolean;
+    onStripeRedirect?: () => void;
 }
 
 export const OrderContext = createContext<OrderContextProps | undefined>(
@@ -18,6 +19,7 @@ interface OrderProviderProps {
     isLoading: boolean;
     isError: boolean;
     steps: string[];
+    onStripeRedirect?: () => void;
 }
 
 export const OrderProvider = ({
@@ -26,8 +28,19 @@ export const OrderProvider = ({
     isLoading,
     isError,
     steps,
-}: OrderProviderProps) => (
-    <OrderContext.Provider value={{ order, isLoading, isError, steps }}>
-        {children}
-    </OrderContext.Provider>
-);
+    onStripeRedirect,
+}: OrderProviderProps) => {
+    return (
+        <OrderContext.Provider
+            value={{
+                order,
+                isLoading,
+                isError,
+                steps,
+                onStripeRedirect,
+            }}
+        >
+            {children}
+        </OrderContext.Provider>
+    );
+};

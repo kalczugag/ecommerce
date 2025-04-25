@@ -11,6 +11,7 @@ import appRouter from "./routes/v1/appRouter";
 import coreRouter from "./routes/v1/coreRouter";
 
 import "./config/passport";
+import { cleanUpOrders, syncOrderNumberCounter } from "./utils/orderHelpers";
 
 const app = express();
 
@@ -54,5 +55,7 @@ app.use("/api/v1", appRouter());
 app.use("/api/v1/admin", coreRouter());
 
 app.use(errorHandler);
+
+// cleanUpOrders().then(() => syncOrderNumberCounter());
 
 export default app;
