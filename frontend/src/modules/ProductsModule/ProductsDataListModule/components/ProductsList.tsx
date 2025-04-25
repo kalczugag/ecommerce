@@ -5,13 +5,13 @@ import { useInView } from "react-intersection-observer";
 import useAuth from "@/hooks/useAuth";
 import { useLazyGetAllProductsQuery, useUpdateWishlistMutation } from "@/store";
 import ProductCard from "@/components/ProductCard";
+import { CircularProgress } from "@mui/material";
 
 interface ProductsListProps {
     category: string;
-    setIsFetching: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ProductsList = ({ category, setIsFetching }: ProductsListProps) => {
+const ProductsList = ({ category }: ProductsListProps) => {
     const { ref, inView } = useInView({
         threshold: 0,
         rootMargin: "200px",
@@ -77,25 +77,25 @@ const ProductsList = ({ category, setIsFetching }: ProductsListProps) => {
         }
     }, [fetchNextPage, inView]);
 
-    useEffect(() => {
-        setIsFetching(isFetching);
-    }, [isFetching]);
-
     return (
-        <div className="grid justify-items-center grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {data?.pages.map((page) =>
-                page?.result.map((product) => (
-                    <ProductCard
-                        key={product._id}
-                        data={product}
-                        isLoading={isFetching}
-                        isFavorite={isFavorite}
-                        onWishlistTrigger={handleWishlist}
-                        size="lg"
-                    />
-                ))
-            )}
-            <div ref={ref}></div>
+        <div className="w-full">
+            <div className="grid justify-items-center grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {data?.pages.map((page) =>
+                    page?.result.map((product) => (
+                        <ProductCard
+                            key={product._id}
+                            data={product}
+                            isLoading={isFetching}
+                            isFavorite={isFavorite}
+                            onWishlistTrigger={handleWishlist}
+                            size="lg"
+                        />
+                    ))
+                )}
+            </div>
+            <div ref={ref} className="flex justify-center">
+                {isFetching && <CircularProgress sx={{ mt: 4 }} />}
+            </div>
         </div>
     );
 };

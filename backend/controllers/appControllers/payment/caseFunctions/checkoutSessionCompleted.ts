@@ -83,7 +83,13 @@ export const handleCheckoutSessionCompleted = async (
         await CartModel.findOneAndUpdate(
             { _user: userId },
             {
-                $set: { items: [] },
+                $set: {
+                    items: [],
+                    subTotal: 0,
+                    discount: 0,
+                    deliveryCost: 0,
+                    total: 0,
+                },
             }
         );
 

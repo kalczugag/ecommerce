@@ -3,20 +3,15 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { useInView } from "react-intersection-observer";
 import { useLazyGetOrdersByUserIdQuery } from "@/store";
 import OrderListItem from "../OrderListItem";
+import { CircularProgress } from "@mui/material";
 
 interface OrdersListProps {
     userId: string;
     status: string;
     sort: string;
-    setIsFetching: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const OrdersList = ({
-    userId,
-    sort,
-    status,
-    setIsFetching,
-}: OrdersListProps) => {
+const OrdersList = ({ userId, sort, status }: OrdersListProps) => {
     const { ref, inView } = useInView();
 
     const [triggerFetch] = useLazyGetOrdersByUserIdQuery();
@@ -50,12 +45,8 @@ const OrdersList = ({
         }
     }, [fetchNextPage, inView]);
 
-    useEffect(() => {
-        setIsFetching(isFetching);
-    }, [isFetching]);
-
     return (
-        <div>
+        <div className="w-full">
             <div className="flex flex-col w-full space-y-28">
                 {data?.pages.map((page) =>
                     page?.result.map((order) => (
@@ -67,7 +58,9 @@ const OrdersList = ({
                     ))
                 )}
             </div>
-            <div ref={ref}></div>
+            <div ref={ref} className="flex justify-center">
+                {isFetching && <CircularProgress sx={{ mt: 4 }} />}
+            </div>
         </div>
     );
 };

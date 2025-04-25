@@ -22,8 +22,6 @@ import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Cart from "@/pages/Cart";
 import Checkout from "@/pages/Checkout";
-import Delivery from "@/pages/Checkout/Delivery";
-import Summary from "@/pages/Checkout/Summary";
 import AccountDetails from "@/pages/Account/Details";
 import AccountOverview from "@/pages/Account/Overview";
 import AccountPreferences from "@/pages/Account/Preferences";
@@ -60,16 +58,7 @@ const App = () => {
                                 <Route
                                     path="/checkout/:orderId/*"
                                     element={<Checkout />}
-                                >
-                                    <Route
-                                        path="delivery"
-                                        element={<Delivery />}
-                                    />
-                                    <Route
-                                        path="summary"
-                                        element={<Summary />}
-                                    />
-                                </Route>
+                                />
                                 <Route
                                     path="/account"
                                     element={<AccountOutlet />}
