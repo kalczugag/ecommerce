@@ -13,11 +13,7 @@ const orders = (router: express.Router) => {
         methods.readByUserId
     );
 
-    router.post(
-        "/orders",
-        passport.authenticate("jwt", { session: false }),
-        methods.create
-    );
+    router.post("/orders", methods.create);
 
     router.delete(
         "/orders/:id",

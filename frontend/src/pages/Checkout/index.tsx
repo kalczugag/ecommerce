@@ -1,79 +1,69 @@
-import { useCallback, useEffect, useRef } from "react";
-import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
-import { useGetOrderByIdQuery, useDeleteOrderMutation } from "@/store";
-import { useTitle } from "@/hooks/useTitle";
-import { useHandleMutation } from "@/hooks/useHandleMutation";
-import { checkoutSteps } from "@/constants/checkoutSteps";
-import { OrderProvider } from "@/contexts/OrderContext";
+import { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import { initializeCheckout, setUser, useGetCurrentUserQuery } from "@/store";
+import { useAppDispatch, useAppSelector } from "@/hooks/useStore";
+import useCart from "@/hooks/useCart";
 import CheckoutLayout from "@/layouts/CheckoutLayout";
-import NotFound from "@/components/NotFound";
 import Loading from "@/components/Loading";
+import Delivery from "./Delivery";
+import Summary from "./Summary";
+import { checkoutSteps } from "@/constants/checkoutSteps";
 
 const Checkout = () => {
-    const { orderId } = useParams<{ orderId: string }>();
-    const { data, isError, isLoading } = useGetOrderByIdQuery(orderId || "");
-    const [deleteOrder] = useDeleteOrderMutation();
-    const { handleMutation } = useHandleMutation();
-    const location = useLocation();
+    const dispatch = useAppDispatch();
+    const [searchParams] = useSearchParams();
+    const { initialized } = useAppSelector((state) => state.checkout);
+    const { data, loading } = useCart();
+    const { data: userData, isLoading: isUserLoading } =
+        useGetCurrentUserQuery();
 
-    const isRedirectingToStripe = useRef(false);
-    const prevLocation = useRef(location.pathname);
-
-    useTitle("Checkout");
-
-    const handleUnloadOrder = useCallback(() => {
-        if (orderId && !isRedirectingToStripe.current)
-            handleMutation({
-                mutation: deleteOrder,
-                values: orderId,
-                snackbar: false,
-            });
-    }, [deleteOrder, handleMutation, orderId]);
+    const currentStep = searchParams.get("step") || checkoutSteps[0];
 
     useEffect(() => {
-        window.addEventListener("beforeunload", handleUnloadOrder);
+        if (data?.result && !initialized) {
+            const { items, subTotal, discount, deliveryCost, total } =
+                data.result;
 
-        return () => {
-            window.removeEventListener("beforeunload", handleUnloadOrder);
-        };
-    }, []);
-
-    useEffect(() => {
-        const currentPath = location.pathname;
-        const wasOnCheckout = prevLocation.current.includes("/checkout");
-        const isStillOnCheckout = currentPath.includes("/checkout");
-
-        if (
-            wasOnCheckout &&
-            !isStillOnCheckout &&
-            !isRedirectingToStripe.current
-        ) {
-            handleUnloadOrder();
+            dispatch(
+                initializeCheckout({
+                    products: items,
+                    subTotal,
+                    discount,
+                    deliveryCost,
+                    total,
+                })
+            );
         }
+    }, [data?.result]);
 
-        prevLocation.current = currentPath;
-    }, [handleUnloadOrder, location.pathname]);
+    useEffect(() => {
+        if (!isUserLoading && userData) {
+            dispatch(setUser(userData));
+        }
+    }, [userData]);
 
-    const prepareStripeRedirect = useCallback(() => {
-        isRedirectingToStripe.current = true;
-    }, []);
+    // useEffect(() => {
+    //     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+    //         e.preventDefault();
+    //         e.returnValue =
+    //             "You have unsaved changes. Are you sure you want to leave?";
+    //         return e.returnValue;
+    //     };
 
-    if (isError || (!isLoading && !data?.result)) return <NotFound />;
+    //     window.addEventListener("beforeunload", handleBeforeUnload);
+
+    //     return () => {
+    //         window.removeEventListener("beforeunload", handleBeforeUnload);
+    //     };
+    // }, []);
 
     return (
-        <OrderProvider
-            order={data?.result}
-            steps={checkoutSteps}
-            isError={isError}
-            isLoading={isLoading}
-            onStripeRedirect={prepareStripeRedirect}
-        >
-            <CheckoutLayout>
-                <Loading isLoading={isLoading}>
-                    <Outlet />
-                </Loading>
-            </CheckoutLayout>
-        </OrderProvider>
+        <CheckoutLayout>
+            <Loading isLoading={loading.get || isUserLoading}>
+                {currentStep === "delivery" && <Delivery />}
+                {currentStep === "summary" && <Summary />}
+            </Loading>
+        </CheckoutLayout>
     );
 };
 

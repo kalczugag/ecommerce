@@ -1,28 +1,67 @@
 import express from "express";
+import { isValidObjectId } from "mongoose";
 import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import { processShipments } from "../../../utils/processFunctions";
-import type { Item, Order, Shipment } from "../../../types/Order";
+import { UserModel } from "../../../models/User";
+import { OrderModel } from "../../../models/Order";
+import { enhanceShipments } from "../../../utils/enhanceShipments";
+import type { Item, Shipment } from "../../../types/Order";
 import type { Product } from "../../../types/Product";
-import type { User } from "../../../types/User";
+import type { DeliveryMethod } from "../../../types/DeliveryMethod";
 
 import Stripe from "stripe";
-import { DeliveryMethod } from "types/DeliveryMethod";
 const stripe = new Stripe(process.env.STRIPE_SECRET!);
 
 export const createCheckoutSession = async (
-    req: express.Request<{}, {}, Order>,
+    req: express.Request<{}, {}, { orderId: string }>,
     res: express.Response
 ) => {
-    const order = req.body;
+    const { orderId } = req.body;
     const url = process.env.REDIRECT_URL;
 
-    if (!order) {
+    if (!isValidObjectId(orderId)) {
         return res
             .status(400)
-            .json(errorResponse(null, "No order provided", 400));
+            .json(errorResponse(null, "Order ID is required", 400));
     }
 
-    const user = order._user as User;
+    const initOrder = await OrderModel.findById(orderId)
+        .populate("_user", "firstName lastName email phone address")
+        .populate("payments")
+        .populate({
+            path: "shipments",
+            populate: {
+                path: "items",
+                model: "BaseItem",
+            },
+        })
+        .populate({
+            path: "items",
+            populate: {
+                path: "_product",
+                model: "Product",
+            },
+        })
+        .exec();
+
+    if (!initOrder) {
+        return res.status(404).json(errorResponse(null, "Order not found"));
+    }
+
+    const enhancedShipments = await enhanceShipments(initOrder.shipments);
+
+    const order = {
+        ...initOrder.toObject(),
+        shipments: enhancedShipments,
+    };
+
+    const user = await UserModel.findById(order._user);
+
+    if (!user) {
+        return res
+            .status(400)
+            .json(errorResponse(null, "No user provided", 400));
+    }
 
     if (!user.address) {
         return res
@@ -32,7 +71,7 @@ export const createCheckoutSession = async (
 
     let lineItems = (order.items as Item[]).map((item) => {
         const productData = item._product as Product;
-        const unitPrice = productData.discountPercent
+        const unitPrice = productData?.discountPercent
             ? productData.discountedPrice!
             : productData.price!;
 
@@ -120,13 +159,13 @@ export const createCheckoutSession = async (
             customer_email: user.email,
             automatic_tax: { enabled: true },
             metadata: {
-                userId: user._id!,
-                orderId: order._id!,
+                userId: user._id.toString(),
+                orderId: order._id.toString(),
             },
             payment_intent_data: {
                 metadata: {
-                    userId: user._id!,
-                    orderId: order._id!,
+                    userId: user._id.toString(),
+                    orderId: order._id.toString(),
                 },
             },
             shipping_options: createShippingOptions(),

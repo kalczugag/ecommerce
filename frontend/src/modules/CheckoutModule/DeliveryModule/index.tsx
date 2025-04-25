@@ -1,14 +1,14 @@
 import { Form } from "react-final-form";
-import { useUpdateOrderMutation, useUpdateUserMutation } from "@/store";
-import { useOrder } from "@/contexts/OrderContext";
+import { updateCheckout, useUpdateUserMutation } from "@/store";
 import DeliveryForm from "@/forms/DeliveryForm";
 import AdditionalInfoForm from "@/forms/AdditionalInfoForm";
 import DeliveryMethodForm from "@/forms/DeliveryMethodForm";
 import useStep from "./hooks/useStep";
+import { useAppDispatch, useAppSelector } from "@/hooks/useStore";
 import { Button, Divider } from "@mui/material";
 import type { ShippingAddress } from "@/types/Order";
 import type { DeliveryMethod, Provider } from "@/types/DeliveryMethod";
-import { processShipments } from "@/utils/processFunctions";
+import { useEffect } from "react";
 
 interface DeliveryFormProps {
     _id: string;
@@ -41,70 +41,51 @@ const findProviderById = (
 };
 
 const DeliveryModule = ({ data, isDeliveryLoading }: DeliveryModuleProps) => {
-    const { order, isLoading } = useOrder();
+    const dispatch = useAppDispatch();
+    const { total, userData, shippingAddress, _deliveryMethod } =
+        useAppSelector((state) => state.checkout);
     const [_, nextStep] = useStep();
-    const [updateOrder, { isLoading: isUpdatingOrder }] =
-        useUpdateOrderMutation();
-    const [updateUser, { isLoading: isUpdatingUser }] = useUpdateUserMutation();
-    const { isMoreThanOne, shipments } = processShipments(
-        order?.shipments || []
-    );
+    const [updateUser, { isLoading: isUpdatingUser, isSuccess }] =
+        useUpdateUserMutation();
 
     const handleSubmit = async (values: DeliveryFormProps) => {
-        if (!order) return;
-
-        const userId = order._user._id;
         const selectedProvider = findProviderById(data, values._deliveryMethod);
 
-        if (values.shippingAddress && userId) {
+        if (values.shippingAddress && userData?._id) {
+            dispatch(
+                updateCheckout({
+                    _deliveryMethod: values._deliveryMethod,
+                    deliveryCost: selectedProvider?.price,
+                    total: total + (selectedProvider?.price || 0),
+                    shippingAddress: values.shippingAddress,
+                    billingAddress: values.sameAsShipping
+                        ? values.shippingAddress
+                        : values.billingAddress,
+                })
+            );
+
             await updateUser({
-                _id: userId,
+                _id: userData._id,
                 address: values.shippingAddress,
             });
         }
-
-        await updateOrder({
-            _id: order._id || "",
-            shipments: [
-                {
-                    _order: order._id!,
-                    shipFrom: {
-                        street: "Człuchowska 92",
-                        city: "Warsaw",
-                        state: "Masovian",
-                        postalCode: "01-360",
-                        country: "Poland",
-                    },
-                    shipTo: values.shippingAddress,
-                    _deliveryMethod: values._deliveryMethod,
-                    shippingCost:
-                        (order?.total || 0) > 100 ? 0 : selectedProvider?.price,
-                    itemsDelivered: 0,
-                },
-            ],
-            shippingAddress: values.shippingAddress,
-            billingAddress: values.sameAsShipping
-                ? values.shippingAddress
-                : values.billingAddress,
-        });
-
-        if (!isUpdatingOrder && !isUpdatingUser && values.shippingAddress)
-            nextStep();
     };
 
-    const loading =
-        isLoading || isUpdatingOrder || isUpdatingUser || isDeliveryLoading;
+    const loading = isUpdatingUser || isDeliveryLoading;
+
+    useEffect(() => {
+        if (isSuccess && shippingAddress) nextStep();
+    }, [isSuccess, shippingAddress]);
 
     return (
         <Form
             onSubmit={handleSubmit}
             initialValues={{
-                ...order?._user,
-                shippingAddress: order?._user?.address,
-                _deliveryMethod: isMoreThanOne
-                    ? shipments[0]?._deliveryMethod
-                    : shipments[0]?._deliveryMethod,
+                firstName: userData?.firstName,
+                lastName: userData?.lastName,
+                shippingAddress: userData?.address,
                 sameAsShipping: true,
+                _deliveryMethod,
             }}
             subscription={{
                 submitting: true,
@@ -125,9 +106,7 @@ const DeliveryModule = ({ data, isDeliveryLoading }: DeliveryModuleProps) => {
                                 <DeliveryMethodForm
                                     content={data}
                                     orderDeliveryCost={
-                                        (order?.total || 0) > 100
-                                            ? 0
-                                            : undefined
+                                        total > 100 ? 0 : undefined
                                     }
                                     isLoading={loading}
                                 />
@@ -152,7 +131,8 @@ const DeliveryModule = ({ data, isDeliveryLoading }: DeliveryModuleProps) => {
                                 sx={{ mt: 4 }}
                                 variant="contained"
                                 type="submit"
-                                disabled={isUpdatingOrder || isUpdatingUser}
+                                loading={isUpdatingUser}
+                                loadingPosition="end"
                             >
                                 Use this address
                             </Button>

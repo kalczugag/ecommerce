@@ -9,7 +9,6 @@ import { RegisterInput, useRegisterMutation } from "@/store";
 import AuthModule from "@/modules/AuthModule";
 import RegisterForm from "@/forms/RegisterForm";
 import { Button, Divider } from "@mui/material";
-import { Save } from "@mui/icons-material";
 
 const Register = () => {
     useTitle("Sign Up");

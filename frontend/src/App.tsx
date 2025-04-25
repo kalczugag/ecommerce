@@ -56,7 +56,7 @@ const App = () => {
                                     element={<Review />}
                                 />
                                 <Route
-                                    path="/checkout/:orderId/*"
+                                    path="/checkout"
                                     element={<Checkout />}
                                 />
                                 <Route
