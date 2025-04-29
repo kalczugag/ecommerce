@@ -69,7 +69,7 @@ const Register = () => {
                             Sign up
                         </Button>
                         <div className="text-sm">
-                            <span>Already have and account? </span>
+                            <span>Already have an account? </span>
                             <Link
                                 to="/login"
                                 className="font-semibold hover:underline"
