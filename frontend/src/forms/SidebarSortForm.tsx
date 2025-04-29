@@ -45,7 +45,7 @@ const SidebarSortForm = ({ config }: SidebarSortFormProps) => {
                             Color
                         </AccordionSummary>
                         <AccordionDetails>
-                            {data?.colorsCount.map((color, index) => (
+                            {data?.colors.map((color, index) => (
                                 <FormControlLabel
                                     key={color.color + "_" + index.toString()}
                                     control={<Checkbox />}
@@ -75,17 +75,19 @@ const SidebarSortForm = ({ config }: SidebarSortFormProps) => {
                                 flexDirection: "column",
                             }}
                         >
-                            {data?.availableSizes.map((size, index) => (
-                                <FormControlLabel
-                                    key={size + "_" + index.toString()}
-                                    control={<Checkbox />}
-                                    name={input.name}
-                                    value={input.value}
-                                    onChange={() => input.onChange(size)}
-                                    label={size}
-                                    disabled={disabled}
-                                />
-                            ))}
+                            {data?.sizes.map((sizesData) =>
+                                sizesData.sizes.map((size, index) => (
+                                    <FormControlLabel
+                                        key={size + "_" + index.toString()}
+                                        control={<Checkbox />}
+                                        name={input.name}
+                                        value={input.value}
+                                        onChange={() => input.onChange(size)}
+                                        label={size.name}
+                                        disabled={disabled}
+                                    />
+                                ))
+                            )}
                         </AccordionDetails>
                     </Accordion>
                 )}
@@ -93,7 +95,10 @@ const SidebarSortForm = ({ config }: SidebarSortFormProps) => {
 
             <Divider />
 
-            <Field name="price" parse={(value) => value || [0, data?.maxPrice]}>
+            <Field
+                name="price"
+                parse={(value) => value || [0, data?.priceRange.max]}
+            >
                 {({ input }) => (
                     <Accordion>
                         <AccordionSummary expandIcon={<ExpandMore />}>
@@ -102,11 +107,11 @@ const SidebarSortForm = ({ config }: SidebarSortFormProps) => {
                         <AccordionDetails>
                             <Slider
                                 name={input.name}
-                                value={input.value || [0, data?.maxPrice]}
+                                value={input.value || [0, data?.priceRange.max]}
                                 onChange={(_, value) => {
                                     input.onChange(value);
                                 }}
-                                max={data?.maxPrice}
+                                max={data?.priceRange.max}
                                 valueLabelDisplay="auto"
                                 getAriaValueText={valuetext}
                                 disabled={disabled}

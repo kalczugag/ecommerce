@@ -24,7 +24,7 @@ const Sidebar = ({ config }: SidebarProps) => {
                 onSubmit={onSubmit}
                 subscription={{}}
                 initialValues={filters}
-                render={({ handleSubmit, pristine }) => (
+                render={({ handleSubmit, pristine, form }) => (
                     <form
                         onSubmit={handleSubmit}
                         className="flex flex-col space-y-6 mr-8 z-10 min-w-48 max-w-48"
@@ -34,7 +34,12 @@ const Sidebar = ({ config }: SidebarProps) => {
                                 Filters
                             </h3>
                             {Object.entries(filters).length > 0 && (
-                                <IconButton onClick={clearFilters}>
+                                <IconButton
+                                    onClick={() => {
+                                        form.reset();
+                                        clearFilters();
+                                    }}
+                                >
                                     <Close />
                                 </IconButton>
                             )}
