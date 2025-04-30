@@ -6,7 +6,8 @@ import { useSearchParams } from "react-router-dom";
  */
 export const useQueryParams = (): [
     URLSearchParams,
-    (params: Record<string, string>) => void
+    (params: Record<string, string>) => void,
+    () => void
 ] => {
     const [searchParams, setSearchParams] = useSearchParams();
 
@@ -14,12 +15,20 @@ export const useQueryParams = (): [
         setSearchParams((prev) => {
             const newParams = new URLSearchParams(prev);
             Object.entries(params).forEach(([key, value]) => {
-                newParams.set(key, value);
+                if (Array.isArray(value)) {
+                    newParams.set(key, value.join(","));
+                } else {
+                    newParams.set(key, value);
+                }
             });
 
             return newParams;
         });
     };
 
-    return [searchParams, setQueryParams];
+    const clearSearchParams = () => {
+        setSearchParams({});
+    };
+
+    return [searchParams, setQueryParams, clearSearchParams];
 };

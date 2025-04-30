@@ -1,4 +1,5 @@
 import { Field } from "react-final-form";
+import { FieldArray } from "react-final-form-arrays";
 import { ExpandMore } from "@mui/icons-material";
 import {
     Accordion as MuiAccordion,
@@ -38,60 +39,70 @@ const SidebarSortForm = ({ config }: SidebarSortFormProps) => {
 
     return (
         <>
-            <Field name="color" type="checkbox">
-                {({ input }) => (
-                    <Accordion>
-                        <AccordionSummary expandIcon={<ExpandMore />}>
-                            Color
-                        </AccordionSummary>
-                        <AccordionDetails>
-                            {data?.colors.map((color, index) => (
+            <Accordion>
+                <AccordionSummary expandIcon={<ExpandMore />}>
+                    Color
+                </AccordionSummary>
+                <AccordionDetails>
+                    {data?.colors.map((color, index) => (
+                        <Field
+                            name="color"
+                            type="checkbox"
+                            key={color.color + "_" + index}
+                            value={color.color}
+                        >
+                            {({ input }) => (
                                 <FormControlLabel
-                                    key={color.color + "_" + index.toString()}
-                                    control={<Checkbox />}
-                                    name={input.name}
-                                    value={input.value}
-                                    onChange={() => input.onChange(color.color)}
+                                    control={
+                                        <Checkbox
+                                            {...input}
+                                            disabled={disabled}
+                                        />
+                                    }
                                     label={`${color.color} (${color.count})`}
-                                    disabled={disabled}
                                 />
-                            ))}
-                        </AccordionDetails>
-                    </Accordion>
-                )}
-            </Field>
+                            )}
+                        </Field>
+                    ))}
+                </AccordionDetails>
+            </Accordion>
 
             <Divider />
 
-            <Field name="size">
-                {({ input }) => (
-                    <Accordion>
-                        <AccordionSummary expandIcon={<ExpandMore />}>
-                            Size
-                        </AccordionSummary>
-                        <AccordionDetails
-                            sx={{
-                                display: "flex",
-                                flexDirection: "column",
-                            }}
-                        >
-                            {data?.sizes.map((sizesData) =>
-                                sizesData.sizes.map((size, index) => (
+            <Accordion>
+                <AccordionSummary expandIcon={<ExpandMore />}>
+                    Size
+                </AccordionSummary>
+                <AccordionDetails
+                    sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                    }}
+                >
+                    {data?.sizes.map((sizesData) =>
+                        sizesData.sizes.map((size, index) => (
+                            <Field
+                                name="size"
+                                type="checkbox"
+                                value={size.name}
+                                key={size.name + "_" + index}
+                            >
+                                {({ input }) => (
                                     <FormControlLabel
-                                        key={size + "_" + index.toString()}
-                                        control={<Checkbox />}
-                                        name={input.name}
-                                        value={input.value}
-                                        onChange={() => input.onChange(size)}
+                                        control={
+                                            <Checkbox
+                                                {...input}
+                                                disabled={disabled}
+                                            />
+                                        }
                                         label={size.name}
-                                        disabled={disabled}
                                     />
-                                ))
-                            )}
-                        </AccordionDetails>
-                    </Accordion>
-                )}
-            </Field>
+                                )}
+                            </Field>
+                        ))
+                    )}
+                </AccordionDetails>
+            </Accordion>
 
             <Divider />
 

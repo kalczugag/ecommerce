@@ -1,30 +1,38 @@
 import { Form, FormSpy } from "react-final-form";
+import { useQueryParams } from "@/hooks/useQueryParams";
 import { Button, IconButton } from "@mui/material";
 import SidebarSortForm from "@/forms/SidebarSortForm";
-import type { ProductFilters } from "@/types/Product";
-import useFilters from "@/hooks/useFilters";
 import { Close } from "@mui/icons-material";
+import type { ProductFilters } from "@/types/Product";
+import { useEffect } from "react";
 
 interface SidebarProps {
     config: {
         data?: ProductFilters;
         disabled?: boolean;
-        onSubmit: (values: any) => void;
     };
 }
 
-// to remove
 const Sidebar = ({ config }: SidebarProps) => {
-    const { onSubmit, data } = config;
-    const { filters, clearFilters } = useFilters();
+    const { data } = config;
+
+    const [searchParams, setSearchParams, clearSearchParams] = useQueryParams();
+    const filters = Object.fromEntries(searchParams.entries());
+
+    const handleSubmit = (values: any) => {
+        setSearchParams(values);
+    };
+
+    useEffect(() => {
+        console.log(filters);
+    }, [filters]);
 
     return (
         <div className="hidden md:block">
             <Form
-                onSubmit={onSubmit}
+                onSubmit={handleSubmit}
                 subscription={{}}
-                initialValues={filters}
-                render={({ handleSubmit, pristine, form }) => (
+                render={({ handleSubmit, form, pristine }) => (
                     <form
                         onSubmit={handleSubmit}
                         className="flex flex-col space-y-6 mr-8 z-10 min-w-48 max-w-48"
@@ -36,8 +44,8 @@ const Sidebar = ({ config }: SidebarProps) => {
                             {Object.entries(filters).length > 0 && (
                                 <IconButton
                                     onClick={() => {
+                                        clearSearchParams();
                                         form.reset();
-                                        clearFilters();
                                     }}
                                 >
                                     <Close />

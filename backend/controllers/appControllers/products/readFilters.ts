@@ -119,7 +119,7 @@ export const getFilters = async (
                 { $match: query },
                 { $group: { _id: "$color", count: { $sum: 1 } } },
                 { $project: { color: "$_id", count: 1, _id: 0 } },
-                { $sort: { color: 1 } },
+                { $sort: { count: -1 } },
             ]),
 
             // size
