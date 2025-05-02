@@ -1,4 +1,5 @@
 import { Field } from "react-final-form";
+import { FieldArray } from "react-final-form-arrays";
 import { ExpandMore } from "@mui/icons-material";
 import {
     Accordion as MuiAccordion,
@@ -38,62 +39,77 @@ const SidebarSortForm = ({ config }: SidebarSortFormProps) => {
 
     return (
         <>
-            <Field name="color" type="checkbox">
-                {({ input }) => (
-                    <Accordion>
-                        <AccordionSummary expandIcon={<ExpandMore />}>
-                            Color
-                        </AccordionSummary>
-                        <AccordionDetails>
-                            {data?.colorsCount.map((color, index) => (
-                                <FormControlLabel
-                                    key={color.color + "_" + index.toString()}
-                                    control={<Checkbox />}
-                                    name={input.name}
-                                    value={input.value}
-                                    onChange={() => input.onChange(color.color)}
-                                    label={`${color.color} (${color.count})`}
-                                    disabled={disabled}
-                                />
-                            ))}
-                        </AccordionDetails>
-                    </Accordion>
-                )}
-            </Field>
-
-            <Divider />
-
-            <Field name="size">
-                {({ input }) => (
-                    <Accordion>
-                        <AccordionSummary expandIcon={<ExpandMore />}>
-                            Size
-                        </AccordionSummary>
-                        <AccordionDetails
-                            sx={{
-                                display: "flex",
-                                flexDirection: "column",
-                            }}
+            <Accordion>
+                <AccordionSummary expandIcon={<ExpandMore />}>
+                    Color
+                </AccordionSummary>
+                <AccordionDetails>
+                    {data?.colors.map((color, index) => (
+                        <Field
+                            name="color"
+                            type="checkbox"
+                            key={color.color + "_" + index}
+                            value={color.color}
                         >
-                            {data?.availableSizes.map((size, index) => (
+                            {({ input }) => (
                                 <FormControlLabel
-                                    key={size + "_" + index.toString()}
-                                    control={<Checkbox />}
-                                    name={input.name}
-                                    value={input.value}
-                                    onChange={() => input.onChange(size)}
-                                    label={size}
-                                    disabled={disabled}
+                                    control={
+                                        <Checkbox
+                                            {...input}
+                                            disabled={disabled}
+                                        />
+                                    }
+                                    label={`${color.color} (${color.count})`}
                                 />
-                            ))}
-                        </AccordionDetails>
-                    </Accordion>
-                )}
-            </Field>
+                            )}
+                        </Field>
+                    ))}
+                </AccordionDetails>
+            </Accordion>
 
             <Divider />
 
-            <Field name="price" parse={(value) => value || [0, data?.maxPrice]}>
+            <Accordion>
+                <AccordionSummary expandIcon={<ExpandMore />}>
+                    Size
+                </AccordionSummary>
+                <AccordionDetails
+                    sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                    }}
+                >
+                    {data?.sizes.map((sizesData) =>
+                        sizesData.sizes.map((size, index) => (
+                            <Field
+                                name="size.name"
+                                type="checkbox"
+                                value={size.name}
+                                key={size.name + "_" + index}
+                            >
+                                {({ input }) => (
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                {...input}
+                                                disabled={disabled}
+                                            />
+                                        }
+                                        label={size.name}
+                                    />
+                                )}
+                            </Field>
+                        ))
+                    )}
+                </AccordionDetails>
+            </Accordion>
+
+            <Divider />
+
+            <Field
+                name="price"
+                parse={(value) => value || [0, data?.priceRange.max]}
+            >
                 {({ input }) => (
                     <Accordion>
                         <AccordionSummary expandIcon={<ExpandMore />}>
@@ -102,11 +118,12 @@ const SidebarSortForm = ({ config }: SidebarSortFormProps) => {
                         <AccordionDetails>
                             <Slider
                                 name={input.name}
-                                value={input.value || [0, data?.maxPrice]}
+                                value={input.value || [0, data?.priceRange.max]}
                                 onChange={(_, value) => {
+                                    console.log(value);
                                     input.onChange(value);
                                 }}
-                                max={data?.maxPrice}
+                                max={data?.priceRange.max}
                                 valueLabelDisplay="auto"
                                 getAriaValueText={valuetext}
                                 disabled={disabled}

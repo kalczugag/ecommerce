@@ -49,48 +49,6 @@ productSchema.index({
     description: "text",
 });
 
-// productSchema.pre("validate", async function (next) {
-//     const product = this;
-
-//     if (
-//         !product.isModified("topLevelCategory") &&
-//         !product.isModified("secondLevelCategory") &&
-//         !product.isModified("thirdLevelCategory")
-//     ) {
-//         return next();
-//     }
-
-//     const secondLevelCategory = await CategoryModel.findById(
-//         product.secondLevelCategory
-//     );
-//     if (
-//         !secondLevelCategory ||
-//         secondLevelCategory._parentCategory !== product.topLevelCategory
-//     ) {
-//         return next(
-//             new Error(
-//                 "Second level category must belong to the top level category"
-//             )
-//         );
-//     }
-
-//     const thirdLevelCategory = await CategoryModel.findById(
-//         product.thirdLevelCategory
-//     );
-//     if (
-//         !thirdLevelCategory ||
-//         thirdLevelCategory._parentCategory !== product.secondLevelCategory
-//     ) {
-//         return next(
-//             new Error(
-//                 "Third level category must belong to the second level category"
-//             )
-//         );
-//     }
-
-//     next();
-// });
-
 productSchema.pre("save", function (next) {
     if (this.discountPercent && this.price) {
         this.discountedPrice =

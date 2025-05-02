@@ -6,6 +6,7 @@ import {
     useLazyGetFeaturedCampaignQuery,
     useUpdateWishlistMutation,
 } from "@/store";
+import { CircularProgress } from "@mui/material";
 import InfiniteCarousel from "@/components/InfiniteCarousel";
 import ProductCard from "@/components/ProductCard";
 
@@ -104,7 +105,9 @@ const CampaignsList = ({ isToken }: CampaignsListProps) => {
                     );
                 })
             )}
-            <div ref={ref}></div>
+            <div ref={ref} className="flex justify-center">
+                {isFetching && <CircularProgress sx={{ mt: 4 }} />}
+            </div>
         </div>
     );
 };

@@ -8,10 +8,6 @@ import Box from "@/components/Box";
 import type { Cart } from "@/types/Cart";
 import type { CreateOrder } from "@/types/Order";
 
-const stripePromise = loadStripe(
-    "pk_test_51QAVfFCeAQbmOrQrs7FGHSpQGIkEEVEVHULiWMWYAIoBy1cGNYlmVSvQxy648SjYHG5JcDD01J3YIz5tuJCoeyoV003GfOyfFz"
-);
-
 const SummaryModule = () => {
     const {
         products,
@@ -24,6 +20,10 @@ const SummaryModule = () => {
         deliveryCost,
         total,
     } = useAppSelector((state) => state.checkout);
+
+    const stripePromise = loadStripe(
+        "pk_test_51QAVfFCeAQbmOrQrs7FGHSpQGIkEEVEVHULiWMWYAIoBy1cGNYlmVSvQxy648SjYHG5JcDD01J3YIz5tuJCoeyoV003GfOyfFz"
+    );
 
     const [createOrder, { isLoading: orderLoading }] = useAddOrderMutation();
     const [createPayment, { isLoading: paymentLoading }] =

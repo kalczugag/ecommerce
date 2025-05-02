@@ -28,10 +28,31 @@ export interface Product {
 }
 
 export interface ProductFilters {
-    colorsCount: {
-        color: string;
+    colors: {
         count: number;
+        color: string;
     }[];
-    availableSizes: string[];
-    maxPrice: number;
+    sizes: {
+        categoryName: string;
+        sizes: {
+            name: string;
+            count: number;
+        }[];
+    }[];
+    priceRange: {
+        min: number;
+        max: number;
+    };
+    brands: {
+        count: number;
+        brand: string;
+    }[];
+    discounts: {
+        count: number;
+        hasDiscount: boolean;
+    }[];
+    availability: {
+        count: number;
+        inStock: boolean;
+    }[];
 }
