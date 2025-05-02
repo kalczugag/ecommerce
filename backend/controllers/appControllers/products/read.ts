@@ -123,6 +123,10 @@ export const getAllProducts = async (
             return res.status(200).json(successResponse(randomProducts));
         }
 
+        if (parsedQuery) {
+            console.log(parsedQuery);
+        }
+
         const combinedFilters = { ...query, ...parsedQuery.filter };
         const isQuery = query ? combinedFilters : parsedQuery.filter;
 

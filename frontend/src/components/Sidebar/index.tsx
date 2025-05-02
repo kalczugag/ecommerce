@@ -4,7 +4,6 @@ import { Button, IconButton } from "@mui/material";
 import SidebarSortForm from "@/forms/SidebarSortForm";
 import { Close } from "@mui/icons-material";
 import type { ProductFilters } from "@/types/Product";
-import { useEffect } from "react";
 
 interface SidebarProps {
     config: {
@@ -19,13 +18,15 @@ const Sidebar = ({ config }: SidebarProps) => {
     const [searchParams, setSearchParams, clearSearchParams] = useQueryParams();
     const filters = Object.fromEntries(searchParams.entries());
 
-    const handleSubmit = (values: any) => {
+    const handleSubmit = ({ size, ...values }: any) => {
+        if (size && size.name) {
+            values["size.name"] = Array.isArray(size.name)
+                ? size.name.join(",")
+                : size.name;
+        }
+
         setSearchParams(values);
     };
-
-    useEffect(() => {
-        console.log(filters);
-    }, [filters]);
 
     return (
         <div className="hidden md:block">

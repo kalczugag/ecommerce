@@ -82,7 +82,7 @@ const SidebarSortForm = ({ config }: SidebarSortFormProps) => {
                     {data?.sizes.map((sizesData) =>
                         sizesData.sizes.map((size, index) => (
                             <Field
-                                name="size"
+                                name="size.name"
                                 type="checkbox"
                                 value={size.name}
                                 key={size.name + "_" + index}
@@ -120,6 +120,7 @@ const SidebarSortForm = ({ config }: SidebarSortFormProps) => {
                                 name={input.name}
                                 value={input.value || [0, data?.priceRange.max]}
                                 onChange={(_, value) => {
+                                    console.log(value);
                                     input.onChange(value);
                                 }}
                                 max={data?.priceRange.max}
