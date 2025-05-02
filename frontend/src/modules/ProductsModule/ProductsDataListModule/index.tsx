@@ -27,7 +27,6 @@ interface ProductsDataListModuleProps {
     config: {
         pageSize: number;
         category: string;
-        handleFilters: (value: any) => void;
     };
 }
 
@@ -42,7 +41,7 @@ const sortConfig = [
 ];
 
 const ProductsDataListModule = ({ config }: ProductsDataListModuleProps) => {
-    const { category, handleFilters } = config;
+    const { category } = config;
     const { data: productFilters } = useGetProductFiltersQuery(category);
 
     return (
@@ -66,7 +65,6 @@ const ProductsDataListModule = ({ config }: ProductsDataListModuleProps) => {
                 config={{
                     data: productFilters?.result,
                     // disabled: !data.length,
-                    onSubmit: handleFilters,
                 }}
             />
 

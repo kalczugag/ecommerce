@@ -2,7 +2,7 @@ import express from "express";
 import passport from "passport";
 
 import methods from "../../../controllers/appControllers/products";
-import { hasRole, optionalAuth } from "../../../middlewares";
+import { cache, hasRole, optionalAuth } from "../../../middlewares";
 
 const products = (router: express.Router) => {
     router.get("/products", optionalAuth, methods.read);

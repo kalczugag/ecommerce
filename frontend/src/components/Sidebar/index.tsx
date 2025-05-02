@@ -1,30 +1,39 @@
 import { Form, FormSpy } from "react-final-form";
+import { useQueryParams } from "@/hooks/useQueryParams";
 import { Button, IconButton } from "@mui/material";
 import SidebarSortForm from "@/forms/SidebarSortForm";
-import type { ProductFilters } from "@/types/Product";
-import useFilters from "@/hooks/useFilters";
 import { Close } from "@mui/icons-material";
+import type { ProductFilters } from "@/types/Product";
 
 interface SidebarProps {
     config: {
         data?: ProductFilters;
         disabled?: boolean;
-        onSubmit: (values: any) => void;
     };
 }
 
-// to remove
 const Sidebar = ({ config }: SidebarProps) => {
-    const { onSubmit, data } = config;
-    const { filters, clearFilters } = useFilters();
+    const { data } = config;
+
+    const [searchParams, setSearchParams, clearSearchParams] = useQueryParams();
+    const filters = Object.fromEntries(searchParams.entries());
+
+    const handleSubmit = ({ size, ...values }: any) => {
+        if (size && size.name) {
+            values["size.name"] = Array.isArray(size.name)
+                ? size.name.join(",")
+                : size.name;
+        }
+
+        setSearchParams(values);
+    };
 
     return (
         <div className="hidden md:block">
             <Form
-                onSubmit={onSubmit}
+                onSubmit={handleSubmit}
                 subscription={{}}
-                initialValues={filters}
-                render={({ handleSubmit, pristine }) => (
+                render={({ handleSubmit, form, pristine }) => (
                     <form
                         onSubmit={handleSubmit}
                         className="flex flex-col space-y-6 mr-8 z-10 min-w-48 max-w-48"
@@ -34,7 +43,12 @@ const Sidebar = ({ config }: SidebarProps) => {
                                 Filters
                             </h3>
                             {Object.entries(filters).length > 0 && (
-                                <IconButton onClick={clearFilters}>
+                                <IconButton
+                                    onClick={() => {
+                                        clearSearchParams();
+                                        form.reset();
+                                    }}
+                                >
                                     <Close />
                                 </IconButton>
                             )}
