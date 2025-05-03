@@ -1,7 +1,10 @@
+import { useState } from "react";
 import { PersonOutlineOutlined } from "@mui/icons-material";
 import { Button, IconButton, Menu, Tooltip } from "@mui/material";
 import { AvatarMenuItem, AvatarMenuItemProps } from "./AvatarMenuItem";
 import { useNavigate } from "react-router-dom";
+import LoginDialog from "@/components/AuthDialogs/LoginDialog";
+import RegisterDialog from "@/components/AuthDialogs/RegisterDialog";
 
 interface AvatarMenuProps {
     config: AvatarMenuItemProps[];
@@ -20,7 +23,18 @@ const AvatarMenu = ({
     handleOpenUserMenu,
     handleCloseUserMenu,
 }: AvatarMenuProps) => {
-    const navigate = useNavigate();
+    const [loginOpen, setLoginOpen] = useState(false);
+    const [registerOpen, setRegisterOpen] = useState(false);
+
+    const handleTabChange = () => {
+        if (loginOpen) {
+            setLoginOpen(false);
+            setRegisterOpen(true);
+        } else {
+            setRegisterOpen(false);
+            setLoginOpen(true);
+        }
+    };
 
     return (
         <div>
@@ -33,7 +47,7 @@ const AvatarMenu = ({
             ) : (
                 <Button
                     onClick={(e) =>
-                        isAuth ? handleOpenUserMenu(e) : navigate("/login")
+                        isAuth ? handleOpenUserMenu(e) : setLoginOpen(true)
                     }
                     startIcon={<PersonOutlineOutlined />}
                     color="inherit"
@@ -87,6 +101,16 @@ const AvatarMenu = ({
                     <AvatarMenuItem key={index} {...item} />
                 ))}
             </Menu>
+            <LoginDialog
+                open={loginOpen}
+                onClose={() => setLoginOpen(false)}
+                handleTabChange={handleTabChange}
+            />
+            <RegisterDialog
+                open={registerOpen}
+                onClose={() => setRegisterOpen(false)}
+                handleTabChange={handleTabChange}
+            />
         </div>
     );
 };

@@ -18,8 +18,6 @@ import OrdersList from "@/pages/Account/Orders/List";
 import OrderReturn from "@/pages/Account/Returns/Add";
 import ReturnsList from "@/pages/Account/Returns/List";
 import ReturnDetails from "@/pages/Account/Returns/Details";
-import Login from "@/pages/Login";
-import Register from "@/pages/Register";
 import Cart from "@/pages/Cart";
 import Checkout from "@/pages/Checkout";
 import AccountDetails from "@/pages/Account/Details";
@@ -36,8 +34,6 @@ const App = () => {
             <ThemeProvider theme={appTheme}>
                 <SessionInitializer>
                     <Routes>
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/register" element={<Register />} />
                         <Route element={<TrackEventsOutlet />}>
                             <Route index element={<Dashboard />} />
                             <Route
