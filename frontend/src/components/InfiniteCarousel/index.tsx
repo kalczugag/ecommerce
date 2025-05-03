@@ -1,6 +1,5 @@
 import {
     ArrowForward,
-    ArrowRight,
     KeyboardArrowLeft,
     KeyboardArrowRight,
 } from "@mui/icons-material";

@@ -81,48 +81,50 @@ const ProductCard = ({
                         className={`max-h-[${sizes[size].width}px]`}
                     />
                 </Link>
-                <div
-                    className="absolute top-2 right-0"
-                    onClick={(e) => e.stopPropagation()}
-                    onMouseOver={() => setIsHeartHovered(true)}
-                    onMouseLeave={() => setIsHeartHovered(false)}
-                >
-                    <IconButton
-                        disableRipple
-                        disableFocusRipple
-                        onClick={() =>
-                            onWishlistTrigger &&
-                            onWishlistTrigger(
-                                data._id || "",
-                                isFavorite ? "remove" : "add"
-                            )
-                        }
-                        sx={{
-                            backgroundColor: "white",
-                            color: "black",
-                            borderRadius: 0,
-                        }}
+                {onWishlistTrigger && (
+                    <div
+                        className="absolute top-2 right-0"
+                        onClick={(e) => e.stopPropagation()}
+                        onMouseOver={() => setIsHeartHovered(true)}
+                        onMouseLeave={() => setIsHeartHovered(false)}
                     >
-                        <Box
+                        <IconButton
+                            disableRipple
+                            disableFocusRipple
+                            onClick={() =>
+                                onWishlistTrigger &&
+                                onWishlistTrigger(
+                                    data._id || "",
+                                    isFavorite ? "remove" : "add"
+                                )
+                            }
                             sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                transition: "transform 0.2s ease",
-                                transform:
-                                    isHeartHovered || isFavorite
-                                        ? "scale(1.2)"
-                                        : "scale(1)",
+                                backgroundColor: "white",
+                                color: "black",
+                                borderRadius: 0,
                             }}
                         >
-                            {isHeartHovered || isFavorite ? (
-                                <Favorite />
-                            ) : (
-                                <FavoriteBorder />
-                            )}
-                        </Box>
-                    </IconButton>
-                </div>
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    transition: "transform 0.2s ease",
+                                    transform:
+                                        isHeartHovered || isFavorite
+                                            ? "scale(1.2)"
+                                            : "scale(1)",
+                                }}
+                            >
+                                {isHeartHovered || isFavorite ? (
+                                    <Favorite />
+                                ) : (
+                                    <FavoriteBorder />
+                                )}
+                            </Box>
+                        </IconButton>
+                    </div>
+                )}
                 {badges && (
                     <div className="absolute bottom-2 left-2 z-10 flex space-x-1">
                         {badges.map(({ title, bgColor, textColor }, index) => (

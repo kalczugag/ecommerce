@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useGetProductByIdQuery } from "@/store";
 import { useTitle } from "@/hooks/useTitle";
 import { useAnalytics } from "@/hooks/useAnalytics";
@@ -8,9 +8,10 @@ import NotFound from "@/components/NotFound";
 
 const ProductDetails = () => {
     const { id } = useParams<{ id: string }>();
-    const { data, isLoading, isError } = useGetProductByIdQuery(id || "");
+    const location = useLocation();
+    const { data, isFetching, isError } = useGetProductByIdQuery(id || "");
     const { trackEvent } = useAnalytics();
-    useTitle(data?.result.title || (!isLoading ? "Product - Details" : ""));
+    useTitle(data?.result.title || (!isFetching ? "Product - Details" : ""));
 
     useEffect(() => {
         if (data?.result) {
@@ -25,12 +26,12 @@ const ProductDetails = () => {
 
     useEffect(() => {
         window.scrollTo(0, 0);
-    }, []);
+    }, [location.pathname]);
 
-    if (isError || (!isLoading && !data?.result)) return <NotFound />;
+    if (isError || (!isFetching && !data?.result)) return <NotFound />;
 
     const config = {
-        isLoading,
+        isLoading: isFetching,
     };
 
     return <ReadProductDetailsModule config={config} data={data?.result} />;
