@@ -1,12 +1,12 @@
+import { HTMLAttributes, useState } from "react";
 import { Link } from "react-router-dom";
 import { Box, IconButton, Rating } from "@mui/material";
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
 import { TColors, colors } from "@/constants/colors";
 import type { Product } from "@/types/Product";
-import { useState } from "react";
 import SafeHtmlRender from "../SafeHtmlRender";
 
-interface ProductCardProps {
+interface ProductCardProps extends HTMLAttributes<HTMLElement> {
     data: Product;
     isLoading: boolean;
     variant?: "default" | "highlighted";
@@ -42,6 +42,7 @@ const ProductCard = ({
     isFavorite: favoriteLocal,
     badges,
     onWishlistTrigger,
+    ...rest
 }: ProductCardProps) => {
     const {
         _id,
@@ -65,7 +66,7 @@ const ProductCard = ({
         <Box
             className={`flex flex-col ${
                 variant === "default" ? "" : "items-center justify-center"
-            } ${isLoading && "pointer-events-none"}`}
+            } ${isLoading && "pointer-events-none"} ${rest.className}`}
             style={{
                 maxWidth: `${sizes[size].width}px`,
             }}

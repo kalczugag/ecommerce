@@ -3,7 +3,7 @@ import {
     KeyboardArrowLeft,
     KeyboardArrowRight,
 } from "@mui/icons-material";
-import Slider, { Settings } from "react-slick";
+import Slider, { ResponsiveObject, Settings } from "react-slick";
 import { Button, Container } from "@mui/material";
 import Loading from "../Loading";
 import type { FeaturedCampaign } from "@/types/FeaturedCampaign";
@@ -58,6 +58,7 @@ interface CarouselProps {
     isLoading: boolean;
     bgColor: FeaturedCampaign["bgColor"];
     textColor: FeaturedCampaign["textColor"];
+    customConfig?: ResponsiveObject[];
 }
 
 const InfiniteCarousel = ({
@@ -67,6 +68,7 @@ const InfiniteCarousel = ({
     isLoading,
     bgColor,
     textColor,
+    customConfig,
 }: CarouselProps) => {
     return (
         <Loading isLoading={isLoading}>
@@ -120,29 +122,31 @@ const InfiniteCarousel = ({
                 >
                     <Slider
                         {...config}
-                        responsive={[
-                            {
-                                breakpoint: 1280,
-                                settings: {
-                                    slidesToShow: 3,
-                                    slidesToScroll: 1,
+                        responsive={
+                            customConfig || [
+                                {
+                                    breakpoint: 1280,
+                                    settings: {
+                                        slidesToShow: 3,
+                                        slidesToScroll: 1,
+                                    },
                                 },
-                            },
-                            {
-                                breakpoint: 1024,
-                                settings: {
-                                    slidesToShow: 2,
-                                    slidesToScroll: 1,
+                                {
+                                    breakpoint: 1024,
+                                    settings: {
+                                        slidesToShow: 2,
+                                        slidesToScroll: 1,
+                                    },
                                 },
-                            },
-                            {
-                                breakpoint: 600,
-                                settings: {
-                                    slidesToShow: 1,
-                                    slidesToScroll: 1,
+                                {
+                                    breakpoint: 600,
+                                    settings: {
+                                        slidesToShow: 1,
+                                        slidesToScroll: 1,
+                                    },
                                 },
-                            },
-                        ]}
+                            ]
+                        }
                     >
                         {content}
                     </Slider>

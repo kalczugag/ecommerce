@@ -12,7 +12,6 @@ import { useAnalytics } from "@/hooks/useAnalytics";
 import { useHandleMutation } from "@/hooks/useHandleMutation";
 import DefaultLayout from "@/layouts/DefaultLayout";
 import DetailsProductCard from "./components/DetailsProductCard";
-import { Divider } from "@mui/material";
 const FeaturedBar = lazy(() => import("./components/FeaturedBar"));
 
 export type Sizes = string;
@@ -124,10 +123,7 @@ const ReadProductModule = ({ config, data }: ReadProductModuleProps) => {
                 onWishlistTrigger={handleWishlist}
             />
 
-            <Divider sx={{ my: 6 }} />
-
             <Suspense fallback={null}>
-                <h1 className="text-2xl font-semibold">Recommendations</h1>
                 <FeaturedBar
                     category={productCategory}
                     productLoading={isLoading}
