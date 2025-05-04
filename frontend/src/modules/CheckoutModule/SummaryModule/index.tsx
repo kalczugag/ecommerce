@@ -7,6 +7,7 @@ import Contact from "./components/Contact";
 import Box from "@/components/Box";
 import type { Cart } from "@/types/Cart";
 import type { CreateOrder } from "@/types/Order";
+import { enqueueSnackbar } from "notistack";
 
 const SummaryModule = () => {
     const {
@@ -63,10 +64,10 @@ const SummaryModule = () => {
             const { data: order } = await createOrder(orderData);
 
             if (!order?.result._id) {
-                return;
+                return enqueueSnackbar("Failed to create order", {
+                    variant: "error",
+                });
             }
-
-            console.log(order?.result._id);
 
             const { data } = await createPayment({
                 orderId: order?.result._id,

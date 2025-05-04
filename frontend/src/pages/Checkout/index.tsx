@@ -1,6 +1,11 @@
 import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { initializeCheckout, setUser, useGetCurrentUserQuery } from "@/store";
+import {
+    initializeCheckout,
+    resetCheckout,
+    setUser,
+    useGetCurrentUserQuery,
+} from "@/store";
 import { useAppDispatch, useAppSelector } from "@/hooks/useStore";
 import useCart from "@/hooks/useCart";
 import CheckoutLayout from "@/layouts/CheckoutLayout";
@@ -20,6 +25,10 @@ const Checkout = () => {
     const currentStep = searchParams.get("step") || checkoutSteps[0];
 
     useEffect(() => {
+        dispatch(resetCheckout());
+    }, []);
+
+    useEffect(() => {
         if (data?.result && !initialized) {
             const { items, subTotal, discount, deliveryCost, total } =
                 data.result;
@@ -34,28 +43,13 @@ const Checkout = () => {
                 })
             );
         }
-    }, [data?.result]);
+    }, [data?.result, initialized]);
 
     useEffect(() => {
         if (!isUserLoading && userData) {
             dispatch(setUser(userData));
         }
     }, [userData]);
-
-    // useEffect(() => {
-    //     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-    //         e.preventDefault();
-    //         e.returnValue =
-    //             "You have unsaved changes. Are you sure you want to leave?";
-    //         return e.returnValue;
-    //     };
-
-    //     window.addEventListener("beforeunload", handleBeforeUnload);
-
-    //     return () => {
-    //         window.removeEventListener("beforeunload", handleBeforeUnload);
-    //     };
-    // }, []);
 
     return (
         <CheckoutLayout>
