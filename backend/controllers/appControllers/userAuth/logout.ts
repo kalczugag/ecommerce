@@ -24,8 +24,8 @@ export const logout = async (req: express.Request, res: express.Response) => {
 
             res.clearCookie("refreshToken", {
                 httpOnly: true,
-                secure: true,
-                sameSite: "none",
+                secure: false,
+                sameSite: "lax",
             });
 
             await redisClient.del("current_user:no-query");
@@ -42,8 +42,8 @@ export const logout = async (req: express.Request, res: express.Response) => {
 
         res.clearCookie("refreshToken", {
             httpOnly: true,
-            secure: true,
-            sameSite: "none",
+            secure: false,
+            sameSite: "lax",
         });
 
         return res.status(200).json("Logged out successfully");
