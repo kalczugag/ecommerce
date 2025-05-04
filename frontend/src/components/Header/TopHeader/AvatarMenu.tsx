@@ -40,7 +40,11 @@ const AvatarMenu = ({
         <div>
             {isMobile ? (
                 <Tooltip title="Open settings">
-                    <IconButton onClick={handleOpenUserMenu}>
+                    <IconButton
+                        onClick={(e) =>
+                            isAuth ? handleOpenUserMenu(e) : setLoginOpen(true)
+                        }
+                    >
                         <PersonOutlineOutlined sx={{ fontSize: "24px" }} />
                     </IconButton>
                 </Tooltip>
