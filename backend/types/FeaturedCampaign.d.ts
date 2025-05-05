@@ -11,6 +11,8 @@ export interface FeaturedCampaign {
     endDate: Date;
     image?: string;
     discount: number; // %
+    // minPrice?:number;
+    // maxPrice?:number;
     promoCode?: string;
     products: string[] | Product[];
     status: "active" | "inactive";

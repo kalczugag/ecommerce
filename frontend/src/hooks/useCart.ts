@@ -74,11 +74,31 @@ const useCart = (condition = true) => {
         }
     };
 
+    const handleAddDiscount = (promoCode: string) => {
+        handleMutation({
+            values: {
+                cartId: data?.result._id,
+                action: "addPromoCode",
+                promoCode,
+            },
+            mutation: editCart,
+            onSuccess: () => {
+                localStorage.setItem("promoCode", JSON.stringify(promoCode));
+
+                trackEvent("add_discount", {
+                    _cart: data?.result._id,
+                    _promoCode: promoCode,
+                });
+            },
+            successMessage: "Promo code applied successfully",
+            errorMessage: "Failed to apply promo code",
+        });
+    };
+
     const isEmpty = data?.result.items.length === 0;
 
     const loading = {
         edit: editLoading,
-        // add: addLoading,
         get: isFetching,
     };
 
@@ -90,6 +110,7 @@ const useCart = (condition = true) => {
         handleCheckout,
         handleDelete,
         handleQuantityChange,
+        handleAddDiscount,
     };
 };
 

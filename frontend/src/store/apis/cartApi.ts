@@ -10,6 +10,7 @@ interface BodyProps {
     unitPrice?: number;
     quantity?: number;
     _id?: string;
+    promoCode?: string;
 }
 
 export const cartApi = apiSlice.injectEndpoints({
@@ -37,11 +38,11 @@ export const cartApi = apiSlice.injectEndpoints({
         }),
 
         editUsersCart: builder.mutation<ApiResponseObject<Cart>, BodyProps>({
-            query: (cart) => {
-                console.log(cart);
-
+            query: ({ promoCode, ...cart }) => {
                 return {
-                    url: `/cart/${cart.cartId}`,
+                    url: `/cart/${cart.cartId}${
+                        promoCode ? `/${promoCode}` : ""
+                    }`,
                     method: "PATCH",
                     body: cart,
                 };

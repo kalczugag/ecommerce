@@ -15,6 +15,7 @@ export const handleClear = async (
         cart.items = [];
         cart.subTotal = 0;
         cart.discount = 0;
+        cart.promoCodeDiscount = 0;
         cart.deliveryCost = 0;
         cart.total = 0;
 

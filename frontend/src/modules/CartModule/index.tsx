@@ -9,6 +9,7 @@ const CartModule = () => {
     const {
         data,
         handleCheckout,
+        handleAddDiscount,
         handleDelete,
         handleQuantityChange,
         loading,
@@ -32,8 +33,10 @@ const CartModule = () => {
                         </div>
                         <CheckoutSummary
                             data={data.result}
-                            isLoading={loading.get}
+                            loadingGet={loading.get}
+                            loadingEdit={loading.edit}
                             handleCheckout={handleCheckout}
+                            handleAddDiscount={handleAddDiscount}
                         />
                     </div>
                 ) : (
