@@ -6,6 +6,7 @@ export interface Category {
     description?: string;
     _parentCategory?: any; // TODO: fix this
     level: CategoryLevel;
+    hidden: boolean;
 }
 
 export interface GroupedCategories {

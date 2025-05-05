@@ -2,7 +2,6 @@ import { useState } from "react";
 import { PersonOutlineOutlined } from "@mui/icons-material";
 import { Button, IconButton, Menu, Tooltip } from "@mui/material";
 import { AvatarMenuItem, AvatarMenuItemProps } from "./AvatarMenuItem";
-import { useNavigate } from "react-router-dom";
 import LoginDialog from "@/components/AuthDialogs/LoginDialog";
 import RegisterDialog from "@/components/AuthDialogs/RegisterDialog";
 

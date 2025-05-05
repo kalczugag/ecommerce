@@ -15,7 +15,9 @@ const CategoryList = ({ data, page, isOpen, setOpen }: CategoryListProps) => {
     if (!data) return null;
 
     const topLevelCategory = data.topLevelCategories.find(
-        (category) => category.name.toLowerCase() === page.toLowerCase()
+        (category) =>
+            category.name.toLowerCase() === page.toLowerCase() &&
+            !category.hidden
     );
 
     if (!topLevelCategory) return null;
@@ -53,7 +55,8 @@ const CategoryList = ({ data, page, isOpen, setOpen }: CategoryListProps) => {
                             .filter(
                                 (secondLevelCategory) =>
                                     secondLevelCategory._parentCategory._id ===
-                                    topLevelCategory._id
+                                        topLevelCategory._id &&
+                                    !secondLevelCategory.hidden
                             )
                             .map((secondLevelCategory) => (
                                 <ul
@@ -77,7 +80,8 @@ const CategoryList = ({ data, page, isOpen, setOpen }: CategoryListProps) => {
                                             (thirdLevelCategory) =>
                                                 thirdLevelCategory
                                                     ._parentCategory._id ===
-                                                secondLevelCategory._id
+                                                    secondLevelCategory._id &&
+                                                !thirdLevelCategory.hidden
                                         )
                                         .map((thirdLevelCategory) => (
                                             <li key={thirdLevelCategory._id}>

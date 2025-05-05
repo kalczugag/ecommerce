@@ -11,6 +11,7 @@ import appRouter from "./routes/v1/appRouter";
 import coreRouter from "./routes/v1/coreRouter";
 
 import "./config/passport";
+import { CategoryModel } from "./models/Categories";
 import { cleanUpOrders, syncOrderNumberCounter } from "./utils/orderHelpers";
 
 const app = express();
