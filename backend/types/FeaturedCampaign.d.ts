@@ -2,6 +2,7 @@ import type { Category } from "./Category";
 import type { Product } from "./Product";
 
 export interface FeaturedCampaign {
+    _id?: string;
     name: string;
     description?: string;
     _category: string | Category;
@@ -9,6 +10,7 @@ export interface FeaturedCampaign {
     startDate: Date;
     endDate: Date;
     image?: string;
+    discount: number; // %
     promoCode?: string;
     products: string[] | Product[];
     status: "active" | "inactive";
@@ -20,4 +22,5 @@ export interface FeaturedCampaign {
         primary: string;
         secondary: string;
     };
+    hidden?: boolean;
 }

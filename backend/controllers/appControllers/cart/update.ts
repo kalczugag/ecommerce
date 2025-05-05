@@ -4,6 +4,7 @@ import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import { CartModel } from "../../../models/Cart";
 import {
     handleAdd,
+    handleAddPromoCode,
     handleChangeQuantity,
     handleClear,
     handleDelete,
@@ -12,7 +13,7 @@ import type { CartDocument } from "../../../types/Cart";
 import type { Item } from "../../../types/Order";
 
 interface BodyProps extends Item {
-    action: "add" | "delete" | "clear" | "changeQuantity";
+    action: "add" | "delete" | "clear" | "changeQuantity" | "addPromoCode";
 }
 
 export interface HandleAddResult {
@@ -22,10 +23,10 @@ export interface HandleAddResult {
 }
 
 export const updateCart = async (
-    req: express.Request<{ id: string }, {}, BodyProps>,
+    req: express.Request<{ id: string; promoCode?: string }, {}, BodyProps>,
     res: express.Response
 ) => {
-    const { id } = req.params;
+    const { id, promoCode } = req.params;
     const { action, ...newItem } = req.body;
 
     if (!isValidObjectId(id)) {
@@ -61,6 +62,10 @@ export const updateCart = async (
             }
             case "clear": {
                 result = await handleClear(cart);
+                break;
+            }
+            case "addPromoCode": {
+                result = await handleAddPromoCode(cart, promoCode!);
                 break;
             }
             default:

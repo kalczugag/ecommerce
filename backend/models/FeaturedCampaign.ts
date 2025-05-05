@@ -7,14 +7,20 @@ const featuredCampaignSchema = new mongoose.Schema<FeaturedCampaign>({
     _category: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Category",
-        required: true,
+        required: false,
     },
     imageUrl: { type: String, required: false },
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
+    discount: { type: Number, required: true, min: 0, max: 100, default: 0 },
     promoCode: { type: String, required: false },
-    image: { type: String, required: false },
-    products: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+    products: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Product",
+            required: false,
+        },
+    ],
     status: { type: String, required: true, default: "active" },
     textColor: {
         primary: { type: String, default: "#000000" },
@@ -24,7 +30,10 @@ const featuredCampaignSchema = new mongoose.Schema<FeaturedCampaign>({
         primary: { type: String, default: "#ffffff" },
         secondary: { type: String, default: "#000000" },
     },
+    hidden: { type: Boolean, required: false, default: false },
 });
+
+featuredCampaignSchema.index({ promoCode: 1 }, { unique: true });
 
 export const FeaturedCampaignModel = mongoose.model(
     "FeaturedCampaign",
