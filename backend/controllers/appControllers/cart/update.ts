@@ -8,12 +8,19 @@ import {
     handleChangeQuantity,
     handleClear,
     handleDelete,
+    handleDeletePromoCode,
 } from "./caseFunctions";
 import type { CartDocument } from "../../../types/Cart";
 import type { Item } from "../../../types/Order";
 
 interface BodyProps extends Item {
-    action: "add" | "delete" | "clear" | "changeQuantity" | "addPromoCode";
+    action:
+        | "add"
+        | "delete"
+        | "clear"
+        | "changeQuantity"
+        | "addPromoCode"
+        | "deletePromoCode";
 }
 
 export interface HandleAddResult {
@@ -66,6 +73,10 @@ export const updateCart = async (
             }
             case "addPromoCode": {
                 result = await handleAddPromoCode(cart, promoCode!);
+                break;
+            }
+            case "deletePromoCode": {
+                result = await handleDeletePromoCode(cart);
                 break;
             }
             default:

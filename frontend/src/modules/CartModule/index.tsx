@@ -12,6 +12,7 @@ const CartModule = () => {
         handleAddDiscount,
         handleDelete,
         handleQuantityChange,
+        handleDeleteDiscount,
         loading,
     } = useCart();
 
@@ -37,6 +38,7 @@ const CartModule = () => {
                             loadingEdit={loading.edit}
                             handleCheckout={handleCheckout}
                             handleAddDiscount={handleAddDiscount}
+                            handleDeleteDiscount={handleDeleteDiscount}
                         />
                     </div>
                 ) : (

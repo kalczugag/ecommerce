@@ -83,8 +83,6 @@ const useCart = (condition = true) => {
             },
             mutation: editCart,
             onSuccess: () => {
-                localStorage.setItem("promoCode", JSON.stringify(promoCode));
-
                 trackEvent("add_discount", {
                     _cart: data?.result._id,
                     _promoCode: promoCode,
@@ -92,6 +90,23 @@ const useCart = (condition = true) => {
             },
             successMessage: "Promo code applied successfully",
             errorMessage: "Failed to apply promo code",
+        });
+    };
+
+    const handleDeleteDiscount = () => {
+        handleMutation({
+            values: {
+                cartId: data?.result._id,
+                action: "deletePromoCode",
+            },
+            mutation: editCart,
+            onSuccess: () => {
+                trackEvent("remove_discount", {
+                    _cart: data?.result._id,
+                });
+            },
+            successMessage: "Promo code removed",
+            errorMessage: "Failed to remove promo code",
         });
     };
 
@@ -111,6 +126,7 @@ const useCart = (condition = true) => {
         handleDelete,
         handleQuantityChange,
         handleAddDiscount,
+        handleDeleteDiscount,
     };
 };
 

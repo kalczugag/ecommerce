@@ -9,7 +9,8 @@ export interface Cart {
     items: string | Item[];
     subTotal: number;
     discount: number;
-    promoCodeDiscount: number;
+    promoCodePercent: number;
+    promoCode: string | null;
     deliveryCost: number;
     total: number;
 }

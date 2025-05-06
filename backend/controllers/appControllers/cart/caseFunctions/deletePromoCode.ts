@@ -4,14 +4,15 @@ import type { HandleAddResult } from "../update";
 export const handleDeletePromoCode = async (
     cart: CartDocument
 ): Promise<HandleAddResult> => {
-    if (!cart.promoCodeDiscount)
+    if (!cart.promoCode)
         return {
             success: false,
             message: "No promo code applied to remove",
         };
 
     try {
-        cart.promoCodeDiscount = 0;
+        cart.promoCode = null;
+        cart.promoCodePercent = 0;
 
         await cart.save();
 

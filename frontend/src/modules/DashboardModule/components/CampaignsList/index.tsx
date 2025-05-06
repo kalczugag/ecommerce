@@ -81,6 +81,8 @@ const CampaignsList = ({ isToken }: CampaignsListProps) => {
         <div className="space-y-12">
             {data?.pages.map((page) =>
                 page?.result.map((campaign) => {
+                    if (campaign.hidden) return;
+
                     const products = campaign?.products.map((product) => (
                         <ProductCard
                             key={product._id}

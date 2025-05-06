@@ -9,6 +9,7 @@ export interface FeaturedCampaign {
     startDate: Date;
     endDate: Date;
     promoCode?: string;
+    hidden: boolean;
     image?: string;
     products: Product[];
     status: "active" | "inactive";

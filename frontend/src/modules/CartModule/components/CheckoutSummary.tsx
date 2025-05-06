@@ -8,6 +8,7 @@ interface CheckoutSummaryProps {
     loadingEdit: boolean;
     isSummary?: boolean;
     handleCheckout: () => void;
+    handleDeleteDiscount: () => void;
     handleAddDiscount: (promoCode: string) => void;
 }
 
@@ -36,6 +37,7 @@ const CheckoutSummary = ({
     isSummary,
     handleCheckout,
     handleAddDiscount,
+    handleDeleteDiscount,
 }: CheckoutSummaryProps) => {
     const itemsCount = data.items
         .map((item) => item.quantity)
@@ -87,7 +89,9 @@ const CheckoutSummary = ({
             </Button>
             {!isSummary && (
                 <DiscountDialog
-                    onSubmit={handleAddDiscount}
+                    currentPromoCode={data.promoCode}
+                    handleAddDiscount={handleAddDiscount}
+                    handleDeleteDiscount={handleDeleteDiscount}
                     isLoading={loadingEdit}
                 />
             )}

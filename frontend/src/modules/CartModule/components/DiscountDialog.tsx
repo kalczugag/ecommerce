@@ -13,47 +13,46 @@ import {
 import { Add, Close } from "@mui/icons-material";
 
 interface DiscountDialogProps {
+    currentPromoCode: string | null;
     isLoading: boolean;
-    onSubmit: (promoCode: string) => void;
+    handleAddDiscount: (promoCode: string) => void;
+    handleDeleteDiscount: () => void;
 }
 
-const DiscountDialog = ({ isLoading, onSubmit }: DiscountDialogProps) => {
+const DiscountDialog = ({
+    currentPromoCode,
+    isLoading,
+    handleAddDiscount,
+    handleDeleteDiscount,
+}: DiscountDialogProps) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [currentPromoCode, setCurrentPromoCode] = useState<string | null>(
-        () => {
-            const stored = localStorage.getItem("promoCode");
-            return stored ? JSON.parse(stored) : null;
-        }
-    );
 
     const handleOpen = () => setIsOpen(true);
     const handleClose = () => setIsOpen(false);
 
-    const handleRemoveDiscount = () => {
-        localStorage.removeItem("promoCode");
-    };
-
     const handleSubmit = (values: { promo_code: string }) => {
-        onSubmit(values.promo_code.trim());
+        handleAddDiscount(values.promo_code.trim());
         handleClose();
     };
 
     return (
         <>
             {!currentPromoCode ? (
-                <Button
-                    startIcon={<Add />}
-                    color="inherit"
-                    onClick={handleOpen}
-                >
-                    Discount code
-                </Button>
+                <div className="flex justify-center">
+                    <Button
+                        startIcon={<Add />}
+                        color="inherit"
+                        onClick={handleOpen}
+                    >
+                        Discount code
+                    </Button>
+                </div>
             ) : (
                 <div className="flex flex-row justify-center items-center space-x-2">
                     <span className="text-gray-700 underline">
                         {currentPromoCode}
                     </span>
-                    <IconButton size="small" onClick={handleRemoveDiscount}>
+                    <IconButton size="small" onClick={handleDeleteDiscount}>
                         <Close />
                     </IconButton>
                 </div>

@@ -6,10 +6,10 @@ export const handleAddPromoCode = async (
     cart: CartDocument,
     promoCode: string
 ): Promise<HandleAddResult> => {
-    if (cart.promoCodeDiscount > 0)
+    if (cart.promoCode)
         return {
             success: false,
-            message: "Promo code discount already applied",
+            message: "Promo code already applied",
         };
 
     if (!promoCode)
@@ -40,7 +40,8 @@ export const handleAddPromoCode = async (
                 message: "Promo code is not active",
             };
 
-        cart.promoCodeDiscount = (cart.subTotal * campaign.discount) / 100;
+        cart.promoCode = promoCode;
+        cart.promoCodePercent = campaign.discount;
 
         await cart.save();
 
