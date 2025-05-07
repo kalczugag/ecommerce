@@ -41,9 +41,10 @@ interface NavLinksMenuProps {
         sectionLabel: string;
         elements: NavLink[];
     }[];
+    fontSize?: "small" | "medium" | "large";
 }
 
-const NavLinksMenu = ({ links }: NavLinksMenuProps) => {
+const NavLinksMenu = ({ links, fontSize = "medium" }: NavLinksMenuProps) => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const { pathname } = useLocation();
@@ -53,6 +54,27 @@ const NavLinksMenu = ({ links }: NavLinksMenuProps) => {
     );
 
     const [activeKeys, setActiveKeys] = useState<string[]>([]);
+
+    const fontSizeMap = {
+        small: {
+            primary: {
+                fontSize: "0.875rem",
+            },
+            section: "text-xs",
+        },
+        medium: {
+            primary: {
+                fontSize: "1rem",
+            },
+            section: "text-sm",
+        },
+        large: {
+            primary: {
+                fontSize: "1.125rem",
+            },
+            section: "text-base",
+        },
+    };
 
     const collapseAll = () => setActiveKeys([]);
 
@@ -141,7 +163,9 @@ const NavLinksMenu = ({ links }: NavLinksMenuProps) => {
                     <List
                         subheader={
                             !collapsed && (
-                                <h5 className="px-4 text-gray-400 text-sm font-semibold">
+                                <h5
+                                    className={`px-4 text-gray-400 text-sm font-semibold ${fontSizeMap[fontSize].section}`}
+                                >
                                     {section.sectionLabel}
                                 </h5>
                             )
@@ -192,14 +216,23 @@ const NavLinksMenu = ({ links }: NavLinksMenuProps) => {
                                                     {link.icon ? (
                                                         link.icon
                                                     ) : index % 2 === 0 ? (
-                                                        <Inbox />
+                                                        <Inbox
+                                                            fontSize={fontSize}
+                                                        />
                                                     ) : (
-                                                        <Mail />
+                                                        <Mail
+                                                            fontSize={fontSize}
+                                                        />
                                                     )}
                                                 </ListItemIcon>
                                                 {!collapsed && (
                                                     <ListItemText
                                                         primary={link.label}
+                                                        primaryTypographyProps={{
+                                                            sx: fontSizeMap[
+                                                                fontSize
+                                                            ].primary,
+                                                        }}
                                                     />
                                                 )}
                                                 {!collapsed &&
@@ -271,6 +304,12 @@ const NavLinksMenu = ({ links }: NavLinksMenuProps) => {
                                                                     primary={
                                                                         subLink.label
                                                                     }
+                                                                    primaryTypographyProps={{
+                                                                        sx: fontSizeMap[
+                                                                            fontSize
+                                                                        ]
+                                                                            .primary,
+                                                                    }}
                                                                 />
                                                             </ListItemButton>
                                                         </ListItem>
