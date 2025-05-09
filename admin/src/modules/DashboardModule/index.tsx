@@ -1,4 +1,3 @@
-import { ReactNode } from "react";
 import dayjs from "dayjs";
 import { comparison } from "@/utils/helpers";
 import { Insights, KeyboardArrowRight } from "@mui/icons-material";
@@ -9,6 +8,7 @@ import {
     generateMonthDays,
 } from "@/utils/generateMonthDays";
 import SummaryCard from "./components/SummaryCard";
+import Wrapper from "@/components/Wrapper";
 import type { DailySummary } from "@/types/Analytics";
 import type { ResultDataProps } from "@/store/apis/analyticsApi";
 import OrdersTreeView from "./components/OrdersTreeView";
@@ -17,10 +17,6 @@ interface DashboardModuleProps {
     data: ResultDataProps;
     isLoading: boolean;
 }
-
-const Wrapper = ({ children }: { children: ReactNode }) => {
-    return <div className="flex flex-wrap gap-4 w-full">{children}</div>;
-};
 
 const formatSummaryData = (data: DailySummary[], key: keyof DailySummary) => {
     const monthDays = generateMonthDays(dayjs().year(), dayjs().month() + 1);
@@ -91,6 +87,8 @@ const DashboardModule = ({ data, isLoading }: DashboardModuleProps) => {
         data.prev30Days.sessions.direct +
         data.prev30Days.sessions.organic +
         data.prev30Days.sessions.referral;
+
+    console.log(data.last30Days);
 
     return (
         <DefaultLayout>

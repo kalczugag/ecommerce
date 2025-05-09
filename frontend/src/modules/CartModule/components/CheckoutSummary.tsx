@@ -8,7 +8,7 @@ interface CheckoutSummaryProps {
     loadingEdit: boolean;
     isSummary?: boolean;
     handleCheckout: () => void;
-    handleDeleteDiscount: () => void;
+    handleDeleteDiscount: (promoCode: string) => void;
     handleAddDiscount: (promoCode: string) => void;
 }
 

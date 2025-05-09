@@ -93,7 +93,7 @@ const useCart = (condition = true) => {
         });
     };
 
-    const handleDeleteDiscount = () => {
+    const handleDeleteDiscount = (promoCode: string) => {
         handleMutation({
             values: {
                 cartId: data?.result._id,
@@ -103,6 +103,7 @@ const useCart = (condition = true) => {
             onSuccess: () => {
                 trackEvent("remove_discount", {
                     _cart: data?.result._id,
+                    _promoCode: promoCode,
                 });
             },
             successMessage: "Promo code removed",

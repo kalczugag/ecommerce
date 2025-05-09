@@ -16,7 +16,7 @@ interface DiscountDialogProps {
     currentPromoCode: string | null;
     isLoading: boolean;
     handleAddDiscount: (promoCode: string) => void;
-    handleDeleteDiscount: () => void;
+    handleDeleteDiscount: (promoCode: string) => void;
 }
 
 const DiscountDialog = ({
@@ -52,7 +52,10 @@ const DiscountDialog = ({
                     <span className="text-gray-700 underline">
                         {currentPromoCode}
                     </span>
-                    <IconButton size="small" onClick={handleDeleteDiscount}>
+                    <IconButton
+                        size="small"
+                        onClick={() => handleDeleteDiscount}
+                    >
                         <Close />
                     </IconButton>
                 </div>

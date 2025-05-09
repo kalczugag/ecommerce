@@ -35,7 +35,7 @@ const SummaryCard = ({
     label,
     subLabel,
     value,
-    rate: rateNumber = 10,
+    rate: rateNumber,
     data = [],
     type = "sparkLine",
     size = "small",
@@ -68,7 +68,7 @@ const SummaryCard = ({
             } ${type === "pie" && "max-w-0"}`}
         >
             <h5 className="text-sm">{label}</h5>
-            {value && rate && (
+            {value && (
                 <div
                     className={`flex items-center ${
                         size === "small" && "justify-between"
@@ -77,13 +77,15 @@ const SummaryCard = ({
                     } `}
                 >
                     <p className="text-2xl font-semibold">{value}</p>
-                    <Chip
-                        label={rateLabel}
-                        size="small"
-                        variant="outlined"
-                        color={rateColorKey}
-                        sx={{ fontWeight: "bold", fontSize: "12px" }}
-                    />
+                    {rateNumber && (
+                        <Chip
+                            label={rateLabel}
+                            size="small"
+                            variant="outlined"
+                            color={rateColorKey}
+                            sx={{ fontWeight: "bold", fontSize: "12px" }}
+                        />
+                    )}
                 </div>
             )}
             {subLabel && (
