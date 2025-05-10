@@ -1,14 +1,36 @@
 import Wrapper from "@/components/Wrapper";
 import DefaultLayout from "@/layouts/DefaultLayout";
-import SummaryCard from "../DashboardModule/components/SummaryCard";
+import SummaryCard, {
+    SummaryCardProps,
+} from "../DashboardModule/components/SummaryCard";
+import { Button } from "@mui/material";
+
+const ExtendedSummaryCard = ({
+    queryKey,
+    ...rest
+}: { queryKey: string } & SummaryCardProps) => {
+    return (
+        <SummaryCard {...rest}>
+            <Button variant="outlined" sx={{ mt: 2 }}>
+                Show
+            </Button>
+        </SummaryCard>
+    );
+};
 
 const CampaignsModule = () => {
+    const cardsConfig = [
+        { label: "Total Campaigns", value: 11, queryKey: "total" },
+        { label: "Active Campaigns", value: 11, queryKey: "active" },
+        { label: "Inactive Campaigns", value: 11, queryKey: "inactive" },
+    ];
+
     return (
         <DefaultLayout>
             <Wrapper>
-                <SummaryCard label="Total Campaigns" value={11} />
-                <SummaryCard label="Active Campaigns" value={1} />
-                <SummaryCard label="Inactive Campaigns" value={2} />
+                {cardsConfig.map((card, index) => (
+                    <ExtendedSummaryCard key={index} {...card} />
+                ))}
             </Wrapper>
         </DefaultLayout>
     );

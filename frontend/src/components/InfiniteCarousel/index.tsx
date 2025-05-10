@@ -5,7 +5,6 @@ import {
 } from "@mui/icons-material";
 import Slider, { ResponsiveObject, Settings } from "react-slick";
 import { Button, Container } from "@mui/material";
-import Loading from "../Loading";
 import type { FeaturedCampaign } from "@/types/FeaturedCampaign";
 
 const config: Settings = {
@@ -71,7 +70,7 @@ const InfiniteCarousel = ({
     customConfig,
 }: CarouselProps) => {
     return (
-        <Loading isLoading={isLoading}>
+        <div>
             {name && (
                 <Container
                     maxWidth={false}
@@ -152,7 +151,7 @@ const InfiniteCarousel = ({
                     </Slider>
                 </Container>
             </Container>
-        </Loading>
+        </div>
     );
 };
 
