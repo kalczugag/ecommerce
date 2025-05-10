@@ -4,6 +4,7 @@ import SummaryCard, {
     SummaryCardProps,
 } from "../DashboardModule/components/SummaryCard";
 import { Button } from "@mui/material";
+import { CampaignsGlobalSummary } from "@/types/FeaturedCampaign";
 
 const ExtendedSummaryCard = ({
     queryKey,
@@ -18,11 +19,23 @@ const ExtendedSummaryCard = ({
     );
 };
 
-const CampaignsModule = () => {
+interface CampaignsModuleProps {
+    data: CampaignsGlobalSummary;
+}
+
+const CampaignsModule = ({ data }: CampaignsModuleProps) => {
     const cardsConfig = [
-        { label: "Total Campaigns", value: 11, queryKey: "total" },
-        { label: "Active Campaigns", value: 11, queryKey: "active" },
-        { label: "Inactive Campaigns", value: 11, queryKey: "inactive" },
+        { label: "Total Campaigns", value: data.total, queryKey: "total" },
+        {
+            label: "Active Campaigns",
+            value: data.active,
+            queryKey: "active",
+        },
+        {
+            label: "Inactive Campaigns",
+            value: data.inactive,
+            queryKey: "inactive",
+        },
     ];
 
     return (

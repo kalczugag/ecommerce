@@ -19,6 +19,20 @@ const analytics = (router: express.Router) => {
         hasRole("admin"),
         methods.readProductDailySummary
     );
+
+    router.get(
+        "/analytics/campaignsDailySummary",
+        passport.authenticate("jwt", { session: false }),
+        hasRole("admin"),
+        methods.readCampaignsDailySummary
+    );
+
+    router.get(
+        "/analytics/campaignsGlobalSummary",
+        passport.authenticate("jwt", { session: false }),
+        hasRole("admin"),
+        methods.readCampaignsGlobalSummary
+    );
 };
 
 export default analytics;

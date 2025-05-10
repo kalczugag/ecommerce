@@ -133,7 +133,6 @@ eventQueue.process(async (job) => {
                 }
             }
 
-            // For discount usages
             if (doc.eventType === "add_discount") {
                 campaignUpdate.$inc.discountUses = 1;
 

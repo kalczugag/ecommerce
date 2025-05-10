@@ -15,7 +15,7 @@ export interface FeaturedCampaign {
     // maxPrice?:number;
     promoCode?: string;
     products: string[] | Product[];
-    status: "active" | "inactive";
+    status: "active" | "inactive" | "scheduled" | "completed";
     textColor: {
         primary: string;
         secondary: string;

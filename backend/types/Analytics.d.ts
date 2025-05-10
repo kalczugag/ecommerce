@@ -50,6 +50,17 @@ interface CampaignsDailySummary {
     completed: number;
 }
 
+interface CampaignsGlobalSummary {
+    _id?: string;
+    date: Date;
+    views: number;
+    total: number;
+    active: number;
+    inactive: number;
+    scheduled: number;
+    completed: number;
+}
+
 interface SummaryByCountry {
     _id?: string;
     country: string;
@@ -71,6 +82,7 @@ export {
     DailySummary,
     ProductDailySummary,
     CampaignsDailySummary,
+    CampaignsGlobalSummary,
     DailySummaryQueryParams,
     SummaryByCountry,
 };
