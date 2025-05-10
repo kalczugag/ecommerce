@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toggleSidebar, toggleCollapsed } from "@/store";
 import { useAppDispatch, useAppSelector } from "@/hooks/useStore";
@@ -53,6 +53,9 @@ const NavLinksMenu = ({ links, fontSize = "medium" }: NavLinksMenuProps) => {
         (state) => state.sidebar
     );
 
+    const prevIsMobile = useRef(isMobile);
+    const prevDesktopCollapsedState = useRef(collapsed);
+
     const [activeKeys, setActiveKeys] = useState<string[]>([]);
 
     const fontSizeMap = {
@@ -102,6 +105,17 @@ const NavLinksMenu = ({ links, fontSize = "medium" }: NavLinksMenuProps) => {
     const toggleDrawer = (newOpen: boolean) => {
         dispatch(toggleSidebar(newOpen));
     };
+
+    useEffect(() => {
+        if (isMobile && !prevIsMobile.current) {
+            prevDesktopCollapsedState.current = collapsed;
+            dispatch(toggleCollapsed(false));
+        } else if (!isMobile && prevIsMobile.current) {
+            dispatch(toggleCollapsed(prevDesktopCollapsedState.current));
+        }
+
+        prevIsMobile.current = isMobile;
+    }, [isMobile, collapsed]);
 
     const DrawerList = (
         <Box

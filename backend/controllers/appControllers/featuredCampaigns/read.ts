@@ -9,11 +9,12 @@ import { WishlistModel } from "../../../models/Wishlist";
 const parser = new MongooseQueryParser();
 
 export const getAllCampaigns = async (
-    req: express.Request,
+    req: express.Request<{}, {}, {}, { all?: boolean }>,
     res: express.Response
 ) => {
     const user = req.user ? (req.user as User) : null;
-    const parsedQuery = parser.parse(req.query);
+    const { all, ...rest } = req.query;
+    const parsedQuery = parser.parse(rest);
 
     const page = parsedQuery.skip
         ? parseInt(parsedQuery.skip as unknown as string, 10)
@@ -21,6 +22,8 @@ export const getAllCampaigns = async (
     const pageSize = parsedQuery.limit
         ? parseInt(parsedQuery.limit as unknown as string, 10)
         : 5;
+
+    parsedQuery.filter = { status: all ? "" : "active" };
 
     try {
         let userPreferenceCategory: any;
