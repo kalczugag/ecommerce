@@ -1,15 +1,16 @@
 import { useGetCampaignsGlobalSummaryQuery } from "@/store/apis/analyticsApi";
 import { useTitle } from "@/hooks/useTitle";
 import CampaignsModule from "@/modules/CampaignsModule";
+import NotFound from "@/components/NotFound";
 
 const Campaigns = () => {
     useTitle("Campaigns");
 
-    const { data, isSuccess } = useGetCampaignsGlobalSummaryQuery();
+    const { data, isLoading, isError } = useGetCampaignsGlobalSummaryQuery();
 
-    if (!isSuccess) return null;
+    if (isError || (!isLoading && !data?.result)) return <NotFound />;
 
-    return <CampaignsModule data={data?.result} />;
+    return <CampaignsModule data={data?.result} isLoading={isLoading} />;
 };
 
 export default Campaigns;

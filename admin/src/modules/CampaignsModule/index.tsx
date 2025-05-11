@@ -20,20 +20,21 @@ const ExtendedSummaryCard = ({
 };
 
 interface CampaignsModuleProps {
-    data: CampaignsGlobalSummary;
+    data?: CampaignsGlobalSummary;
+    isLoading: boolean;
 }
 
-const CampaignsModule = ({ data }: CampaignsModuleProps) => {
+const CampaignsModule = ({ data, isLoading }: CampaignsModuleProps) => {
     const cardsConfig = [
-        { label: "Total Campaigns", value: data.total, queryKey: "total" },
+        { label: "Total Campaigns", value: data?.total, queryKey: "total" },
         {
             label: "Active Campaigns",
-            value: data.active,
+            value: data?.active,
             queryKey: "active",
         },
         {
             label: "Inactive Campaigns",
-            value: data.inactive,
+            value: data?.inactive,
             queryKey: "inactive",
         },
     ];
@@ -42,7 +43,11 @@ const CampaignsModule = ({ data }: CampaignsModuleProps) => {
         <DefaultLayout>
             <Wrapper>
                 {cardsConfig.map((card, index) => (
-                    <ExtendedSummaryCard key={index} {...card} />
+                    <ExtendedSummaryCard
+                        key={index}
+                        isLoading={isLoading}
+                        {...card}
+                    />
                 ))}
             </Wrapper>
         </DefaultLayout>

@@ -68,7 +68,7 @@ const SummaryCard = ({
             } ${type === "pie" && "max-w-0"}`}
         >
             <h5 className="text-sm">{label}</h5>
-            {value && (
+            {(value === 0 || value) && (
                 <div
                     className={`flex items-center ${
                         size === "small" && "justify-between"

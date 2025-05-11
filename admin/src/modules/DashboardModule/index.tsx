@@ -94,6 +94,7 @@ const DashboardModule = ({ data, isLoading }: DashboardModuleProps) => {
         <DefaultLayout>
             <Wrapper>
                 <Wrapper>
+                    {/* render from array of objects */}
                     <SummaryCard
                         label="Unique Visitors"
                         subLabel="Last 30 days"
