@@ -3,7 +3,7 @@ const Copyright = () => {
 
     return (
         <div className="text-sm text-start p-4">
-            <p>{currYear} &copy; Ecommerce</p>
+            <p>{currYear} &copy; EVERWEAR</p>
         </div>
     );
 };

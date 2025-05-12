@@ -39,7 +39,23 @@ export const campaignsApi = apiSlice.injectEndpoints({
                       }))
                     : [{ type: "Campaigns", id: "LIST" }],
         }),
+
+        getCampaignById: builder.query<
+            ApiResponseObject<FeaturedCampaign>,
+            string
+        >({
+            query: (id) => ({
+                url: `/admin/campaigns/${id}`,
+                method: "GET",
+                keepUnusedDataFor: 300,
+            }),
+            providesTags: (result, error, id) => [
+                { type: "Campaigns", id: id },
+                { type: "Campaigns", id: "GLOBAL" },
+            ],
+        }),
     }),
 });
 
-export const { useGetAllCampaignsQuery } = campaignsApi;
+export const { useGetAllCampaignsQuery, useGetCampaignByIdQuery } =
+    campaignsApi;

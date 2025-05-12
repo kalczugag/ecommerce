@@ -144,21 +144,24 @@ const NavLinksMenu = ({ links, fontSize = "medium" }: NavLinksMenuProps) => {
             )}
 
             <div
-                className={`flex items-center ${
-                    collapsed ? "justify-center px-2" : "px-6"
+                className={`relative flex items-center ${
+                    collapsed ? "justify-center px-2" : "pt-8 px-6"
                 } mb-10`}
                 onClick={() => {
                     toggleDrawer(false);
                     collapseAll();
                 }}
             >
-                <Adb className={collapsed ? "mx-auto" : "mr-1"} />
                 {!collapsed && (
                     <Link
                         to="/"
-                        className="font-mono font-bold text-xl tracking-[.3rem] no-underline"
+                        className="absolute left-1 -top-2 mr-2 flex items-center"
                     >
-                        LOGO
+                        <img
+                            src="/icons/logoWhite.svg"
+                            alt="logo"
+                            style={{ height: "60px", width: "120px" }}
+                        />
                     </Link>
                 )}
             </div>

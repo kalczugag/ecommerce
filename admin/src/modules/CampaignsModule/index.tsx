@@ -34,7 +34,7 @@ const ExtendedSummaryCard = ({
 
     return (
         <SummaryCard {...rest}>
-            <Box sx={{ mt: 2 }}>
+            {/* <Box sx={{ mt: 2 }}>
                 <Button
                     variant="outlined"
                     onClick={handleClick}
@@ -47,7 +47,7 @@ const ExtendedSummaryCard = ({
                         <Close fontSize="small" />
                     </IconButton>
                 )}
-            </Box>
+            </Box> */}
         </SummaryCard>
     );
 };
