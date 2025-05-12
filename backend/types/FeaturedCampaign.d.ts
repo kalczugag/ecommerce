@@ -1,5 +1,6 @@
 import type { Category } from "./Category";
 import type { Product } from "./Product";
+import type { ParsedQs } from "qs";
 
 export interface FeaturedCampaign {
     _id?: string;
@@ -25,4 +26,12 @@ export interface FeaturedCampaign {
         secondary: string;
     };
     hidden?: boolean;
+}
+
+export interface PaginatedCampaigns extends ParsedQs {
+    search?: { search: string };
+    sort?: string;
+    category?: string;
+    page: number;
+    pageSize: number;
 }

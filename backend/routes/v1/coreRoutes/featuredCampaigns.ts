@@ -6,6 +6,13 @@ import { hasRole } from "../../../middlewares";
 
 const featuredCampaigns = (router: express.Router) => {
     router.get(
+        "/campaigns",
+        passport.authenticate("jwt", { session: false }),
+        hasRole("admin"),
+        methods.read
+    );
+
+    router.get(
         "/campaigns/refresh",
         passport.authenticate("jwt", { session: false }),
         hasRole("admin"),

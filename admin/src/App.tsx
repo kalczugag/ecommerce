@@ -15,7 +15,7 @@ import CustomersEdit from "@/pages/Customers/edit";
 import CustomersAdd from "@/pages/Customers/add";
 import OrdersList from "@/pages/Orders/list";
 import OrdersManage from "@/pages/Orders/manage";
-import Campaigns from "@/pages/Campaigns";
+import CampaignsList from "@/pages/Campaigns/list";
 import CategoriesList from "@/pages/Categories/list";
 import CategoriesEdit from "@/pages/Categories/edit";
 import CategoriesAdd from "@/pages/Categories/add";
@@ -55,7 +55,7 @@ const App = () => {
                         <Route path=":id" element={<CategoriesEdit />} />
                         <Route path="add" element={<CategoriesAdd />} />
                     </Route>
-                    <Route path="/campaigns" element={<Campaigns />} />
+                    <Route path="/campaigns" element={<CampaignsList />} />
                     <Route path="overview" element={<Overview />} />
                     <Route
                         path="/settings/:settingsKey"

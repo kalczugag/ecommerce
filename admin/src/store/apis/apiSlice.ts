@@ -75,5 +75,6 @@ export const apiSlice = createApi({
         "Payments",
         "Shipments",
         "Notes",
+        "Campaigns",
     ],
 });

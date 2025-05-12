@@ -4,7 +4,7 @@ import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import { ProductModel } from "../../../models/Product";
 import { CategoryModel } from "../../../models/Categories";
 import { WishlistModel } from "../../../models/Wishlist";
-import type { PaginatedProducts, Product } from "../../../types/Product";
+import type { PaginatedProducts } from "../../../types/Product";
 import type { Category } from "../../../types/Category";
 import type { User } from "../../../types/User";
 

@@ -34,6 +34,11 @@ const featuredCampaignSchema = new mongoose.Schema<FeaturedCampaign>({
 });
 
 featuredCampaignSchema.index({ promoCode: 1 }, { unique: true });
+featuredCampaignSchema.index({
+    name: "text",
+    description: "text",
+    promoCode: "text",
+});
 
 export const FeaturedCampaignModel = mongoose.model(
     "FeaturedCampaign",
