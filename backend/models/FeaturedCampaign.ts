@@ -31,6 +31,7 @@ const featuredCampaignSchema = new mongoose.Schema<FeaturedCampaign>({
         secondary: { type: String, default: "#ffffff" },
     },
     hidden: { type: Boolean, required: false, default: false },
+    numOfCoupons: { type: Number, required: false, default: 10 },
 });
 
 featuredCampaignSchema.index({ promoCode: 1 }, { unique: true });

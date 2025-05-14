@@ -19,6 +19,7 @@ const schema = Joi.object({
     textColor: colorSchema.optional(),
     bgColor: colorSchema.optional(),
     hidden: Joi.boolean().optional(),
+    numOfCoupons: Joi.number().integer().min(1).optional(),
 });
 
 export default schema;

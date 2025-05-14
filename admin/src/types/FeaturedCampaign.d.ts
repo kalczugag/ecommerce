@@ -25,6 +25,7 @@ interface FeaturedCampaign {
         secondary: string;
     };
     hidden: boolean;
+    numOfCoupons: number;
     createdAt: string;
     updatedAt: string;
 }

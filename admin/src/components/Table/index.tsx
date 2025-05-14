@@ -230,7 +230,6 @@ const CustomPaginationActionsTable = ({
         <Loading isLoading={isLoading}>
             <TableContainer
                 component={Paper}
-                sx={{ bgcolor: "#F5F6FA" }}
                 className="text-text-light dark:text-text-dark"
             >
                 <Table>

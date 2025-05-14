@@ -21,4 +21,5 @@ export interface FeaturedCampaign {
         primary: string;
         secondary: string;
     };
+    numOfCoupons: number;
 }

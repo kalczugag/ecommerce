@@ -3,6 +3,7 @@ import { useAddCampaignMutation } from "@/store";
 import { useTitle } from "@/hooks/useTitle";
 import { useHandleMutation } from "@/hooks/useHandleMutation";
 import CrudModule from "@/modules/CrudModule";
+import CampaignForm from "@/forms/CampaignForm";
 import CreateForm from "@/components/CreateForm";
 import type { FeaturedCampaign } from "@/types/FeaturedCampaign";
 
@@ -20,15 +21,6 @@ const CampaignsAdd = () => {
             mutation: addCampaign,
             onSuccess: () => navigate(-1),
         });
-        // try {
-        //     await addCategory(values).unwrap();
-        //     navigate(-1);
-        //     enqueueSnackbar("Customer added successfully", {
-        //         variant: "success",
-        //     });
-        // } catch (error) {
-        //     enqueueSnackbar("Failed to add customer", { variant: "error" });
-        // }
     };
 
     return (
@@ -37,7 +29,7 @@ const CampaignsAdd = () => {
                 <CreateForm
                     handleSubmit={handleSubmit}
                     isLoading={isLoading}
-                    formElements={<></>}
+                    formElements={<CampaignForm />}
                 />
             }
         />

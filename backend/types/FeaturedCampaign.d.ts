@@ -26,6 +26,7 @@ export interface FeaturedCampaign {
         secondary: string;
     };
     hidden?: boolean;
+    numOfCoupons: number;
 }
 
 export interface PaginatedCampaigns extends ParsedQs {
