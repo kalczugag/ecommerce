@@ -45,7 +45,7 @@ export const campaignsApi = apiSlice.injectEndpoints({
             string
         >({
             query: (id) => ({
-                url: `/admin/campaigns/${id}`,
+                url: `/admin/campaigns/id/${id}`,
                 method: "GET",
                 keepUnusedDataFor: 300,
             }),
@@ -54,8 +54,26 @@ export const campaignsApi = apiSlice.injectEndpoints({
                 { type: "Campaigns", id: "GLOBAL" },
             ],
         }),
+
+        addCampaign: builder.mutation<
+            ApiResponseObject<FeaturedCampaign>,
+            FeaturedCampaign
+        >({
+            query: (values) => ({
+                url: "/campaigns",
+                method: "POST",
+                body: values,
+            }),
+            invalidatesTags: (result, error, values) => [
+                { type: "Campaigns", id: values._id },
+                { type: "Campaigns", id: "GLOBAL" },
+            ],
+        }),
     }),
 });
 
-export const { useGetAllCampaignsQuery, useGetCampaignByIdQuery } =
-    campaignsApi;
+export const {
+    useGetAllCampaignsQuery,
+    useGetCampaignByIdQuery,
+    useAddCampaignMutation,
+} = campaignsApi;

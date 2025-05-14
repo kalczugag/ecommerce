@@ -6,7 +6,7 @@ import { useTitle } from "@/hooks/useTitle";
 import usePagination from "@/hooks/usePagination";
 import useSortedData from "@/hooks/useSortedData";
 import useDebounce from "@/hooks/useDebounce";
-import CampaignsModule from "@/modules/CampaignsModule";
+import CampaignsListModule from "@/modules/CampaignsModule/CampaignsListModule";
 import NotFound from "@/components/NotFound";
 import SearchItem from "@/components/SearchItem";
 import SortForm from "@/forms/SortForm";
@@ -47,7 +47,7 @@ const CampaignsList = () => {
     };
 
     return (
-        <CampaignsModule
+        <CampaignsListModule
             data={analyticsData?.result}
             config={config}
             isLoading={isLoading}

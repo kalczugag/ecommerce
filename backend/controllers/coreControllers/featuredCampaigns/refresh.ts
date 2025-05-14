@@ -36,10 +36,22 @@ export const refreshCampaigns = async (
             }
         );
 
-        const newCampaignSummary = new CampaignsGlobalSummaryModel(
-            filteredCampaigns
-        );
-        await newCampaignSummary.save();
+        const campaignsGlobalSummary =
+            await CampaignsGlobalSummaryModel.findOne({});
+
+        let refreshedCampaignsGlobalSummary;
+        if (!campaignsGlobalSummary) {
+            refreshedCampaignsGlobalSummary = new CampaignsGlobalSummaryModel(
+                filteredCampaigns
+            );
+            refreshedCampaignsGlobalSummary.save();
+        } else {
+            refreshedCampaignsGlobalSummary =
+                await CampaignsGlobalSummaryModel.findOneAndUpdate(
+                    {},
+                    { $set: filteredCampaigns }
+                );
+        }
 
         return res
             .status(201)

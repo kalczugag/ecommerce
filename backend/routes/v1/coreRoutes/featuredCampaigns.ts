@@ -13,7 +13,7 @@ const featuredCampaigns = (router: express.Router) => {
     );
 
     router.get(
-        "/campaigns/:id",
+        "/campaigns/id/:id",
         passport.authenticate("jwt", { session: false }),
         hasRole("admin"),
         methods.readById

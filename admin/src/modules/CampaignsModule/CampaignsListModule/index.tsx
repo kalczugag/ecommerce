@@ -3,13 +3,10 @@ import { useQueryParams } from "@/hooks/useQueryParams";
 import Wrapper from "@/components/Wrapper";
 import DefaultLayout from "@/layouts/DefaultLayout";
 import SummaryCard, {
-    SummaryCardProps,
-} from "../DashboardModule/components/SummaryCard";
-import CrudModule from "../CrudModule";
-import { Box, Button, IconButton } from "@mui/material";
+    type SummaryCardProps,
+} from "../../DashboardModule/components/SummaryCard";
 import { CampaignsGlobalSummary } from "@/types/FeaturedCampaign";
-import { Close } from "@mui/icons-material";
-import type { CrudModuleProps } from "../CrudModule";
+import CrudModule, { type CrudModuleProps } from "../../CrudModule";
 
 const ExtendedSummaryCard = ({
     queryKey,
@@ -52,19 +49,19 @@ const ExtendedSummaryCard = ({
     );
 };
 
-interface CampaignsModuleProps {
+interface CampaignsListModuleProps {
     config: CrudModuleProps["config"];
     data?: CampaignsGlobalSummary;
     isLoading: boolean;
     formElements: JSX.Element;
 }
 
-const CampaignsModule = ({
+const CampaignsListModule = ({
     data,
     isLoading,
     config,
     formElements,
-}: CampaignsModuleProps) => {
+}: CampaignsListModuleProps) => {
     const cardsConfig = [
         { label: "Total Campaigns", value: data?.total, queryKey: "total" },
         {
@@ -99,4 +96,4 @@ const CampaignsModule = ({
     );
 };
 
-export default CampaignsModule;
+export default CampaignsListModule;

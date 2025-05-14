@@ -7,7 +7,7 @@ const colorSchema = Joi.object({
 
 const schema = Joi.object({
     name: Joi.string().min(2).required(),
-    description: Joi.string().min(10).optional(),
+    description: Joi.string().min(10).max(500).optional(),
     _category: Joi.string().optional(),
     imageUrl: Joi.string().uri().optional(),
     startDate: Joi.date().iso().required(),

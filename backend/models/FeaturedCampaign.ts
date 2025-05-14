@@ -3,7 +3,7 @@ import type { FeaturedCampaign } from "../types/FeaturedCampaign";
 
 const featuredCampaignSchema = new mongoose.Schema<FeaturedCampaign>({
     name: { type: String, required: true, unique: true },
-    description: { type: String, required: false },
+    description: { type: String, required: false, maxlength: 500 },
     _category: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Category",
@@ -27,8 +27,8 @@ const featuredCampaignSchema = new mongoose.Schema<FeaturedCampaign>({
         secondary: { type: String, default: "#ffffff" },
     },
     bgColor: {
-        primary: { type: String, default: "#ffffff" },
-        secondary: { type: String, default: "#000000" },
+        primary: { type: String, default: "#EFEFF0" },
+        secondary: { type: String, default: "#ffffff" },
     },
     hidden: { type: Boolean, required: false, default: false },
 });
