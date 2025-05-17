@@ -12,7 +12,13 @@ const featuredCampaignSchema = new mongoose.Schema<FeaturedCampaign>({
     imageUrl: { type: String, required: false },
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
-    discount: { type: Number, required: true, min: 0, max: 100, default: 0 },
+    discount: { type: Number, required: true, min: 5, max: 100, default: 0 },
+    discountType: {
+        type: String,
+        enum: ["percentage", "quota"],
+        required: true,
+    },
+    minPrice: { type: Number, required: true },
     promoCode: { type: String, required: false },
     products: [
         {
@@ -21,7 +27,7 @@ const featuredCampaignSchema = new mongoose.Schema<FeaturedCampaign>({
             required: false,
         },
     ],
-    status: { type: String, required: true, default: "active" },
+    status: { type: String, required: false, default: "active" },
     textColor: {
         primary: { type: String, default: "#000000" },
         secondary: { type: String, default: "#ffffff" },

@@ -32,7 +32,7 @@ export const createCampaign = async (
         return res
             .status(201)
             .json(
-                successResponse(req.body, "Campaign added successfully", 201)
+                successResponse(newCampaign, "Campaign added successfully", 201)
             );
     } catch (error) {
         if (error instanceof Error) {

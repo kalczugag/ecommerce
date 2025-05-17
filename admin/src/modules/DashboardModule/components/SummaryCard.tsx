@@ -89,7 +89,9 @@ const SummaryCard = ({
                 </div>
             )}
             {subLabel && (
-                <p className="text-[12px] text-gray-600">{subLabel}</p>
+                <p className="text-[12px] text-gray-600 dark:text-[#94A0B8]">
+                    {subLabel}
+                </p>
             )}
             {data.length !== 0 && selectedChart}
             {children}

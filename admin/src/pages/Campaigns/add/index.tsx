@@ -7,6 +7,15 @@ import CampaignForm from "@/forms/CampaignForm";
 import CreateForm from "@/components/CreateForm";
 import type { FeaturedCampaign } from "@/types/FeaturedCampaign";
 
+interface FormValues {
+    couponType: string;
+    couponValue: number;
+    startDate: Date;
+    endDate: Date;
+    minValue: number;
+    numOfCoupons: number;
+}
+
 const CampaignsAdd = () => {
     const navigate = useNavigate();
     const { handleMutation } = useHandleMutation();
@@ -15,11 +24,21 @@ const CampaignsAdd = () => {
 
     useTitle("Campaign - Add");
 
-    const handleSubmit = async (values: FeaturedCampaign) => {
+    const handleSubmit = async ({
+        couponType,
+        couponValue,
+        ...values
+    }: FormValues) => {
         handleMutation({
-            values,
+            values: {
+                ...values,
+                discount: couponValue,
+                discountType: couponType,
+                hidden: true,
+            },
             mutation: addCampaign,
-            onSuccess: () => navigate(-1),
+            onSuccess: (data: ApiResponseObject<FeaturedCampaign>) =>
+                navigate(`/campaigns/${data.result._id}`),
         });
     };
 
@@ -29,6 +48,7 @@ const CampaignsAdd = () => {
                 <CreateForm
                     handleSubmit={handleSubmit}
                     isLoading={isLoading}
+                    initialValues={{ couponType: "percentage" }}
                     formElements={<CampaignForm />}
                 />
             }

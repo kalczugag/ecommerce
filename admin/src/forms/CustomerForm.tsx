@@ -36,7 +36,7 @@ const CustomerForm = ({ isUpdateForm, isLoading }: CustomerFormProps) => {
     };
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-4 max-w-2xl">
             <Row>
                 <Field name="firstName" validate={required}>
                     {(props) => (

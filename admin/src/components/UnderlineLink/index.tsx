@@ -1,16 +1,17 @@
 import { ReactNode } from "react";
-import { Link, LinkProps } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Link } from "@mui/material";
 
-interface UnderlineLinkProps extends LinkProps {
+interface UnderlineLinkProps {
+    to: string;
     children: ReactNode;
 }
 
-const UnderlineLink = ({ children, ...props }: UnderlineLinkProps) => {
+const UnderlineLink = ({ children, to }: UnderlineLinkProps) => {
+    const navigate = useNavigate();
+
     return (
-        <Link
-            {...props}
-            className="text-[#197AD4] underline decoration-[#70A2D9] hover:decoration-[#197AD4] dark:text-text-dark dark:decoration-transparent dark:hover:decoration-text-dark"
-        >
+        <Link component="button" type="button" onClick={() => navigate(to)}>
             {children}
         </Link>
     );

@@ -40,6 +40,48 @@ export const handleAddPromoCode = async (
                 message: "Promo code is not active",
             };
 
+        if (
+            campaign.discountType === "quota" &&
+            campaign.minPrice > cart.subTotal
+        )
+            return {
+                success: false,
+                message: "Promo code is not active",
+            };
+
+        if (cart.subTotal < campaign.minPrice)
+            return {
+                success: false,
+                message: "Promo code is not active",
+            };
+
+        if (
+            campaign.discountType === "quota" &&
+            campaign.discount > cart.subTotal
+        )
+            return {
+                success: false,
+                message: "Promo code is not active",
+            };
+
+        if (campaign.discountType === "percentage" && campaign.discount > 100)
+            return {
+                success: false,
+                message: "Promo code is not active",
+            };
+
+        if (campaign.discountType === "quota" && campaign.discount < 0)
+            return {
+                success: false,
+                message: "Promo code is not active",
+            };
+
+        if (campaign.discountType === "percentage" && campaign.discount < 0)
+            return {
+                success: false,
+                message: "Promo code is not active",
+            };
+
         cart.promoCode = promoCode;
         cart.promoCodePercent = campaign.discount;
 

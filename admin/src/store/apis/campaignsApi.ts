@@ -60,7 +60,7 @@ export const campaignsApi = apiSlice.injectEndpoints({
             FeaturedCampaign
         >({
             query: (values) => ({
-                url: "/campaigns",
+                url: "/admin/campaigns",
                 method: "POST",
                 body: values,
             }),

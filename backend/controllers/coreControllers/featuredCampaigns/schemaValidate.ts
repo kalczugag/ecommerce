@@ -12,14 +12,16 @@ const schema = Joi.object({
     imageUrl: Joi.string().uri().optional(),
     startDate: Joi.date().iso().required(),
     endDate: Joi.date().iso().required(),
-    discount: Joi.number().min(0).max(100).required(),
+    discount: Joi.number().min(5).max(100).required(),
+    discountType: Joi.string().valid("percentage", "quota").required(),
+    minPrice: Joi.number().positive().required(),
     promoCode: Joi.string().optional(),
     image: Joi.string().uri().optional(),
     products: Joi.array().items(Joi.string()).optional(),
     textColor: colorSchema.optional(),
     bgColor: colorSchema.optional(),
     hidden: Joi.boolean().optional(),
-    numOfCoupons: Joi.number().integer().min(1).optional(),
+    numOfCoupons: Joi.number().integer().min(1).required(),
 });
 
 export default schema;

@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { Field } from "react-final-form";
 import dayjs from "dayjs";
-import { required } from "@/utils/validators";
-import Row from "@/components/Row";
+import { required, mustBeNumber, compose } from "@/utils/validators";
 import {
     FormControl,
     FormControlLabel,
@@ -12,10 +11,13 @@ import {
     Grid,
     Button,
     Link,
+    TextField,
+    InputAdornment,
 } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import Row from "@/components/Row";
 
 const quotaValues = [20, 50, 100, 200, 300, 400, 500];
 const percentageValues = [
@@ -32,7 +34,24 @@ const CampaignForm = () => {
     const [showAllOptions, setShowAllOptions] = useState(false);
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-8 max-w-2xl">
+            <Row label="Campaign name">
+                <Field name="name" validate={required}>
+                    {({ input, meta }) => (
+                        <TextField
+                            label="Name"
+                            name={input.name}
+                            value={input.value}
+                            onChange={input.onChange}
+                            error={meta.error && meta.touched}
+                            helperText={
+                                meta.error && meta.touched ? meta.error : null
+                            }
+                            fullWidth
+                        />
+                    )}
+                </Field>
+            </Row>
             <Row
                 label="Campaign duration"
                 description="Specify when the coupon can be collected and redeemed."
@@ -121,16 +140,12 @@ const CampaignForm = () => {
                 </FormControl>
                 <Field name="couponValue">
                     {({ input }) => (
-                        <Grid
-                            container
-                            spacing={1}
-                            sx={{ mt: 1, maxWidth: 600 }}
-                        >
+                        <Grid container spacing={1} sx={{ mt: 1 }}>
                             {(couponType === "percentage"
                                 ? percentageValues
                                 : quotaValues
                             )
-                                .slice(0, showAllOptions ? 5 : undefined)
+                                .slice(0, !showAllOptions ? 5 : undefined)
                                 .map((value) => (
                                     <Grid item xs={4} sm={2} key={value}>
                                         <Button
@@ -201,10 +216,75 @@ const CampaignForm = () => {
                                         },
                                     }}
                                 >
-                                    {showAllOptions ? "Show all" : "Show less"}
+                                    {!showAllOptions ? "Show all" : "Show less"}
                                 </Link>
                             </Grid>
                         </Grid>
+                    )}
+                </Field>
+            </Row>
+            <Row
+                label="Minimum order value"
+                description="You can optionally specify the total minimum value of the offers covered by the coupon needed to redeem the coupon. Remember that the buyer will also have to buy at least 2 items from this campaign."
+            >
+                <Field
+                    name="minPrice"
+                    validate={compose(required, mustBeNumber)}
+                    type="number"
+                >
+                    {(props) => (
+                        <TextField
+                            label="Minimum order value"
+                            type="number"
+                            name={props.input.name}
+                            value={props.input.value}
+                            onChange={props.input.onChange}
+                            sx={{ maxWidth: 300 }}
+                            slotProps={{
+                                input: {
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            $
+                                        </InputAdornment>
+                                    ),
+                                },
+                            }}
+                            error={props.meta.error && props.meta.touched}
+                            helperText={
+                                props.meta.error && props.meta.touched
+                                    ? props.meta.error
+                                    : "Minimum $5"
+                            }
+                            fullWidth
+                        />
+                    )}
+                </Field>
+            </Row>
+            <Row
+                label="Number of coupons"
+                description="Define the pool of coupons available to buyers."
+            >
+                <Field
+                    name="numOfCoupons"
+                    validate={compose(required, mustBeNumber)}
+                    type="number"
+                >
+                    {(props) => (
+                        <TextField
+                            label="Number of coupons"
+                            type="number"
+                            name={props.input.name}
+                            value={props.input.value}
+                            onChange={props.input.onChange}
+                            sx={{ maxWidth: 300 }}
+                            error={props.meta.error && props.meta.touched}
+                            helperText={
+                                props.meta.error && props.meta.touched
+                                    ? props.meta.error
+                                    : null
+                            }
+                            fullWidth
+                        />
                     )}
                 </Field>
             </Row>

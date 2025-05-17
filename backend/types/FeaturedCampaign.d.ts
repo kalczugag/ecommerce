@@ -12,7 +12,8 @@ export interface FeaturedCampaign {
     endDate: Date;
     image?: string;
     discount: number; // %
-    // minPrice?:number;
+    discountType: "percentage" | "quota";
+    minPrice: number;
     // maxPrice?:number;
     promoCode?: string;
     products: string[] | Product[];

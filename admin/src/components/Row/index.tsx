@@ -26,7 +26,7 @@ const Row = ({
                             {label}
                         </h2>
                         {description && (
-                            <p className="text-sm text-gray-600">
+                            <p className="text-sm text-gray-600 dark:text-[#94A0B8]">
                                 {description}
                             </p>
                         )}

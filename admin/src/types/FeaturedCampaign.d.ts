@@ -13,6 +13,7 @@ interface FeaturedCampaign {
     imageUrl?: string;
     minPrice?: number;
     maxPrice?: number;
+    discountType: "percentage" | "quota";
     discount: number;
     products: Product[];
     status: "active" | "inactive" | "scheduled" | "completed";
