@@ -15,7 +15,7 @@ import SortForm from "@/forms/SortForm";
 import { sortConfig, tableConfig } from "./tableConfig";
 
 const CampaignsList = () => {
-    useTitle("Campaigns");
+    useTitle("Campaigns - List");
     const navigate = useNavigate();
     const [pagination] = usePagination();
     const { sortCriteria, setSortCriteria } = useSortedData();

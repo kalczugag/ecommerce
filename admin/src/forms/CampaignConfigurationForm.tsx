@@ -27,15 +27,15 @@ const percentageValues = [
 const quota = (value: number) => `$${value}`;
 const percentage = (value: number) => `${value}%`;
 
-const CampaignForm = () => {
+const CampaignConfigurationForm = () => {
     const [couponType, setCouponType] = useState<"percentage" | "quota">(
         "percentage"
     );
     const [showAllOptions, setShowAllOptions] = useState(false);
 
     return (
-        <div className="space-y-8 max-w-2xl">
-            <Row label="Campaign name">
+        <>
+            {/* <Row label="Campaign name">
                 <Field name="name" validate={required}>
                     {({ input, meta }) => (
                         <TextField
@@ -51,7 +51,7 @@ const CampaignForm = () => {
                         />
                     )}
                 </Field>
-            </Row>
+            </Row> */}
             <Row
                 label="Campaign duration"
                 description="Specify when the coupon can be collected and redeemed."
@@ -288,8 +288,8 @@ const CampaignForm = () => {
                     )}
                 </Field>
             </Row>
-        </div>
+        </>
     );
 };
 
-export default CampaignForm;
+export default CampaignConfigurationForm;
