@@ -1,5 +1,6 @@
-import { useState, cloneElement, useEffect } from "react";
+import { useState, cloneElement } from "react";
 import { useSearchParams } from "react-router-dom";
+import { Form } from "react-final-form";
 import {
     Box,
     Button,
@@ -8,8 +9,9 @@ import {
     Stepper,
     Typography,
 } from "@mui/material";
-import { Form } from "react-final-form";
 import type { StepProps } from "@/types/Step";
+import AlertDialog from "../AlertDialog";
+import Review from "../Review";
 
 interface StepperFormProps {
     content: {
@@ -35,11 +37,7 @@ const StepperForm = ({
         setSearchParams({ step: newValue.toString() });
     };
 
-    useEffect(() => {
-        setActiveStep(activeStep);
-    }, [activeStep]);
-
-    const [formValues, setFormValues] = useState<any>({});
+    const [formValues, setFormValues] = useState<any>(initialValues || {});
     const [completed, setCompleted] = useState<{ [key: number]: boolean }>({});
 
     const totalSteps = () => content.length;
@@ -50,9 +48,7 @@ const StepperForm = ({
     const handleNext = () => {
         const newActiveStep =
             isLastStep() && !allStepsCompleted()
-                ? // It's the last step, but not all steps have been completed,
-                  // find the first step that has been completed
-                  content.findIndex((_, i) => !(i in completed))
+                ? content.findIndex((_, i) => !(i in completed))
                 : activeStep + 1;
         setActiveStep(newActiveStep);
     };
@@ -62,25 +58,33 @@ const StepperForm = ({
     };
 
     const handleComplete = (stepValues: any) => {
-        if (allStepsCompleted() && onSubmit) {
-            onSubmit(formValues);
+        const updatedFormValues = {
+            ...formValues,
+            ...stepValues,
+        };
+        setFormValues(updatedFormValues);
+
+        const newCompleted = {
+            ...completed,
+            [activeStep]: true,
+        };
+        setCompleted(newCompleted);
+
+        const newCompletedCount = Object.keys(newCompleted).length;
+        if (newCompletedCount === totalSteps()) {
+            if (onSubmit) {
+                onSubmit(updatedFormValues);
+            }
             return;
         }
 
-        setFormValues((prev: any) => ({
-            ...prev,
-            ...stepValues,
-        }));
-        setCompleted({
-            ...completed,
-            [activeStep]: true,
-        });
         handleNext();
     };
 
     const handleReset = () => {
         setActiveStep(0);
         setCompleted({});
+        setFormValues(initialValues || {});
     };
 
     const currentStepProps = {
@@ -102,10 +106,27 @@ const StepperForm = ({
             </Stepper>
             <Form
                 onSubmit={handleComplete}
-                initialValues={initialValues}
-                render={({ handleSubmit }) => (
+                initialValues={{ ...initialValues, ...formValues }}
+                render={({ handleSubmit, form }) => (
                     <form onSubmit={handleSubmit}>
-                        {!allStepsCompleted() && (
+                        {allStepsCompleted() ? (
+                            <>
+                                <Typography sx={{ mt: 2, mb: 1 }}>
+                                    All steps completed - you&apos;re finished
+                                </Typography>
+                                <Review values={form.getState().values} />
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        pt: 2,
+                                    }}
+                                >
+                                    <Box sx={{ flex: "1 1 auto" }} />
+                                    <Button onClick={handleReset}>Reset</Button>
+                                </Box>
+                            </>
+                        ) : (
                             <>
                                 <Box
                                     sx={{
@@ -115,13 +136,13 @@ const StepperForm = ({
                                     }}
                                     className={className}
                                 >
-                                    {/* here are rendering components from contend */}
-
-                                    {cloneElement(
-                                        content[activeStep].element(
-                                            currentStepProps
+                                    {content[activeStep] ? (
+                                        cloneElement(
+                                            content[activeStep].element(
+                                                currentStepProps
+                                            )
                                         )
-                                    ) || (
+                                    ) : (
                                         <Typography>
                                             No content available for this step.
                                         </Typography>
@@ -144,22 +165,45 @@ const StepperForm = ({
                                         Back
                                     </Button>
                                     <Box sx={{ flex: "1 1 auto" }} />
-                                    {activeStep !== content.length &&
-                                        (completed[activeStep] ? (
-                                            <Button
-                                                onClick={handleNext}
-                                                sx={{ mr: 1 }}
-                                            >
-                                                Next
-                                            </Button>
-                                        ) : (
-                                            <Button type="submit">
-                                                {completedSteps() ===
-                                                totalSteps() - 1
-                                                    ? "Submit"
-                                                    : "Next"}
-                                            </Button>
-                                        ))}
+                                    {completed[activeStep] ? (
+                                        <Button
+                                            onClick={handleNext}
+                                            sx={{ mr: 1 }}
+                                            disabled={isLastStep()}
+                                        >
+                                            Next
+                                        </Button>
+                                    ) : isLastStep() ? (
+                                        <AlertDialog
+                                            title="Are you sure?"
+                                            content={
+                                                <Review
+                                                    values={
+                                                        form.getState().values
+                                                    }
+                                                />
+                                            }
+                                            cancel="Cancel"
+                                            confirm="Submit"
+                                            onConfirm={handleSubmit}
+                                        >
+                                            {(props) => (
+                                                <Button
+                                                    variant="contained"
+                                                    onClick={props.open}
+                                                >
+                                                    Submit
+                                                </Button>
+                                            )}
+                                        </AlertDialog>
+                                    ) : (
+                                        <Button
+                                            type="submit"
+                                            variant="contained"
+                                        >
+                                            Next
+                                        </Button>
+                                    )}
                                 </Box>
                             </>
                         )}

@@ -1,5 +1,7 @@
+import CampaignPresentationForm from "@/forms/CampaignPresentationForm";
+
 const PresentationStep = () => {
-    return <div>pres</div>;
+    return <CampaignPresentationForm />;
 };
 
 export default PresentationStep;

@@ -7,6 +7,7 @@ import DefaultLayout from "@/layouts/DefaultLayout";
 import StepperForm from "@/components/StepperForm";
 import type { FeaturedCampaign } from "@/types/FeaturedCampaign";
 import type { StepProps } from "@/types/Step";
+import Box from "@/components/Box";
 
 interface FormValues {
     couponType: string;
@@ -15,6 +16,8 @@ interface FormValues {
     endDate: Date;
     minValue: number;
     numOfCoupons: number;
+    description: string;
+    name: string;
 }
 
 const CampaignAddModule = () => {
@@ -50,16 +53,25 @@ const CampaignAddModule = () => {
             onSuccess: (data: ApiResponseObject<FeaturedCampaign>) =>
                 navigate(`/campaigns/${data.result._id}`),
         });
+
+        console.log({
+            ...values,
+            discount: couponValue,
+            discountType: couponType,
+            hidden: true,
+        });
     };
 
     return (
         <DefaultLayout>
-            <StepperForm
-                initialValues={{ couponType: "percentage" }}
-                content={steps}
-                className="flex-col max-w-2xl space-y-4"
-                onSubmit={handleSubmit}
-            />
+            <Box>
+                <StepperForm
+                    initialValues={{ couponType: "percentage" }}
+                    content={steps}
+                    className="flex-col max-w-2xl space-y-4"
+                    onSubmit={handleSubmit}
+                />
+            </Box>
         </DefaultLayout>
     );
 };
