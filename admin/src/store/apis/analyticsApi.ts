@@ -1,9 +1,10 @@
 import { apiSlice } from "./apiSlice";
-import {
+import type {
     DailySummary,
     SummaryByCountry,
     DailySummaryQueryParams,
 } from "@/types/Analytics";
+import type { CampaignsGlobalSummary } from "@/types/FeaturedCampaign";
 
 export interface ResultDataProps {
     todayOrDate: DailySummary[];
@@ -55,8 +56,21 @@ export const analyticsApi = apiSlice.injectEndpoints({
                 params,
             }),
         }),
+
+        getCampaignsGlobalSummary: builder.query<
+            ApiResponseObject<CampaignsGlobalSummary>,
+            void // todo all boolean
+        >({
+            query: () => ({
+                url: "/admin/analytics/campaignsGlobalSummary",
+                method: "GET",
+            }),
+        }),
     }),
 });
 
-export const { useGetDailySummaryQuery, useGetProductDailySummaryQuery } =
-    analyticsApi;
+export const {
+    useGetDailySummaryQuery,
+    useGetProductDailySummaryQuery,
+    useGetCampaignsGlobalSummaryQuery,
+} = analyticsApi;

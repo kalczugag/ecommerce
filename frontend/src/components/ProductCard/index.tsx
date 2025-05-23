@@ -1,12 +1,12 @@
+import { HTMLAttributes, useState } from "react";
 import { Link } from "react-router-dom";
 import { Box, IconButton, Rating } from "@mui/material";
 import { Favorite, FavoriteBorder } from "@mui/icons-material";
 import { TColors, colors } from "@/constants/colors";
 import type { Product } from "@/types/Product";
-import { useState } from "react";
 import SafeHtmlRender from "../SafeHtmlRender";
 
-interface ProductCardProps {
+interface ProductCardProps extends HTMLAttributes<HTMLElement> {
     data: Product;
     isLoading: boolean;
     variant?: "default" | "highlighted";
@@ -42,6 +42,7 @@ const ProductCard = ({
     isFavorite: favoriteLocal,
     badges,
     onWishlistTrigger,
+    ...rest
 }: ProductCardProps) => {
     const {
         _id,
@@ -65,7 +66,7 @@ const ProductCard = ({
         <Box
             className={`flex flex-col ${
                 variant === "default" ? "" : "items-center justify-center"
-            } ${isLoading && "pointer-events-none"}`}
+            } ${isLoading && "pointer-events-none"} ${rest.className}`}
             style={{
                 maxWidth: `${sizes[size].width}px`,
             }}
@@ -81,48 +82,50 @@ const ProductCard = ({
                         className={`max-h-[${sizes[size].width}px]`}
                     />
                 </Link>
-                <div
-                    className="absolute top-2 right-0"
-                    onClick={(e) => e.stopPropagation()}
-                    onMouseOver={() => setIsHeartHovered(true)}
-                    onMouseLeave={() => setIsHeartHovered(false)}
-                >
-                    <IconButton
-                        disableRipple
-                        disableFocusRipple
-                        onClick={() =>
-                            onWishlistTrigger &&
-                            onWishlistTrigger(
-                                data._id || "",
-                                isFavorite ? "remove" : "add"
-                            )
-                        }
-                        sx={{
-                            backgroundColor: "white",
-                            color: "black",
-                            borderRadius: 0,
-                        }}
+                {onWishlistTrigger && (
+                    <div
+                        className="absolute top-2 right-0"
+                        onClick={(e) => e.stopPropagation()}
+                        onMouseOver={() => setIsHeartHovered(true)}
+                        onMouseLeave={() => setIsHeartHovered(false)}
                     >
-                        <Box
+                        <IconButton
+                            disableRipple
+                            disableFocusRipple
+                            onClick={() =>
+                                onWishlistTrigger &&
+                                onWishlistTrigger(
+                                    data._id || "",
+                                    isFavorite ? "remove" : "add"
+                                )
+                            }
                             sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                transition: "transform 0.2s ease",
-                                transform:
-                                    isHeartHovered || isFavorite
-                                        ? "scale(1.2)"
-                                        : "scale(1)",
+                                backgroundColor: "white",
+                                color: "black",
+                                borderRadius: 0,
                             }}
                         >
-                            {isHeartHovered || isFavorite ? (
-                                <Favorite />
-                            ) : (
-                                <FavoriteBorder />
-                            )}
-                        </Box>
-                    </IconButton>
-                </div>
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    transition: "transform 0.2s ease",
+                                    transform:
+                                        isHeartHovered || isFavorite
+                                            ? "scale(1.2)"
+                                            : "scale(1)",
+                                }}
+                            >
+                                {isHeartHovered || isFavorite ? (
+                                    <Favorite />
+                                ) : (
+                                    <FavoriteBorder />
+                                )}
+                            </Box>
+                        </IconButton>
+                    </div>
+                )}
                 {badges && (
                     <div className="absolute bottom-2 left-2 z-10 flex space-x-1">
                         {badges.map(({ title, bgColor, textColor }, index) => (

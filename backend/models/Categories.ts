@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import type { Category } from "../types/Category";
+import { required } from "joi";
 
 const categorySchema = new mongoose.Schema<Category>(
     {
@@ -20,6 +21,11 @@ const categorySchema = new mongoose.Schema<Category>(
             type: String,
             enum: ["topLevel", "secondLevel", "thirdLevel"],
             default: "topLevel",
+        },
+        hidden: {
+            type: Boolean,
+            default: false,
+            required: false,
         },
     },
     { timestamps: true }

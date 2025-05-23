@@ -6,6 +6,7 @@ export interface Category {
     description?: string;
     _parentCategory?: string | Category;
     level: "topLevel" | "secondLevel" | "thirdLevel";
+    hidden?: boolean;
 }
 
 export interface SortedCategories {

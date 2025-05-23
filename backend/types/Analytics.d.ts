@@ -38,6 +38,29 @@ interface ProductDailySummary {
     quantity: number; // Total quantity sold
 }
 
+interface CampaignsDailySummary {
+    _id?: string;
+    _campaign: string | Campaign;
+    date: Date;
+    views: number;
+    total: number;
+    active: number;
+    inactive: number;
+    scheduled: number;
+    completed: number;
+}
+
+interface CampaignsGlobalSummary {
+    _id?: string;
+    date: Date;
+    views: number;
+    total: number;
+    active: number;
+    inactive: number;
+    scheduled: number;
+    completed: number;
+}
+
 interface SummaryByCountry {
     _id?: string;
     country: string;
@@ -58,6 +81,8 @@ export {
     Event,
     DailySummary,
     ProductDailySummary,
+    CampaignsDailySummary,
+    CampaignsGlobalSummary,
     DailySummaryQueryParams,
     SummaryByCountry,
 };

@@ -1,4 +1,4 @@
-import { Button, IconButton } from "@mui/material";
+import { Button, IconButton, Stack } from "@mui/material";
 import { RemoveCircleOutline, AddCircleOutline } from "@mui/icons-material";
 import type { Item } from "@/types/Order";
 
@@ -67,7 +67,7 @@ const CartProductItem = ({
             </div>
             {editable && onQuantityChange && onDelete && (
                 <div className="flex space-x-8">
-                    <div className="flex items-center space-x-1">
+                    <Stack direction="row" spacing={1} alignItems="center">
                         <IconButton
                             onClick={() =>
                                 onQuantityChange(data._id!, itemQuantity - 1)
@@ -85,7 +85,7 @@ const CartProductItem = ({
                         >
                             <AddCircleOutline />
                         </IconButton>
-                    </div>
+                    </Stack>
                     <Button
                         variant="contained"
                         onClick={() => onDelete(data._id!)}

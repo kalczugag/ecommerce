@@ -1,28 +1,25 @@
-import { useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useRef } from "react";
 import { Form } from "react-final-form";
 import ReCAPTCHA from "react-google-recaptcha";
 import { useLoginMutation, LoginInput } from "@/store";
-import { useTitle } from "@/hooks/useTitle";
 import { useHandleMutation } from "@/hooks/useHandleMutation";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import AuthModule from "@/modules/AuthModule";
 import LoginForm from "@/forms/LoginForm";
-import { Button, Divider } from "@mui/material";
-import { Save } from "@mui/icons-material";
+import { Button, Divider, Dialog } from "@mui/material";
 
-const Login = () => {
-    useTitle("Sign In");
-    const navigate = useNavigate();
+interface LoginDialogProps {
+    open: boolean;
+    onClose: () => void;
+    handleTabChange: () => void;
+}
+
+const LoginDialog = ({ open, onClose, handleTabChange }: LoginDialogProps) => {
     const recaptchaRef = useRef<ReCAPTCHA>(null);
     const recaptchaPromiseRef = useRef<((token: string) => void) | null>(null);
     const { handleMutation } = useHandleMutation();
     const { trackEvent } = useAnalytics();
-    const [login, { isLoading, isSuccess }] = useLoginMutation();
-
-    useEffect(() => {
-        if (isSuccess) navigate("/");
-    }, [isSuccess]);
+    const [login, { isLoading }] = useLoginMutation();
 
     const handleVerify = (token: string | null) => {
         if (token !== null && recaptchaPromiseRef.current) {
@@ -43,6 +40,7 @@ const Login = () => {
                 mutation: login,
                 onSuccess: () => {
                     trackEvent("log_in");
+                    onClose();
                 },
             });
     };
@@ -70,12 +68,12 @@ const Login = () => {
                         </Button>
                         <div className="text-sm">
                             <span>Don't have an account? </span>
-                            <Link
-                                to="/register"
-                                className="font-semibold hover:underline"
+                            <span
+                                onClick={handleTabChange}
+                                className="font-semibold cursor-pointer hover:underline"
                             >
                                 Sign up
-                            </Link>
+                            </span>
                         </div>
                     </div>
 
@@ -124,7 +122,11 @@ const Login = () => {
         />
     );
 
-    return <AuthModule authContent={<FormContainer />} title={"Sign in"} />;
+    return (
+        <Dialog open={open} onClose={onClose}>
+            <AuthModule authContent={<FormContainer />} title={"Sign in"} />;
+        </Dialog>
+    );
 };
 
-export default Login;
+export default LoginDialog;

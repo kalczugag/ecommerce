@@ -7,6 +7,7 @@ import shipments from "./coreRoutes/shipments";
 import baseItems from "./coreRoutes/baseItems";
 import notes from "./coreRoutes/notes";
 import analytics from "./coreRoutes/analytics";
+import featuredCampaigns from "./coreRoutes/featuredCampaigns";
 
 const router = express.Router();
 
@@ -18,6 +19,7 @@ export default (): express.Router => {
     baseItems(router);
     notes(router);
     analytics(router);
+    featuredCampaigns(router);
 
     return router;
 };

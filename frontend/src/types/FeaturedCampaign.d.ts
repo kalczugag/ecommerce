@@ -9,6 +9,7 @@ export interface FeaturedCampaign {
     startDate: Date;
     endDate: Date;
     promoCode?: string;
+    hidden: boolean;
     image?: string;
     products: Product[];
     status: "active" | "inactive";
@@ -20,4 +21,5 @@ export interface FeaturedCampaign {
         primary: string;
         secondary: string;
     };
+    numOfCoupons: number;
 }

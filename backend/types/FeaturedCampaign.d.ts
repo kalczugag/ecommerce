@@ -1,7 +1,9 @@
 import type { Category } from "./Category";
 import type { Product } from "./Product";
+import type { ParsedQs } from "qs";
 
 export interface FeaturedCampaign {
+    _id?: string;
     name: string;
     description?: string;
     _category: string | Category;
@@ -9,9 +11,13 @@ export interface FeaturedCampaign {
     startDate: Date;
     endDate: Date;
     image?: string;
+    discount: number; // %
+    discountType: "percentage" | "quota";
+    minPrice: number;
+    // maxPrice?:number;
     promoCode?: string;
     products: string[] | Product[];
-    status: "active" | "inactive";
+    status: "active" | "inactive" | "scheduled" | "completed";
     textColor: {
         primary: string;
         secondary: string;
@@ -20,4 +26,14 @@ export interface FeaturedCampaign {
         primary: string;
         secondary: string;
     };
+    hidden?: boolean;
+    numOfCoupons: number;
+}
+
+export interface PaginatedCampaigns extends ParsedQs {
+    search?: { search: string };
+    sort?: string;
+    category?: string;
+    page: number;
+    pageSize: number;
 }

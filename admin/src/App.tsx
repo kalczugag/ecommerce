@@ -7,7 +7,7 @@ import { Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "@mui/material";
 import useTheme from "@/hooks/useTheme";
 import Dashboard from "@/pages/Dashboard";
-import ProductAdd from "@/pages/Products/add";
+import ProductsAdd from "@/pages/Products/add";
 import ProductsList from "@/pages/Products/list";
 import ProductsEdit from "@/pages/Products/edit";
 import CustomersList from "@/pages/Customers/list";
@@ -15,6 +15,9 @@ import CustomersEdit from "@/pages/Customers/edit";
 import CustomersAdd from "@/pages/Customers/add";
 import OrdersList from "@/pages/Orders/list";
 import OrdersManage from "@/pages/Orders/manage";
+import CampaignsList from "@/pages/Campaigns/list";
+import CampaignsManage from "@/pages/Campaigns/manage";
+import CampaignsAdd from "@/pages/Campaigns/add";
 import CategoriesList from "@/pages/Categories/list";
 import CategoriesEdit from "@/pages/Categories/edit";
 import CategoriesAdd from "@/pages/Categories/add";
@@ -38,7 +41,7 @@ const App = () => {
                     <Route path="/products">
                         <Route index element={<ProductsList />} />
                         <Route path=":id" element={<ProductsEdit />} />
-                        <Route path="add" element={<ProductAdd />} />
+                        <Route path="add" element={<ProductsAdd />} />
                     </Route>
                     <Route path="/customers">
                         <Route index element={<CustomersList />} />
@@ -53,6 +56,11 @@ const App = () => {
                         <Route index element={<CategoriesList />} />
                         <Route path=":id" element={<CategoriesEdit />} />
                         <Route path="add" element={<CategoriesAdd />} />
+                    </Route>
+                    <Route path="/campaigns">
+                        <Route index element={<CampaignsList />} />
+                        <Route path=":id" element={<CampaignsManage />} />
+                        <Route path="add" element={<CampaignsAdd />} />
                     </Route>
                     <Route path="overview" element={<Overview />} />
                     <Route

@@ -13,6 +13,7 @@ interface CreateFormProps {
     initialValues?: any;
     isLoading: boolean;
     formValuesDisplay?: boolean;
+    className?: string;
     handleSubmit: (values: any) => void;
 }
 
@@ -21,6 +22,7 @@ const CreateForm = ({
     formElements,
     initialValues,
     isLoading,
+    className,
     formValuesDisplay,
 }: CreateFormProps) => {
     const navigate = useNavigate();
@@ -44,7 +46,7 @@ const CreateForm = ({
                                             : ""
                                     }
                                 >
-                                    <div className="flex-1">
+                                    <div className={`flex-1 ${className}`}>
                                         {isValidElement(formElements) ? (
                                             cloneElement(
                                                 formElements as ReactElement,

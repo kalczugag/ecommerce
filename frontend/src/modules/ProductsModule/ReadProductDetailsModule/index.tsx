@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, lazy, Suspense } from "react";
 import {
     useEditUsersCartMutation,
     ProductResult,
@@ -12,6 +12,7 @@ import { useAnalytics } from "@/hooks/useAnalytics";
 import { useHandleMutation } from "@/hooks/useHandleMutation";
 import DefaultLayout from "@/layouts/DefaultLayout";
 import DetailsProductCard from "./components/DetailsProductCard";
+const FeaturedBar = lazy(() => import("./components/FeaturedBar"));
 
 export type Sizes = string;
 
@@ -108,9 +109,11 @@ const ReadProductModule = ({ config, data }: ReadProductModuleProps) => {
     };
 
     const isFavorite = wishlist.includes(data?._id ?? "");
+    const productCategory =
+        data?.topLevelCategory?.name + "," + data?.secondLevelCategory?.name;
 
     return (
-        <DefaultLayout className="items-center">
+        <DefaultLayout>
             <DetailsProductCard
                 data={data as any}
                 isLoading={isLoading}
@@ -119,6 +122,13 @@ const ReadProductModule = ({ config, data }: ReadProductModuleProps) => {
                 onAddToCart={handleAddToCart}
                 onWishlistTrigger={handleWishlist}
             />
+
+            <Suspense fallback={null}>
+                <FeaturedBar
+                    category={productCategory}
+                    productLoading={isLoading}
+                />
+            </Suspense>
         </DefaultLayout>
     );
 };

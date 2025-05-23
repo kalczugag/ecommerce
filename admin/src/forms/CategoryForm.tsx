@@ -71,7 +71,7 @@ const CategoryForm = ({
     };
 
     return (
-        <div className="flex flex-col space-y-4">
+        <div className="flex flex-col space-y-4 max-w-2xl">
             <Row>
                 <Field name="name" validate={required}>
                     {(props) => (

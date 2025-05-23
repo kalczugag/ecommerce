@@ -1,27 +1,30 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { Form } from "react-final-form";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useHandleMutation } from "@/hooks/useHandleMutation";
 import ReCAPTCHA from "react-google-recaptcha";
-import { useTitle } from "@/hooks/useTitle";
 import { useAnalytics, getIPData } from "@/hooks/useAnalytics";
 import { RegisterInput, useRegisterMutation } from "@/store";
 import AuthModule from "@/modules/AuthModule";
 import RegisterForm from "@/forms/RegisterForm";
-import { Button, Divider } from "@mui/material";
+import { Button, Dialog, Divider } from "@mui/material";
 
-const Register = () => {
-    useTitle("Sign Up");
-    const navigate = useNavigate();
+interface RegisterDialogProps {
+    open: boolean;
+    onClose: () => void;
+    handleTabChange: () => void;
+}
+
+const RegisterDialog = ({
+    open,
+    onClose,
+    handleTabChange,
+}: RegisterDialogProps) => {
     const recaptchaRef = useRef<ReCAPTCHA>(null);
     const recaptchaPromiseRef = useRef<((token: string) => void) | null>(null);
     const { handleMutation } = useHandleMutation();
     const { trackEvent } = useAnalytics();
-    const [register, { isLoading, isSuccess }] = useRegisterMutation();
-
-    useEffect(() => {
-        if (isSuccess) navigate("/");
-    }, [isSuccess]);
+    const [register, { isLoading }] = useRegisterMutation();
 
     const handleVerify = (token: string | null) => {
         if (token !== null && recaptchaPromiseRef.current) {
@@ -47,6 +50,7 @@ const Register = () => {
                         country: ipData.country_name,
                         flag: ipData.flag,
                     });
+                    onClose();
                 },
             });
     };
@@ -70,12 +74,12 @@ const Register = () => {
                         </Button>
                         <div className="text-sm">
                             <span>Already have an account? </span>
-                            <Link
-                                to="/login"
-                                className="font-semibold hover:underline"
+                            <span
+                                onClick={handleTabChange}
+                                className="font-semibold cursor-pointer hover:underline"
                             >
                                 Sign in
-                            </Link>
+                            </span>
                         </div>
                     </div>
 
@@ -124,7 +128,11 @@ const Register = () => {
         />
     );
 
-    return <AuthModule authContent={<FormContainer />} title="Sign up" />;
+    return (
+        <Dialog open={open} onClose={onClose}>
+            <AuthModule authContent={<FormContainer />} title="Sign up" />;
+        </Dialog>
+    );
 };
 
-export default Register;
+export default RegisterDialog;

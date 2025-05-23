@@ -7,7 +7,7 @@ export interface TableColumnProps<T = any> {
     render: (row: T) => ReactNode;
 }
 
-interface CrudModuleProps {
+export interface CrudModuleProps {
     config?: {
         tableConfig: TableColumnProps[];
         tableData: any[];
@@ -17,6 +17,7 @@ interface CrudModuleProps {
         isLoading: boolean;
     };
     actionForm: JSX.Element;
+    padding?: boolean;
 }
 
 const CrudModule = ({ config, actionForm }: CrudModuleProps) => {

@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toggleSidebar, toggleCollapsed } from "@/store";
 import { useAppDispatch, useAppSelector } from "@/hooks/useStore";
@@ -41,9 +41,10 @@ interface NavLinksMenuProps {
         sectionLabel: string;
         elements: NavLink[];
     }[];
+    fontSize?: "small" | "medium" | "large";
 }
 
-const NavLinksMenu = ({ links }: NavLinksMenuProps) => {
+const NavLinksMenu = ({ links, fontSize = "medium" }: NavLinksMenuProps) => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const { pathname } = useLocation();
@@ -52,7 +53,31 @@ const NavLinksMenu = ({ links }: NavLinksMenuProps) => {
         (state) => state.sidebar
     );
 
+    const prevIsMobile = useRef(isMobile);
+    const prevDesktopCollapsedState = useRef(collapsed);
+
     const [activeKeys, setActiveKeys] = useState<string[]>([]);
+
+    const fontSizeMap = {
+        small: {
+            primary: {
+                fontSize: "0.875rem",
+            },
+            section: "text-xs",
+        },
+        medium: {
+            primary: {
+                fontSize: "1rem",
+            },
+            section: "text-sm",
+        },
+        large: {
+            primary: {
+                fontSize: "1.125rem",
+            },
+            section: "text-base",
+        },
+    };
 
     const collapseAll = () => setActiveKeys([]);
 
@@ -81,6 +106,17 @@ const NavLinksMenu = ({ links }: NavLinksMenuProps) => {
         dispatch(toggleSidebar(newOpen));
     };
 
+    useEffect(() => {
+        if (isMobile && !prevIsMobile.current) {
+            prevDesktopCollapsedState.current = collapsed;
+            dispatch(toggleCollapsed(false));
+        } else if (!isMobile && prevIsMobile.current) {
+            dispatch(toggleCollapsed(prevDesktopCollapsedState.current));
+        }
+
+        prevIsMobile.current = isMobile;
+    }, [isMobile, collapsed]);
+
     const DrawerList = (
         <Box
             width={collapsed ? 70 : 250}
@@ -108,21 +144,24 @@ const NavLinksMenu = ({ links }: NavLinksMenuProps) => {
             )}
 
             <div
-                className={`flex items-center ${
-                    collapsed ? "justify-center px-2" : "px-6"
+                className={`relative flex items-center ${
+                    collapsed ? "justify-center px-2" : "pt-8 px-6"
                 } mb-10`}
                 onClick={() => {
                     toggleDrawer(false);
                     collapseAll();
                 }}
             >
-                <Adb className={collapsed ? "mx-auto" : "mr-1"} />
                 {!collapsed && (
                     <Link
                         to="/"
-                        className="font-mono font-bold text-xl tracking-[.3rem] no-underline"
+                        className="absolute left-1 -top-2 mr-2 flex items-center"
                     >
-                        LOGO
+                        <img
+                            src="/icons/logoWhite.svg"
+                            alt="logo"
+                            style={{ height: "60px", width: "120px" }}
+                        />
                     </Link>
                 )}
             </div>
@@ -141,7 +180,9 @@ const NavLinksMenu = ({ links }: NavLinksMenuProps) => {
                     <List
                         subheader={
                             !collapsed && (
-                                <h5 className="px-4 text-gray-400 text-sm font-semibold">
+                                <h5
+                                    className={`px-4 text-gray-400 text-sm font-semibold ${fontSizeMap[fontSize].section}`}
+                                >
                                     {section.sectionLabel}
                                 </h5>
                             )
@@ -192,14 +233,23 @@ const NavLinksMenu = ({ links }: NavLinksMenuProps) => {
                                                     {link.icon ? (
                                                         link.icon
                                                     ) : index % 2 === 0 ? (
-                                                        <Inbox />
+                                                        <Inbox
+                                                            fontSize={fontSize}
+                                                        />
                                                     ) : (
-                                                        <Mail />
+                                                        <Mail
+                                                            fontSize={fontSize}
+                                                        />
                                                     )}
                                                 </ListItemIcon>
                                                 {!collapsed && (
                                                     <ListItemText
                                                         primary={link.label}
+                                                        primaryTypographyProps={{
+                                                            sx: fontSizeMap[
+                                                                fontSize
+                                                            ].primary,
+                                                        }}
                                                     />
                                                 )}
                                                 {!collapsed &&
@@ -271,6 +321,12 @@ const NavLinksMenu = ({ links }: NavLinksMenuProps) => {
                                                                     primary={
                                                                         subLink.label
                                                                     }
+                                                                    primaryTypographyProps={{
+                                                                        sx: fontSizeMap[
+                                                                            fontSize
+                                                                        ]
+                                                                            .primary,
+                                                                    }}
                                                                 />
                                                             </ListItemButton>
                                                         </ListItem>

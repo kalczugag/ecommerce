@@ -18,6 +18,8 @@ const cartSchema = new mongoose.Schema<Cart>({
     ],
     subTotal: { type: Number, default: 0 },
     discount: { type: Number, default: 0 },
+    promoCodePercent: { type: Number, default: 0 },
+    promoCode: { type: String, default: null },
     deliveryCost: { type: Number, required: false, default: 0 },
     total: { type: Number, default: 0 },
 });
@@ -26,8 +28,10 @@ cartSchema.pre("save", async function (next) {
     const cart = this as Cart;
 
     cart.subTotal = 0;
-    cart.discount = 0;
+    let productDiscount = 0;
     cart.deliveryCost = 0;
+
+    // if (cart.items.length === 0) cart.promoCodePercent = 0;
 
     for (const item of cart.items as Item[]) {
         const product = await ProductModel.findById(item._product);
@@ -39,11 +43,18 @@ cartSchema.pre("save", async function (next) {
         if (product.discountPercent) {
             const discountAmount =
                 (product.price * product.discountPercent) / 100;
-            cart.discount += discountAmount * item.quantity;
+            productDiscount += discountAmount * item.quantity;
         }
 
         cart.subTotal += itemPrice;
     }
+
+    const promoDiscount =
+        cart.promoCodePercent > 0
+            ? (cart.subTotal * cart.promoCodePercent) / 100
+            : 0;
+
+    cart.discount = productDiscount + promoDiscount;
 
     cart.total = cart.subTotal - cart.discount + cart.deliveryCost;
 

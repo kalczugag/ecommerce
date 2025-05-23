@@ -42,20 +42,23 @@ const findProviderById = (
 
 const DeliveryModule = ({ data, isDeliveryLoading }: DeliveryModuleProps) => {
     const dispatch = useAppDispatch();
-    const { total, userData, shippingAddress, _deliveryMethod } =
+    const { total, subTotal, userData, shippingAddress, _deliveryMethod } =
         useAppSelector((state) => state.checkout);
     const [_, nextStep] = useStep();
     const [updateUser, { isLoading: isUpdatingUser, isSuccess }] =
         useUpdateUserMutation();
 
     const handleSubmit = async (values: DeliveryFormProps) => {
-        const selectedProvider = findProviderById(data, values._deliveryMethod);
+        const selectedProvider =
+            subTotal > 100
+                ? undefined
+                : findProviderById(data, values._deliveryMethod);
 
         if (values.shippingAddress && userData?._id) {
             dispatch(
                 updateCheckout({
                     _deliveryMethod: values._deliveryMethod,
-                    deliveryCost: selectedProvider?.price,
+                    deliveryCost: selectedProvider?.price || 0,
                     total: total + (selectedProvider?.price || 0),
                     shippingAddress: values.shippingAddress,
                     billingAddress: values.sameAsShipping

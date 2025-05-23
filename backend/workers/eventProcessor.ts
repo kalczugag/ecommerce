@@ -2,7 +2,7 @@ import Queue from "bull";
 import { DailySummaryModel } from "../models/Analytics/DailySummary";
 import { ProductDailySummaryModel } from "../models/Analytics/ProductDailySummary";
 import { SummaryByCountryModel } from "../models/Analytics/SummaryByCountry";
-import { UserModel } from "models/User";
+import { CampaignsDailySummaryModel } from "../models/Analytics/CampaignDailySummary";
 
 const eventQueue = new Queue("event_processing", process.env.REDIS_URL!);
 
@@ -55,6 +55,111 @@ eventQueue.process(async (job) => {
             if (bulkOperations.length > 0) {
                 await ProductDailySummaryModel.bulkWrite(bulkOperations);
             }
+        }
+
+        const campaignEvents = [
+            "campaign_view",
+            "campaign_click",
+            "add_discount",
+            "remove_discount",
+            "campaign_conversion",
+            "campaign_email_open",
+            "campaign_email_click",
+            "campaign_social_share",
+            "campaign_created",
+            "campaign_updated",
+            "campaign_activated",
+            "campaign_deactivated",
+            "campaign_completed",
+            "campaign_scheduled",
+        ];
+        if (campaignEvents.includes(doc.eventType) && doc.metadata?._campaign) {
+            const campaignUpdate: Record<string, any> = {
+                $setOnInsert: {
+                    date: dateOnly,
+                    _campaign: doc.metadata._campaign,
+                },
+                $inc: { views: 0 },
+            };
+
+            if (doc.eventType === "campaign_view") {
+                campaignUpdate.$inc.views = 1;
+            }
+
+            if (
+                doc.eventType === "campaign_created" ||
+                doc.eventType === "campaign_updated"
+            ) {
+                if (doc.metadata.status) {
+                    const statusField = doc.metadata.status.toLowerCase();
+                    if (
+                        [
+                            "active",
+                            "inactive",
+                            "scheduled",
+                            "completed",
+                        ].includes(statusField)
+                    ) {
+                        campaignUpdate.$inc[statusField] = 1;
+                    }
+                }
+            }
+
+            if (doc.eventType === "campaign_activated") {
+                campaignUpdate.$inc.active = 1;
+                if (doc.metadata.previousStatus) {
+                    campaignUpdate.$inc[doc.metadata.previousStatus] = -1;
+                }
+            }
+
+            if (doc.eventType === "campaign_deactivated") {
+                campaignUpdate.$inc.inactive = 1;
+                if (doc.metadata.previousStatus) {
+                    campaignUpdate.$inc[doc.metadata.previousStatus] = -1;
+                }
+            }
+
+            if (doc.eventType === "campaign_completed") {
+                campaignUpdate.$inc.completed = 1;
+                if (doc.metadata.previousStatus) {
+                    campaignUpdate.$inc[doc.metadata.previousStatus] = -1;
+                }
+            }
+
+            if (doc.eventType === "campaign_scheduled") {
+                campaignUpdate.$inc.scheduled = 1;
+                if (doc.metadata.previousStatus) {
+                    campaignUpdate.$inc[doc.metadata.previousStatus] = -1;
+                }
+            }
+
+            if (doc.eventType === "add_discount") {
+                campaignUpdate.$inc.discountUses = 1;
+
+                if (doc.metadata.discountValue) {
+                    campaignUpdate.$inc.discountValueTotal =
+                        doc.metadata.discountValue;
+                }
+            }
+
+            if (doc.eventType === "campaign_conversion") {
+                campaignUpdate.$inc.conversions = 1;
+
+                if (doc.metadata.conversionValue) {
+                    campaignUpdate.$inc.conversionValueTotal =
+                        doc.metadata.conversionValue;
+                }
+            }
+
+            if (doc.eventType === "campaign_created") {
+                campaignUpdate.$inc.total = 1;
+            }
+
+            await CampaignsDailySummaryModel.findOneAndUpdate(
+                { date: dateOnly, _campaign: doc.metadata._campaign },
+                campaignUpdate,
+                { upsert: true, new: true }
+            );
         }
 
         const dailyUpdate: Record<string, any> = {

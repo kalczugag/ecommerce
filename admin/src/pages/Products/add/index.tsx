@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useTitle } from "@/hooks/useTitle";
 import { useHandleMutation } from "@/hooks/useHandleMutation";
 
-const ProductAdd = () => {
+const ProductsAdd = () => {
     const navigate = useNavigate();
     const { handleMutation } = useHandleMutation();
     useTitle("Product - Add");
@@ -50,4 +50,4 @@ const ProductAdd = () => {
     );
 };
 
-export default ProductAdd;
+export default ProductsAdd;

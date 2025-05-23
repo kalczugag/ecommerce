@@ -1,8 +1,7 @@
-import { useGetDailySummaryQuery } from "@/store/apis/analyticsApi";
+import { useGetDailySummaryQuery, ResultDataProps } from "@/store";
 import { useTitle } from "@/hooks/useTitle";
 import DashboardModule from "@/modules/DashboardModule";
 import NotFound from "@/components/NotFound";
-import type { ResultDataProps } from "@/store/apis/analyticsApi";
 
 const placeholderData: ResultDataProps = {
     todayOrDate: [

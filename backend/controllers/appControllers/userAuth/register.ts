@@ -60,8 +60,8 @@ export const register = async (
 
         res.cookie("refreshToken", refreshToken.token, {
             httpOnly: true,
-            secure: true,
-            sameSite: "none",
+            secure: false,
+            sameSite: "lax",
             maxAge: refreshTokenMaxAge,
         });
 

@@ -1,11 +1,15 @@
 import { Button, Divider } from "@mui/material";
+import DiscountDialog from "./DiscountDialog";
 import type { Cart } from "@/types/Cart";
 
 interface CheckoutSummaryProps {
     data: Cart;
-    isLoading: boolean;
+    loadingGet: boolean;
+    loadingEdit: boolean;
     isSummary?: boolean;
     handleCheckout: () => void;
+    handleDeleteDiscount: (promoCode: string) => void;
+    handleAddDiscount: (promoCode: string) => void;
 }
 
 interface BoxProps {
@@ -28,9 +32,12 @@ const Box = ({ title, value, bold, color = "standard" }: BoxProps) => {
 
 const CheckoutSummary = ({
     data,
-    isLoading,
+    loadingGet,
+    loadingEdit,
     isSummary,
     handleCheckout,
+    handleAddDiscount,
+    handleDeleteDiscount,
 }: CheckoutSummaryProps) => {
     const itemsCount = data.items
         .map((item) => item.quantity)
@@ -74,12 +81,20 @@ const CheckoutSummary = ({
             <Button
                 variant="contained"
                 onClick={handleCheckout}
-                loading={isLoading}
+                loading={loadingGet}
                 loadingPosition="end"
                 fullWidth
             >
                 {isSummary ? "Payment" : "Checkout"}
             </Button>
+            {!isSummary && (
+                <DiscountDialog
+                    currentPromoCode={data.promoCode}
+                    handleAddDiscount={handleAddDiscount}
+                    handleDeleteDiscount={handleDeleteDiscount}
+                    isLoading={loadingEdit}
+                />
+            )}
         </div>
     );
 };
