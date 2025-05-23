@@ -54,7 +54,7 @@ const DiscountDialog = ({
                     </span>
                     <IconButton
                         size="small"
-                        onClick={() => handleDeleteDiscount}
+                        onClick={() => handleDeleteDiscount(currentPromoCode)}
                     >
                         <Close />
                     </IconButton>
