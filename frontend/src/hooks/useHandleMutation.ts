@@ -54,29 +54,53 @@ export const useHandleMutation = () => {
                 result = await mutation(values).unwrap();
             }
 
+            const isSuccess =
+                result.success !== false &&
+                (result.statusCode === undefined || result.statusCode < 400);
+
             if (!successMessage && !errorMessage) {
-                if (result.statusCode < 400) {
+                if (isSuccess) {
                     finalSuccessMessage = result.message;
                 } else {
                     finalErrorMessage = result.message || "An error occurred";
                 }
             }
 
-            if (snackbar && finalSuccessMessage)
-                enqueueSnackbar(finalSuccessMessage, {
-                    variant: "success",
-                    autoHideDuration:
-                        calculateSnackbarDuration(finalSuccessMessage),
-                });
+            if (isSuccess) {
+                if (snackbar && finalSuccessMessage)
+                    enqueueSnackbar(finalSuccessMessage, {
+                        variant: "success",
+                        autoHideDuration:
+                            calculateSnackbarDuration(finalSuccessMessage),
+                    });
 
-            if (onSuccess) onSuccess(result);
+                if (onSuccess) onSuccess(result);
+            } else {
+                if (snackbar && finalErrorMessage)
+                    enqueueSnackbar(finalErrorMessage, {
+                        variant: "error",
+                        autoHideDuration:
+                            calculateSnackbarDuration(finalErrorMessage),
+                    });
+
+                if (onError) onError(result as TError);
+
+                throw new Error(finalErrorMessage || "Operation failed");
+            }
+
+            return result;
         } catch (error) {
-            if (snackbar && finalErrorMessage)
-                enqueueSnackbar(finalErrorMessage, {
+            const errorMsg =
+                finalErrorMessage ||
+                (error as any)?.message ||
+                "An unexpected error occurred.";
+
+            if (snackbar) {
+                enqueueSnackbar(errorMsg, {
                     variant: "error",
-                    autoHideDuration:
-                        calculateSnackbarDuration(finalErrorMessage),
+                    autoHideDuration: calculateSnackbarDuration(errorMsg),
                 });
+            }
 
             if (onError) onError(error as TError);
             throw error;
