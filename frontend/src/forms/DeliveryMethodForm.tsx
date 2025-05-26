@@ -1,4 +1,6 @@
 import { Field, FormSpy } from "react-final-form";
+import { useGetDeliveryMethodsQuery } from "@/store";
+import { required } from "@/utils/validators";
 import {
     FormControl,
     FormControlLabel,
@@ -8,7 +10,6 @@ import {
 } from "@mui/material";
 import type { DeliveryMethod, Provider } from "@/types/DeliveryMethod";
 import type { ShippingAddress } from "@/types/Order";
-import { required } from "@/utils/validators";
 
 interface ListItemProps extends Provider {
     type: DeliveryMethod["type"];
@@ -35,20 +36,18 @@ const ListItem = ({ type, label, name, additionalNotes }: ListItemProps) => {
 };
 
 interface DeliveryMethodFormProps {
-    content: DeliveryMethod[];
-    orderDeliveryCost?: number;
-    isLoading: boolean;
+    totalPrice: number;
 }
 
-const DeliveryMethodForm = ({
-    content,
-    orderDeliveryCost,
-    isLoading,
-}: DeliveryMethodFormProps) => {
+const DeliveryMethodForm = ({ totalPrice }: DeliveryMethodFormProps) => {
+    const { data, isLoading } = useGetDeliveryMethodsQuery();
+
+    const orderDeliveryCost = totalPrice > 100 ? 0 : undefined;
+
     return (
         <FormControl disabled={isLoading}>
             <div className="space-y-4">
-                {content.map((method) => {
+                {data?.result.map((method) => {
                     const typeToLabel =
                         method.type === "home_delivery"
                             ? "Home Delivery"
