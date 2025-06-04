@@ -25,7 +25,7 @@ const getStepContent = (step: number) => {
         case 0:
             return <AddressForm />;
         case 1:
-            return <DeliveryMethodForm />;
+            return <DeliveryMethodForm totalPrice={0} />;
         case 2:
             return <PaymentForm />;
         case 3:
