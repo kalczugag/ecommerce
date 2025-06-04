@@ -9,6 +9,8 @@ import {
 import type { DeliveryMethod, Provider } from "@/types/DeliveryMethod";
 import type { ShippingAddress } from "@/types/Order";
 import { required } from "@/utils/validators";
+import { useGetDeliveryMethodsQuery } from "@/store";
+import Loading from "@/components/Loading";
 
 interface ListItemProps extends Provider {
     type: DeliveryMethod["type"];
@@ -35,148 +37,156 @@ const ListItem = ({ type, label, name, additionalNotes }: ListItemProps) => {
 };
 
 interface DeliveryMethodFormProps {
-    content: DeliveryMethod[];
-    orderDeliveryCost?: number;
-    isLoading: boolean;
+    totalPrice: number;
 }
 
-const DeliveryMethodForm = ({
-    content,
-    orderDeliveryCost,
-    isLoading,
-}: DeliveryMethodFormProps) => {
+const DeliveryMethodForm = ({ totalPrice }: DeliveryMethodFormProps) => {
+    const { data, isLoading } = useGetDeliveryMethodsQuery();
+
+    const isFreeDelivery = totalPrice < 100;
+
     return (
-        <FormControl disabled={isLoading}>
-            <div className="space-y-4">
-                {content.map((method) => {
-                    const typeToLabel =
-                        method.type === "home_delivery"
-                            ? "Home Delivery"
-                            : method.type === "locker_delivery"
-                            ? "Locker"
-                            : "In Store Pickup";
+        <Loading isLoading={isLoading}>
+            <FormControl disabled={isLoading}>
+                <div className="space-y-4">
+                    {data?.result.map((method) => {
+                        const typeToLabel =
+                            method.type === "home_delivery"
+                                ? "Home Delivery"
+                                : method.type === "locker_delivery"
+                                ? "Locker"
+                                : "In Store Pickup";
 
-                    return (
-                        <div key={method._id}>
-                            <h3 className="text-lg font-semibold">
-                                {typeToLabel}
-                            </h3>
-                            <RadioGroup>
-                                {method.providers.map((provider) => {
-                                    if (!provider.isAvailable) return;
+                        return (
+                            <div key={method._id}>
+                                <h3 className="text-lg font-semibold">
+                                    {typeToLabel}
+                                </h3>
+                                <RadioGroup>
+                                    {method.providers.map((provider) => {
+                                        if (!provider.isAvailable) return;
 
-                                    const titleVariant =
-                                        method.type === "home_delivery" ? (
-                                            <ListItem
-                                                type={method.type}
-                                                label="Courier"
-                                                {...provider}
-                                            />
-                                        ) : method.type ===
-                                          "locker_delivery" ? (
-                                            <ListItem
-                                                type={method.type}
-                                                label="Pickup"
-                                                {...provider}
-                                            />
-                                        ) : (
-                                            <ListItem
-                                                type={method.type}
-                                                label="Store"
-                                                {...provider}
-                                            />
-                                        );
-
-                                    return (
-                                        <div
-                                            key={provider._id}
-                                            className="flex flex-row items-center justify-between"
-                                        >
-                                            <div className="flex flex-col py-2">
-                                                <FormControlLabel
-                                                    key={provider._id}
-                                                    control={
-                                                        <Field
-                                                            name="_deliveryMethod"
-                                                            type="radio"
-                                                            value={provider._id}
-                                                            validate={required}
-                                                        >
-                                                            {({ input }) => (
-                                                                <Radio
-                                                                    sx={{
-                                                                        paddingY: 0,
-                                                                    }}
-                                                                    {...input}
-                                                                />
-                                                            )}
-                                                        </Field>
-                                                    }
-                                                    label={titleVariant}
+                                        const titleVariant =
+                                            method.type === "home_delivery" ? (
+                                                <ListItem
+                                                    type={method.type}
+                                                    label="Courier"
+                                                    {...provider}
                                                 />
-                                                <div className="pl-8">
-                                                    <p>
-                                                        {`
+                                            ) : method.type ===
+                                              "locker_delivery" ? (
+                                                <ListItem
+                                                    type={method.type}
+                                                    label="Pickup"
+                                                    {...provider}
+                                                />
+                                            ) : (
+                                                <ListItem
+                                                    type={method.type}
+                                                    label="Store"
+                                                    {...provider}
+                                                />
+                                            );
+
+                                        return (
+                                            <div
+                                                key={provider._id}
+                                                className="flex flex-row items-center justify-between"
+                                            >
+                                                <div className="flex flex-col py-2">
+                                                    <FormControlLabel
+                                                        key={provider._id}
+                                                        control={
+                                                            <Field
+                                                                name="_deliveryMethod"
+                                                                type="radio"
+                                                                value={
+                                                                    provider._id
+                                                                }
+                                                                validate={
+                                                                    required
+                                                                }
+                                                            >
+                                                                {({
+                                                                    input,
+                                                                }) => (
+                                                                    <Radio
+                                                                        sx={{
+                                                                            paddingY: 0,
+                                                                        }}
+                                                                        {...input}
+                                                                    />
+                                                                )}
+                                                            </Field>
+                                                        }
+                                                        label={titleVariant}
+                                                    />
+                                                    <div className="pl-8">
+                                                        <p>
+                                                            {`
                                                         ${
                                                             provider.estimatedDeliveryTimeMin
                                                         } - ${
-                                                            provider.estimatedDeliveryTimeMax
-                                                        } days ${
-                                                            method.type ===
-                                                            "locker_delivery"
-                                                                ? "at point"
-                                                                : method.type ===
-                                                                  "home_delivery"
-                                                                ? "at you"
-                                                                : ""
-                                                        }
+                                                                provider.estimatedDeliveryTimeMax
+                                                            } days ${
+                                                                method.type ===
+                                                                "locker_delivery"
+                                                                    ? "at point"
+                                                                    : method.type ===
+                                                                      "home_delivery"
+                                                                    ? "at you"
+                                                                    : ""
+                                                            }
                                                     `}
-                                                    </p>
-                                                    {method.type ===
-                                                        "locker_delivery" && (
-                                                        <p className="text-sm text-gray-600">
-                                                            will be delivered by{" "}
-                                                            {provider.name}
                                                         </p>
-                                                    )}
+                                                        {method.type ===
+                                                            "locker_delivery" && (
+                                                            <p className="text-sm text-gray-600">
+                                                                will be
+                                                                delivered by{" "}
+                                                                {provider.name}
+                                                            </p>
+                                                        )}
+                                                    </div>
                                                 </div>
+                                                <p className="flex flex-col">
+                                                    {totalPrice === 0 &&
+                                                    method.type === "pickup" ? (
+                                                        "Free"
+                                                    ) : !isFreeDelivery ? (
+                                                        <>
+                                                            <span className="line-through text-gray-600">
+                                                                $
+                                                                {provider.price}
+                                                            </span>
+                                                            Free
+                                                        </>
+                                                    ) : (
+                                                        `$${provider.price}`
+                                                    )}
+                                                </p>
                                             </div>
-                                            <p className="flex flex-col">
-                                                {orderDeliveryCost === 0 &&
-                                                method.type === "pickup" ? (
-                                                    "Free"
-                                                ) : orderDeliveryCost === 0 ? (
-                                                    <>
-                                                        <span className="line-through text-gray-600">
-                                                            ${provider.price}
-                                                        </span>
-                                                        Free
-                                                    </>
-                                                ) : (
-                                                    `$${provider.price}`
-                                                )}
-                                            </p>
-                                        </div>
-                                    );
-                                })}
-                            </RadioGroup>
-                        </div>
-                    );
-                })}
-            </div>
-            <FormSpy subscription={{ errors: true, touched: true }}>
-                {({ errors, touched }) => (
-                    <>
-                        {errors?._deliveryMethod &&
-                            touched?._deliveryMethod && (
-                                <FormHelperText error>
-                                    Please select a delivery method
-                                </FormHelperText>
-                            )}
-                    </>
-                )}
-            </FormSpy>
-        </FormControl>
+                                        );
+                                    })}
+                                </RadioGroup>
+                            </div>
+                        );
+                    })}
+                </div>
+                <FormSpy subscription={{ errors: true, touched: true }}>
+                    {({ errors, touched }) => (
+                        <>
+                            {errors?._deliveryMethod &&
+                                touched?._deliveryMethod && (
+                                    <FormHelperText error>
+                                        Please select a delivery method
+                                    </FormHelperText>
+                                )}
+                        </>
+                    )}
+                </FormSpy>
+            </FormControl>
+        </Loading>
     );
 };
 
