@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { Field, useField } from "react-final-form";
+import { required } from "@/utils/validators";
 import {
     AccountBalanceRounded,
     CreditCardRounded,
@@ -20,8 +21,8 @@ import {
     FormLabel,
     OutlinedInput,
     Checkbox,
+    FormHelperText,
 } from "@mui/material";
-import { Field } from "react-final-form";
 
 const Card = styled(MuiCard)<{ selected?: boolean }>(({ theme }) => ({
     border: "1px solid",
@@ -87,164 +88,113 @@ const FormGrid = styled("div")(() => ({
     flexDirection: "column",
 }));
 
+type PaymentType = "creditCard" | "bankTransfer";
+
 const PaymentForm = () => {
-    const [paymentType, setPaymentType] = useState("creditCard");
-    const [cardNumber, setCardNumber] = useState("");
-    const [cvv, setCvv] = useState("");
-    const [expirationDate, setExpirationDate] = useState("");
-
-    const handlePaymentTypeChange = (event: {
-        target: { value: React.SetStateAction<string> };
-    }) => {
-        setPaymentType(event.target.value);
-    };
-
-    const handleCardNumberChange = (event: { target: { value: string } }) => {
-        const value = event.target.value.replace(/\D/g, "");
-        const formattedValue = value.replace(/(\d{4})(?=\d)/g, "$1 ");
-        if (value.length <= 16) {
-            setCardNumber(formattedValue);
-        }
-    };
-
-    const handleCvvChange = (event: { target: { value: string } }) => {
-        const value = event.target.value.replace(/\D/g, "");
-        if (value.length <= 3) {
-            setCvv(value);
-        }
-    };
-
-    const handleExpirationDateChange = (event: {
-        target: { value: string };
-    }) => {
-        const value = event.target.value.replace(/\D/g, "");
-        const formattedValue = value.replace(/(\d{2})(?=\d{2})/, "$1/");
-        if (value.length <= 4) {
-            setExpirationDate(formattedValue);
-        }
-    };
+    const paymentType = useField<PaymentType>("paymentType", {
+        subscription: { value: true },
+    });
 
     return (
         <Stack spacing={{ xs: 3, sm: 6 }} useFlexGap>
             <FormControl component="fieldset" fullWidth>
                 <RadioGroup
+                    {...paymentType.input}
                     aria-label="Payment options"
                     name="paymentType"
-                    value={paymentType}
-                    onChange={handlePaymentTypeChange}
                     sx={{
                         display: "flex",
                         flexDirection: { xs: "column", sm: "row" },
                         gap: 2,
                     }}
                 >
-                    <Field name="paymentType" type="radio">
-                        {({ input }) => (
-                            <Card selected={paymentType === "creditCard"}>
-                                <CardActionArea
-                                    onClick={() => {
-                                        input.onChange("creditCard");
-                                        setPaymentType("creditCard");
-                                    }}
-                                    sx={{
-                                        ".MuiCardActionArea-focusHighlight": {
-                                            backgroundColor: "transparent",
+                    <Card selected={paymentType.input.value === "creditCard"}>
+                        <CardActionArea
+                            onClick={() =>
+                                paymentType.input.onChange("creditCard")
+                            }
+                            sx={{
+                                ".MuiCardActionArea-focusHighlight": {
+                                    backgroundColor: "transparent",
+                                },
+                                "&:focus-visible": {
+                                    backgroundColor: "action.hover",
+                                },
+                            }}
+                        >
+                            <CardContent
+                                sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: 1,
+                                }}
+                            >
+                                <CreditCardRounded
+                                    fontSize="small"
+                                    sx={[
+                                        (theme) => ({
+                                            color: "grey.400",
+                                            ...theme.applyStyles("dark", {
+                                                color: "grey.600",
+                                            }),
+                                        }),
+                                        paymentType.input.value ===
+                                            "creditCard" && {
+                                            color: "primary.main",
                                         },
-                                        "&:focus-visible": {
-                                            backgroundColor: "action.hover",
+                                    ]}
+                                />
+                                <Typography sx={{ fontWeight: "medium" }}>
+                                    Card
+                                </Typography>
+                            </CardContent>
+                        </CardActionArea>
+                    </Card>
+                    <Card selected={paymentType.input.value === "bankTransfer"}>
+                        <CardActionArea
+                            onClick={() =>
+                                paymentType.input.onChange("bankTransfer")
+                            }
+                            sx={{
+                                ".MuiCardActionArea-focusHighlight": {
+                                    backgroundColor: "transparent",
+                                },
+                                "&:focus-visible": {
+                                    backgroundColor: "action.hover",
+                                },
+                            }}
+                        >
+                            <CardContent
+                                sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: 1,
+                                }}
+                            >
+                                <AccountBalanceRounded
+                                    fontSize="small"
+                                    sx={[
+                                        (theme) => ({
+                                            color: "grey.400",
+                                            ...theme.applyStyles("dark", {
+                                                color: "grey.600",
+                                            }),
+                                        }),
+                                        paymentType.input.value ===
+                                            "bankTransfer" && {
+                                            color: "primary.main",
                                         },
-                                    }}
-                                >
-                                    <CardContent
-                                        sx={{
-                                            display: "flex",
-                                            alignItems: "center",
-                                            gap: 1,
-                                        }}
-                                    >
-                                        <CreditCardRounded
-                                            fontSize="small"
-                                            sx={[
-                                                (theme) => ({
-                                                    color: "grey.400",
-                                                    ...theme.applyStyles(
-                                                        "dark",
-                                                        {
-                                                            color: "grey.600",
-                                                        }
-                                                    ),
-                                                }),
-                                                paymentType ===
-                                                    "creditCard" && {
-                                                    color: "primary.main",
-                                                },
-                                            ]}
-                                        />
-                                        <Typography
-                                            sx={{ fontWeight: "medium" }}
-                                        >
-                                            Card
-                                        </Typography>
-                                    </CardContent>
-                                </CardActionArea>
-                            </Card>
-                        )}
-                    </Field>
-                    <Field name="paymentType" type="radio">
-                        {({ input }) => (
-                            <Card selected={paymentType === "bankTransfer"}>
-                                <CardActionArea
-                                    onClick={() => {
-                                        input.onChange("bankTransfer");
-                                        setPaymentType("bankTransfer");
-                                    }}
-                                    sx={{
-                                        ".MuiCardActionArea-focusHighlight": {
-                                            backgroundColor: "transparent",
-                                        },
-                                        "&:focus-visible": {
-                                            backgroundColor: "action.hover",
-                                        },
-                                    }}
-                                >
-                                    <CardContent
-                                        sx={{
-                                            display: "flex",
-                                            alignItems: "center",
-                                            gap: 1,
-                                        }}
-                                    >
-                                        <AccountBalanceRounded
-                                            fontSize="small"
-                                            sx={[
-                                                (theme) => ({
-                                                    color: "grey.400",
-                                                    ...theme.applyStyles(
-                                                        "dark",
-                                                        {
-                                                            color: "grey.600",
-                                                        }
-                                                    ),
-                                                }),
-                                                paymentType ===
-                                                    "bankTransfer" && {
-                                                    color: "primary.main",
-                                                },
-                                            ]}
-                                        />
-                                        <Typography
-                                            sx={{ fontWeight: "medium" }}
-                                        >
-                                            Bank account
-                                        </Typography>
-                                    </CardContent>
-                                </CardActionArea>
-                            </Card>
-                        )}
-                    </Field>
+                                    ]}
+                                />
+                                <Typography sx={{ fontWeight: "medium" }}>
+                                    Bank account
+                                </Typography>
+                            </CardContent>
+                        </CardActionArea>
+                    </Card>
                 </RadioGroup>
             </FormControl>
-            {paymentType === "creditCard" && (
+            {paymentType.input.value === "creditCard" && (
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                     <PaymentContainer>
                         <Box
@@ -275,71 +225,167 @@ const PaymentForm = () => {
                                 gap: 2,
                             }}
                         >
-                            <FormGrid sx={{ flexGrow: 1 }}>
-                                <FormLabel htmlFor="card-number" required>
-                                    Card number
-                                </FormLabel>
-                                <OutlinedInput
-                                    id="card-number"
-                                    autoComplete="card-number"
-                                    placeholder="0000 0000 0000 0000"
-                                    required
-                                    size="small"
-                                    value={cardNumber}
-                                    onChange={handleCardNumberChange}
-                                />
-                            </FormGrid>
-                            <FormGrid sx={{ maxWidth: "20%" }}>
-                                <FormLabel htmlFor="cvv" required>
-                                    CVV
-                                </FormLabel>
-                                <OutlinedInput
-                                    id="cvv"
-                                    autoComplete="CVV"
-                                    placeholder="123"
-                                    required
-                                    size="small"
-                                    value={cvv}
-                                    onChange={handleCvvChange}
-                                />
-                            </FormGrid>
+                            <Field name="cardNumber" validate={required}>
+                                {({ input, meta }) => (
+                                    <FormGrid sx={{ flexGrow: 1 }}>
+                                        <FormLabel
+                                            htmlFor="card-number"
+                                            required
+                                        >
+                                            Card number
+                                        </FormLabel>
+                                        <OutlinedInput
+                                            {...input}
+                                            onChange={(e) => {
+                                                const value =
+                                                    e.target.value.replace(
+                                                        /\D/g,
+                                                        ""
+                                                    );
+                                                const formattedValue =
+                                                    value.replace(
+                                                        /(\d{4})(?=\d)/g,
+                                                        "$1 "
+                                                    );
+                                                if (value.length <= 16) {
+                                                    return input.onChange(
+                                                        formattedValue
+                                                    );
+                                                }
+                                            }}
+                                            id="card-number"
+                                            autoComplete="card-number"
+                                            placeholder="0000 0000 0000 0000"
+                                            required
+                                            size="small"
+                                            error={meta.error && meta.touched}
+                                        />
+                                        {meta.error && meta.touched && (
+                                            <FormHelperText error>
+                                                {meta.error}
+                                            </FormHelperText>
+                                        )}
+                                    </FormGrid>
+                                )}
+                            </Field>
+                            <Field name="cvv" validate={required}>
+                                {({ input, meta }) => (
+                                    <FormGrid sx={{ maxWidth: "20%" }}>
+                                        <FormLabel htmlFor="cvv" required>
+                                            CVV
+                                        </FormLabel>
+                                        <OutlinedInput
+                                            {...input}
+                                            onChange={(e) => {
+                                                const value =
+                                                    e.target.value.replace(
+                                                        /\D/g,
+                                                        ""
+                                                    );
+                                                if (value.length <= 3) {
+                                                    return input.onChange(
+                                                        value
+                                                    );
+                                                }
+                                            }}
+                                            id="cvv"
+                                            autoComplete="CVV"
+                                            placeholder="123"
+                                            required
+                                            size="small"
+                                            error={meta.error && meta.touched}
+                                        />
+                                        {meta.error && meta.touched && (
+                                            <FormHelperText error>
+                                                {meta.error}
+                                            </FormHelperText>
+                                        )}
+                                    </FormGrid>
+                                )}
+                            </Field>
                         </Box>
                         <Box sx={{ display: "flex", gap: 2 }}>
-                            <FormGrid sx={{ flexGrow: 1 }}>
-                                <FormLabel htmlFor="card-name" required>
-                                    Name
-                                </FormLabel>
-                                <OutlinedInput
-                                    id="card-name"
-                                    autoComplete="card-name"
-                                    placeholder="John Smith"
-                                    required
-                                    size="small"
-                                />
-                            </FormGrid>
-                            <FormGrid sx={{ flexGrow: 1 }}>
-                                <FormLabel htmlFor="card-expiration" required>
-                                    Expiration date
-                                </FormLabel>
-                                <OutlinedInput
-                                    id="card-expiration"
-                                    autoComplete="card-expiration"
-                                    placeholder="MM/YY"
-                                    required
-                                    size="small"
-                                    value={expirationDate}
-                                    onChange={handleExpirationDateChange}
-                                />
-                            </FormGrid>
+                            <Field name="cardHolder" validate={required}>
+                                {({ input, meta }) => (
+                                    <FormGrid sx={{ flexGrow: 1 }}>
+                                        <FormLabel htmlFor="card-name" required>
+                                            Name
+                                        </FormLabel>
+                                        <OutlinedInput
+                                            {...input}
+                                            id="card-name"
+                                            autoComplete="card-name"
+                                            placeholder="John Smith"
+                                            required
+                                            size="small"
+                                            error={meta.error && meta.touched}
+                                        />
+                                        {meta.error && meta.touched && (
+                                            <FormHelperText error>
+                                                {meta.error}
+                                            </FormHelperText>
+                                        )}
+                                    </FormGrid>
+                                )}
+                            </Field>
+                            <Field name="expDate" validate={required}>
+                                {({ input, meta }) => (
+                                    <FormGrid sx={{ flexGrow: 1 }}>
+                                        <FormLabel
+                                            htmlFor="card-expiration"
+                                            required
+                                        >
+                                            Expiration date
+                                        </FormLabel>
+                                        <OutlinedInput
+                                            {...input}
+                                            id="card-expiration"
+                                            autoComplete="card-expiration"
+                                            placeholder="MM/YY"
+                                            required
+                                            size="small"
+                                            onChange={(e) => {
+                                                const value =
+                                                    e.target.value.replace(
+                                                        /\D/g,
+                                                        ""
+                                                    );
+                                                const formattedValue =
+                                                    value.replace(
+                                                        /(\d{2})(?=\d{2})/,
+                                                        "$1/"
+                                                    );
+                                                if (value.length <= 4) {
+                                                    return input.onChange(
+                                                        formattedValue
+                                                    );
+                                                }
+                                            }}
+                                            error={meta.error && meta.touched}
+                                        />
+                                        {meta.error && meta.touched && (
+                                            <FormHelperText error>
+                                                {meta.error}
+                                            </FormHelperText>
+                                        )}
+                                    </FormGrid>
+                                )}
+                            </Field>
                         </Box>
                     </PaymentContainer>
-                    <FormControlLabel
-                        control={<Checkbox name="saveCard" />}
-                        label="Remember credit card details for next time"
-                    />
+                    <Field name="saveCard" type="checkbox">
+                        {({ input, meta }) => (
+                            <FormControlLabel
+                                control={
+                                    <Checkbox {...input} name="saveCard" />
+                                }
+                                label="Remember credit card details for next time"
+                            />
+                        )}
+                    </Field>
                 </Box>
             )}
-            {paymentType === "bankTransfer" && (
+            {paymentType.input.value === "bankTransfer" && (
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
                     <Alert severity="warning" icon={<WarningRounded />}>
                         Your order will be processed once we receive the funds.

@@ -2,14 +2,8 @@ import { useState } from "react";
 import { Close, ExpandMoreRounded } from "@mui/icons-material";
 import { Box, Button, Drawer, IconButton } from "@mui/material";
 import Info from "./Info";
-import type { Item } from "@/types/Order";
 
-interface InfoMobileProps {
-    totalPrice: string;
-    products: Item[];
-}
-
-const InfoMobile = ({ totalPrice, products }: InfoMobileProps) => {
+const InfoMobile = () => {
     const [open, setOpen] = useState(false);
 
     const toggleDrawer = (newOpen: boolean) => {
@@ -24,7 +18,7 @@ const InfoMobile = ({ totalPrice, products }: InfoMobileProps) => {
             >
                 <Close />
             </IconButton>
-            <Info totalPrice={totalPrice} products={products} />
+            <Info />
         </Box>
     );
 

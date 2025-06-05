@@ -5,6 +5,13 @@ import type { User } from "@/types/User";
 interface CheckoutState {
     products: Item[];
     userData?: User;
+    paymentInfo?: {
+        paymentType: string;
+        cardHolder: string;
+        last4: string;
+        expDate: string;
+        brand: string;
+    };
     subTotal: number;
     discount?: number;
     deliveryCost?: number;
@@ -15,11 +22,12 @@ interface CheckoutState {
     initialized: boolean;
 }
 
-interface ActionPayload extends Omit<CheckoutState, "initialized"> {}
+interface CheckoutActionPayload extends Omit<CheckoutState, "initialized"> {}
 
 const initialState: CheckoutState = {
     products: [],
     userData: undefined,
+    paymentInfo: undefined,
     subTotal: 0,
     discount: 0,
     deliveryCost: 0,
@@ -32,7 +40,10 @@ const checkoutSlice = createSlice({
     name: "checkout",
     initialState,
     reducers: {
-        initializeCheckout: (state, action: PayloadAction<ActionPayload>) => ({
+        initializeCheckout: (
+            state,
+            action: PayloadAction<CheckoutActionPayload>
+        ) => ({
             ...state,
             ...action.payload,
             initialized: true,
@@ -40,7 +51,7 @@ const checkoutSlice = createSlice({
 
         updateCheckout: (
             state,
-            action: PayloadAction<Partial<ActionPayload>>
+            action: PayloadAction<Partial<CheckoutActionPayload>>
         ) => ({ ...state, ...action.payload }),
 
         setUser: (state, action: PayloadAction<User>) => ({
@@ -56,4 +67,4 @@ export const { initializeCheckout, updateCheckout, setUser, resetCheckout } =
     checkoutSlice.actions;
 
 export default checkoutSlice.reducer;
-export type { CheckoutState };
+export type { CheckoutState, CheckoutActionPayload };

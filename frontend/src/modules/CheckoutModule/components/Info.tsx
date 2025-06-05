@@ -1,19 +1,32 @@
-import { List, ListItem, ListItemText, Typography } from "@mui/material";
-import type { Item } from "@/types/Order";
+import { useGetDeliveryMethodsQuery } from "@/store";
+import { useAppSelector } from "@/hooks/useStore";
+import {
+    Divider,
+    List,
+    ListItem,
+    ListItemText,
+    Typography,
+} from "@mui/material";
+import { findProviderById } from "@/utils/helpers";
 
-interface InfoProps {
-    totalPrice: string;
-    products: Item[];
-}
+const Info = () => {
+    const { products, total, _deliveryMethod } = useAppSelector(
+        (state) => state.checkout
+    );
+    const { data, isSuccess } = useGetDeliveryMethodsQuery();
 
-const Info = ({ totalPrice, products }: InfoProps) => {
+    const deliveryProvider =
+        isSuccess && data
+            ? findProviderById(data.result, _deliveryMethod)
+            : null;
+
     return (
         <>
             <Typography variant="subtitle2" sx={{ color: "text.secondary" }}>
                 Total
             </Typography>
             <Typography variant="h4" gutterBottom>
-                {totalPrice}
+                ${total.toFixed(2)}
             </Typography>
             <List disablePadding>
                 {products.map((product) => (
@@ -33,6 +46,28 @@ const Info = ({ totalPrice, products }: InfoProps) => {
                         </Typography>
                     </ListItem>
                 ))}
+                {deliveryProvider && (
+                    <>
+                        <Divider />
+                        <ListItem sx={{ py: 1, px: 0 }}>
+                            <ListItemText
+                                sx={{ mr: 2 }}
+                                primary="Delivery method"
+                                secondary={deliveryProvider.name}
+                            />
+                            <Typography
+                                variant="body1"
+                                sx={{
+                                    fontWeight: "medium",
+                                }}
+                            >
+                                {total > 100
+                                    ? "Free"
+                                    : `$${deliveryProvider.price.toFixed(2)}`}
+                            </Typography>
+                        </ListItem>
+                    </>
+                )}
             </List>
         </>
     );

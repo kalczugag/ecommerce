@@ -14,11 +14,15 @@ import {
     Typography,
 } from "@mui/material";
 import Info from "./components/Info";
-import type { Cart } from "@/types/Cart";
 import InfoMobile from "./components/InfoMobile";
+import Review from "./components/Review";
 import AddressForm from "@/forms/AddressForm";
 import PaymentForm from "@/forms/PaymentForm";
 import DeliveryMethodForm from "@/forms/DeliveryMethodForm";
+import type { Cart } from "@/types/Cart";
+import type { User } from "@/types/User";
+import type { CheckoutActionPayload } from "@/store";
+import { useAppSelector } from "@/hooks/useStore";
 
 const getStepContent = (step: number, totalPrice?: number) => {
     switch (step) {
@@ -29,7 +33,7 @@ const getStepContent = (step: number, totalPrice?: number) => {
         case 2:
             return <PaymentForm />;
         case 3:
-            return <div>Review your order</div>;
+            return <Review />;
         default:
             return "Unknown step";
     }
@@ -37,14 +41,45 @@ const getStepContent = (step: number, totalPrice?: number) => {
 
 interface CheckoutModuleProps {
     data: Cart;
+    userData?: User;
     steps: string[];
+    handleUpdateCheckout: (data: Partial<CheckoutActionPayload>) => {
+        payload: Partial<CheckoutActionPayload>;
+        type: "checkout/updateCheckout";
+    };
 }
 
-const CheckoutModule = ({ data, steps }: CheckoutModuleProps) => {
+const CheckoutModule = ({
+    data,
+    userData,
+    steps,
+    handleUpdateCheckout,
+}: CheckoutModuleProps) => {
     const [activeStep, setActiveStep] = useState(0);
+    const { paymentInfo } = useAppSelector((state) => state.checkout);
 
     const handleNext = (values: any) => {
         setActiveStep(activeStep + 1);
+
+        if (activeStep === 1)
+            handleUpdateCheckout({
+                _deliveryMethod: values._deliveryMethod,
+            });
+
+        if (activeStep === 2)
+            handleUpdateCheckout(
+                values.paymentType === "creditCard"
+                    ? {
+                          paymentInfo: {
+                              paymentType: values.paymentType,
+                              cardHolder: values.cardHolder,
+                              last4: values.cardNumber.slice(-4),
+                              expDate: values.expDate,
+                              brand: "Visa",
+                          },
+                      }
+                    : { paymentInfo: undefined }
+            );
 
         if (activeStep === steps.length - 1) {
             console.log("last step! \n");
@@ -90,10 +125,7 @@ const CheckoutModule = ({ data, steps }: CheckoutModuleProps) => {
                         maxWidth: 500,
                     }}
                 >
-                    <Info
-                        products={data.items}
-                        totalPrice={`$${data.total.toFixed(2)}`}
-                    />
+                    <Info />
                 </Box>
             </Grid>
             <Grid
@@ -169,10 +201,7 @@ const CheckoutModule = ({ data, steps }: CheckoutModuleProps) => {
                                 ${data.total.toFixed(2)}
                             </Typography>
                         </div>
-                        <InfoMobile
-                            products={data.items}
-                            totalPrice={`$${data.total.toFixed(2)}`}
-                        />
+                        <InfoMobile />
                     </CardContent>
                 </Card>
                 <Box
@@ -242,6 +271,17 @@ const CheckoutModule = ({ data, steps }: CheckoutModuleProps) => {
                     ) : (
                         <Form
                             onSubmit={handleNext}
+                            initialValues={{
+                                firstName: userData?.firstName,
+                                lastName: userData?.lastName,
+                                address1: userData?.address?.street,
+                                city: userData?.address?.city,
+                                state: userData?.address?.state,
+                                postalCode: userData?.address?.postalCode,
+                                country: userData?.address?.country,
+                                paymentType:
+                                    paymentInfo?.paymentType || "creditCard",
+                            }}
                             render={({ handleSubmit }) => {
                                 const handleNextClick = async () => {
                                     const result = await handleSubmit();
@@ -333,13 +373,13 @@ const CheckoutModule = ({ data, steps }: CheckoutModuleProps) => {
                                                     : "Next"}
                                             </Button>
                                         </Box>
-                                        <FormSpy
+                                        {/* <FormSpy
                                             subscription={{ values: true }}
                                         >
                                             {({ values }) => {
                                                 return <></>;
                                             }}
-                                        </FormSpy>
+                                        </FormSpy> */}
                                     </form>
                                 );
                             }}

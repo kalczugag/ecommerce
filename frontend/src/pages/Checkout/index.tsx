@@ -1,4 +1,5 @@
 import useCart from "@/hooks/useCart";
+import useCheckout from "@/hooks/useCheckout";
 import { useTitle } from "@/hooks/useTitle";
 import DefaultLayout from "@/layouts/DefaultLayout";
 import CheckoutModule from "@/modules/CheckoutModule";
@@ -14,11 +15,17 @@ const Checkout = () => {
     useTitle("Checkout");
 
     const { data } = useCart();
+    const { userData, handleUpdateCheckout } = useCheckout(data?.result);
 
     return (
         <DefaultLayout>
             {data?.result && (
-                <CheckoutModule data={data.result} steps={steps} />
+                <CheckoutModule
+                    data={data.result}
+                    userData={userData}
+                    steps={steps}
+                    handleUpdateCheckout={handleUpdateCheckout}
+                />
             )}
         </DefaultLayout>
     );
