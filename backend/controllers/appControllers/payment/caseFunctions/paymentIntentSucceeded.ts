@@ -1,8 +1,15 @@
+import Stripe from "stripe";
 import { OrderModel } from "../../../../models/Order";
 import { CartModel } from "../../../../models/Cart";
 import { PaymentModel } from "../../../../models/Order/Payment";
+import { EventModel } from "../../../../models/Analytics/Event";
+import { ProductModel } from "../../../../models/Product";
+import { sendEmail } from "../../../../config/nodemailer";
+import { orderConfirmation } from "../../../../emailTemplates/orderConfirmation";
 
-import Stripe from "stripe";
+import type { Item } from "../../../../types/Order";
+import type { Product } from "../../../../types/Product";
+
 const stripe = new Stripe(process.env.STRIPE_SECRET!);
 
 export const handlePaymentIntentSucceeded = async (
@@ -10,74 +17,145 @@ export const handlePaymentIntentSucceeded = async (
 ) => {
     const fullPaymentIntent = await stripe.paymentIntents.retrieve(
         paymentIntent.id,
-        { expand: ["payment_method"] }
+        {
+            expand: [
+                "payment_method",
+                "charges.data.billing_details",
+                "charges",
+            ],
+        }
     );
 
-    const { userId, orderId } = fullPaymentIntent.metadata;
+    const charges = (fullPaymentIntent as any).charges;
+
+    const {
+        userId,
+        orderId,
+        referrer = "unknown",
+    } = fullPaymentIntent.metadata || {};
+    const email =
+        fullPaymentIntent.receipt_email ||
+        charges?.data?.[0]?.billing_details?.email;
 
     if (!userId || !orderId) {
-        throw new Error("Missing userId or orderId");
+        throw new Error("Missing userId or orderId in metadata");
     }
 
-    const paymentMethod =
-        fullPaymentIntent.payment_method as Stripe.PaymentMethod;
-
-    const cardDetails = paymentMethod.card
-        ? {
-              brand: paymentMethod.card.brand,
-              last4: paymentMethod.card.last4,
-              exp_month: paymentMethod.card.exp_month,
-              exp_year: paymentMethod.card.exp_year,
-              funding: paymentMethod.card.funding,
-              country: paymentMethod.card.country,
-              checks: paymentMethod.card.checks
-                  ? {
-                        cvc_check: paymentMethod.card.checks.cvc_check,
-                        address_line1_check:
-                            paymentMethod.card.checks.address_line1_check,
-                        address_postal_code_check:
-                            paymentMethod.card.checks.address_postal_code_check,
-                    }
-                  : null,
-          }
-        : null;
-
     try {
+        const paymentMethod =
+            fullPaymentIntent.payment_method as Stripe.PaymentMethod;
+        const cardDetails = paymentMethod.card
+            ? {
+                  brand: paymentMethod.card.brand,
+                  last4: paymentMethod.card.last4,
+                  exp_month: paymentMethod.card.exp_month,
+                  exp_year: paymentMethod.card.exp_year,
+                  funding: paymentMethod.card.funding,
+                  country: paymentMethod.card.country,
+                  checks: paymentMethod.card.checks || null,
+              }
+            : null;
+
         const payment = await PaymentModel.create({
             _order: orderId,
             _user: userId,
             paymentMethod: paymentMethod.type,
-            paymentStatus:
-                fullPaymentIntent.status === "succeeded"
-                    ? "completed"
-                    : "failed",
-            amount: parseFloat((fullPaymentIntent.amount / 100).toFixed(2)),
+            paymentStatus: "completed",
+            amount: fullPaymentIntent.amount / 100,
             transactionId: fullPaymentIntent.id,
             paymentDate: new Date(),
             authorizationStatus: "closed",
-            allowAdditionalCapture:
-                fullPaymentIntent.status === "succeeded" ? true : false,
+            allowAdditionalCapture: true,
             authorized: true,
-            capturedAmount: parseFloat(
-                (fullPaymentIntent.amount / 100).toFixed(2)
-            ),
+            capturedAmount: fullPaymentIntent.amount / 100,
             card: cardDetails,
         });
 
-        if (!payment) throw new Error("Error creating payment");
+        const order = await OrderModel.findByIdAndUpdate(
+            orderId,
+            { status: "confirmed", payments: [payment._id] },
+            { new: true }
+        )
+            .populate([
+                {
+                    path: "_user",
+                    select: "firstName lastName phone address email",
+                },
+                { path: "shipments" },
+                {
+                    path: "items",
+                    populate: {
+                        path: "_product",
+                        model: "Product",
+                    },
+                },
+            ])
+            .exec();
 
-        await OrderModel.findByIdAndUpdate(orderId, {
-            status: "placed",
-            payments: [payment._id],
+        if (!order) {
+            throw new Error("Order not found");
+        }
+
+        const newEvent = new EventModel({
+            eventType: "order",
+            _user: userId,
+            _session: paymentIntent.id,
+            metadata: {
+                paymentStatus: fullPaymentIntent.status,
+                amountTotal: fullPaymentIntent.amount / 100,
+                currency: fullPaymentIntent.currency,
+                referrer,
+                products: (order.items as Item[]).map((item) => ({
+                    _product: (item._product as Product)._id,
+                    quantity: item.quantity,
+                })),
+            },
+            timestamp: new Date(),
         });
+
+        await newEvent.save();
+
+        const bulkUpdates = (order.items as Item[]).map((item) => {
+            const productId = (item._product as Product)._id;
+            const purchasedQuantity = item.quantity;
+            const purchasedSize = item.size;
+
+            return {
+                updateOne: {
+                    filter: { _id: productId, "size.name": purchasedSize },
+                    update: {
+                        $inc: {
+                            quantity: -purchasedQuantity,
+                            "size.$.quantity": -purchasedQuantity,
+                        },
+                    },
+                },
+            };
+        });
+
+        await ProductModel.bulkWrite(bulkUpdates);
 
         await CartModel.findOneAndUpdate(
             { _user: userId },
             {
-                $set: { items: [] },
+                $set: {
+                    items: [],
+                    subTotal: 0,
+                    discount: 0,
+                    deliveryCost: 0,
+                    total: 0,
+                },
             }
         );
+
+        if (email) {
+            await sendEmail({
+                to: email,
+                subject: "Order Confirmation",
+                html: orderConfirmation(order),
+            });
+        }
     } catch (error) {
-        console.error("Error updating order:", error);
+        console.error("Error in handlePaymentIntentSucceeded:", error);
     }
 };

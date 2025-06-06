@@ -20,6 +20,7 @@ interface CheckoutState {
     shippingAddress?: ShippingAddress;
     billingAddress?: ShippingAddress;
     initialized: boolean;
+    stripeClientSecret?: string;
 }
 
 interface CheckoutActionPayload extends Omit<CheckoutState, "initialized"> {}
@@ -34,6 +35,7 @@ const initialState: CheckoutState = {
     total: 0,
     initialized: false,
     _deliveryMethod: undefined,
+    stripeClientSecret: undefined,
 };
 
 const checkoutSlice = createSlice({
@@ -60,11 +62,21 @@ const checkoutSlice = createSlice({
         }),
 
         resetCheckout: () => initialState,
+
+        setStripeClientSecret: (state, action: PayloadAction<string>) => ({
+            ...state,
+            stripeClientSecret: action.payload,
+        }),
     },
 });
 
-export const { initializeCheckout, updateCheckout, setUser, resetCheckout } =
-    checkoutSlice.actions;
+export const {
+    initializeCheckout,
+    updateCheckout,
+    setUser,
+    resetCheckout,
+    setStripeClientSecret,
+} = checkoutSlice.actions;
 
 export default checkoutSlice.reducer;
 export type { CheckoutState, CheckoutActionPayload };

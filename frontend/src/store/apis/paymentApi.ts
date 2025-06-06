@@ -3,7 +3,7 @@ import { apiSlice } from "./apiSlice";
 export const paymentApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         createPayment: builder.mutation<
-            ApiResponseObject<string>,
+            ApiResponseObject<{ clientSecret: string }>,
             { orderId: string }
         >({
             query: (values) => ({

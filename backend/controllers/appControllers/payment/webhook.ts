@@ -37,15 +37,15 @@ export const stripeWebhook = async (
                 break;
             }
 
-            case "checkout.session.completed": {
-                handleCheckoutSessionCompleted(event.data.object);
-                break;
-            }
+            // case "checkout.session.completed": {
+            //     handleCheckoutSessionCompleted(event.data.object);
+            //     break;
+            // }
 
-            case "checkout.session.expired": {
-                handleCheckoutSessionExpired(event.data.object);
-                break;
-            }
+            // case "checkout.session.expired": {
+            //     handleCheckoutSessionExpired(event.data.object);
+            //     break;
+            // }
 
             case "payment_intent.succeeded": {
                 handlePaymentIntentSucceeded(event.data.object);

@@ -1,11 +1,20 @@
-import { useState } from "react";
-import { Form, FormSpy } from "react-final-form";
+import { RefObject, useRef, useState } from "react";
+import { Form } from "react-final-form";
+import { useAppDispatch, useAppSelector } from "@/hooks/useStore";
+import {
+    useElements,
+    useStripe,
+    PaymentElement,
+    Elements,
+} from "@stripe/react-stripe-js";
+import { enqueueSnackbar } from "notistack";
 import { ChevronLeftRounded, ChevronRightRounded } from "@mui/icons-material";
 import {
     Box,
     Button,
     Card,
     CardContent,
+    CircularProgress,
     Grid,
     Stack,
     Step,
@@ -16,22 +25,51 @@ import {
 import Info from "./components/Info";
 import InfoMobile from "./components/InfoMobile";
 import Review from "./components/Review";
+import PaymentStep, { PaymentStepProps } from "./components/PaymentStep";
 import AddressForm from "@/forms/AddressForm";
-import PaymentForm from "@/forms/PaymentForm";
+// import PaymentForm from "@/forms/PaymentForm";
 import DeliveryMethodForm from "@/forms/DeliveryMethodForm";
+import {
+    useAddOrderMutation,
+    useCreatePaymentMutation,
+    setStripeClientSecret,
+    type CheckoutActionPayload,
+} from "@/store";
+import type { CreateOrder } from "@/types/Order";
 import type { Cart } from "@/types/Cart";
 import type { User } from "@/types/User";
-import type { CheckoutActionPayload } from "@/store";
-import { useAppSelector } from "@/hooks/useStore";
 
-const getStepContent = (step: number, totalPrice?: number) => {
+const getStepContent = (
+    step: number,
+    totalPrice: number,
+    stripeClientSecret: string | undefined,
+    stripePromise: any,
+    paymentRef: RefObject<PaymentStepProps>
+) => {
     switch (step) {
         case 0:
             return <AddressForm />;
         case 1:
             return <DeliveryMethodForm totalPrice={totalPrice || 0} />;
         case 2:
-            return <PaymentForm />;
+            return stripeClientSecret ? (
+                <Elements
+                    stripe={stripePromise}
+                    options={{ clientSecret: stripeClientSecret }}
+                >
+                    <PaymentStep ref={paymentRef} />
+                </Elements>
+            ) : (
+                <Box
+                    display="flex"
+                    justifyContent="center"
+                    alignItems="center"
+                    minHeight={200}
+                >
+                    <CircularProgress />
+                    <Typography sx={{ ml: 2 }}>Preparing payment...</Typography>
+                </Box>
+            );
         case 3:
             return <Review />;
         default:
@@ -47,6 +85,7 @@ interface CheckoutModuleProps {
         payload: Partial<CheckoutActionPayload>;
         type: "checkout/updateCheckout";
     };
+    stripePromise: ReturnType<typeof import("@stripe/stripe-js").loadStripe>;
 }
 
 const CheckoutModule = ({
@@ -54,42 +93,111 @@ const CheckoutModule = ({
     userData,
     steps,
     handleUpdateCheckout,
+    stripePromise,
 }: CheckoutModuleProps) => {
+    const dispatch = useAppDispatch();
     const [activeStep, setActiveStep] = useState(0);
-    const { paymentInfo } = useAppSelector((state) => state.checkout);
+    const [isCreatingPayment, setIsCreatingPayment] = useState(false);
+    const paymentRef = useRef<PaymentStepProps>(null);
 
-    const handleNext = (values: any) => {
-        setActiveStep(activeStep + 1);
+    const { paymentInfo, shippingAddress, billingAddress, stripeClientSecret } =
+        useAppSelector((state) => state.checkout);
 
-        if (activeStep === 1)
+    const [createOrder] = useAddOrderMutation();
+    const [createPayment] = useCreatePaymentMutation();
+
+    const handleNext = async (values: any) => {
+        if (activeStep === 1) {
+            setIsCreatingPayment(true);
+
             handleUpdateCheckout({
                 _deliveryMethod: values._deliveryMethod,
             });
 
-        if (activeStep === 2)
-            handleUpdateCheckout(
-                values.paymentType === "creditCard"
-                    ? {
-                          paymentInfo: {
-                              paymentType: values.paymentType,
-                              cardHolder: values.cardHolder,
-                              last4: values.cardNumber.slice(-4),
-                              expDate: values.expDate,
-                              brand: "Visa",
-                          },
-                      }
-                    : { paymentInfo: undefined }
-            );
+            const orderData: CreateOrder = {
+                orderData: {
+                    _user: userData?._id || "",
+                    _cart: (userData?._cart as string) || "",
+                    shippingAddress: shippingAddress!,
+                    billingAddress: billingAddress!,
+                },
+                shipmentData: {
+                    shipFrom: {
+                        street: "Człuchowska 92",
+                        city: "Warsaw",
+                        state: "Masovian",
+                        postalCode: "01-360",
+                        country: "Poland",
+                    },
+                    shipTo: shippingAddress!,
+                    _deliveryMethod: values._deliveryMethod,
+                },
+            };
 
-        if (activeStep === steps.length - 1) {
-            console.log("last step! \n");
-            console.log(values);
+            try {
+                const { data: order } = await createOrder(orderData);
+
+                if (!order?.result._id) {
+                    enqueueSnackbar("Failed to create order", {
+                        variant: "error",
+                    });
+                    setIsCreatingPayment(false);
+                    return;
+                }
+
+                const { data: payment } = await createPayment({
+                    orderId: order.result._id,
+                });
+
+                if (!payment?.result.clientSecret) {
+                    enqueueSnackbar("Failed to create payment intent", {
+                        variant: "error",
+                    });
+                    setIsCreatingPayment(false);
+                    return;
+                }
+
+                dispatch(setStripeClientSecret(payment.result.clientSecret));
+                setIsCreatingPayment(false);
+
+                setActiveStep(2);
+
+                return;
+            } catch (error) {
+                console.error("Checkout error: ", error);
+                return;
+            }
         }
+
+        if (activeStep === 2) {
+            const confirmed = await paymentRef.current?.confirm();
+            if (!confirmed) return;
+
+            // handleUpdateCheckout(
+            //     values.paymentType === "creditCard"
+            //         ? {
+            //               paymentInfo: {
+            //                   paymentType: values.paymentType,
+            //                   cardHolder: values.cardHolder,
+            //                   last4: values.cardNumber.slice(-4),
+            //                   expDate: values.expDate,
+            //                   brand: "Visa",
+            //               },
+            //           }
+            //         : { paymentInfo: undefined }
+            // );
+        }
+
+        setActiveStep((prev) => prev + 1);
     };
 
-    const handleBack = () => {
-        setActiveStep(activeStep - 1);
+    const canProceed = () => {
+        if (activeStep === 1 && isCreatingPayment) return false;
+        if (activeStep === 2 && !stripeClientSecret) return false;
+        return !isCreatingPayment;
     };
+
+    const handleBack = () => setActiveStep((prev) => prev - 1);
 
     return (
         <Grid
@@ -293,7 +401,13 @@ const CheckoutModule = ({
                                         onSubmit={handleSubmit}
                                         className="space-y-10"
                                     >
-                                        {getStepContent(activeStep, data.total)}
+                                        {getStepContent(
+                                            activeStep,
+                                            data.total,
+                                            stripeClientSecret,
+                                            stripePromise,
+                                            paymentRef
+                                        )}
                                         <Box
                                             sx={[
                                                 {
@@ -333,6 +447,12 @@ const CheckoutModule = ({
                                                             sm: "flex",
                                                         },
                                                     }}
+                                                    disabled={
+                                                        isCreatingPayment ||
+                                                        Boolean(
+                                                            stripeClientSecret
+                                                        )
+                                                    }
                                                 >
                                                     Previous
                                                 </Button>
@@ -351,6 +471,12 @@ const CheckoutModule = ({
                                                             sm: "none",
                                                         },
                                                     }}
+                                                    disabled={
+                                                        isCreatingPayment ||
+                                                        Boolean(
+                                                            stripeClientSecret
+                                                        )
+                                                    }
                                                 >
                                                     Previous
                                                 </Button>
@@ -367,8 +493,12 @@ const CheckoutModule = ({
                                                         sm: "fit-content",
                                                     },
                                                 }}
+                                                disabled={!canProceed()}
                                             >
-                                                {activeStep === steps.length - 1
+                                                {isCreatingPayment
+                                                    ? "Creating payment..."
+                                                    : activeStep ===
+                                                      steps.length - 1
                                                     ? "Place order"
                                                     : "Next"}
                                             </Button>

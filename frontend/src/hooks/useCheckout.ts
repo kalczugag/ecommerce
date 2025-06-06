@@ -12,7 +12,9 @@ import { Cart } from "@/types/Cart";
 
 const useCheckout = (cartData?: Cart) => {
     const dispatch = useAppDispatch();
-    const { initialized, userData } = useAppSelector((state) => state.checkout);
+    const { initialized, userData, stripeClientSecret } = useAppSelector(
+        (state) => state.checkout
+    );
     const { data: currentUser, isLoading: isUserLoading } =
         useGetCurrentUserQuery();
 
@@ -45,7 +47,7 @@ const useCheckout = (cartData?: Cart) => {
     const handleUpdateCheckout = (data: Partial<CheckoutActionPayload>) =>
         dispatch(updateCheckout(data));
 
-    return { userData, handleUpdateCheckout };
+    return { userData, stripeClientSecret, handleUpdateCheckout };
 };
 
 export default useCheckout;

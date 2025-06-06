@@ -10,7 +10,7 @@ import {
 import { findProviderById } from "@/utils/helpers";
 
 const Info = () => {
-    const { products, total, _deliveryMethod } = useAppSelector(
+    const { products, total, deliveryCost, _deliveryMethod } = useAppSelector(
         (state) => state.checkout
     );
     const { data, isSuccess } = useGetDeliveryMethodsQuery();
@@ -20,13 +20,15 @@ const Info = () => {
             ? findProviderById(data.result, _deliveryMethod)
             : null;
 
+    const totalCost = total + (total > 100 ? 0 : deliveryCost || 0);
+
     return (
         <>
             <Typography variant="subtitle2" sx={{ color: "text.secondary" }}>
                 Total
             </Typography>
             <Typography variant="h4" gutterBottom>
-                ${total.toFixed(2)}
+                ${totalCost.toFixed(2)}
             </Typography>
             <List disablePadding>
                 {products.map((product) => (

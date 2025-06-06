@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+import { loadStripe } from "@stripe/stripe-js";
 import useCart from "@/hooks/useCart";
 import useCheckout from "@/hooks/useCheckout";
 import { useTitle } from "@/hooks/useTitle";
@@ -14,6 +16,11 @@ const steps = [
 const Checkout = () => {
     useTitle("Checkout");
 
+    const stripePromise = useMemo(
+        () => loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY),
+        []
+    );
+
     const { data } = useCart();
     const { userData, handleUpdateCheckout } = useCheckout(data?.result);
 
@@ -25,6 +32,7 @@ const Checkout = () => {
                     userData={userData}
                     steps={steps}
                     handleUpdateCheckout={handleUpdateCheckout}
+                    stripePromise={stripePromise}
                 />
             )}
         </DefaultLayout>
