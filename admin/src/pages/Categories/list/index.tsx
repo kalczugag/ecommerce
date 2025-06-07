@@ -23,6 +23,12 @@ const CategoriesList = () => {
 
     const [deleteCategory, result] = useDeleteCategoryMutation();
 
+    const handleDelete = () => {
+        alert(
+            "Delete functionality is disabled for now. Please check the code comments."
+        );
+    };
+
     const handleSort = (sortValues: Record<string, string>) => {
         setSortCriteria(sortValues);
     };
@@ -37,7 +43,7 @@ const CategoriesList = () => {
         tableConfig,
         tableData: data?.result || [],
         total: data?.count || 0,
-        action: deleteCategory,
+        action: handleDelete,
         isLoading: isFetching || result.isLoading,
     };
 

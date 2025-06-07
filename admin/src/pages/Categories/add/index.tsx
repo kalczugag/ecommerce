@@ -14,17 +14,20 @@ const CategoriesAdd = () => {
     useTitle("Category - Add");
 
     const handleSubmit = async (values: Category) => {
-        try {
-            await addCategory(values).unwrap();
-            navigate(-1);
-            enqueueSnackbar("Category added successfully", {
-                variant: "success",
-            });
-        } catch (error) {
-            enqueueSnackbar("Failed to add category", {
-                variant: "error",
-            });
-        }
+        // try {
+        //     await addCategory(values).unwrap();
+        //     navigate(-1);
+        //     enqueueSnackbar("Category added successfully", {
+        //         variant: "success",
+        //     });
+        // } catch (error) {
+        //     enqueueSnackbar("Failed to add category", {
+        //         variant: "error",
+        //     });
+        // }
+        alert(
+            "Add functionality is disabled for now. Please check the code comments."
+        );
     };
 
     return (
