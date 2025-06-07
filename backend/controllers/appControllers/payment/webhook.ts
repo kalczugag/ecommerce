@@ -2,9 +2,7 @@ import express from "express";
 import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import {
     handlePaymentIntentSucceeded,
-    handleCheckoutSessionCompleted,
     handlePaymentFailed,
-    handleCheckoutSessionExpired,
 } from "./caseFunctions";
 
 import Stripe from "stripe";

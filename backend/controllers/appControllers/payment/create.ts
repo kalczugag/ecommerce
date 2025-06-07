@@ -4,6 +4,7 @@ import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import { OrderModel } from "../../../models/Order";
 
 import Stripe from "stripe";
+import { User } from "types/User";
 const stripe = new Stripe(process.env.STRIPE_SECRET!);
 
 export const createCheckoutSession = async (
@@ -38,17 +39,19 @@ export const createCheckoutSession = async (
         })
         .exec();
 
-    if (!order) {
+    if (!order || !order._user) {
         return res.status(404).json(errorResponse(null, "Order not found"));
     }
+
+    const user = order._user as User;
 
     try {
         const paymentIntent = await stripe.paymentIntents.create({
             amount: Math.round(order.total * 100),
             currency: "usd",
             metadata: {
-                orderId: order._id.toString(),
-                userId: order._user.toString(),
+                orderId: order._id!.toString(),
+                userId: user._id!.toString(),
             },
             automatic_payment_methods: {
                 enabled: true,

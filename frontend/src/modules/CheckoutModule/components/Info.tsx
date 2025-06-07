@@ -1,4 +1,3 @@
-import { useGetDeliveryMethodsQuery } from "@/store";
 import { useAppSelector } from "@/hooks/useStore";
 import {
     Divider,
@@ -7,20 +6,11 @@ import {
     ListItemText,
     Typography,
 } from "@mui/material";
-import { findProviderById } from "@/utils/helpers";
 
 const Info = () => {
-    const { products, total, deliveryCost, _deliveryMethod } = useAppSelector(
+    const { products, total, _deliveryMethod } = useAppSelector(
         (state) => state.checkout
     );
-    const { data, isSuccess } = useGetDeliveryMethodsQuery();
-
-    const deliveryProvider =
-        isSuccess && data
-            ? findProviderById(data.result, _deliveryMethod)
-            : null;
-
-    const totalCost = total + (total > 100 ? 0 : deliveryCost || 0);
 
     return (
         <>
@@ -28,7 +18,7 @@ const Info = () => {
                 Total
             </Typography>
             <Typography variant="h4" gutterBottom>
-                ${totalCost.toFixed(2)}
+                ${total.toFixed(2)}
             </Typography>
             <List disablePadding>
                 {products.map((product) => (
@@ -48,14 +38,14 @@ const Info = () => {
                         </Typography>
                     </ListItem>
                 ))}
-                {deliveryProvider && (
+                {_deliveryMethod && (
                     <>
                         <Divider />
                         <ListItem sx={{ py: 1, px: 0 }}>
                             <ListItemText
                                 sx={{ mr: 2 }}
                                 primary="Delivery method"
-                                secondary={deliveryProvider.name}
+                                secondary={_deliveryMethod.name}
                             />
                             <Typography
                                 variant="body1"
@@ -65,7 +55,7 @@ const Info = () => {
                             >
                                 {total > 100
                                     ? "Free"
-                                    : `$${deliveryProvider.price.toFixed(2)}`}
+                                    : `$${_deliveryMethod.price.toFixed(2)}`}
                             </Typography>
                         </ListItem>
                     </>

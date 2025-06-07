@@ -1,6 +1,4 @@
 import { useAppSelector } from "@/hooks/useStore";
-import { useGetDeliveryMethodsQuery } from "@/store";
-import { findProviderById } from "@/utils/helpers";
 import {
     Divider,
     Grid,
@@ -11,33 +9,18 @@ import {
     Typography,
 } from "@mui/material";
 
-const addresses = ["1 MUI Drive", "Reactville", "Anytown", "99999", "USA"];
-const payments = [
-    { name: "Card type:", detail: "Visa" },
-    { name: "Card holder:", detail: "Mr. John Smith" },
-    { name: "Card number:", detail: "xxxx-xxxx-xxxx-1234" },
-    { name: "Expiry date:", detail: "04/2024" },
-];
-
 const Review = () => {
     const {
         total,
         subTotal,
         paymentInfo,
         _deliveryMethod,
+        shippingAddress,
         products,
         userData,
     } = useAppSelector((state) => state.checkout);
 
-    const { data, isSuccess } = useGetDeliveryMethodsQuery();
-
-    const deliveryProvider =
-        isSuccess && data
-            ? findProviderById(data.result, _deliveryMethod)
-            : null;
-
-    const { street, city, state, postalCode, country } =
-        userData?.address ?? {};
+    const { street, city, state, postalCode, country } = shippingAddress ?? {};
     const fullAddress = `${street}, ${city}, ${state}, ${postalCode}, ${country}`;
 
     return (
@@ -57,8 +40,7 @@ const Review = () => {
                     <Typography variant="body2">
                         {total > 100
                             ? "Free"
-                            : deliveryProvider &&
-                              `$${deliveryProvider.price.toFixed(2)}`}
+                            : `$${_deliveryMethod?.price.toFixed(2)}`}
                     </Typography>
                 </ListItem>
                 <ListItem sx={{ py: 1, px: 0 }}>

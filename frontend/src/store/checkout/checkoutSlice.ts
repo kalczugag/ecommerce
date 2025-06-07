@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { Item, ShippingAddress } from "@/types/Order";
 import type { User } from "@/types/User";
+import type { Provider } from "@/types/DeliveryMethod";
 
 interface CheckoutState {
     products: Item[];
@@ -14,9 +15,8 @@ interface CheckoutState {
     };
     subTotal: number;
     discount?: number;
-    deliveryCost?: number;
     total: number;
-    _deliveryMethod?: string;
+    _deliveryMethod?: Provider;
     shippingAddress?: ShippingAddress;
     billingAddress?: ShippingAddress;
     initialized: boolean;
@@ -31,10 +31,11 @@ const initialState: CheckoutState = {
     paymentInfo: undefined,
     subTotal: 0,
     discount: 0,
-    deliveryCost: 0,
     total: 0,
     initialized: false,
     _deliveryMethod: undefined,
+    shippingAddress: undefined,
+    billingAddress: undefined,
     stripeClientSecret: undefined,
 };
 

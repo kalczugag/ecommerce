@@ -1,12 +1,9 @@
-import { RefObject, useRef, useState } from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 import { Form } from "react-final-form";
 import { useAppDispatch, useAppSelector } from "@/hooks/useStore";
-import {
-    useElements,
-    useStripe,
-    PaymentElement,
-    Elements,
-} from "@stripe/react-stripe-js";
+import { findProviderById } from "@/utils/helpers";
+import { useNavigate } from "react-router-dom";
+import { Elements } from "@stripe/react-stripe-js";
 import { enqueueSnackbar } from "notistack";
 import { ChevronLeftRounded, ChevronRightRounded } from "@mui/icons-material";
 import {
@@ -27,30 +24,39 @@ import InfoMobile from "./components/InfoMobile";
 import Review from "./components/Review";
 import PaymentStep, { PaymentStepProps } from "./components/PaymentStep";
 import AddressForm from "@/forms/AddressForm";
-// import PaymentForm from "@/forms/PaymentForm";
 import DeliveryMethodForm from "@/forms/DeliveryMethodForm";
 import {
     useAddOrderMutation,
     useCreatePaymentMutation,
     setStripeClientSecret,
+    useLazyGetDeliveryMethodsQuery,
     type CheckoutActionPayload,
 } from "@/store";
-import type { CreateOrder } from "@/types/Order";
+import type { CreateOrder, Order } from "@/types/Order";
 import type { Cart } from "@/types/Cart";
 import type { User } from "@/types/User";
+import type { DeliveryMethod } from "@/types/DeliveryMethod";
 
 const getStepContent = (
     step: number,
     totalPrice: number,
     stripeClientSecret: string | undefined,
     stripePromise: any,
-    paymentRef: RefObject<PaymentStepProps>
+    paymentRef: RefObject<PaymentStepProps>,
+    isLoadingDeliveryMethods: boolean,
+    deliveryMethods?: DeliveryMethod[]
 ) => {
     switch (step) {
         case 0:
             return <AddressForm />;
         case 1:
-            return <DeliveryMethodForm totalPrice={totalPrice || 0} />;
+            return (
+                <DeliveryMethodForm
+                    totalPrice={totalPrice || 0}
+                    data={deliveryMethods}
+                    isLoading={isLoadingDeliveryMethods}
+                />
+            );
         case 2:
             return stripeClientSecret ? (
                 <Elements
@@ -96,30 +102,68 @@ const CheckoutModule = ({
     stripePromise,
 }: CheckoutModuleProps) => {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+
     const [activeStep, setActiveStep] = useState(0);
     const [isCreatingPayment, setIsCreatingPayment] = useState(false);
+    const [isConfirming, setIsConfirming] = useState(false);
+    const [orderData, setOrderData] = useState<Order | null>(null);
+
     const paymentRef = useRef<PaymentStepProps>(null);
 
-    const { paymentInfo, shippingAddress, billingAddress, stripeClientSecret } =
-        useAppSelector((state) => state.checkout);
+    const { total, paymentInfo, stripeClientSecret } = useAppSelector(
+        (state) => state.checkout
+    );
 
-    const [createOrder] = useAddOrderMutation();
+    const [
+        getDeliveryMethods,
+        {
+            data: deliveryMethods,
+            isLoading: isLoadingDeliveryMethods,
+            isSuccess,
+            isUninitialized,
+        },
+    ] = useLazyGetDeliveryMethodsQuery();
+    const [createOrder, { isLoading: isCreatingOrder }] = useAddOrderMutation();
     const [createPayment] = useCreatePaymentMutation();
+
+    useEffect(() => {
+        if (activeStep === 1 && isUninitialized) getDeliveryMethods();
+    }, [activeStep, isUninitialized]);
 
     const handleNext = async (values: any) => {
         if (activeStep === 1) {
             setIsCreatingPayment(true);
 
+            const deliveryProvider =
+                isSuccess && deliveryMethods?.result
+                    ? findProviderById(
+                          deliveryMethods?.result,
+                          values._deliveryMethod
+                      )
+                    : null;
+
+            const shippingAddress = {
+                street: values.address1,
+                city: values.city,
+                state: values.state,
+                postalCode: values.postalCode,
+                country: values.country,
+            };
+
             handleUpdateCheckout({
-                _deliveryMethod: values._deliveryMethod,
+                _deliveryMethod: deliveryProvider || undefined,
+                total: total + (total > 100 ? 0 : deliveryProvider?.price || 0),
+                shippingAddress: shippingAddress,
+                billingAddress: shippingAddress,
             });
 
             const orderData: CreateOrder = {
                 orderData: {
                     _user: userData?._id || "",
                     _cart: (userData?._cart as string) || "",
-                    shippingAddress: shippingAddress!,
-                    billingAddress: billingAddress!,
+                    shippingAddress: shippingAddress,
+                    billingAddress: shippingAddress,
                 },
                 shipmentData: {
                     shipFrom: {
@@ -129,13 +173,15 @@ const CheckoutModule = ({
                         postalCode: "01-360",
                         country: "Poland",
                     },
-                    shipTo: shippingAddress!,
+                    shipTo: shippingAddress,
                     _deliveryMethod: values._deliveryMethod,
                 },
             };
 
             try {
                 const { data: order } = await createOrder(orderData);
+
+                setOrderData(order?.result || null);
 
                 if (!order?.result._id) {
                     enqueueSnackbar("Failed to create order", {
@@ -170,22 +216,16 @@ const CheckoutModule = ({
         }
 
         if (activeStep === 2) {
+            setIsConfirming(true);
+
             const confirmed = await paymentRef.current?.confirm();
             if (!confirmed) return;
 
-            // handleUpdateCheckout(
-            //     values.paymentType === "creditCard"
-            //         ? {
-            //               paymentInfo: {
-            //                   paymentType: values.paymentType,
-            //                   cardHolder: values.cardHolder,
-            //                   last4: values.cardNumber.slice(-4),
-            //                   expDate: values.expDate,
-            //                   brand: "Visa",
-            //               },
-            //           }
-            //         : { paymentInfo: undefined }
-            // );
+            setIsConfirming(false);
+        }
+
+        if (activeStep === 3) {
+            // if user clicked place order make it confirmed and redirect to order page
         }
 
         setActiveStep((prev) => prev + 1);
@@ -362,12 +402,13 @@ const CheckoutModule = ({
                                 sx={{ color: "text.secondary" }}
                             >
                                 Your order number is
-                                <strong>&nbsp;#140396</strong>. We have emailed
-                                your order confirmation and will update you once
-                                its shipped.
+                                <strong>&nbsp;#{orderData?.orderNumber}</strong>
+                                . We have emailed your order confirmation and
+                                will update you once its shipped.
                             </Typography>
                             <Button
                                 variant="contained"
+                                onClick={() => navigate("/account/orders")}
                                 sx={{
                                     alignSelf: "start",
                                     width: { xs: "100%", sm: "auto" },
@@ -406,7 +447,9 @@ const CheckoutModule = ({
                                             data.total,
                                             stripeClientSecret,
                                             stripePromise,
-                                            paymentRef
+                                            paymentRef,
+                                            isLoadingDeliveryMethods,
+                                            deliveryMethods?.result
                                         )}
                                         <Box
                                             sx={[
@@ -493,6 +536,12 @@ const CheckoutModule = ({
                                                         sm: "fit-content",
                                                     },
                                                 }}
+                                                loading={
+                                                    isCreatingPayment ||
+                                                    isCreatingOrder ||
+                                                    isConfirming
+                                                }
+                                                loadingPosition="end"
                                                 disabled={!canProceed()}
                                             >
                                                 {isCreatingPayment
@@ -503,13 +552,6 @@ const CheckoutModule = ({
                                                     : "Next"}
                                             </Button>
                                         </Box>
-                                        {/* <FormSpy
-                                            subscription={{ values: true }}
-                                        >
-                                            {({ values }) => {
-                                                return <></>;
-                                            }}
-                                        </FormSpy> */}
                                     </form>
                                 );
                             }}

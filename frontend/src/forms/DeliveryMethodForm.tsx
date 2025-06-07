@@ -6,11 +6,10 @@ import {
     Radio,
     RadioGroup,
 } from "@mui/material";
+import { required } from "@/utils/validators";
+import Loading from "@/components/Loading";
 import type { DeliveryMethod, Provider } from "@/types/DeliveryMethod";
 import type { ShippingAddress } from "@/types/Order";
-import { required } from "@/utils/validators";
-import { useGetDeliveryMethodsQuery } from "@/store";
-import Loading from "@/components/Loading";
 
 interface ListItemProps extends Provider {
     type: DeliveryMethod["type"];
@@ -37,19 +36,23 @@ const ListItem = ({ type, label, name, additionalNotes }: ListItemProps) => {
 };
 
 interface DeliveryMethodFormProps {
+    data?: DeliveryMethod[];
+    isLoading: boolean;
     totalPrice: number;
 }
 
-const DeliveryMethodForm = ({ totalPrice }: DeliveryMethodFormProps) => {
-    const { data, isLoading } = useGetDeliveryMethodsQuery();
-
+const DeliveryMethodForm = ({
+    data,
+    isLoading,
+    totalPrice,
+}: DeliveryMethodFormProps) => {
     const isFreeDelivery = totalPrice < 100;
 
     return (
         <Loading isLoading={isLoading}>
             <FormControl disabled={isLoading}>
                 <div className="space-y-4">
-                    {data?.result.map((method) => {
+                    {data?.map((method) => {
                         const typeToLabel =
                             method.type === "home_delivery"
                                 ? "Home Delivery"
