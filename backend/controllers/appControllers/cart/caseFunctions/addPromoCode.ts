@@ -37,7 +37,7 @@ export const handleAddPromoCode = async (
         if (!isActive || campaign.status === "inactive")
             return {
                 success: false,
-                message: "Promo code is not active",
+                message: "Promo code expired or inactive",
             };
 
         if (
@@ -46,13 +46,13 @@ export const handleAddPromoCode = async (
         )
             return {
                 success: false,
-                message: "Promo code is not active",
+                message: "Cart does not meet minimum price for promo code",
             };
 
         if (cart.subTotal < campaign.minPrice)
             return {
                 success: false,
-                message: "Promo code is not active",
+                message: "Cart does not meet minimum price for promo code",
             };
 
         if (
@@ -61,25 +61,25 @@ export const handleAddPromoCode = async (
         )
             return {
                 success: false,
-                message: "Promo code is not active",
+                message: "Discount exceeds cart total",
             };
 
         if (campaign.discountType === "percentage" && campaign.discount > 100)
             return {
                 success: false,
-                message: "Promo code is not active",
+                message: "Discount cannot exceed 100%",
             };
 
         if (campaign.discountType === "quota" && campaign.discount < 0)
             return {
                 success: false,
-                message: "Promo code is not active",
+                message: "Cart does not meet minimum price for promo code",
             };
 
         if (campaign.discountType === "percentage" && campaign.discount < 0)
             return {
                 success: false,
-                message: "Promo code is not active",
+                message: "Cart does not meet minimum price for promo code",
             };
 
         cart.promoCode = promoCode;

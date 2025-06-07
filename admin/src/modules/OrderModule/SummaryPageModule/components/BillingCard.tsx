@@ -7,6 +7,7 @@ import Contact from "./Contact";
 import { Field, Form } from "react-final-form";
 import { FormControl, MenuItem, Select } from "@mui/material";
 import type { Order, UpdateOrder } from "@/types/Order";
+import { useHandleMutation } from "@/hooks/useHandleMutation";
 
 interface BillingCardProps {
     data: Order;
@@ -14,21 +15,16 @@ interface BillingCardProps {
 
 const BillingCard = ({ data }: BillingCardProps) => {
     const [editOrder, { isLoading }] = useEditOrderMutation();
+    const { handleMutation } = useHandleMutation();
 
     const handleSubmit = async (values: UpdateOrder) => {
-        try {
-            await editOrder({
+        handleMutation({
+            values: {
                 _id: data._id || "",
                 status: values.status,
-            }).unwrap();
-            enqueueSnackbar("Order status updated successfully", {
-                variant: "success",
-            });
-        } catch (error) {
-            enqueueSnackbar("Failed to update order status", {
-                variant: "error",
-            });
-        }
+            },
+            mutation: editOrder,
+        });
     };
 
     return (

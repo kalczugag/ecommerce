@@ -85,12 +85,12 @@ export const updateCart = async (
                     .json(errorResponse(null, "Invalid action", 400));
         }
 
-        if (result?.success) {
+        if (result.success) {
             return res
                 .status(200)
                 .json(successResponse(result.updatedCart, result.message));
         } else {
-            return res.status(500).json(errorResponse(null, result.message));
+            return res.status(400).json(errorResponse(null, result.message));
         }
     } catch (error) {
         console.error(error);

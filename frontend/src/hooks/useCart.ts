@@ -88,8 +88,9 @@ const useCart = (condition = true) => {
                     _promoCode: promoCode,
                 });
             },
-            successMessage: "Promo code applied successfully",
-            errorMessage: "Failed to apply promo code",
+
+            // successMessage: "Promo code applied successfully",
+            // errorMessage: "Failed to apply promo code",
         });
     };
 

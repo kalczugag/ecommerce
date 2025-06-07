@@ -15,4 +15,5 @@ export const deliveryMethodsApi = apiSlice.injectEndpoints({
     }),
 });
 
-export const { useGetDeliveryMethodsQuery } = deliveryMethodsApi;
+export const { useGetDeliveryMethodsQuery, useLazyGetDeliveryMethodsQuery } =
+    deliveryMethodsApi;

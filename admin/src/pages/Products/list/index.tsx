@@ -33,10 +33,13 @@ const ProductsList = () => {
     }, 250);
 
     const handleDelete = (id: string) => {
-        handleMutation({
-            values: id,
-            mutation: deleteProduct,
-        });
+        // handleMutation({
+        //     values: id,
+        //     mutation: deleteProduct,
+        // });
+        alert(
+            "Delete functionality is disabled for now. Please check the code comments."
+        );
     };
 
     const config = {

@@ -37,7 +37,7 @@ const orderSchema = new mongoose.Schema<Order>(
                 "canceled",
                 "returned",
             ],
-            default: "placed",
+            default: "pending payment",
         },
         shippingAddress: shippingAddressSchema,
         billingAddress: shippingAddressSchema,

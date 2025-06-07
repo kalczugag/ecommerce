@@ -25,17 +25,20 @@ const CategoriesEdit = () => {
     if (isError || (!isLoading && !data?.result)) return <NotFound />;
 
     const handleSubmit = async (values: Category) => {
-        try {
-            await editCategory(values).unwrap();
-            navigate(-1);
-            enqueueSnackbar("Category updated successfully", {
-                variant: "success",
-            });
-        } catch (error) {
-            enqueueSnackbar("Failed to update category", {
-                variant: "error",
-            });
-        }
+        // try {
+        //     await editCategory(values).unwrap();
+        //     navigate(-1);
+        //     enqueueSnackbar("Category updated successfully", {
+        //         variant: "success",
+        //     });
+        // } catch (error) {
+        //     enqueueSnackbar("Failed to update category", {
+        //         variant: "error",
+        //     });
+        // }
+        alert(
+            "Edit functionality is disabled for now. Please check the code comments."
+        );
     };
 
     const hasChildren =

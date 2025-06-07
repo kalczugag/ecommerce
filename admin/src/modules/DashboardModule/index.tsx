@@ -88,8 +88,6 @@ const DashboardModule = ({ data, isLoading }: DashboardModuleProps) => {
         data.prev30Days.sessions.organic +
         data.prev30Days.sessions.referral;
 
-    console.log(data.last30Days);
-
     return (
         <DefaultLayout>
             <Wrapper>
