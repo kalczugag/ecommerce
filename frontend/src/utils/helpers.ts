@@ -1,3 +1,5 @@
+import type { DeliveryMethod, Provider } from "@/types/DeliveryMethod";
+
 export const placeholderArray = (length: number) => {
     return new Array(length).fill(null);
 };
@@ -15,4 +17,17 @@ export const serialize = (
         }
         return acc;
     }, {} as Record<string, string>);
+};
+
+export const findProviderById = (
+    content: DeliveryMethod[],
+    providerId: string | undefined
+): Provider | undefined => {
+    for (const method of content) {
+        const provider = method.providers.find(
+            (provider) => provider._id === providerId
+        );
+        if (provider) return provider;
+    }
+    return undefined;
 };
