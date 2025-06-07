@@ -64,7 +64,10 @@ const CartDrawer = () => {
                 <div className="flex-1 space-y-4 h-full overflow-y-auto">
                     {!isEmpty ? (
                         data?.result.items.map((item) => (
-                            <div className="flex justify-between space-x-4">
+                            <div
+                                key={item._id}
+                                className="flex justify-between space-x-4"
+                            >
                                 <Link
                                     key={item._id}
                                     to={`/product/${item._product._id}`}
@@ -143,7 +146,7 @@ const CartDrawer = () => {
                     <Button
                         variant="contained"
                         onClick={handleCheckout}
-                        loading={loading.add}
+                        loading={loading.get}
                         loadingPosition="end"
                         disabled={loading.get}
                     >

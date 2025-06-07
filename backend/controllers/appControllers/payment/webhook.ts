@@ -2,9 +2,7 @@ import express from "express";
 import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import {
     handlePaymentIntentSucceeded,
-    handleCheckoutSessionCompleted,
     handlePaymentFailed,
-    handleCheckoutSessionExpired,
 } from "./caseFunctions";
 
 import Stripe from "stripe";
@@ -37,15 +35,15 @@ export const stripeWebhook = async (
                 break;
             }
 
-            case "checkout.session.completed": {
-                handleCheckoutSessionCompleted(event.data.object);
-                break;
-            }
+            // case "checkout.session.completed": {
+            //     handleCheckoutSessionCompleted(event.data.object);
+            //     break;
+            // }
 
-            case "checkout.session.expired": {
-                handleCheckoutSessionExpired(event.data.object);
-                break;
-            }
+            // case "checkout.session.expired": {
+            //     handleCheckoutSessionExpired(event.data.object);
+            //     break;
+            // }
 
             case "payment_intent.succeeded": {
                 handlePaymentIntentSucceeded(event.data.object);
