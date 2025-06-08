@@ -1,6 +1,5 @@
 import { ReactNode } from "react";
-import { Divider } from "@mui/material";
-import Box from "@/components/Box";
+import { Card, Divider, Stack } from "@mui/material";
 
 interface CrudLayoutProps {
     headerPanel: ReactNode;
@@ -10,11 +9,10 @@ interface CrudLayoutProps {
 
 const CrudLayout = ({ headerPanel, children, padding }: CrudLayoutProps) => {
     return (
-        <div className={`flex flex-col ${padding && "md:p-6 lg:py-0"}`}>
-            <Box>{headerPanel}</Box>
-            <Divider sx={{ mb: "31px" }} />
-            {children}
-        </div>
+        <Stack direction="column" spacing={4} divider={<Divider />}>
+            <Card sx={{ p: 2 }}>{headerPanel}</Card>
+            <Card>{children}</Card>
+        </Stack>
     );
 };
 

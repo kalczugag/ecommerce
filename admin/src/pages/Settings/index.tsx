@@ -12,6 +12,11 @@ const Settings = () => {
             label: "General Settings",
             children: <GeneralSettingsModule />,
         },
+        {
+            key: "general_settings",
+            label: "Test Settings",
+            children: <GeneralSettingsModule />,
+        },
     ];
 
     return <TabsContent content={content} />;

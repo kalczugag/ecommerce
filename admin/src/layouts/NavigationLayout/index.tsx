@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Container } from "@mui/material";
+import { Box, Container } from "@mui/material";
 import Header from "@/components/Header";
 import NavLinksMenu from "@/components/NavLinksMenu";
 import { navLinks } from "@/constants/sidebarLinksConfig";
@@ -10,17 +10,30 @@ interface LayoutProps {
 
 const Layout = ({ children }: LayoutProps) => {
     return (
-        <div className="md:flex h-screen md:overflow-hidden">
+        <Box
+            sx={{
+                display: "flex",
+                height: "100vh",
+                overflow: { md: "hidden" },
+            }}
+        >
             <NavLinksMenu links={navLinks} fontSize="small" />
-            <div className="flex-1 flex flex-col min-w-0">
+            <Box
+                sx={{
+                    flex: 1,
+                    display: "flex",
+                    flexDirection: "column",
+                    minWidth: 0,
+                }}
+            >
                 <Header />
-                <div className="flex-1 overflow-auto">
-                    <Container maxWidth="xl" className="pt-8 md:pt-0">
+                <Box sx={{ flex: 1, overflow: "auto" }}>
+                    <Container maxWidth="xl" sx={{ pt: { xs: 8, md: 0 } }}>
                         {children}
                     </Container>
-                </div>
-            </div>
-        </div>
+                </Box>
+            </Box>
+        </Box>
     );
 };
 

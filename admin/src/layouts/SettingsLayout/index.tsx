@@ -1,5 +1,11 @@
 import { ReactNode } from "react";
-import { Container } from "@mui/material";
+import {
+    Card,
+    CardHeader,
+    CardContent,
+    Stack,
+    Typography,
+} from "@mui/material";
 
 interface SettingsLayoutProps {
     label: string;
@@ -8,10 +14,18 @@ interface SettingsLayoutProps {
 
 const SettingsLayout = ({ label, children }: SettingsLayoutProps) => {
     return (
-        <Container maxWidth="lg">
-            <h1 className="text-lg font-bold mb-10">{label}</h1>
-            <div className="flex flex-col space-y-6">{children}</div>
-        </Container>
+        <Card elevation={0}>
+            <CardHeader
+                title={
+                    <Typography variant="subtitle1" fontWeight={600}>
+                        {label}
+                    </Typography>
+                }
+            />
+            <CardContent>
+                <Stack spacing={2}>{children}</Stack>
+            </CardContent>
+        </Card>
     );
 };
 

@@ -1,5 +1,6 @@
 import SettingsLayout from "@/layouts/SettingsLayout";
 import type { Content } from "@/types/Content";
+import { Divider, Stack } from "@mui/material";
 
 interface TabsContentProps {
     content: Content[];
@@ -12,7 +13,11 @@ const TabsContent = ({ content }: TabsContentProps) => {
         </SettingsLayout>
     ));
 
-    return items;
+    return (
+        <Stack direction="column" spacing={4} divider={<Divider />}>
+            {items}
+        </Stack>
+    );
 };
 
 export default TabsContent;
