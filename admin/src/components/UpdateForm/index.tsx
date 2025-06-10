@@ -56,18 +56,6 @@ const UpdateForm = ({
                                             <div />
                                         )}
                                     </div>
-                                    {formValuesDisplay && (
-                                        <>
-                                            <Divider
-                                                flexItem
-                                                orientation="vertical"
-                                                sx={{ mx: 2 }}
-                                            />
-                                            <FormValuesDisplay
-                                                values={values}
-                                            />
-                                        </>
-                                    )}
                                 </div>
                             )}
                         </FormSpy>

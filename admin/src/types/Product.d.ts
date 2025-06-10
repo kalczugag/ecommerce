@@ -15,6 +15,7 @@ export interface Product {
         quantity: number;
     }[];
     quantity?: number;
+    tags?: string[];
     analytics: {
         average: number;
         reviewCount: number;

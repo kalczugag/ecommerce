@@ -39,7 +39,7 @@ const ProductsEdit = () => {
         return <NotFound />;
 
     const handleSubmit = async (values: Product) => {
-        const { quantity, ...rest } = values;
+        const { quantity, tags, ...rest } = values;
 
         handleMutation({
             values: {
@@ -55,6 +55,8 @@ const ProductsEdit = () => {
         ...productsData?.result,
         imageUrl: (productsData?.result.imageUrl as string[])?.join(",\n"),
     };
+
+    console.log(updatedInitialValues);
 
     return (
         <CrudModule

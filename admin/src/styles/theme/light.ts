@@ -21,6 +21,22 @@ const lightTheme = createTheme({
             main: "#dc004e",
         },
     },
+    // components: {
+    //     MuiCard: {
+    //         styleOverrides: {
+    //             root: {
+    //                 boxShadow: "0px 1px 3px rgba(0,0,0,0.06)",
+    //             },
+    //         },
+    //     },
+    //     MuiAccordion: {
+    //         styleOverrides: {
+    //             root: {
+    //                 boxShadow: "0px 1px 3px rgba(0,0,0,0.06)",
+    //             },
+    //         },
+    //     },
+    // },
 });
 
 export default lightTheme;
