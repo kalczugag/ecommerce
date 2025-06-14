@@ -3,6 +3,7 @@ import { Chip } from "@mui/material";
 interface StatusChipProps {
     status: string;
     type: "order" | "payment" | "shipment";
+    size?: "small" | "medium";
     customMap?: Record<
         string,
         | "default"
@@ -15,7 +16,12 @@ interface StatusChipProps {
     >;
 }
 
-const StatusChip = ({ status, type, customMap }: StatusChipProps) => {
+const StatusChip = ({
+    status,
+    type,
+    customMap,
+    size = "medium",
+}: StatusChipProps) => {
     const orderColorMap: Record<
         string,
         | "default"
@@ -81,6 +87,7 @@ const StatusChip = ({ status, type, customMap }: StatusChipProps) => {
         <Chip
             label={status}
             color={customMap ? customMap[status] : colorMap[status]}
+            size={size}
         />
     );
 };

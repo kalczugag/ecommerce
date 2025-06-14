@@ -5,6 +5,7 @@ const lightTheme = createTheme({
         button: {
             textTransform: "none",
         },
+        fontSize: 14,
     },
     palette: {
         mode: "light",

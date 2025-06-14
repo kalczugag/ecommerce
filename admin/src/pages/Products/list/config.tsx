@@ -1,7 +1,7 @@
+import moment from "moment";
+import { Box, Stack, Typography } from "@mui/material";
 import type { Product } from "@/types/Product";
-import { Image } from "@/components/TableFields";
-import { Title } from "@/components/TableFields";
-import ActionButtons from "@/components/Table/ActionButtons";
+import TableMenu from "@/components/Table/Menu";
 
 interface RowProps extends Product {
     isLoading: boolean;
@@ -21,11 +21,12 @@ export const sortConfig: SortConfigProps[] = [
         ],
     },
     {
-        label: "Availability",
+        label: "Stock",
         criteria: "filter.quantity",
         items: [
-            { label: "more than 10", value: { $gt: 10 } },
-            { label: "less than 10", value: { $lt: 10 } },
+            { label: "In stock", value: { $gt: 70 } },
+            { label: "Low stock", value: { $lt: 30 } },
+            { label: "Out of stock", value: { $lte: 0 } },
         ],
     },
     {
@@ -40,35 +41,97 @@ export const sortConfig: SortConfigProps[] = [
 
 export const tableConfig = [
     {
-        label: "Image",
-        render: (row: RowProps) => <Image src={row.imageUrl[0]} alt="Image" />,
-    },
-    {
-        label: "Title",
+        label: "Product",
+
         render: (row: RowProps) => (
-            <Title title={row.title} subtitle={row.brand} />
+            <Stack direction="row" spacing={2} alignItems="center">
+                <Box
+                    component="img"
+                    sx={{
+                        width: "4rem",
+                        height: "4rem",
+                        borderRadius: "8px",
+                        objectFit: "cover",
+                        objectPosition: "top",
+                    }}
+                    src={`${row.imageUrl[0]}?imwidth=96`}
+                    alt={row.title}
+                />
+                <Stack direction="column">
+                    <Typography variant="body2">{row.title}</Typography>
+                    <Typography
+                        variant="subtitle2"
+                        sx={{ color: "text.secondary", fontSize: "0.75rem" }}
+                    >
+                        {row.thirdLevelCategory.name}
+                    </Typography>
+                </Stack>
+            </Stack>
         ),
     },
     {
-        label: "Category",
-        render: (row: RowProps) => row.thirdLevelCategory?.name || "",
+        label: "Created at",
+        render: (row: RowProps) => {
+            const date = moment(row.createdAt).format("DD MMM YYYY");
+            const time = moment(row.createdAt).format("hh:mm A");
+
+            return (
+                <Stack direction="column">
+                    <Typography variant="body2" fontWeight="normal">
+                        {date}
+                    </Typography>
+                    <Typography
+                        variant="subtitle2"
+                        sx={{ color: "text.secondary", fontSize: 12 }}
+                    >
+                        {time}
+                    </Typography>
+                </Stack>
+            );
+        },
+    },
+    {
+        label: "Stock",
+        render: (row: RowProps) => {
+            const percentage = Math.floor(((row?.quantity || 0) / 150) * 100);
+            const color =
+                percentage > 50 ? "green" : percentage < 50 ? "orange" : "red";
+
+            return (
+                <Stack direction="column" alignItems="center" spacing={1}>
+                    <Box
+                        sx={{
+                            width: "100%",
+                            minWidth: "100px",
+                            height: 6,
+                            borderRadius: 4,
+                            overflow: "hidden",
+                        }}
+                        className="bg-[#E0E0E0] dark:bg-dark-primary"
+                    >
+                        <Box
+                            sx={{
+                                width: `${percentage}%`,
+                                height: "100%",
+                                backgroundColor: color,
+                            }}
+                        />
+                    </Box>
+                    <Box sx={{ color: "text.secondary", fontSize: 12 }}>
+                        {row.quantity} in stock
+                    </Box>
+                </Stack>
+            );
+        },
     },
     {
         label: "Price",
-        render: (row: RowProps) => <span>${row.price}</span>,
-    },
-    {
-        label: "Quantity",
-        render: (row: RowProps) => <span>{row.quantity} pcs. </span>,
+        render: (row: RowProps) => `$${row.price.toFixed(2)}`,
     },
     {
         label: "Actions",
         render: (row: RowProps) => (
-            <ActionButtons
-                id={row._id!}
-                disabled={row.isLoading}
-                handleDelete={row.handleDelete}
-            />
+            <TableMenu id={row._id || ""} handleDelete={row.handleDelete} />
         ),
     },
 ];

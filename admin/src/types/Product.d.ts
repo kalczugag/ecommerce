@@ -26,4 +26,6 @@ export interface Product {
     secondLevelCategory: Category;
     thirdLevelCategory: Category;
     description?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
 }

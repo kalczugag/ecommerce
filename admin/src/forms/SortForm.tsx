@@ -1,5 +1,11 @@
 import { Field, Form } from "react-final-form";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import {
+    Divider,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
+} from "@mui/material";
 
 interface SelectFieldProps {
     label: string;
@@ -33,6 +39,7 @@ const SelectField = ({
             }}
         >
             <MenuItem value="">None</MenuItem>
+            <Divider />
             {items.map(({ value, label }, index) => (
                 <MenuItem key={index} value={value}>
                     {label}

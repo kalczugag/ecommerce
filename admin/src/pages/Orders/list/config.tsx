@@ -4,6 +4,7 @@ import type { Order } from "@/types/Order";
 import UnderlineLink from "@/components/UnderlineLink";
 import StatusChip from "@/components/StatusChip";
 import { TableColumnProps } from "@/modules/CrudModule";
+import { Box, Grid, Stack, Typography } from "@mui/material";
 
 interface RowProps extends Order {
     bolder: string;
@@ -43,7 +44,19 @@ export const tableConfig: TableColumnProps<RowProps>[] = [
     },
     {
         label: "Customer",
-        render: (row) => row._user.firstName + " " + row._user.lastName,
+        render: (row) => (
+            <Stack direction="column">
+                <Typography variant="body2">
+                    {row._user.firstName} {row._user.lastName}
+                </Typography>
+                <Typography
+                    variant="subtitle2"
+                    sx={{ color: "text.secondary", fontSize: 12 }}
+                >
+                    {row._user.email}
+                </Typography>
+            </Stack>
+        ),
     },
     {
         label: "Amount",
@@ -51,20 +64,42 @@ export const tableConfig: TableColumnProps<RowProps>[] = [
     },
     {
         label: "Order Status",
-        render: (row) => <StatusChip status={row.status || ""} type="order" />,
+        render: (row) => (
+            <StatusChip status={row.status || ""} type="order" size="small" />
+        ),
     },
     {
         label: "Payment",
         render: (row) => {
             const paymentStatus = row.payments?.[0]?.paymentStatus || "no data";
-            return <StatusChip status={paymentStatus} type="payment" />;
+            return (
+                <StatusChip
+                    status={paymentStatus}
+                    type="payment"
+                    size="small"
+                />
+            );
         },
     },
     {
         label: "Date",
-        render: (row) => {
-            const date = moment(row.createdAt).format("DD/MM/YYYY");
-            return <div>{date}</div>;
+        render: (row: RowProps) => {
+            const date = moment(row.createdAt).format("DD MMM YYYY");
+            const time = moment(row.createdAt).format("hh:mm A");
+
+            return (
+                <Stack direction="column">
+                    <Typography variant="body2" fontWeight="normal">
+                        {date}
+                    </Typography>
+                    <Typography
+                        variant="subtitle2"
+                        sx={{ color: "text.secondary", fontSize: 12 }}
+                    >
+                        {time}
+                    </Typography>
+                </Stack>
+            );
         },
     },
     {

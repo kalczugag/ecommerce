@@ -5,6 +5,7 @@ const darkTheme = createTheme({
         button: {
             textTransform: "none",
         },
+        fontSize: 14,
     },
     palette: {
         mode: "dark",

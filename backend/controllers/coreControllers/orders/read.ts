@@ -52,7 +52,9 @@ export const getAllOrders = async (
                     from: "users",
                     localField: "_user",
                     foreignField: "_id",
-                    pipeline: [{ $project: { firstName: 1, lastName: 1 } }],
+                    pipeline: [
+                        { $project: { firstName: 1, lastName: 1, email: 1 } },
+                    ],
                     as: "_user",
                 },
             },

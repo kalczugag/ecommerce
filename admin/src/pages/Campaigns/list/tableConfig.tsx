@@ -2,7 +2,7 @@ import moment from "moment";
 import ActionButtons from "@/components/Table/ActionButtons";
 import type { TableColumnProps } from "@/modules/CrudModule";
 import type { FeaturedCampaign } from "@/types/FeaturedCampaign";
-import { Chip } from "@mui/material";
+import { Chip, Stack, Typography } from "@mui/material";
 
 interface RowProps extends FeaturedCampaign {
     isLoading: boolean;
@@ -32,7 +32,7 @@ export const sortConfig: SortConfigProps[] = [
 export const tableConfig: TableColumnProps<RowProps>[] = [
     {
         label: "Name",
-        render: (row) => row.name,
+        render: (row) => <Typography variant="body2">{row.name}</Typography>,
     },
     {
         label: "Period",
@@ -40,12 +40,30 @@ export const tableConfig: TableColumnProps<RowProps>[] = [
             const start = moment(row.startDate).format("DD/MM/YYYY");
             const end = moment(row.endDate).format("DD/MM/YYYY");
 
-            return start + " - " + end;
+            // return start + " - " + end;
+            return (
+                <Stack direction="row" spacing={1}>
+                    <Chip
+                        label={start}
+                        variant="outlined"
+                        size="small"
+                        color="primary"
+                    />
+                    <Chip
+                        label={end}
+                        variant="outlined"
+                        size="small"
+                        color="secondary"
+                    />
+                </Stack>
+            );
         },
     },
     {
         label: "Discount",
-        render: (row) => `${row.discount}%`,
+        render: (row) => (
+            <Typography variant="body2">{row.discount}%</Typography>
+        ),
     },
     {
         label: "Status",
@@ -53,12 +71,15 @@ export const tableConfig: TableColumnProps<RowProps>[] = [
             <Chip
                 label={row.status}
                 color={row.status === "active" ? "success" : "default"}
+                size="small"
             />
         ),
     },
     {
         label: "Hidden",
-        render: (row) => <Chip label={row.hidden ? "Yes" : "No"} />,
+        render: (row) => (
+            <Chip label={row.hidden ? "Yes" : "No"} size="small" />
+        ),
     },
     {
         label: "Actions",
