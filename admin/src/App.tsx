@@ -27,6 +27,7 @@ import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import PrivateOutlet from "@/pages/PrivateOutlet";
 import NotFound from "@/pages/404";
+import Test from "./pages/test";
 
 const App = () => {
     const { theme } = useTheme();
@@ -48,6 +49,7 @@ const App = () => {
                         <Route path=":id" element={<CustomersEdit />} />
                         <Route path="add" element={<CustomersAdd />} />
                     </Route>
+                    <Route path="/test" element={<Test />} />
                     <Route path="/orders">
                         <Route index element={<OrdersList />} />
                         <Route path=":id" element={<OrdersManage />} />
