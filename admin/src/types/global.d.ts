@@ -1,3 +1,28 @@
+import { LazyQueryTrigger } from "@reduxjs/toolkit/dist/query/react/buildHooks";
+import {
+    BaseQueryFn,
+    FetchArgs,
+    FetchBaseQueryError,
+    FetchBaseQueryMeta,
+    QueryDefinition,
+} from "@reduxjs/toolkit/query";
+
+type LazyGetTriggerType<T, U> = LazyQueryTrigger<
+    QueryDefinition<
+        T,
+        BaseQueryFn<
+            string | FetchArgs,
+            unknown,
+            FetchBaseQueryError,
+            object,
+            FetchBaseQueryMeta
+        >,
+        never,
+        U,
+        "api"
+    >
+>;
+
 interface ApiResponseArray<T> {
     success: boolean;
     result: T[];

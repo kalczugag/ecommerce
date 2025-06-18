@@ -132,6 +132,7 @@ export const userApi = apiSlice.injectEndpoints({
 
 export const {
     useGetAllUsersQuery,
+    useLazyGetAllUsersQuery,
     useGetUsersByRoleQuery,
     useGetUserByIdQuery,
     useAddUserMutation,

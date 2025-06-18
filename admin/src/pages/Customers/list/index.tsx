@@ -1,67 +1,100 @@
-import { useNavigate } from "react-router-dom";
-import { useDeleteUserMutation, useGetAllUsersQuery } from "@/store";
-import { sortConfig, tableConfig } from "./config";
+import { createColumnHelper } from "@tanstack/react-table";
+import { useLazyGetAllUsersQuery } from "@/store";
 import { useTitle } from "@/hooks/useTitle";
-import usePagination from "@/hooks/usePagination";
-import useSortedData from "@/hooks/useSortedData";
-import useDebounce from "@/hooks/useDebounce";
-import CrudModule from "@/modules/CrudModule";
-import SortForm from "@/forms/SortForm";
-import SearchItem from "@/components/SearchItem";
-import { Button } from "@mui/material";
+import {
+    Avatar,
+    Box,
+    Checkbox,
+    Chip,
+    Grid2 as Grid,
+    Stack,
+    Typography,
+} from "@mui/material";
+import Table2 from "@/components/Table2";
+import TableActions from "@/components/Table2/components/TableActions";
+import type { User } from "@/types/User";
 
+const columnHelper = createColumnHelper<User>();
+
+const columns = [
+    columnHelper.display({
+        id: "select",
+        header: ({ table }) => (
+            <Checkbox
+                {...{
+                    checked: table.getIsAllRowsSelected(),
+                    indeterminate: table.getIsSomeRowsSelected(),
+                    onChange: table.getToggleAllRowsSelectedHandler(),
+                }}
+            />
+        ),
+        cell: ({ row }) => (
+            <Checkbox
+                {...{
+                    checked: row.getIsSelected(),
+                    disabled: !row.getCanSelect(),
+                    indeterminate: row.getIsSomeSelected(),
+                    onChange: row.getToggleSelectedHandler(),
+                }}
+            />
+        ),
+        size: 32,
+    }),
+    columnHelper.accessor((row) => `${row.firstName} ${row.lastName}`, {
+        header: "Name",
+        cell: (info) => {
+            const user = info.row.original;
+
+            return (
+                <Stack direction="row" spacing={2} alignItems="center">
+                    {/* <Avatar
+                        src="/images/avatar.png"
+                        sx={{ width: 40, height: 40 }}
+                    /> */}
+                    <Stack spacing={0.3}>
+                        <Typography variant="body2">
+                            {info.getValue()}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            {user.email}
+                        </Typography>
+                    </Stack>
+                </Stack>
+            );
+        },
+    }),
+    columnHelper.accessor("phone", {
+        header: "Phone number",
+        cell: (info) => info.getValue() ?? "-",
+    }),
+    columnHelper.accessor("email", {
+        header: "Email",
+        cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("_role.name", {
+        header: "Role",
+        cell: (info) => (
+            <Chip
+                size="small"
+                variant="outlined"
+                color="primary"
+                label={info.getValue()}
+            />
+        ),
+    }),
+    columnHelper.display({
+        id: "actions",
+        header: "Actions",
+        cell: ({ row }) => <TableActions id={row.original._id || ""} />,
+    }),
+];
 const CustomersList = () => {
-    const navigate = useNavigate();
-    const [pagination] = usePagination();
     useTitle("Customers - List");
 
-    const { sortCriteria, setSortCriteria } = useSortedData();
-    const { data, isFetching } = useGetAllUsersQuery({
-        ...pagination,
-        ...sortCriteria,
-    });
-
-    const [deleteUser, result] = useDeleteUserMutation();
-
-    const handleSort = (sortValues: any) => {
-        setSortCriteria(sortValues);
-    };
-
-    const handleSearch = useDebounce((search: { search: string }) => {
-        const filter = { $text: { $search: search.search } };
-
-        setSortCriteria({ filter });
-    }, 250);
-
-    const config = {
-        tableConfig,
-        tableData: data?.result || [],
-        total: data?.count || 0,
-        action: deleteUser,
-        isLoading: isFetching || result.isLoading,
-    };
-
     return (
-        <CrudModule
-            config={config}
-            actionForm={
-                <div className="space-y-4">
-                    <SearchItem handleSubmit={handleSearch} />
-                    <div className="flex flex-col space-y-2 sm:space-y-0 sm:space-x-2 sm:flex-row">
-                        <SortForm
-                            config={sortConfig}
-                            handleSubmit={handleSort}
-                        />
-                        <Button
-                            variant="contained"
-                            onClick={() => navigate("/customers/add")}
-                        >
-                            Add Customer
-                        </Button>
-                    </div>
-                </div>
-            }
-        />
+        <div>
+            <Table2<User> columns={columns} queryFn={useLazyGetAllUsersQuery} />
+        </div>
     );
 };
 
