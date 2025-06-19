@@ -14,12 +14,11 @@ import {
     ColumnDef,
     flexRender,
     getCoreRowModel,
-    getPaginationRowModel,
     useReactTable,
 } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
 
-interface EnhancedTableProps<T> {
+export interface EnhancedTableProps<T> {
     columns: ColumnDef<T, any>[];
     queryFn: LazyGetTriggerType<T, any>;
 }
@@ -61,14 +60,9 @@ const EnhancedTable = <T extends object>({
         <TableContainer>
             <Table>
                 <TableHead>
-                    {/* <TableCell padding="checkbox">
-                        <Checkbox
-                            indeterminate={table.getIsSomeRowsSelected()}
-                        />
-                    </TableCell> */}
                     {table.getHeaderGroups().map((headerGroup) => (
                         <TableRow key={headerGroup.id}>
-                            {headerGroup.headers.map((header, index) => (
+                            {headerGroup.headers.map((header) => (
                                 <TableCell variant="head" key={header.id}>
                                     {header.isPlaceholder
                                         ? null

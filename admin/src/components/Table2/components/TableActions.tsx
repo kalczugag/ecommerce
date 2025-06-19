@@ -10,7 +10,12 @@ import {
 } from "@mui/material";
 import AlertDialog from "../../AlertDialog";
 
-const TableActions = ({ id }: { id: string }) => {
+interface TableActionsProps {
+    id: string;
+    handleDelete: (id: string) => void;
+}
+
+const TableActions = ({ id, handleDelete }: TableActionsProps) => {
     const navigate = useNavigate();
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -34,13 +39,6 @@ const TableActions = ({ id }: { id: string }) => {
                 <MoreVert />
             </IconButton>
             <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-                <MenuItem>
-                    <ListItemIcon>
-                        <Visibility fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText>View</ListItemText>
-                </MenuItem>
-
                 <MenuItem onClick={() => handleNavigate(id.toString())}>
                     <ListItemIcon>
                         <Edit fontSize="small" />
@@ -54,7 +52,7 @@ const TableActions = ({ id }: { id: string }) => {
                     confirm="Yes"
                     onConfirm={() => {
                         setAnchorEl(null);
-                        // handleDelete();
+                        handleDelete(id);
                     }}
                 >
                     {(props) => (

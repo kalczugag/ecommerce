@@ -1,18 +1,12 @@
 import { createColumnHelper } from "@tanstack/react-table";
-import { useLazyGetAllUsersQuery } from "@/store";
+import { useDeleteUserMutation, useLazyGetAllUsersQuery } from "@/store";
 import { useTitle } from "@/hooks/useTitle";
-import {
-    Avatar,
-    Box,
-    Checkbox,
-    Chip,
-    Grid2 as Grid,
-    Stack,
-    Typography,
-} from "@mui/material";
+import { Avatar, Checkbox, Chip, Stack, Typography } from "@mui/material";
 import Table2 from "@/components/Table2";
 import TableActions from "@/components/Table2/components/TableActions";
 import type { User } from "@/types/User";
+import { useHandleMutation } from "@/hooks/useHandleMutation";
+import CrudModule from "@/modules/CrudModule";
 
 const columnHelper = createColumnHelper<User>();
 
@@ -85,17 +79,32 @@ const columns = [
     columnHelper.display({
         id: "actions",
         header: "Actions",
-        cell: ({ row }) => <TableActions id={row.original._id || ""} />,
+        cell: ({ row }) => <ActionCell row={row} />,
     }),
 ];
+
+const ActionCell = ({ row }: { row: any }) => {
+    const { handleMutation } = useHandleMutation();
+    const [deleteUser] = useDeleteUserMutation();
+
+    const handleDelete = (id: string) => {
+        handleMutation({
+            values: id,
+            mutation: deleteUser,
+            successMessage: "User deleted successfully",
+            errorMessage: "Failed to delete user",
+        });
+    };
+
+    return (
+        <TableActions id={row.original._id || ""} handleDelete={handleDelete} />
+    );
+};
+
 const CustomersList = () => {
     useTitle("Customers - List");
 
-    return (
-        <div>
-            <Table2<User> columns={columns} queryFn={useLazyGetAllUsersQuery} />
-        </div>
-    );
+    return <CrudModule columns={columns} queryFn={useLazyGetAllUsersQuery} />;
 };
 
 export default CustomersList;
