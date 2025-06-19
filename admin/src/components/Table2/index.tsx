@@ -2,6 +2,7 @@ import { LazyGetTriggerType } from "@/types/global";
 import {
     Box,
     LinearProgress,
+    styled,
     Table,
     TableBody,
     TableCell,
@@ -9,6 +10,7 @@ import {
     TableHead,
     TablePagination,
     TableRow,
+    tableCellClasses,
 } from "@mui/material";
 import {
     ColumnDef,
@@ -22,6 +24,15 @@ export interface EnhancedTableProps<T> {
     columns: ColumnDef<T, any>[];
     queryFn: LazyGetTriggerType<T, any>;
 }
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+        backgroundColor: theme.palette.action.hover,
+    },
+    [`&.${tableCellClasses.body}`]: {
+        fontSize: 14,
+    },
+}));
 
 const EnhancedTable = <T extends object>({
     columns,
@@ -63,14 +74,14 @@ const EnhancedTable = <T extends object>({
                     {table.getHeaderGroups().map((headerGroup) => (
                         <TableRow key={headerGroup.id}>
                             {headerGroup.headers.map((header) => (
-                                <TableCell variant="head" key={header.id}>
+                                <StyledTableCell variant="head" key={header.id}>
                                     {header.isPlaceholder
                                         ? null
                                         : flexRender(
                                               header.column.columnDef.header,
                                               header.getContext()
                                           )}
-                                </TableCell>
+                                </StyledTableCell>
                             ))}
                         </TableRow>
                     ))}
@@ -79,7 +90,7 @@ const EnhancedTable = <T extends object>({
                     {table.getRowModel().rows.map((row) => (
                         <TableRow key={row.id} selected={row.getIsSelected()}>
                             {row.getVisibleCells().map((cell) => (
-                                <TableCell
+                                <StyledTableCell
                                     variant="body"
                                     key={cell.id}
                                     sx={{
@@ -91,7 +102,7 @@ const EnhancedTable = <T extends object>({
                                         cell.column.columnDef.cell,
                                         cell.getContext()
                                     )}
-                                </TableCell>
+                                </StyledTableCell>
                             ))}
                         </TableRow>
                     ))}

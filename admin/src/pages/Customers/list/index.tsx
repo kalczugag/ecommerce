@@ -2,7 +2,6 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { useDeleteUserMutation, useLazyGetAllUsersQuery } from "@/store";
 import { useTitle } from "@/hooks/useTitle";
 import { Avatar, Checkbox, Chip, Stack, Typography } from "@mui/material";
-import Table2 from "@/components/Table2";
 import TableActions from "@/components/Table2/components/TableActions";
 import type { User } from "@/types/User";
 import { useHandleMutation } from "@/hooks/useHandleMutation";
@@ -32,7 +31,6 @@ const columns = [
                 }}
             />
         ),
-        size: 32,
     }),
     columnHelper.accessor((row) => `${row.firstName} ${row.lastName}`, {
         header: "Name",
@@ -78,7 +76,7 @@ const columns = [
     }),
     columnHelper.display({
         id: "actions",
-        header: "Actions",
+        header: "",
         cell: ({ row }) => <ActionCell row={row} />,
     }),
 ];

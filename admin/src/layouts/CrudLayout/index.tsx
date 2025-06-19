@@ -1,6 +1,14 @@
 import { ReactNode } from "react";
-import { Link as RouterLink, useParams, useLocation } from "react-router-dom";
-import { Box, Breadcrumbs, Link, Stack, Typography } from "@mui/material";
+import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
+import {
+    Box,
+    Breadcrumbs,
+    IconButton,
+    Link,
+    Stack,
+    Typography,
+} from "@mui/material";
+import { KeyboardArrowLeft } from "@mui/icons-material";
 
 interface CrudLayoutProps {
     headerPanel?: ReactNode;
@@ -18,6 +26,7 @@ const labelMap: Record<string, string> = {
 };
 
 const CrudLayout = ({ headerPanel, children }: CrudLayoutProps) => {
+    const navigate = useNavigate();
     const { pathname } = useLocation();
 
     const segments = pathname.split("/").filter(Boolean);
@@ -50,7 +59,17 @@ const CrudLayout = ({ headerPanel, children }: CrudLayoutProps) => {
     return (
         <Stack spacing={4}>
             <Stack spacing={1}>
-                <Stack>
+                <Stack direction="row" alignItems="center">
+                    {breadcrumbs.length > 1 && (
+                        <IconButton
+                            size="small"
+                            color="inherit"
+                            disableRipple
+                            onClick={() => navigate(-1)}
+                        >
+                            <KeyboardArrowLeft />
+                        </IconButton>
+                    )}
                     <Typography variant="h5">{title}</Typography>
                 </Stack>
                 <Breadcrumbs>
