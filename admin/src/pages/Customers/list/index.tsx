@@ -1,7 +1,7 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { useDeleteUserMutation, useLazyGetAllUsersQuery } from "@/store";
 import { useTitle } from "@/hooks/useTitle";
-import { Avatar, Checkbox, Chip, Stack, Typography } from "@mui/material";
+import { Avatar, Chip, Stack, Typography } from "@mui/material";
 import TableActions from "@/components/Table2/components/TableActions";
 import type { User } from "@/types/User";
 import { useHandleMutation } from "@/hooks/useHandleMutation";
@@ -10,28 +10,6 @@ import CrudModule from "@/modules/CrudModule";
 const columnHelper = createColumnHelper<User>();
 
 const columns = [
-    columnHelper.display({
-        id: "select",
-        header: ({ table }) => (
-            <Checkbox
-                {...{
-                    checked: table.getIsAllRowsSelected(),
-                    indeterminate: table.getIsSomeRowsSelected(),
-                    onChange: table.getToggleAllRowsSelectedHandler(),
-                }}
-            />
-        ),
-        cell: ({ row }) => (
-            <Checkbox
-                {...{
-                    checked: row.getIsSelected(),
-                    disabled: !row.getCanSelect(),
-                    indeterminate: row.getIsSomeSelected(),
-                    onChange: row.getToggleSelectedHandler(),
-                }}
-            />
-        ),
-    }),
     columnHelper.accessor((row) => `${row.firstName} ${row.lastName}`, {
         header: "Name",
         cell: (info) => {
@@ -76,7 +54,6 @@ const columns = [
     }),
     columnHelper.display({
         id: "actions",
-        header: "",
         cell: ({ row }) => <ActionCell row={row} />,
     }),
 ];

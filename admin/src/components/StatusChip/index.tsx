@@ -86,6 +86,7 @@ const StatusChip = ({
     return (
         <Chip
             label={status}
+            variant="outlined"
             color={customMap ? customMap[status] : colorMap[status]}
             size={size}
         />

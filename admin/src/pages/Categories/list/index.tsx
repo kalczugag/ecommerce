@@ -1,76 +1,65 @@
-import { useNavigate } from "react-router-dom";
-import { useGetAllCategoriesQuery, useDeleteCategoryMutation } from "@/store";
-import { sortConfig, tableConfig } from "./config";
+import { createColumnHelper } from "@tanstack/react-table";
+import {
+    useLazyGetAllCategoriesQuery,
+    useDeleteCategoryMutation,
+} from "@/store";
 import { useTitle } from "@/hooks/useTitle";
-import usePagination from "@/hooks/usePagination";
-import useSortedData from "@/hooks/useSortedData";
-import useDebounce from "@/hooks/useDebounce";
+import { useHandleMutation } from "@/hooks/useHandleMutation";
+import TableActions from "@/components/Table2/components/TableActions";
 import CrudModule from "@/modules/CrudModule";
-import SortForm from "@/forms/SortForm";
-import { Button } from "@mui/material";
-import SearchItem from "@/components/SearchItem";
+import type { Category } from "@/types/Category";
 
-const CategoriesList = () => {
-    const [pagination] = usePagination();
-    const navigate = useNavigate();
-    useTitle("Categories - List");
+const columnHelper = createColumnHelper<Category>();
 
-    const { sortCriteria, setSortCriteria } = useSortedData();
-    const { data, isFetching } = useGetAllCategoriesQuery({
-        ...pagination,
-        ...sortCriteria,
-    });
+const columns = [
+    columnHelper.accessor("name", {
+        header: "Name",
+        cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("description", {
+        header: "Description",
+        cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("_parentCategory", {
+        header: "Parent Category",
+        cell: (info) => info.getValue()?.name || "",
+    }),
+    columnHelper.accessor("level", {
+        header: "Level",
+        cell: (info) => info.getValue(),
+    }),
+    columnHelper.display({
+        id: "actions",
+        cell: ({ row }) => <ActionCell row={row} />,
+    }),
+];
 
-    const [deleteCategory, result] = useDeleteCategoryMutation();
+const ActionCell = ({ row }: { row: any }) => {
+    const { handleMutation } = useHandleMutation();
+    const [deleteCategory] = useDeleteCategoryMutation();
 
-    const handleDelete = () => {
+    const handleDelete = (id: string) => {
         alert(
             "Delete functionality is disabled for now. Please check the code comments."
         );
-    };
-
-    const handleSort = (sortValues: Record<string, string>) => {
-        setSortCriteria(sortValues);
-    };
-
-    const handleSearch = useDebounce((search: { search: string }) => {
-        const filter = { $text: { $search: search.search } };
-
-        setSortCriteria({ filter });
-    }, 250);
-
-    const config = {
-        tableConfig,
-        tableData: data?.result || [],
-        total: data?.count || 0,
-        action: handleDelete,
-        isLoading: isFetching || result.isLoading,
+        // handleMutation({
+        //     values: id,
+        //     mutation: deleteCategory,
+        //     successMessage: "Category deleted successfully",
+        //     errorMessage: "Failed to delete category",
+        // });
     };
 
     return (
-        <CrudModule
-            config={config}
-            actionForm={
-                <div className="space-y-4">
-                    <SearchItem
-                        handleSubmit={handleSearch}
-                        placeholder="Search by name"
-                    />
-                    <div className="flex flex-col space-y-2 sm:space-y-0 sm:space-x-2 sm:flex-row">
-                        <SortForm
-                            config={sortConfig}
-                            handleSubmit={handleSort}
-                        />
-                        <Button
-                            variant="contained"
-                            onClick={() => navigate("/categories/add")}
-                        >
-                            Add Category
-                        </Button>
-                    </div>
-                </div>
-            }
-        />
+        <TableActions id={row.original._id || ""} handleDelete={handleDelete} />
+    );
+};
+
+const CategoriesList = () => {
+    useTitle("Categories - List");
+
+    return (
+        <CrudModule columns={columns} queryFn={useLazyGetAllCategoriesQuery} />
     );
 };
 

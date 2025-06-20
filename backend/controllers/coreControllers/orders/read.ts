@@ -49,6 +49,14 @@ export const getAllOrders = async (
             },
             {
                 $lookup: {
+                    from: "baseitems",
+                    localField: "items",
+                    foreignField: "_id",
+                    as: "items",
+                },
+            },
+            {
+                $lookup: {
                     from: "users",
                     localField: "_user",
                     foreignField: "_id",

@@ -94,6 +94,7 @@ export const productApi = apiSlice.injectEndpoints({
 
 export const {
     useGetAllProductsQuery,
+    useLazyGetAllProductsQuery,
     useLazyGetProductByIdQuery,
     useGetProductByIdQuery,
     useAddProductMutation,

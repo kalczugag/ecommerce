@@ -20,13 +20,19 @@ export const getAllUsers = async (
         : 5;
 
     try {
-        const users = await UserModel.find(parsedQuery.filter)
-            .populate(parsedQuery.populate)
+        let query = UserModel.find(parsedQuery.filter)
             .select(parsedQuery.select)
             .sort(parsedQuery.sort)
             .skip(page * pageSize)
-            .limit(pageSize)
-            .exec();
+            .limit(pageSize);
+
+        if (parsedQuery.populate) {
+            query = query.populate(parsedQuery.populate);
+        }
+
+        query = query.populate("_role");
+
+        const users = await query.exec();
 
         const totalDocuments = await UserModel.countDocuments(
             parsedQuery.filter

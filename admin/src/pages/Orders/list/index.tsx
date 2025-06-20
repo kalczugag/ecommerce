@@ -1,56 +1,114 @@
-import { useGetAllOrdersQuery } from "@/store";
-import { sortConfig, tableConfig } from "./config";
+import { createColumnHelper } from "@tanstack/react-table";
+import { useLazyGetAllOrdersQuery } from "@/store";
 import { useTitle } from "@/hooks/useTitle";
-import usePagination from "@/hooks/usePagination";
-import useSortedData from "@/hooks/useSortedData";
-import useDebounce from "@/hooks/useDebounce";
 import CrudModule from "@/modules/CrudModule";
-import SortForm from "@/forms/SortForm";
-import SearchItem from "@/components/SearchItem";
+import UnderlineLink from "@/components/UnderlineLink";
+import type { Order } from "@/types/Order";
+import { Stack, Typography } from "@mui/material";
+import StatusChip from "@/components/StatusChip";
+import TableActions from "@/components/Table2/components/TableActions";
+import moment from "moment";
 
-const OrdersList = () => {
-    const [pagination] = usePagination();
-    useTitle("Orders - List");
+const columnHelper = createColumnHelper<Order>();
 
-    const { sortCriteria, setSortCriteria } = useSortedData();
-    const { data, isFetching } = useGetAllOrdersQuery({
-        ...pagination,
-        ...sortCriteria,
-    });
+const columns = [
+    columnHelper.accessor((row) => `#${row.orderNumber}`, {
+        header: "Order Number",
+        cell: (info) => (
+            <UnderlineLink to={`/orders/${info.row.original._id}`}>
+                {info.getValue()}
+            </UnderlineLink>
+        ),
+    }),
+    columnHelper.accessor(
+        (row) => `${row._user.firstName} ${row._user.firstName}`,
+        {
+            header: "Customer",
+            cell: (info) => (
+                <Stack direction="row" spacing={2} alignItems="center">
+                    {/* <Avatar
+                        src="/images/avatar.png"
+                        sx={{ width: 40, height: 40 }}
+                    /> */}
+                    <Stack spacing={0.3}>
+                        <Typography variant="body2">
+                            {info.getValue()}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            {info.row.original._user.email}
+                        </Typography>
+                    </Stack>
+                </Stack>
+            ),
+        }
+    ),
+    columnHelper.accessor("createdAt", {
+        header: "Date",
+        cell: (info) => {
+            const date = moment(info.getValue()).format("DD MMM YYYY");
+            const time = moment(info.getValue()).format("hh:mm A");
 
-    const handleSort = (sortValues: any) => {
-        setSortCriteria(sortValues);
-    };
+            return (
+                <Stack direction="column" spacing={0.3}>
+                    <Typography variant="body2">{date}</Typography>
+                    <Typography
+                        variant="subtitle2"
+                        fontSize={12}
+                        color="text.secondary"
+                    >
+                        {time}
+                    </Typography>
+                </Stack>
+            );
+        },
+    }),
+    columnHelper.accessor("items", {
+        header: "Items",
+        cell: (info) => {
+            const count = info
+                .getValue()
+                .reduce((acc, item) => acc + item.quantity, 0);
 
-    const handleSearch = useDebounce((searchTerm: { search: string }) => {
-        const filter = {
-            $or: [{ _id: searchTerm.search }, { _user: searchTerm.search }],
-        };
+            return count;
+        },
+    }),
+    columnHelper.accessor((row) => `$${row.total.toFixed(2)}`, {
+        header: "Price",
+        cell: (info) => info.getValue(),
+    }),
+    columnHelper.accessor("status", {
+        header: "Status",
 
-        setSortCriteria({ filter });
-    }, 250);
+        cell: (info) => (
+            <StatusChip
+                status={info.getValue() || ""}
+                type="order"
+                size="small"
+            />
+        ),
+    }),
+    columnHelper.display({
+        id: "actions",
+        cell: ({ row }) => <ActionCell row={row} />,
+    }),
+];
 
-    const config = {
-        tableConfig,
-        tableData: data?.result || [],
-        total: data?.count || 0,
-        isLoading: isFetching,
+const ActionCell = ({ row }: { row: any }) => {
+    const handleDelete = (id: string) => {
+        alert(
+            `_id: ${id}\n\nOrder deletion is disabled for now. Please check the code comments.`
+        );
     };
 
     return (
-        <CrudModule
-            config={config}
-            actionForm={
-                <div className="space-y-4">
-                    <SearchItem
-                        handleSubmit={handleSearch}
-                        placeholder="Search by order or user id"
-                    />
-                    <SortForm config={sortConfig} handleSubmit={handleSort} />
-                </div>
-            }
-        />
+        <TableActions id={row.original._id || ""} handleDelete={handleDelete} />
     );
+};
+
+const OrdersList = () => {
+    useTitle("Orders - List");
+
+    return <CrudModule columns={columns} queryFn={useLazyGetAllOrdersQuery} />;
 };
 
 export default OrdersList;

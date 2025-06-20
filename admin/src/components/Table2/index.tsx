@@ -11,6 +11,8 @@ import {
     TablePagination,
     TableRow,
     tableCellClasses,
+    tableRowClasses,
+    Checkbox,
 } from "@mui/material";
 import {
     ColumnDef,
@@ -18,7 +20,7 @@ import {
     getCoreRowModel,
     useReactTable,
 } from "@tanstack/react-table";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export interface EnhancedTableProps<T> {
     columns: ColumnDef<T, any>[];
@@ -34,6 +36,36 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     },
 }));
 
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    [`&.${tableRowClasses.root}`]: {
+        "&:hover": {
+            backgroundColor: theme.palette.action.hover,
+        },
+    },
+}));
+
+const createSelectColumn = <T extends object>(): ColumnDef<T, unknown> => ({
+    id: "select",
+    header: ({ table }) => (
+        <Checkbox
+            checked={table.getIsAllRowsSelected()}
+            indeterminate={table.getIsSomeRowsSelected()}
+            onChange={table.getToggleAllRowsSelectedHandler()}
+        />
+    ),
+    cell: ({ row }) => (
+        <Checkbox
+            checked={row.getIsSelected()}
+            indeterminate={row.getIsSomeSelected()}
+            disabled={!row.getCanSelect()}
+            onChange={row.getToggleSelectedHandler()}
+        />
+    ),
+    size: 48,
+    minSize: 32,
+    maxSize: 64,
+});
+
 const EnhancedTable = <T extends object>({
     columns,
     queryFn,
@@ -47,15 +79,19 @@ const EnhancedTable = <T extends object>({
             {
                 skip: pagination.pageIndex,
                 limit: pagination.pageSize,
-                populate: "_role",
             },
             true
         );
     }, [pagination.pageIndex, pagination.pageSize]);
 
+    const extendedColumns = useMemo<ColumnDef<T, any>[]>(
+        () => [createSelectColumn<T>(), ...columns],
+        [columns]
+    );
+
     const table = useReactTable({
         data: data?.result || [],
-        columns,
+        columns: extendedColumns,
         rowCount: data?.count,
         state: {
             pagination,
@@ -74,7 +110,11 @@ const EnhancedTable = <T extends object>({
                     {table.getHeaderGroups().map((headerGroup) => (
                         <TableRow key={headerGroup.id}>
                             {headerGroup.headers.map((header) => (
-                                <StyledTableCell variant="head" key={header.id}>
+                                <StyledTableCell
+                                    size="small"
+                                    variant="head"
+                                    key={header.id}
+                                >
                                     {header.isPlaceholder
                                         ? null
                                         : flexRender(
@@ -88,7 +128,10 @@ const EnhancedTable = <T extends object>({
                 </TableHead>
                 <TableBody>
                     {table.getRowModel().rows.map((row) => (
-                        <TableRow key={row.id} selected={row.getIsSelected()}>
+                        <StyledTableRow
+                            key={row.id}
+                            selected={row.getIsSelected()}
+                        >
                             {row.getVisibleCells().map((cell) => (
                                 <StyledTableCell
                                     variant="body"
@@ -104,7 +147,7 @@ const EnhancedTable = <T extends object>({
                                     )}
                                 </StyledTableCell>
                             ))}
-                        </TableRow>
+                        </StyledTableRow>
                     ))}
                 </TableBody>
             </Table>

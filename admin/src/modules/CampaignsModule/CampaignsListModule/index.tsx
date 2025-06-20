@@ -50,17 +50,18 @@ const ExtendedSummaryCard = ({
 };
 
 interface CampaignsListModuleProps {
-    config: CrudModuleProps["config"];
+    columns: CrudModuleProps["columns"];
+    queryFn: CrudModuleProps["queryFn"];
     data?: CampaignsGlobalSummary;
     isLoading: boolean;
-    formElements: JSX.Element;
+    formElements?: JSX.Element;
 }
 
 const CampaignsListModule = ({
     data,
     isLoading,
-    config,
-    formElements,
+    columns,
+    queryFn,
 }: CampaignsListModuleProps) => {
     const cardsConfig = [
         { label: "Total Campaigns", value: data?.total, queryKey: "total" },
@@ -78,19 +79,20 @@ const CampaignsListModule = ({
 
     return (
         <DefaultLayout className="space-y-8">
-            <Wrapper>
-                {cardsConfig.map((card, index) => (
-                    <ExtendedSummaryCard
-                        key={index}
-                        isLoading={isLoading}
-                        {...card}
-                    />
-                ))}
-            </Wrapper>
             <CrudModule
-                config={config}
-                actionForm={formElements}
-                padding={false}
+                actionForm={
+                    <Wrapper>
+                        {cardsConfig.map((card, index) => (
+                            <ExtendedSummaryCard
+                                key={index}
+                                isLoading={isLoading}
+                                {...card}
+                            />
+                        ))}
+                    </Wrapper>
+                }
+                columns={columns}
+                queryFn={queryFn}
             />
         </DefaultLayout>
     );
