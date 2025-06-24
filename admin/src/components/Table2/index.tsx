@@ -1,4 +1,4 @@
-import { LazyGetTriggerType } from "@/types/global";
+import type { LazyGetTriggerType } from "@/types/global";
 import {
     Box,
     LinearProgress,
@@ -8,16 +8,18 @@ import {
     TableCell,
     TableContainer,
     TableHead,
+    TableSortLabel,
     TablePagination,
     TableRow,
     tableCellClasses,
-    tableRowClasses,
     Checkbox,
 } from "@mui/material";
 import {
     ColumnDef,
     flexRender,
     getCoreRowModel,
+    getSortedRowModel,
+    SortingState,
     useReactTable,
 } from "@tanstack/react-table";
 import { useEffect, useMemo, useState } from "react";
@@ -29,18 +31,10 @@ export interface EnhancedTableProps<T> {
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
-        backgroundColor: theme.palette.action.hover,
+        backgroundColor: "#EBEDF1",
     },
     [`&.${tableCellClasses.body}`]: {
         fontSize: 14,
-    },
-}));
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-    [`&.${tableRowClasses.root}`]: {
-        "&:hover": {
-            backgroundColor: theme.palette.action.hover,
-        },
     },
 }));
 
@@ -61,9 +55,7 @@ const createSelectColumn = <T extends object>(): ColumnDef<T, unknown> => ({
             onChange={row.getToggleSelectedHandler()}
         />
     ),
-    size: 48,
-    minSize: 32,
-    maxSize: 64,
+    enableSorting: false,
 });
 
 const EnhancedTable = <T extends object>({
@@ -71,6 +63,7 @@ const EnhancedTable = <T extends object>({
     queryFn,
 }: EnhancedTableProps<T>) => {
     const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 5 });
+    const [sorting, setSorting] = useState<SortingState>([]);
 
     const [trigger, { data, isFetching }] = queryFn();
 
@@ -79,10 +72,13 @@ const EnhancedTable = <T extends object>({
             {
                 skip: pagination.pageIndex,
                 limit: pagination.pageSize,
+                sort: sorting.map(
+                    (s) => `${s.desc ? "-" : ""}${s.id.toLowerCase()}`
+                ),
             },
             true
         );
-    }, [pagination.pageIndex, pagination.pageSize]);
+    }, [pagination.pageIndex, pagination.pageSize, sorting]);
 
     const extendedColumns = useMemo<ColumnDef<T, any>[]>(
         () => [createSelectColumn<T>(), ...columns],
@@ -95,62 +91,77 @@ const EnhancedTable = <T extends object>({
         rowCount: data?.count,
         state: {
             pagination,
+            sorting,
         },
         debugTable: true,
         enableRowSelection: true,
         manualPagination: true,
+        manualSorting: true,
         onPaginationChange: setPagination,
+        onSortingChange: setSorting,
         getCoreRowModel: getCoreRowModel(),
     });
 
     return (
-        <TableContainer>
-            <Table>
-                <TableHead>
-                    {table.getHeaderGroups().map((headerGroup) => (
-                        <TableRow key={headerGroup.id}>
-                            {headerGroup.headers.map((header) => (
-                                <StyledTableCell
-                                    size="small"
-                                    variant="head"
-                                    key={header.id}
-                                >
-                                    {header.isPlaceholder
-                                        ? null
-                                        : flexRender(
-                                              header.column.columnDef.header,
-                                              header.getContext()
-                                          )}
-                                </StyledTableCell>
-                            ))}
-                        </TableRow>
-                    ))}
-                </TableHead>
-                <TableBody>
-                    {table.getRowModel().rows.map((row) => (
-                        <StyledTableRow
-                            key={row.id}
-                            selected={row.getIsSelected()}
-                        >
-                            {row.getVisibleCells().map((cell) => (
-                                <StyledTableCell
-                                    variant="body"
-                                    key={cell.id}
-                                    sx={{
-                                        width: "auto",
-                                        whiteSpace: "nowrap",
-                                    }}
-                                >
-                                    {flexRender(
-                                        cell.column.columnDef.cell,
-                                        cell.getContext()
-                                    )}
-                                </StyledTableCell>
-                            ))}
-                        </StyledTableRow>
-                    ))}
-                </TableBody>
-            </Table>
+        <>
+            <TableContainer sx={{ maxHeight: "calc(100vh - 300px)" }}>
+                <Table stickyHeader>
+                    <TableHead>
+                        {table.getHeaderGroups().map((headerGroup) => (
+                            <TableRow key={headerGroup.id}>
+                                {headerGroup.headers.map((header) => (
+                                    <StyledTableCell
+                                        size="small"
+                                        variant="head"
+                                        key={header.id}
+                                    >
+                                        <TableSortLabel
+                                            active={Boolean(
+                                                header.column.getIsSorted()
+                                            )}
+                                            onClick={header.column.getToggleSortingHandler()}
+                                        >
+                                            {header.isPlaceholder
+                                                ? null
+                                                : flexRender(
+                                                      header.column.columnDef
+                                                          .header,
+                                                      header.getContext()
+                                                  )}
+                                        </TableSortLabel>
+                                    </StyledTableCell>
+                                ))}
+                            </TableRow>
+                        ))}
+                    </TableHead>
+                    <TableBody>
+                        {table.getRowModel().rows.map((row) => (
+                            <TableRow
+                                key={row.id}
+                                selected={row.getIsSelected()}
+                                tabIndex={-1}
+                                hover
+                            >
+                                {row.getVisibleCells().map((cell) => (
+                                    <StyledTableCell
+                                        variant="body"
+                                        key={cell.id}
+                                        sx={{
+                                            width: "auto",
+                                            whiteSpace: "nowrap",
+                                        }}
+                                    >
+                                        {flexRender(
+                                            cell.column.columnDef.cell,
+                                            cell.getContext()
+                                        )}
+                                    </StyledTableCell>
+                                ))}
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
             <Box position="relative">
                 {isFetching && (
                     <LinearProgress
@@ -177,7 +188,7 @@ const EnhancedTable = <T extends object>({
                     showLastButton
                 />
             </Box>
-        </TableContainer>
+        </>
     );
 };
 

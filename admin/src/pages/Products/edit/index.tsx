@@ -56,8 +56,6 @@ const ProductsEdit = () => {
         imageUrl: (productsData?.result.imageUrl as string[])?.join(",\n"),
     };
 
-    console.log(updatedInitialValues);
-
     return (
         <CrudModule
             actionForm={

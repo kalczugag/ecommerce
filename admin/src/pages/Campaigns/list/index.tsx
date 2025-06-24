@@ -16,9 +16,11 @@ const columns = [
     columnHelper.accessor("name", {
         header: "Name",
         cell: (info) => info.getValue(),
+        sortingFn: "alphanumeric",
     }),
     columnHelper.display({
         id: "period",
+        header: "Period",
         cell: (info) => {
             const start = moment(info.row.original.startDate).format(
                 "DD/MM/YYYY"
@@ -51,6 +53,7 @@ const columns = [
     columnHelper.accessor((row) => `${row.discount}%`, {
         header: "Discount",
         cell: (info) => info.getValue(),
+        sortingFn: "basic",
     }),
     columnHelper.accessor("status", {
         header: "Status",
@@ -61,6 +64,7 @@ const columns = [
                 size="small"
             />
         ),
+        sortingFn: "alphanumeric",
     }),
     columnHelper.accessor("hidden", {
         header: "Hidden",
@@ -71,6 +75,7 @@ const columns = [
                 variant="outlined"
             />
         ),
+        sortingFn: "basic",
     }),
     columnHelper.display({
         id: "actions",

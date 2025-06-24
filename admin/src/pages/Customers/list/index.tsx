@@ -11,6 +11,7 @@ const columnHelper = createColumnHelper<User>();
 
 const columns = [
     columnHelper.accessor((row) => `${row.firstName} ${row.lastName}`, {
+        id: "firstName",
         header: "Name",
         cell: (info) => {
             const user = info.row.original;
@@ -32,14 +33,17 @@ const columns = [
                 </Stack>
             );
         },
+        sortingFn: "alphanumeric",
     }),
     columnHelper.accessor("phone", {
         header: "Phone number",
         cell: (info) => info.getValue() ?? "-",
+        sortingFn: "basic",
     }),
     columnHelper.accessor("email", {
         header: "Email",
         cell: (info) => info.getValue(),
+        sortingFn: "alphanumeric",
     }),
     columnHelper.accessor("_role.name", {
         header: "Role",
@@ -51,6 +55,7 @@ const columns = [
                 label={info.getValue()}
             />
         ),
+        sortingFn: "alphanumeric",
     }),
     columnHelper.display({
         id: "actions",

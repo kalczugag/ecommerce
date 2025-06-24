@@ -1,4 +1,4 @@
-import { createColumnHelper } from "@tanstack/react-table";
+import { createColumnHelper, sortingFns } from "@tanstack/react-table";
 import { useLazyGetAllOrdersQuery } from "@/store";
 import { useTitle } from "@/hooks/useTitle";
 import CrudModule from "@/modules/CrudModule";
@@ -13,17 +13,21 @@ const columnHelper = createColumnHelper<Order>();
 
 const columns = [
     columnHelper.accessor((row) => `#${row.orderNumber}`, {
+        id: "orderNumber",
         header: "Order Number",
         cell: (info) => (
             <UnderlineLink to={`/orders/${info.row.original._id}`}>
                 {info.getValue()}
             </UnderlineLink>
         ),
+        sortingFn: "basic",
     }),
     columnHelper.accessor(
         (row) => `${row._user.firstName} ${row._user.firstName}`,
         {
+            id: "_user.firstName",
             header: "Customer",
+
             cell: (info) => (
                 <Stack direction="row" spacing={2} alignItems="center">
                     {/* <Avatar
@@ -40,6 +44,7 @@ const columns = [
                     </Stack>
                 </Stack>
             ),
+            sortingFn: "alphanumeric",
         }
     ),
     columnHelper.accessor("createdAt", {
@@ -61,6 +66,7 @@ const columns = [
                 </Stack>
             );
         },
+        sortingFn: "datetime",
     }),
     columnHelper.accessor("items", {
         header: "Items",
@@ -71,10 +77,12 @@ const columns = [
 
             return count;
         },
+        sortingFn: "basic",
     }),
     columnHelper.accessor((row) => `$${row.total.toFixed(2)}`, {
         header: "Price",
         cell: (info) => info.getValue(),
+        sortingFn: "basic",
     }),
     columnHelper.accessor("status", {
         header: "Status",
@@ -86,6 +94,7 @@ const columns = [
                 size="small"
             />
         ),
+        sortingFn: "alphanumeric",
     }),
     columnHelper.display({
         id: "actions",

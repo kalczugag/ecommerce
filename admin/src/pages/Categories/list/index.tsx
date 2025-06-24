@@ -15,6 +15,7 @@ const columns = [
     columnHelper.accessor("name", {
         header: "Name",
         cell: (info) => info.getValue(),
+        sortingFn: "alphanumeric",
     }),
     columnHelper.accessor("description", {
         header: "Description",
@@ -23,10 +24,12 @@ const columns = [
     columnHelper.accessor("_parentCategory", {
         header: "Parent Category",
         cell: (info) => info.getValue()?.name || "",
+        sortingFn: "alphanumeric",
     }),
     columnHelper.accessor("level", {
         header: "Level",
         cell: (info) => info.getValue(),
+        sortingFn: "basic",
     }),
     columnHelper.display({
         id: "actions",

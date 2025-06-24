@@ -31,6 +31,7 @@ const columns = [
                 </Stack>
             </Stack>
         ),
+        sortingFn: "alphanumeric",
     }),
     columnHelper.accessor("createdAt", {
         header: "Create at",
@@ -51,6 +52,7 @@ const columns = [
                 </Stack>
             );
         },
+        sortingFn: "datetime",
     }),
     columnHelper.accessor("quantity", {
         header: "Stock",
@@ -85,14 +87,17 @@ const columns = [
                 </Stack>
             );
         },
+        sortingFn: "basic",
     }),
     columnHelper.accessor((row) => `$${row.price.toFixed(2)}`, {
         header: "Price",
         cell: (info) => info.getValue(),
+        sortingFn: "basic",
     }),
     columnHelper.display({
         id: "actions",
         cell: ({ row }) => <ActionCell row={row} />,
+        enableSorting: false,
     }),
 ];
 
