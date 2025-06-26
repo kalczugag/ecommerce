@@ -104,7 +104,7 @@ const EnhancedTable = <T extends object>({
 
     return (
         <>
-            <TableContainer sx={{ maxHeight: "calc(100vh - 300px)" }}>
+            <TableContainer sx={{ maxHeight: "calc(100vh - 340px)" }}>
                 <Table stickyHeader>
                     <TableHead>
                         {table.getHeaderGroups().map((headerGroup) => (
@@ -119,6 +119,12 @@ const EnhancedTable = <T extends object>({
                                             active={Boolean(
                                                 header.column.getIsSorted()
                                             )}
+                                            direction={
+                                                header.column.getIsSorted() ===
+                                                "asc"
+                                                    ? "asc"
+                                                    : "desc"
+                                            }
                                             onClick={header.column.getToggleSortingHandler()}
                                         >
                                             {header.isPlaceholder
