@@ -1,13 +1,20 @@
+import { useMemo } from "react";
+import { Field } from "react-final-form";
 import { createColumnHelper, sortingFns } from "@tanstack/react-table";
 import { useLazyGetAllOrdersQuery } from "@/store";
+import dayjs from "dayjs";
 import { useTitle } from "@/hooks/useTitle";
 import CrudModule from "@/modules/CrudModule";
 import UnderlineLink from "@/components/UnderlineLink";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import type { Order } from "@/types/Order";
-import { Stack, Typography } from "@mui/material";
+import { Stack, Typography, TextField } from "@mui/material";
 import StatusChip from "@/components/StatusChip";
 import TableActions from "@/components/Table2/components/TableActions";
 import moment from "moment";
+import TableFilters from "@/components/Table2/components/TableFilters";
 
 const columnHelper = createColumnHelper<Order>();
 
@@ -117,7 +124,46 @@ const ActionCell = ({ row }: { row: any }) => {
 const OrdersList = () => {
     useTitle("Orders - List");
 
-    return <CrudModule columns={columns} queryFn={useLazyGetAllOrdersQuery} />;
+    const filters = useMemo(() => {
+        return (
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <Stack direction="row" spacing={2}>
+                    <Field name="createdAt">
+                        {({ input }) => {
+                            const value = input.value
+                                ? dayjs(input.value)
+                                : null;
+
+                            return (
+                                <DatePicker
+                                    label="Order date"
+                                    value={value}
+                                    onChange={input.onChange}
+                                />
+                            );
+                        }}
+                    </Field>
+                    <Field name="search">
+                        {({ input }) => (
+                            <TextField
+                                {...input}
+                                placeholder="Search customer or order number"
+                                fullWidth
+                            />
+                        )}
+                    </Field>
+                </Stack>
+            </LocalizationProvider>
+        );
+    }, []);
+
+    return (
+        <CrudModule
+            actionForm={<TableFilters>{filters}</TableFilters>}
+            columns={columns}
+            queryFn={useLazyGetAllOrdersQuery}
+        />
+    );
 };
 
 export default OrdersList;

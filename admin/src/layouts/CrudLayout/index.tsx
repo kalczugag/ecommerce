@@ -3,12 +3,13 @@ import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
 import {
     Box,
     Breadcrumbs,
+    Button,
     IconButton,
     Link,
     Stack,
     Typography,
 } from "@mui/material";
-import { KeyboardArrowLeft } from "@mui/icons-material";
+import { KeyboardArrowLeft, Add } from "@mui/icons-material";
 
 interface CrudLayoutProps {
     headerPanel?: ReactNode;
@@ -58,47 +59,63 @@ const CrudLayout = ({ headerPanel, children }: CrudLayoutProps) => {
 
     return (
         <Stack spacing={4}>
-            <Stack spacing={1}>
-                <Stack direction="row" alignItems="center">
-                    {breadcrumbs.length > 1 && (
-                        <IconButton
-                            size="small"
-                            color="inherit"
-                            disableRipple
-                            onClick={() => navigate(-1)}
-                        >
-                            <KeyboardArrowLeft />
-                        </IconButton>
-                    )}
-                    <Typography variant="h5">{title}</Typography>
-                </Stack>
-                <Breadcrumbs>
-                    <Link
-                        component={RouterLink}
-                        to="/"
-                        underline="hover"
-                        color="inherit"
-                    >
-                        Home
-                    </Link>
-                    {breadcrumbs.map(({ label, path, isLast }) =>
-                        isLast ? (
-                            <Typography key={path} color="text.primary">
-                                {label}
-                            </Typography>
-                        ) : (
-                            <Link
-                                key={path}
-                                component={RouterLink}
-                                to={path}
-                                underline="hover"
+            <Stack
+                spacing={1}
+                direction="row"
+                alignItems="center"
+                justifyContent="space-between"
+            >
+                <Box>
+                    <Stack direction="row" alignItems="center">
+                        {breadcrumbs.length > 1 && (
+                            <IconButton
+                                size="small"
                                 color="inherit"
+                                disableRipple
+                                onClick={() => navigate(-1)}
                             >
-                                {label}
-                            </Link>
-                        )
-                    )}
-                </Breadcrumbs>
+                                <KeyboardArrowLeft />
+                            </IconButton>
+                        )}
+                        <Typography variant="h5">{title}</Typography>
+                    </Stack>
+                    <Breadcrumbs>
+                        <Link
+                            component={RouterLink}
+                            to="/"
+                            underline="hover"
+                            color="inherit"
+                        >
+                            Home
+                        </Link>
+                        {breadcrumbs.map(({ label, path, isLast }) =>
+                            isLast ? (
+                                <Typography key={path} color="text.primary">
+                                    {label}
+                                </Typography>
+                            ) : (
+                                <Link
+                                    key={path}
+                                    component={RouterLink}
+                                    to={path}
+                                    underline="hover"
+                                    color="inherit"
+                                >
+                                    {label}
+                                </Link>
+                            )
+                        )}
+                    </Breadcrumbs>
+                </Box>
+                {!pathname.includes("add") && (
+                    <Button
+                        variant="contained"
+                        startIcon={<Add />}
+                        onClick={() => navigate("add")}
+                    >
+                        Add
+                    </Button>
+                )}
             </Stack>
             {headerPanel && <Box>{headerPanel}</Box>}
             {children}

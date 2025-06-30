@@ -18,9 +18,9 @@ import {
     ColumnDef,
     flexRender,
     getCoreRowModel,
-    getSortedRowModel,
-    SortingState,
     useReactTable,
+    ColumnFiltersState,
+    SortingState,
 } from "@tanstack/react-table";
 import { useEffect, useMemo, useState } from "react";
 
@@ -64,6 +64,7 @@ const EnhancedTable = <T extends object>({
 }: EnhancedTableProps<T>) => {
     const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 5 });
     const [sorting, setSorting] = useState<SortingState>([]);
+    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
     const [trigger, { data, isFetching }] = queryFn();
 
@@ -93,10 +94,10 @@ const EnhancedTable = <T extends object>({
             pagination,
             sorting,
         },
-        debugTable: true,
         enableRowSelection: true,
         manualPagination: true,
         manualSorting: true,
+        manualFiltering: true,
         onPaginationChange: setPagination,
         onSortingChange: setSorting,
         getCoreRowModel: getCoreRowModel(),
