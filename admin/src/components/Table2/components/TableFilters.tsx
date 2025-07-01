@@ -1,17 +1,28 @@
 import { ReactNode } from "react";
-import { Form } from "react-final-form";
+import { Form, FormSpy } from "react-final-form";
 
 interface TableFiltersProps {
-    children?: ReactNode;
-    onSubmit?: (values: any) => void;
+    children: ReactNode;
+    onSubmit: (values: any) => void;
 }
 
 const TableFilters = ({ children, onSubmit }: TableFiltersProps) => {
     return (
         <Form
-            onSubmit={() => {}}
-            render={({ handleSubmit }) => (
-                <form onSubmit={handleSubmit}>{children}</form>
+            onSubmit={onSubmit}
+            subscription={{}}
+            render={({ handleSubmit, form }) => (
+                <form onSubmit={handleSubmit}>
+                    <FormSpy
+                        subscription={{ values: true, pristine: true }}
+                        onChange={({ pristine }) => {
+                            if (!pristine) {
+                                form.submit();
+                            }
+                        }}
+                    />
+                    {children}
+                </form>
             )}
         />
     );

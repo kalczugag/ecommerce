@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Field } from "react-final-form";
-import { createColumnHelper, sortingFns } from "@tanstack/react-table";
+import { createColumnHelper } from "@tanstack/react-table";
 import { useLazyGetAllOrdersQuery } from "@/store";
 import dayjs from "dayjs";
 import { useTitle } from "@/hooks/useTitle";
@@ -14,7 +14,6 @@ import { Stack, Typography, TextField } from "@mui/material";
 import StatusChip from "@/components/StatusChip";
 import TableActions from "@/components/Table2/components/TableActions";
 import moment from "moment";
-import TableFilters from "@/components/Table2/components/TableFilters";
 
 const columnHelper = createColumnHelper<Order>();
 
@@ -124,7 +123,7 @@ const ActionCell = ({ row }: { row: any }) => {
 const OrdersList = () => {
     useTitle("Orders - List");
 
-    const filters = useMemo(() => {
+    const filterElements = useMemo(() => {
         return (
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <Stack direction="row" spacing={2}>
@@ -147,7 +146,7 @@ const OrdersList = () => {
                         {({ input }) => (
                             <TextField
                                 {...input}
-                                placeholder="Search customer or order number"
+                                placeholder="Search customer or order number..."
                                 fullWidth
                             />
                         )}
@@ -159,7 +158,7 @@ const OrdersList = () => {
 
     return (
         <CrudModule
-            actionForm={<TableFilters>{filters}</TableFilters>}
+            actionForm={filterElements}
             columns={columns}
             queryFn={useLazyGetAllOrdersQuery}
         />

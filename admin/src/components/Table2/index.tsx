@@ -1,3 +1,4 @@
+import { useTableContext } from "@/contexts/TableContext";
 import type { LazyGetTriggerType } from "@/types/global";
 import {
     Box,
@@ -12,21 +13,13 @@ import {
     TablePagination,
     TableRow,
     tableCellClasses,
-    Checkbox,
 } from "@mui/material";
-import {
-    ColumnDef,
-    flexRender,
-    getCoreRowModel,
-    useReactTable,
-    ColumnFiltersState,
-    SortingState,
-} from "@tanstack/react-table";
-import { useEffect, useMemo, useState } from "react";
+import { ColumnDef, flexRender } from "@tanstack/react-table";
 
 export interface EnhancedTableProps<T> {
     columns: ColumnDef<T, any>[];
     queryFn: LazyGetTriggerType<T, any>;
+    isLoading: boolean;
 }
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -38,70 +31,13 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     },
 }));
 
-const createSelectColumn = <T extends object>(): ColumnDef<T, unknown> => ({
-    id: "select",
-    header: ({ table }) => (
-        <Checkbox
-            checked={table.getIsAllRowsSelected()}
-            indeterminate={table.getIsSomeRowsSelected()}
-            onChange={table.getToggleAllRowsSelectedHandler()}
-        />
-    ),
-    cell: ({ row }) => (
-        <Checkbox
-            checked={row.getIsSelected()}
-            indeterminate={row.getIsSomeSelected()}
-            disabled={!row.getCanSelect()}
-            onChange={row.getToggleSelectedHandler()}
-        />
-    ),
-    enableSorting: false,
-});
-
 const EnhancedTable = <T extends object>({
-    columns,
-    queryFn,
-}: EnhancedTableProps<T>) => {
-    const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 5 });
-    const [sorting, setSorting] = useState<SortingState>([]);
-    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+    isLoading,
+}: Partial<EnhancedTableProps<T>>) => {
+    const table = useTableContext<T>();
 
-    const [trigger, { data, isFetching }] = queryFn();
-
-    useEffect(() => {
-        trigger(
-            {
-                skip: pagination.pageIndex,
-                limit: pagination.pageSize,
-                sort: sorting.map(
-                    (s) => `${s.desc ? "-" : ""}${s.id.toLowerCase()}`
-                ),
-            },
-            true
-        );
-    }, [pagination.pageIndex, pagination.pageSize, sorting]);
-
-    const extendedColumns = useMemo<ColumnDef<T, any>[]>(
-        () => [createSelectColumn<T>(), ...columns],
-        [columns]
-    );
-
-    const table = useReactTable({
-        data: data?.result || [],
-        columns: extendedColumns,
-        rowCount: data?.count,
-        state: {
-            pagination,
-            sorting,
-        },
-        enableRowSelection: true,
-        manualPagination: true,
-        manualSorting: true,
-        manualFiltering: true,
-        onPaginationChange: setPagination,
-        onSortingChange: setSorting,
-        getCoreRowModel: getCoreRowModel(),
-    });
+    const { pagination } = table.getState();
+    const { rowCount } = table.options;
 
     return (
         <>
@@ -170,7 +106,7 @@ const EnhancedTable = <T extends object>({
                 </Table>
             </TableContainer>
             <Box position="relative">
-                {isFetching && (
+                {isLoading && (
                     <LinearProgress
                         sx={{
                             position: "absolute",
@@ -182,7 +118,7 @@ const EnhancedTable = <T extends object>({
                 )}
                 <TablePagination
                     component="div"
-                    count={data?.count || 0}
+                    count={rowCount || 0}
                     page={pagination.pageIndex}
                     rowsPerPage={pagination.pageSize}
                     onPageChange={(_, newPage) => table.setPageIndex(newPage)}
