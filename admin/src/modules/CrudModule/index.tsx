@@ -5,6 +5,7 @@ import {
     useReactTable,
     SortingState,
 } from "@tanstack/react-table";
+import dayjs from "dayjs";
 import TableContext, { useTableContext } from "@/contexts/TableContext";
 import CrudLayout from "@/layouts/CrudLayout";
 import Table, { type EnhancedTableProps } from "@/components/Table2";
@@ -86,11 +87,20 @@ const CrudModule = <T extends object>({
         getCoreRowModel: getCoreRowModel(),
     });
 
-    const handleSubmit = useDebounce((values: any) => {
-        setGlobalFilters({
-            $or: [{ _id: values.search }, { _user: values.search }],
-        });
-    }, 300);
+    const handleSubmit = useDebounce(
+        (values: { search: string; orderDate: any }) => {
+            const isoDate =
+                values.orderDate && dayjs(values.orderDate).isValid()
+                    ? dayjs(values.orderDate).toISOString()
+                    : "";
+
+            setGlobalFilters({
+                search: values.search || undefined,
+                orderDate: isoDate || undefined,
+            });
+        },
+        300
+    );
 
     useEffect(() => {
         console.log(globalFilter);

@@ -29,24 +29,34 @@ export const getAllOrders = async (
         ? parseInt(parsedQuery.limit as unknown as string, 10)
         : 5;
 
+    const match: Record<string, any> = {};
+
+    const { search, orderDate } = parsedQuery.filter;
+
+    console.log(parsedQuery.filter);
+
+    if (orderDate) {
+        const iso = new Date(orderDate);
+
+        match.createdAt = {
+            $gte: iso,
+        };
+    }
+
+    if (search) {
+        const parsedNumber = parseInt(search, 10);
+        const isNum = !isNaN(parsedNumber);
+
+        match.$or = [
+            ...(isNum ? [{ orderNumber: parsedNumber }] : []),
+            { "_user.firstName": { $regex: search, $options: "i" } },
+            { "_user.lastName": { $regex: search, $options: "i" } },
+            { "_user.email": { $regex: search, $options: "i" } },
+        ];
+    }
+
     try {
-        const orders = await OrderModel.aggregate([
-            { $match: parsedQuery.filter },
-            {
-                $addFields: {
-                    statusPriority: {
-                        $switch: {
-                            branches: Object.entries(statusPriority).map(
-                                ([key, value]) => ({
-                                    case: { $eq: ["$status", key] },
-                                    then: value,
-                                })
-                            ),
-                            default: 99,
-                        },
-                    },
-                },
-            },
+        const pipeline = [
             {
                 $lookup: {
                     from: "baseitems",
@@ -67,11 +77,6 @@ export const getAllOrders = async (
                 },
             },
             {
-                $set: {
-                    _user: { $arrayElemAt: ["$_user", 0] },
-                },
-            },
-            {
                 $lookup: {
                     from: "payments",
                     localField: "payments",
@@ -80,14 +85,49 @@ export const getAllOrders = async (
                     as: "payments",
                 },
             },
-            { $sort: { statusPriority: 1, createdAt: -1 } },
-            { $skip: page * pageSize },
-            { $limit: pageSize },
+            {
+                $match: match,
+            },
+            {
+                $addFields: {
+                    statusPriority: {
+                        $switch: {
+                            branches: Object.entries(statusPriority).map(
+                                ([key, value]) => ({
+                                    case: { $eq: ["$status", key] },
+                                    then: value,
+                                })
+                            ),
+                            default: 99,
+                        },
+                    },
+                },
+            },
+            {
+                $set: {
+                    _user: { $arrayElemAt: ["$_user", 0] },
+                },
+            },
+            { $sort: { statusPriority: 1 as 1, createdAt: -1 as -1 } },
+        ];
+
+        const result = await OrderModel.aggregate([
+            ...pipeline,
+            {
+                $facet: {
+                    data: [{ $skip: page * pageSize }, { $limit: pageSize }],
+                    total: [{ $count: "count" }],
+                },
+            },
         ]);
 
-        const totalDocuments = await OrderModel.countDocuments(
-            parsedQuery.filter
-        );
+        // const countResult = await OrderModel.aggregate([
+        //     ...pipeline,
+        //     { $count: "total" },
+        // ]);
+
+        const orders = result[0]?.data || [];
+        const totalDocuments = result[0]?.total[0]?.count || 0;
 
         if (!orders.length) {
             return res

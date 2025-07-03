@@ -80,6 +80,8 @@ const orderSchema = new mongoose.Schema<Order>(
     { timestamps: true }
 );
 
+orderSchema.index({ createdAt: 1 });
+
 orderSchema.pre("save", async function (next) {
     if (!this.orderNumber) {
         try {
