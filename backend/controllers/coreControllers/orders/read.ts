@@ -1,8 +1,14 @@
 import express from "express";
+import { MongooseQueryParser } from "mongoose-query-parser";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import tz from "dayjs/plugin/timezone";
 import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import { OrderModel } from "../../../models/Order";
 import { PaginatedOrders } from "../../../types/Order";
-import { MongooseQueryParser } from "mongoose-query-parser";
+
+dayjs.extend(utc);
+dayjs.extend(tz);
 
 const statusPriority = {
     placed: 1,
@@ -38,9 +44,12 @@ export const getAllOrders = async (
     if (orderDate) {
         const iso = new Date(orderDate);
 
-        match.createdAt = {
-            $gte: iso,
-        };
+        const localDay = dayjs(iso).tz("Europe/Warsaw");
+
+        const start = localDay.startOf("day").utc().toDate();
+        const end = localDay.add(1, "day").startOf("day").utc().toDate();
+
+        match.createdAt = { $gte: start, $lt: end };
     }
 
     if (search) {
@@ -132,7 +141,7 @@ export const getAllOrders = async (
         if (!orders.length) {
             return res
                 .status(404)
-                .json(errorResponse(null, "No orders found", 404));
+                .json(errorResponse([], "No orders found", 404));
         }
 
         return res

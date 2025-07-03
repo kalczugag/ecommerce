@@ -5,13 +5,13 @@ import {
     useReactTable,
     SortingState,
 } from "@tanstack/react-table";
-import dayjs from "dayjs";
 import TableContext, { useTableContext } from "@/contexts/TableContext";
+import useDebounce from "@/hooks/useDebounce";
+import { normalizeValues } from "@/utils/helpers";
 import CrudLayout from "@/layouts/CrudLayout";
 import Table, { type EnhancedTableProps } from "@/components/Table2";
 import { Checkbox } from "@mui/material";
 import TableFilters from "@/components/Table2/components/TableFilters";
-import useDebounce from "@/hooks/useDebounce";
 
 export interface CrudModuleProps<T>
     extends Omit<EnhancedTableProps<T>, "isLoading"> {
@@ -49,19 +49,21 @@ const CrudModule = <T extends object>({
 
     const [trigger, { data, isFetching }] = queryFn();
 
+    const queryArgs = useMemo(
+        () => ({
+            skip: pagination.pageIndex,
+            limit: pagination.pageSize,
+            sort: sorting.map(
+                (s) => `${s.desc ? "-" : ""}${s.id.toLowerCase()}`
+            ),
+            filter: globalFilter,
+        }),
+        [pagination.pageIndex, pagination.pageSize, sorting, globalFilter]
+    );
+
     useEffect(() => {
-        trigger(
-            {
-                skip: pagination.pageIndex,
-                limit: pagination.pageSize,
-                sort: sorting.map(
-                    (s) => `${s.desc ? "-" : ""}${s.id.toLowerCase()}`
-                ),
-                filter: globalFilter,
-            },
-            true
-        );
-    }, [pagination.pageIndex, pagination.pageSize, sorting, globalFilter]);
+        trigger(queryArgs, true);
+    }, [queryArgs]);
 
     const extendedColumns = useMemo<ColumnDef<T, any>[]>(
         () => [createSelectColumn<T>(), ...columns],
@@ -87,24 +89,11 @@ const CrudModule = <T extends object>({
         getCoreRowModel: getCoreRowModel(),
     });
 
-    const handleSubmit = useDebounce(
-        (values: { search: string; orderDate: any }) => {
-            const isoDate =
-                values.orderDate && dayjs(values.orderDate).isValid()
-                    ? dayjs(values.orderDate).toISOString()
-                    : "";
+    console.log(data);
 
-            setGlobalFilters({
-                search: values.search || undefined,
-                orderDate: isoDate || undefined,
-            });
-        },
-        300
-    );
-
-    useEffect(() => {
-        console.log(globalFilter);
-    }, [globalFilter]);
+    const handleSubmit = useDebounce((values: any) => {
+        setGlobalFilters(normalizeValues(values));
+    }, 300);
 
     return (
         <TableContext.Provider value={table}>

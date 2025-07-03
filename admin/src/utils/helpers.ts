@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 export const placeholderArray = (length: number) => {
     return new Array(length).fill(null);
 };
@@ -29,4 +31,11 @@ export const comparison = (thisData: number, lastData: number) => {
     ).toFixed(2);
 
     return +percentageDifference;
+};
+
+export const normalizeValues = <T>(values: T): T => {
+    const json = JSON.stringify(values, (_, value) => {
+        return dayjs.isDayjs(value) ? value.toISOString() : value;
+    });
+    return JSON.parse(json);
 };
