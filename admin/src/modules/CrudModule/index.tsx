@@ -5,7 +5,7 @@ import {
     useReactTable,
     SortingState,
 } from "@tanstack/react-table";
-import TableContext, { useTableContext } from "@/contexts/TableContext";
+import TableContext from "@/contexts/TableContext";
 import useDebounce from "@/hooks/useDebounce";
 import { normalizeValues } from "@/utils/helpers";
 import CrudLayout from "@/layouts/CrudLayout";
@@ -14,8 +14,9 @@ import { Checkbox } from "@mui/material";
 import TableFilters from "@/components/Table2/components/TableFilters";
 
 export interface CrudModuleProps<T>
-    extends Omit<EnhancedTableProps<T>, "isLoading"> {
+    extends Partial<Omit<EnhancedTableProps<T>, "isLoading">> {
     actionForm?: ReactNode;
+    withTable?: boolean;
 }
 
 const createSelectColumn = <T extends object>(): ColumnDef<T, unknown> => ({
@@ -42,33 +43,42 @@ const CrudModule = <T extends object>({
     columns,
     queryFn,
     actionForm,
+    withTable = true,
 }: CrudModuleProps<T>) => {
     const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 5 });
     const [sorting, setSorting] = useState<SortingState>([]);
     const [globalFilter, setGlobalFilters] = useState<any>([]);
 
-    const [trigger, { data, isFetching }] = queryFn();
+    const [trigger, result] = queryFn?.() || [];
+    const { data, isFetching } = result || {};
 
-    const queryArgs = useMemo(
-        () => ({
+    const queryArgs = useMemo(() => {
+        if (!withTable) return null;
+
+        return {
             skip: pagination.pageIndex,
             limit: pagination.pageSize,
             sort: sorting.map(
                 (s) => `${s.desc ? "-" : ""}${s.id.toLowerCase()}`
             ),
             filter: globalFilter,
-        }),
-        [pagination.pageIndex, pagination.pageSize, sorting, globalFilter]
-    );
+        };
+    }, [
+        pagination.pageIndex,
+        pagination.pageSize,
+        sorting,
+        globalFilter,
+        withTable,
+    ]);
 
     useEffect(() => {
-        trigger(queryArgs, true);
+        if (withTable && trigger && queryArgs) trigger(queryArgs, true);
     }, [queryArgs]);
 
-    const extendedColumns = useMemo<ColumnDef<T, any>[]>(
-        () => [createSelectColumn<T>(), ...columns],
-        [columns]
-    );
+    const extendedColumns = useMemo<ColumnDef<T, any>[]>(() => {
+        if (!columns) return [];
+        return [createSelectColumn<T>(), ...columns];
+    }, [columns]);
 
     const table = useReactTable({
         data: data?.result || [],
@@ -89,26 +99,27 @@ const CrudModule = <T extends object>({
         getCoreRowModel: getCoreRowModel(),
     });
 
-    console.log(data);
-
     const handleSubmit = useDebounce((values: any) => {
-        setGlobalFilters(normalizeValues(values));
+        if (withTable) setGlobalFilters(normalizeValues(values));
     }, 300);
+
+    const hasTable = withTable && table && columns && queryFn;
+    const headerContent = hasTable ? (
+        <TableFilters onSubmit={handleSubmit}>{actionForm}</TableFilters>
+    ) : (
+        <>{actionForm}</>
+    );
 
     return (
         <TableContext.Provider value={table}>
-            <CrudLayout
-                headerPanel={
-                    <TableFilters onSubmit={handleSubmit}>
-                        {actionForm}
-                    </TableFilters>
-                }
-            >
-                <Table
-                    columns={columns}
-                    queryFn={queryFn}
-                    isLoading={isFetching}
-                />
+            <CrudLayout headerPanel={headerContent}>
+                {hasTable && (
+                    <Table
+                        columns={columns}
+                        queryFn={queryFn}
+                        isLoading={isFetching}
+                    />
+                )}
             </CrudLayout>
         </TableContext.Provider>
     );
