@@ -1,12 +1,25 @@
+import { useMemo } from "react";
+import { Field } from "react-final-form";
 import { createColumnHelper } from "@tanstack/react-table";
 import { useLazyGetAllProductsQuery, useDeleteProductMutation } from "@/store";
 import { useTitle } from "@/hooks/useTitle";
 import { useHandleMutation } from "@/hooks/useHandleMutation";
-import { Avatar, Box, Stack, Typography } from "@mui/material";
+import {
+    Avatar,
+    Box,
+    FormControl,
+    InputLabel,
+    OutlinedInput,
+    Select,
+    Stack,
+    TextField,
+    Typography,
+} from "@mui/material";
 import CrudModule from "@/modules/CrudModule";
 import TableActions from "@/components/Table2/components/TableActions";
 import type { Product } from "@/types/Product";
 import moment from "moment";
+import SearchItem from "@/components/SearchItem";
 
 const columnHelper = createColumnHelper<Product>();
 
@@ -19,7 +32,7 @@ const columns = [
                     variant="square"
                     src={info.row.original.imageUrl[0]}
                     alt="product image"
-                    sx={{ width: 70, height: 70 }}
+                    sx={{ width: 60, height: 60, borderRadius: 2 }}
                 />
                 <Stack spacing={0.3}>
                     <Typography variant="body2" fontWeight={500}>
@@ -125,8 +138,33 @@ const ActionCell = ({ row }: { row: any }) => {
 const ProductsList = () => {
     useTitle("Products - List");
 
+    const filterElements = useMemo(
+        () => (
+            <Stack direction="row" spacing={2}>
+                <Field name="stock" type="select">
+                    {({ input }) => (
+                        <FormControl>
+                            <InputLabel>Stock</InputLabel>
+                            <Select
+                                {...input}
+                                multiple
+                                input={<OutlinedInput />}
+                            ></Select>
+                        </FormControl>
+                    )}
+                </Field>
+                <Field name="search">{({ input }) => <SearchItem />}</Field>
+            </Stack>
+        ),
+        []
+    );
+
     return (
-        <CrudModule columns={columns} queryFn={useLazyGetAllProductsQuery} />
+        <CrudModule
+            actionForm={filterElements}
+            columns={columns}
+            queryFn={useLazyGetAllProductsQuery}
+        />
     );
 };
 

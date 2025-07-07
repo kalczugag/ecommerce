@@ -42,7 +42,7 @@ const EnhancedTable = <T extends object>({
     return (
         <>
             <TableContainer sx={{ maxHeight: "calc(100vh - 340px)" }}>
-                <Table stickyHeader>
+                <Table stickyHeader size="small">
                     <TableHead>
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>

@@ -52,7 +52,13 @@ const ManageModule = ({ config, data, isLoading }: ManageModuleProps) => {
     return (
         <Box sx={{ width: "100%" }}>
             <Box sx={{ borderBottom: "1px", borderColor: "divider" }}>
-                <Tabs value={currentTab} onChange={handleTabChange}>
+                <Tabs
+                    value={currentTab}
+                    onChange={handleTabChange}
+                    variant="scrollable"
+                    scrollButtons
+                    allowScrollButtonsMobile
+                >
                     {config.map((tab, index) => (
                         <Tab
                             key={tab.key}

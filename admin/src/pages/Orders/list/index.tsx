@@ -14,6 +14,7 @@ import { Stack, Typography, TextField } from "@mui/material";
 import StatusChip from "@/components/StatusChip";
 import TableActions from "@/components/Table2/components/TableActions";
 import moment from "moment";
+import SearchItem from "@/components/SearchItem";
 
 const columnHelper = createColumnHelper<Order>();
 
@@ -142,15 +143,7 @@ const OrdersList = () => {
                             );
                         }}
                     </Field>
-                    <Field name="search">
-                        {({ input }) => (
-                            <TextField
-                                {...input}
-                                placeholder="Search customer or order number..."
-                                fullWidth
-                            />
-                        )}
-                    </Field>
+                    <SearchItem placeholder="Search customer or order number..." />
                 </Stack>
             </LocalizationProvider>
         );
