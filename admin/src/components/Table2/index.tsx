@@ -13,8 +13,10 @@ import {
     TablePagination,
     TableRow,
     tableCellClasses,
+    Toolbar,
 } from "@mui/material";
 import { ColumnDef, flexRender } from "@tanstack/react-table";
+import EnhancedTableToolbar from "./components/TableToolbar";
 
 export interface EnhancedTableProps<T> {
     columns: ColumnDef<T, any>[];
@@ -40,7 +42,7 @@ const EnhancedTable = <T extends object>({
     const { rowCount } = table.options;
 
     return (
-        <>
+        <Box>
             <TableContainer sx={{ maxHeight: "calc(100vh - 340px)" }}>
                 <Table stickyHeader size="small">
                     <TableHead>
@@ -105,6 +107,7 @@ const EnhancedTable = <T extends object>({
                     </TableBody>
                 </Table>
             </TableContainer>
+            <EnhancedTableToolbar table={table} />
             <Box position="relative">
                 {isLoading && (
                     <LinearProgress
@@ -131,7 +134,7 @@ const EnhancedTable = <T extends object>({
                     showLastButton
                 />
             </Box>
-        </>
+        </Box>
     );
 };
 

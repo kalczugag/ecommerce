@@ -39,8 +39,6 @@ export const getAllOrders = async (
 
     const { search, orderDate } = parsedQuery.filter;
 
-    console.log(parsedQuery.filter);
-
     if (orderDate) {
         const iso = new Date(orderDate);
 

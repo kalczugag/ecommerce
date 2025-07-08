@@ -7,12 +7,14 @@ import { useHandleMutation } from "@/hooks/useHandleMutation";
 import {
     Avatar,
     Box,
+    Checkbox,
     FormControl,
     InputLabel,
+    ListItemText,
+    MenuItem,
     OutlinedInput,
     Select,
     Stack,
-    TextField,
     Typography,
 } from "@mui/material";
 import CrudModule from "@/modules/CrudModule";
@@ -135,25 +137,37 @@ const ActionCell = ({ row }: { row: any }) => {
     );
 };
 
+const stockOptions = [
+    { value: { $gt: 0 }, label: "In stock" },
+    { value: { $lt: 30 }, label: "Low stock" },
+    { value: { $lte: 0 }, label: "Out of stock" },
+];
+
 const ProductsList = () => {
     useTitle("Products - List");
 
     const filterElements = useMemo(
         () => (
             <Stack direction="row" spacing={2}>
-                <Field name="stock" type="select">
+                <Field name="quantity">
                     {({ input }) => (
-                        <FormControl>
+                        <FormControl sx={{ minWidth: 200 }}>
                             <InputLabel>Stock</InputLabel>
                             <Select
                                 {...input}
-                                multiple
-                                input={<OutlinedInput />}
-                            ></Select>
+                                input={<OutlinedInput label="Stock" />}
+                            >
+                                {stockOptions.map((option, index) => (
+                                    // @ts-expect-error ignoring object type for values
+                                    <MenuItem key={index} value={option.value}>
+                                        {option.label}
+                                    </MenuItem>
+                                ))}
+                            </Select>
                         </FormControl>
                     )}
                 </Field>
-                <Field name="search">{({ input }) => <SearchItem />}</Field>
+                <SearchItem />
             </Stack>
         ),
         []

@@ -1,11 +1,24 @@
 import { createColumnHelper } from "@tanstack/react-table";
 import { useDeleteUserMutation, useLazyGetAllUsersQuery } from "@/store";
 import { useTitle } from "@/hooks/useTitle";
-import { Avatar, Chip, Stack, Typography } from "@mui/material";
+import {
+    Avatar,
+    Chip,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    OutlinedInput,
+    Select,
+    Stack,
+    Typography,
+} from "@mui/material";
 import TableActions from "@/components/Table2/components/TableActions";
 import type { User } from "@/types/User";
 import { useHandleMutation } from "@/hooks/useHandleMutation";
 import CrudModule from "@/modules/CrudModule";
+import { useMemo } from "react";
+import { Field } from "react-final-form";
+import SearchItem from "@/components/SearchItem";
 
 const columnHelper = createColumnHelper<User>();
 
@@ -81,10 +94,44 @@ const ActionCell = ({ row }: { row: any }) => {
     );
 };
 
+const roles = ["admin", "client"];
+
 const CustomersList = () => {
     useTitle("Customers - List");
 
-    return <CrudModule columns={columns} queryFn={useLazyGetAllUsersQuery} />;
+    const filterElements = useMemo(
+        () => (
+            <Stack direction="row" spacing={2}>
+                <Field name="_role.name">
+                    {({ input }) => (
+                        <FormControl sx={{ minWidth: 200 }}>
+                            <InputLabel>Role</InputLabel>
+                            <Select
+                                {...input}
+                                input={<OutlinedInput label="Role" />}
+                            >
+                                {roles.map((option, index) => (
+                                    <MenuItem key={index} value={option}>
+                                        {option}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    )}
+                </Field>
+                <SearchItem />
+            </Stack>
+        ),
+        []
+    );
+
+    return (
+        <CrudModule
+            actionForm={filterElements}
+            columns={columns}
+            queryFn={useLazyGetAllUsersQuery}
+        />
+    );
 };
 
 export default CustomersList;

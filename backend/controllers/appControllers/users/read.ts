@@ -19,8 +19,21 @@ export const getAllUsers = async (
         ? parseInt(parsedQuery.limit as unknown as string, 10)
         : 5;
 
+    const match: Record<string, any> = {};
+
+    const { search } = parsedQuery.filter;
+
+    if (search) {
+        match.$or = [
+            { firstName: { $regex: search, $options: "i" } },
+            { lastName: { $regex: search, $options: "i" } },
+            { phone: { $regex: search, $options: "i" } },
+            { email: { $regex: search, $options: "i" } },
+        ];
+    }
+
     try {
-        let query = UserModel.find(parsedQuery.filter)
+        let query = UserModel.find(match)
             .select(parsedQuery.select)
             .sort(parsedQuery.sort)
             .skip(page * pageSize)
@@ -34,9 +47,7 @@ export const getAllUsers = async (
 
         const users = await query.exec();
 
-        const totalDocuments = await UserModel.countDocuments(
-            parsedQuery.filter
-        );
+        const totalDocuments = await UserModel.countDocuments(match);
 
         if (!users || users.length === 0) {
             return res
