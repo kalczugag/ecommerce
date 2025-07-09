@@ -11,6 +11,7 @@ import {
     Autocomplete,
     Avatar,
     Box,
+    Button,
     FormControl,
     FormControlLabel,
     FormGroup,
@@ -47,7 +48,7 @@ const VisuallyHiddenInput = styled("input")({
     width: 1,
 });
 
-const CustomerForm = ({ isLoading }: CustomerFormProps) => {
+const CustomerForm = ({ isLoading, isUpdateForm }: CustomerFormProps) => {
     const { data, isSuccess } = useGetRolesQuery();
 
     const fileRef = useRef<HTMLInputElement>(null);
@@ -57,7 +58,7 @@ const CustomerForm = ({ isLoading }: CustomerFormProps) => {
     return (
         <Grid container spacing={6}>
             <Grid container spacing={2} size={{ xs: 12, md: 4 }}>
-                <Grid size={12}>
+                <Grid size={12} mb={2}>
                     <Field name="photo" validate={validateFile}>
                         {({ input, meta }) => (
                             <Box textAlign="center" sx={{ mt: 2 }}>
@@ -161,6 +162,31 @@ const CustomerForm = ({ isLoading }: CustomerFormProps) => {
                     </Field>
                 </Grid>
                 <Grid size={12}>
+                    <Field name="banned" type="checkbox">
+                        {({ input, meta }) => (
+                            <FormControl
+                                component="fieldset"
+                                error={meta.touched && !!meta.error}
+                            >
+                                <FormLabel component="legend">Banned</FormLabel>
+                                <FormControlLabel
+                                    sx={{ ml: 0 }}
+                                    value="verified"
+                                    control={
+                                        <Switch {...input} color="primary" />
+                                    }
+                                    label={
+                                        <FormHelperText sx={{ ml: 0 }}>
+                                            Apply disable account
+                                        </FormHelperText>
+                                    }
+                                    labelPlacement="start"
+                                />
+                            </FormControl>
+                        )}
+                    </Field>
+                </Grid>
+                <Grid size={12}>
                     <Field name="emailVerified" type="checkbox">
                         {({ input, meta }) => (
                             <FormControl
@@ -170,29 +196,28 @@ const CustomerForm = ({ isLoading }: CustomerFormProps) => {
                                 <FormLabel component="legend">
                                     Email verified
                                 </FormLabel>
-                                <FormGroup row>
-                                    <FormControlLabel
-                                        sx={{ ml: 0 }}
-                                        value="verified"
-                                        control={
-                                            <Switch
-                                                {...input}
-                                                color="primary"
-                                            />
-                                        }
-                                        label={
-                                            <FormHelperText sx={{ ml: 0 }}>
-                                                Disabling this will
-                                                automatically send the user a
-                                                verification email
-                                            </FormHelperText>
-                                        }
-                                        labelPlacement="start"
-                                    />
-                                </FormGroup>
+                                <FormControlLabel
+                                    sx={{ ml: 0 }}
+                                    value="verified"
+                                    control={
+                                        <Switch {...input} color="primary" />
+                                    }
+                                    label={
+                                        <FormHelperText sx={{ ml: 0 }}>
+                                            Disabling this will automatically
+                                            send the user a verification email
+                                        </FormHelperText>
+                                    }
+                                    labelPlacement="start"
+                                />
                             </FormControl>
                         )}
                     </Field>
+                </Grid>
+                <Grid size={12}>
+                    <Button color="error" variant="contained">
+                        Delete customer
+                    </Button>
                 </Grid>
             </Grid>
             <Grid container spacing={2} size={{ xs: 12, md: 8 }}>

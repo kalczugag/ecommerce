@@ -58,7 +58,7 @@ const CrudLayout = ({ headerPanel, children }: CrudLayoutProps) => {
     const title = breadcrumbs.length === 1 ? "List" : lastElement.label;
 
     return (
-        <Stack spacing={4}>
+        <Stack spacing={4} sx={{ pb: 4 }}>
             <Stack
                 spacing={1}
                 direction="row"

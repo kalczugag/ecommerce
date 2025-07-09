@@ -2,11 +2,10 @@ import { cloneElement, isValidElement, ReactElement, ReactNode } from "react";
 import { Form, FormSpy } from "react-final-form";
 import arrayMutators from "final-form-arrays";
 import { useNavigate } from "react-router-dom";
-import { Button, Divider } from "@mui/material";
+import { Button } from "@mui/material";
 import Loading from "../Loading";
 import AlertDialog from "../AlertDialog";
 import Review from "../Review";
-import FormValuesDisplay from "../FormValuesDisplay";
 
 interface UpdateModalProps {
     formElements: ReactNode;
@@ -82,7 +81,7 @@ const UpdateForm = ({
                                         variant="contained"
                                         onClick={props.open}
                                     >
-                                        {buttonText || "Save"}
+                                        {buttonText || "Save changes"}
                                     </Button>
                                 )}
                             </AlertDialog>
