@@ -10,6 +10,7 @@ import FormValuesDisplay from "../FormValuesDisplay";
 
 interface CreateFormProps {
     formElements: ReactNode;
+    buttonText?: string;
     initialValues?: any;
     isLoading: boolean;
     formValuesDisplay?: boolean;
@@ -20,6 +21,7 @@ interface CreateFormProps {
 const CreateForm = ({
     handleSubmit,
     formElements,
+    buttonText,
     initialValues,
     isLoading,
     className,
@@ -74,15 +76,15 @@ const CreateForm = ({
                                     </div>
                                 )}
                             </FormSpy>
-                            <div className="flex space-x-2 mt-8">
-                                <Button
+                            <div className="flex justify-end space-x-2 mt-8">
+                                {/* <Button
                                     type="button"
                                     variant="contained"
                                     color="inherit"
                                     onClick={() => navigate(-1)}
                                 >
                                     Cancel
-                                </Button>
+                                </Button> */}
                                 <AlertDialog
                                     title="Are you sure?"
                                     content={<Review values={values} />}
@@ -95,7 +97,7 @@ const CreateForm = ({
                                             variant="contained"
                                             onClick={props.open}
                                         >
-                                            Submit
+                                            {buttonText || "Save"}
                                         </Button>
                                     )}
                                 </AlertDialog>

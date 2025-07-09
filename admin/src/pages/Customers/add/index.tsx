@@ -30,7 +30,9 @@ const CustomersAdd = () => {
             actionForm={
                 <CreateForm
                     handleSubmit={handleSubmit}
+                    initialValues={{ emailVerified: false }}
                     isLoading={result.isLoading}
+                    buttonText="Create customer"
                     formElements={<CustomerForm isLoading={result.isLoading} />}
                 />
             }
