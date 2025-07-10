@@ -1,16 +1,17 @@
 import mongoose from "mongoose";
 import { CartModel } from "./Cart";
-import type { Locale, User } from "../types/User";
-import type { ShippingAddress } from "../types/Order";
+import type { Locale, User, UserAddress } from "../types/User";
 import { WishlistModel } from "./Wishlist";
 
-const addressSchema = new mongoose.Schema<ShippingAddress>(
+const addressSchema = new mongoose.Schema<UserAddress>(
     {
-        street: { type: String, required: false },
-        city: { type: String, required: false },
-        state: { type: String, required: false },
-        postalCode: { type: String, required: false },
-        country: { type: String, required: false },
+        street1: { type: String, required: true },
+        street2: { type: String, required: false },
+        city: { type: String, required: true },
+        region: { type: String, required: false },
+        postalCode: { type: String, required: true },
+        country: { type: String, required: true },
+        raw: { type: String, required: false },
     },
     { _id: false }
 );
@@ -56,6 +57,7 @@ const userSchema = new mongoose.Schema<User>(
         _wishlist: { type: mongoose.Schema.Types.ObjectId, ref: "Wishlist" },
         firstName: { type: String, required: true },
         lastName: { type: String, required: true },
+        avatarUrl: { type: String, required: false },
         preferences: [
             {
                 type: mongoose.Schema.Types.ObjectId,

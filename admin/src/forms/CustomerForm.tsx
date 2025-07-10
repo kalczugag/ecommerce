@@ -414,16 +414,15 @@ const CustomerForm = ({ isLoading, isUpdateForm }: CustomerFormProps) => {
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6 }}>
                     <Field name="_role" type="select" validate={required}>
-                        {(props) => (
+                        {({ input, meta }) => (
                             <FormControl fullWidth>
-                                <InputLabel>Role</InputLabel>
+                                <InputLabel error={meta.error && meta.touched}>
+                                    Role
+                                </InputLabel>
                                 <Select
+                                    error={meta.error && meta.touched}
                                     label="Role"
-                                    value={props.input.value}
-                                    onChange={props.input.onChange}
-                                    error={
-                                        props.meta.error && props.meta.touched
-                                    }
+                                    {...input}
                                 >
                                     {isSuccess &&
                                         // @ts-expect-error TS2339
@@ -433,9 +432,9 @@ const CustomerForm = ({ isLoading, isUpdateForm }: CustomerFormProps) => {
                                             </MenuItem>
                                         ))}
                                 </Select>
-                                {props.meta.error && props.meta.touched && (
+                                {meta.error && meta.touched && (
                                     <FormHelperText error>
-                                        {props.meta.error}
+                                        {meta.error}
                                     </FormHelperText>
                                 )}
                             </FormControl>
