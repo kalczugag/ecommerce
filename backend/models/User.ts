@@ -57,7 +57,10 @@ const userSchema = new mongoose.Schema<User>(
         _wishlist: { type: mongoose.Schema.Types.ObjectId, ref: "Wishlist" },
         firstName: { type: String, required: true },
         lastName: { type: String, required: true },
-        avatarUrl: { type: String, required: false },
+        avatar: {
+            url: { type: String },
+            imageId: { type: String },
+        },
         preferences: [
             {
                 type: mongoose.Schema.Types.ObjectId,

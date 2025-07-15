@@ -14,6 +14,7 @@ import payment from "./appRoutes/payment";
 import deliveryMethods from "./appRoutes/deliveryMethods";
 import returns from "./appRoutes/returns";
 import wishlist from "./appRoutes/wishlist";
+import images from "./appRoutes/images";
 
 const router = express.Router();
 
@@ -32,6 +33,7 @@ export default (): express.Router => {
     deliveryMethods(router);
     returns(router);
     wishlist(router);
+    images(router);
 
     return router;
 };

@@ -26,7 +26,7 @@ export const userApi = apiSlice.injectEndpoints({
                 }
 
                 return {
-                    url: "/users",
+                    url: "/admin/users",
                     method: "GET",
                     params: queryParams,
                     keepUnusedDataFor: 300,

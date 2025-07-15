@@ -37,3 +37,4 @@ export * from "./apis/deliveryMethods";
 export * from "./apis/notesApi";
 export * from "./apis/campaignsApi";
 export * from "./apis/analyticsApi";
+export * from "./apis/imagesApi";

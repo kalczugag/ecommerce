@@ -17,6 +17,7 @@
         "@dnd-kit/react": "^0.0.9",
         "@emotion/react": "^11.13.3",
         "@emotion/styled": "^11.13.0",
+        "@imagekit/react": "^5.0.1",
         "@mui/icons-material": "^6.1.5",
         "@mui/lab": "^6.0.0-beta.13",
         "@mui/material": "^6.1.5",

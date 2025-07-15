@@ -20,6 +20,7 @@
         "dotenv": "^16.4.5",
         "express": "^4.19.2",
         "express-session": "^1.18.1",
+        "imagekit": "^6.0.0",
         "ioredis": "^5.4.1",
         "joi": "^17.13.3",
         "jsonwebtoken": "^9.0.2",

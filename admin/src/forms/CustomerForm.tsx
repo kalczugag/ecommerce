@@ -59,7 +59,7 @@ const CustomerForm = ({ isLoading, isUpdateForm }: CustomerFormProps) => {
         <Grid container spacing={6}>
             <Grid container spacing={2} size={{ xs: 12, md: 4 }}>
                 <Grid size={12} mb={2}>
-                    <Field name="photo" validate={validateFile}>
+                    <Field name="image" validate={validateFile}>
                         {({ input, meta }) => (
                             <Box textAlign="center" sx={{ mt: 2 }}>
                                 <Typography variant="h6" gutterBottom>
@@ -68,7 +68,7 @@ const CustomerForm = ({ isLoading, isUpdateForm }: CustomerFormProps) => {
                                 <FormSpy
                                     subscription={{ values: true }}
                                     onChange={({ values }) => {
-                                        const file = values["photo"];
+                                        const file = values["image"];
                                         if (!file) {
                                             setPreview(null);
                                             return;
@@ -161,31 +161,38 @@ const CustomerForm = ({ isLoading, isUpdateForm }: CustomerFormProps) => {
                         )}
                     </Field>
                 </Grid>
-                <Grid size={12}>
-                    <Field name="banned" type="checkbox">
-                        {({ input, meta }) => (
-                            <FormControl
-                                component="fieldset"
-                                error={meta.touched && !!meta.error}
-                            >
-                                <FormLabel component="legend">Banned</FormLabel>
-                                <FormControlLabel
-                                    sx={{ ml: 0 }}
-                                    value="verified"
-                                    control={
-                                        <Switch {...input} color="primary" />
-                                    }
-                                    label={
-                                        <FormHelperText sx={{ ml: 0 }}>
-                                            Apply disable account
-                                        </FormHelperText>
-                                    }
-                                    labelPlacement="start"
-                                />
-                            </FormControl>
-                        )}
-                    </Field>
-                </Grid>
+                {isUpdateForm && (
+                    <Grid size={12}>
+                        <Field name="banned" type="checkbox">
+                            {({ input, meta }) => (
+                                <FormControl
+                                    component="fieldset"
+                                    error={meta.touched && !!meta.error}
+                                >
+                                    <FormLabel component="legend">
+                                        Banned
+                                    </FormLabel>
+                                    <FormControlLabel
+                                        sx={{ ml: 0 }}
+                                        value="verified"
+                                        control={
+                                            <Switch
+                                                {...input}
+                                                color="primary"
+                                            />
+                                        }
+                                        label={
+                                            <FormHelperText sx={{ ml: 0 }}>
+                                                Apply disable account
+                                            </FormHelperText>
+                                        }
+                                        labelPlacement="start"
+                                    />
+                                </FormControl>
+                            )}
+                        </Field>
+                    </Grid>
+                )}
                 <Grid size={12}>
                     <Field name="emailVerified" type="checkbox">
                         {({ input, meta }) => (

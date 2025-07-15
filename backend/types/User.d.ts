@@ -53,7 +53,10 @@ interface User {
     _cart: string | Cart;
     _wishlist: string | Wishlist;
     _role: Role | string;
-    avatarUrl?: string;
+    avatar?: {
+        url: string;
+        imageId: string;
+    };
     firstName: string;
     lastName: string;
     preferences: "men" | "women" | "unisex" | "kids" | "all";

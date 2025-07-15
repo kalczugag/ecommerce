@@ -19,6 +19,7 @@ const schema = Joi.object({
     lastName: Joi.string().required(),
     birthday: Joi.date().iso().optional(),
     locale: Joi.any().optional(),
+    imageId: Joi.string().optional(),
     _role: Joi.string().hex().length(24).optional(),
     address: userAddressSchema,
     phone: Joi.string().optional(),
