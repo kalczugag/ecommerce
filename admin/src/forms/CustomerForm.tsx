@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Field, FormSpy } from "react-final-form";
+import { Field, FormSpy, useForm } from "react-final-form";
 import { useGetRolesQuery } from "@/store";
 import {
     required,
@@ -14,7 +14,6 @@ import {
     Button,
     FormControl,
     FormControlLabel,
-    FormGroup,
     FormHelperText,
     FormLabel,
     Grid2 as Grid,
@@ -51,6 +50,7 @@ const VisuallyHiddenInput = styled("input")({
 const CustomerForm = ({ isLoading, isUpdateForm }: CustomerFormProps) => {
     const { data, isSuccess } = useGetRolesQuery();
 
+    const form = useForm();
     const fileRef = useRef<HTMLInputElement>(null);
 
     const [preview, setPreview] = useState<string | null>(null);
@@ -221,11 +221,13 @@ const CustomerForm = ({ isLoading, isUpdateForm }: CustomerFormProps) => {
                         )}
                     </Field>
                 </Grid>
-                <Grid size={12}>
-                    <Button color="error" variant="contained">
-                        Delete customer
-                    </Button>
-                </Grid>
+                {isUpdateForm && (
+                    <Grid size={12}>
+                        <Button color="error" variant="contained">
+                            Delete customer
+                        </Button>
+                    </Grid>
+                )}
             </Grid>
             <Grid container spacing={2} size={{ xs: 12, md: 8 }}>
                 <Grid size={{ xs: 12, sm: 6 }}>
@@ -269,16 +271,20 @@ const CustomerForm = ({ isLoading, isUpdateForm }: CustomerFormProps) => {
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6 }}>
                     <Field name="phone">
-                        {(props) => (
+                        {({ input, meta }) => (
                             <MuiTelInput
-                                {...props.input}
+                                {...input}
                                 label="Phone number"
                                 placeholder="Enter phone number"
                                 defaultCountry="PL"
-                                error={props.meta.error && props.meta.touched}
+                                onChange={(value, info) => {
+                                    form.change("phone", info);
+                                    return input.onChange(value);
+                                }}
+                                error={meta.error && meta.touched}
                                 helperText={
-                                    props.meta.error && props.meta.touched
-                                        ? props.meta.error
+                                    meta.error && meta.touched
+                                        ? meta.error
                                         : null
                                 }
                                 disabled={isLoading}
@@ -288,7 +294,7 @@ const CustomerForm = ({ isLoading, isUpdateForm }: CustomerFormProps) => {
                     </Field>
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6 }}>
-                    <Field name="country" validate={required}>
+                    <Field name="address.country" validate={required}>
                         {({ input, meta }) => (
                             <Autocomplete
                                 options={countries}
@@ -348,7 +354,7 @@ const CustomerForm = ({ isLoading, isUpdateForm }: CustomerFormProps) => {
                     </Field>
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6 }}>
-                    <Field name="region">
+                    <Field name="address.region">
                         {({ input, meta }) => (
                             <TextField
                                 {...input}
@@ -366,7 +372,7 @@ const CustomerForm = ({ isLoading, isUpdateForm }: CustomerFormProps) => {
                     </Field>
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6 }}>
-                    <Field name="city">
+                    <Field name="address.city">
                         {({ input, meta }) => (
                             <TextField
                                 {...input}
@@ -384,7 +390,7 @@ const CustomerForm = ({ isLoading, isUpdateForm }: CustomerFormProps) => {
                     </Field>
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6 }}>
-                    <Field name="street1">
+                    <Field name="address.street1">
                         {({ input, meta }) => (
                             <TextField
                                 {...input}
@@ -402,7 +408,7 @@ const CustomerForm = ({ isLoading, isUpdateForm }: CustomerFormProps) => {
                     </Field>
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6 }}>
-                    <Field name="postalCode">
+                    <Field name="address.postalCode">
                         {({ input, meta }) => (
                             <TextField
                                 {...input}

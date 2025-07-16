@@ -22,7 +22,11 @@ const schema = Joi.object({
     imageId: Joi.string().optional(),
     _role: Joi.string().hex().length(24).optional(),
     address: userAddressSchema,
-    phone: Joi.string().optional(),
+    phone: Joi.object({
+        countryCallingCode: Joi.string().required(),
+        nationalNumber: Joi.string().required(),
+        extension: Joi.string().optional(),
+    }).optional(),
     email: Joi.string().email().required(),
 });
 

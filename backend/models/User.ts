@@ -76,7 +76,11 @@ const userSchema = new mongoose.Schema<User>(
         locale: { type: userLocaleSchema, required: false, select: false },
         birthday: { type: Date, required: false },
         address: { type: addressSchema, required: false },
-        phone: { type: String, required: false },
+        phone: {
+            countryCallingCode: { type: String, required: false },
+            nationalNumber: { type: String, required: false },
+            extension: { type: String, required: false },
+        },
         email: { type: String, required: true, unique: true },
         hash: { type: String, required: true, select: false },
         salt: { type: String, required: true, select: false },

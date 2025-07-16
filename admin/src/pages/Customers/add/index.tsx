@@ -1,11 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { useAddUserMutation } from "@/store";
-import { enqueueSnackbar } from "notistack";
 import { useUploadImageMutation } from "@/store";
 import { useTitle } from "@/hooks/useTitle";
 import CreateForm from "@/components/CreateForm";
 import CustomerForm from "@/forms/CustomerForm";
 import CrudModule from "@/modules/CrudModule";
+import { useHandleMutation } from "@/hooks/useHandleMutation";
+import type { UserAddress } from "@/types/User";
+import type { MuiTelInputInfo } from "mui-tel-input";
 
 interface FormValues {
     image: HTMLInputElement | null;
@@ -14,35 +16,38 @@ interface FormValues {
     fullName: string;
     email: string;
     password: string;
+    phone?: MuiTelInputInfo;
+    address: UserAddress;
 }
 
 const CustomersAdd = () => {
     const navigate = useNavigate();
-    const [addCategory, result] = useAddUserMutation();
+    const { handleMutation } = useHandleMutation();
+    const [addUser, result] = useAddUserMutation();
 
     const [uploadImage, { isLoading }] = useUploadImageMutation();
 
     useTitle("Customer - Add");
 
     const handleSubmit = async (values: FormValues) => {
-        let avatarPayload;
+        console.log(values);
+        // let avatarPayload;
 
-        if (values.image instanceof File) {
-            const { fileId, url } = await uploadImage(values.image).unwrap();
-            avatarPayload = { imageId: fileId, url };
-        }
-
-        console.log(avatarPayload);
-
-        // try {
-        //     await addCategory(values).unwrap();
-        //     navigate(-1);
-        //     enqueueSnackbar("Customer added successfully", {
-        //         variant: "success",
-        //     });
-        // } catch (error) {
-        //     enqueueSnackbar("Failed to add customer", { variant: "error" });
+        // if (values.image instanceof File) {
+        //     const { fileId, url } = await uploadImage(values.image).unwrap();
+        //     avatarPayload = { imageId: fileId, url };
         // }
+
+        // const payload = {
+        //     ...values,
+        //     avatar: avatarPayload,
+        // };
+
+        // handleMutation({
+        //     values: payload,
+        //     mutation: addUser,
+        //     onSuccess: () => navigate(-1),
+        // });
     };
 
     return (
