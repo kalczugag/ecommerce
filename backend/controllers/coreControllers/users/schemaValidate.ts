@@ -17,6 +17,10 @@ export const userAddressSchema = Joi.object({
 const schema = Joi.object({
     firstName: Joi.string().required(),
     lastName: Joi.string().required(),
+    avatar: Joi.object({
+        url: Joi.string().uri().required(),
+        imageId: Joi.string().hex().length(24).required(),
+    }).optional(),
     birthday: Joi.date().iso().optional(),
     locale: Joi.any().optional(),
     imageId: Joi.string().optional(),

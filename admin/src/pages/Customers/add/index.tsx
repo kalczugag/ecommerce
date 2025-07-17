@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { omit } from "lodash";
 import { useAddUserMutation } from "@/store";
 import { useUploadImageMutation } from "@/store";
 import { useTitle } from "@/hooks/useTitle";
@@ -16,7 +17,7 @@ interface FormValues {
     fullName: string;
     email: string;
     password: string;
-    phone?: MuiTelInputInfo;
+    phone?: string;
     address: UserAddress;
 }
 
@@ -30,24 +31,40 @@ const CustomersAdd = () => {
     useTitle("Customer - Add");
 
     const handleSubmit = async (values: FormValues) => {
-        console.log(values);
-        // let avatarPayload;
+        let avatarPayload;
 
-        // if (values.image instanceof File) {
-        //     const { fileId, url } = await uploadImage(values.image).unwrap();
-        //     avatarPayload = { imageId: fileId, url };
-        // }
+        if (values.image instanceof File) {
+            const { fileId, url } = await uploadImage(values.image).unwrap();
+            avatarPayload = { imageId: fileId, url };
+        }
 
-        // const payload = {
-        //     ...values,
-        //     avatar: avatarPayload,
-        // };
+        const [firstName, ...lastParts] = values.fullName.trim().split(" ");
+        const lastName = lastParts.join(" ");
 
-        // handleMutation({
-        //     values: payload,
-        //     mutation: addUser,
-        //     onSuccess: () => navigate(-1),
-        // });
+        const phoneParts = values.phone ? values.phone.split(" ") : [];
+        const phone = {
+            countryCallingCode: phoneParts[0] || "",
+            nationalNumber: phoneParts
+                .join(" ")
+                .replace(phoneParts[0] || "", "")
+                .trim(),
+        };
+
+        const payload = {
+            ...omit(values, "image", "fullName", "emailVerified"),
+            firstName,
+            lastName,
+            phone,
+            avatar: avatarPayload,
+        };
+
+        console.log(payload);
+
+        handleMutation({
+            values: payload,
+            mutation: addUser,
+            onSuccess: () => navigate(-1),
+        });
     };
 
     return (

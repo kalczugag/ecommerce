@@ -10,7 +10,11 @@ const addressSchema = new mongoose.Schema<UserAddress>(
         city: { type: String, required: true },
         region: { type: String, required: false },
         postalCode: { type: String, required: true },
-        country: { type: String, required: true },
+        country: {
+            code: { type: String, required: true },
+            label: { type: String, required: true },
+            phone: { type: String, required: true },
+        },
         raw: { type: String, required: false },
     },
     { _id: false }
@@ -82,8 +86,8 @@ const userSchema = new mongoose.Schema<User>(
             extension: { type: String, required: false },
         },
         email: { type: String, required: true, unique: true },
-        hash: { type: String, required: true, select: false },
-        salt: { type: String, required: true, select: false },
+        hash: { type: String, required: false, select: false },
+        salt: { type: String, required: false, select: false },
         refreshToken: {
             type: refreshTokenSchema,
             required: false,
