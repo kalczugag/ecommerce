@@ -46,6 +46,7 @@ interface PhoneNumber {
     countryCallingCode: string;
     nationalNumber: string;
     extension?: string;
+    raw?: string;
 }
 
 interface User {
@@ -82,4 +83,11 @@ interface PaginatedUsers extends ParsedQs {
     pageSize: number;
 }
 
-export { User, Locale, PaginatedUsers, UserAddress, PhoneNumber };
+export {
+    User,
+    Locale,
+    PaginatedUsers,
+    CountryOption,
+    UserAddress,
+    PhoneNumber,
+};

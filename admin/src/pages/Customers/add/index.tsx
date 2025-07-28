@@ -33,38 +33,28 @@ const CustomersAdd = () => {
     const handleSubmit = async (values: FormValues) => {
         let avatarPayload;
 
-        if (values.image instanceof File) {
-            const { fileId, url } = await uploadImage(values.image).unwrap();
-            avatarPayload = { imageId: fileId, url };
-        }
+        // if (values.image instanceof File) {
+        //     const { fileId, url } = await uploadImage(values.image).unwrap();
+        //     avatarPayload = { imageId: fileId, url };
+        // }
 
         const [firstName, ...lastParts] = values.fullName.trim().split(" ");
         const lastName = lastParts.join(" ");
-
-        const phoneParts = values.phone ? values.phone.split(" ") : [];
-        const phone = {
-            countryCallingCode: phoneParts[0] || "",
-            nationalNumber: phoneParts
-                .join(" ")
-                .replace(phoneParts[0] || "", "")
-                .trim(),
-        };
 
         const payload = {
             ...omit(values, "image", "fullName", "emailVerified"),
             firstName,
             lastName,
-            phone,
             avatar: avatarPayload,
         };
 
         console.log(payload);
 
-        handleMutation({
-            values: payload,
-            mutation: addUser,
-            onSuccess: () => navigate(-1),
-        });
+        // handleMutation({
+        //     values: payload,
+        //     mutation: addUser,
+        //     onSuccess: () => navigate(-1),
+        // });
     };
 
     return (

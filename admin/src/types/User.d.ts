@@ -21,6 +21,7 @@ interface PhoneNumber {
     countryCallingCode: string;
     nationalNumber: string;
     extension?: string;
+    raw?: string;
 }
 
 interface User {

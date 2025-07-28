@@ -30,6 +30,7 @@ const schema = Joi.object({
         countryCallingCode: Joi.string().required(),
         nationalNumber: Joi.string().required(),
         extension: Joi.string().optional(),
+        raw: Joi.string().optional(),
     }).optional(),
     email: Joi.string().email().required(),
 });

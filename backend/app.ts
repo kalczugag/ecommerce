@@ -13,6 +13,7 @@ import coreRouter from "./routes/v1/coreRouter";
 import "./config/passport";
 import { cleanUpOrders, syncOrderNumberCounter } from "./utils/orderHelpers";
 import { FeaturedCampaignModel } from "./models/FeaturedCampaign";
+import { UserModel } from "./models/User";
 
 const app = express();
 

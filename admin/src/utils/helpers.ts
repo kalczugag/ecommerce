@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import parsePhoneNumberFromString from "libphonenumber-js";
 
 export const placeholderArray = (length: number) => {
     return new Array(length).fill(null);
@@ -38,4 +39,15 @@ export const normalizeValues = <T>(values: T): T => {
         return dayjs.isDayjs(value) ? value.toISOString() : value;
     });
     return JSON.parse(json);
+};
+
+export const parsePhone = (value: string) => {
+    const phone = parsePhoneNumberFromString(value);
+
+    if (!phone) return { countryCallingCode: "", nationalNumber: "" };
+
+    return {
+        countryCallingCode: `+${phone.countryCallingCode}`,
+        nationalNumber: phone.nationalNumber,
+    };
 };

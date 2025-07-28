@@ -28,7 +28,9 @@ import {
 } from "@mui/material";
 import { MuiTelInput } from "mui-tel-input";
 import { PhotoCamera } from "@mui/icons-material";
+import { parsePhone } from "@/utils/helpers";
 import { countries } from "@/constants/countries";
+import parsePhoneNumberFromString from "libphonenumber-js";
 
 interface CustomerFormProps {
     isUpdateForm?: boolean;
@@ -47,10 +49,17 @@ const VisuallyHiddenInput = styled("input")({
     width: 1,
 });
 
+type PhoneValue = {
+    raw: string; // what the user actually typed
+    countryCallingCode?: string;
+    nationalNumber?: string;
+};
+
+const emptyPhone: PhoneValue = { raw: "" };
+
 const CustomerForm = ({ isLoading, isUpdateForm }: CustomerFormProps) => {
     const { data, isSuccess } = useGetRolesQuery();
 
-    const form = useForm();
     const fileRef = useRef<HTMLInputElement>(null);
 
     const [preview, setPreview] = useState<string | null>(null);
@@ -270,27 +279,51 @@ const CustomerForm = ({ isLoading, isUpdateForm }: CustomerFormProps) => {
                     </Field>
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6 }}>
-                    <Field name="phone">
-                        {({ input, meta }) => (
-                            <MuiTelInput
-                                {...input}
-                                label="Phone number"
-                                placeholder="Enter phone number"
-                                defaultCountry="PL"
-                                onChange={(value, info) => {
-                                    form.change("phone", info);
-                                    return input.onChange(value);
-                                }}
-                                error={meta.error && meta.touched}
-                                helperText={
-                                    meta.error && meta.touched
-                                        ? meta.error
-                                        : null
-                                }
-                                disabled={isLoading}
-                                fullWidth
-                            />
-                        )}
+                    <Field<PhoneValue> name="phone" initialValue={emptyPhone}>
+                        {({ input, meta }) => {
+                            const {
+                                countryCallingCode = "",
+                                nationalNumber = "",
+                                raw: rawMaybe,
+                            } = input.value || {};
+
+                            const raw =
+                                rawMaybe ??
+                                [countryCallingCode, nationalNumber]
+                                    .filter(Boolean)
+                                    .join(" ");
+
+                            return (
+                                <MuiTelInput
+                                    {...input}
+                                    value={raw}
+                                    onChange={(val) => {
+                                        const phone =
+                                            parsePhoneNumberFromString(val);
+
+                                        input.onChange(
+                                            phone
+                                                ? {
+                                                      raw: val,
+                                                      countryCallingCode: `+${phone.countryCallingCode}`,
+                                                      nationalNumber:
+                                                          phone.nationalNumber,
+                                                  }
+                                                : { ...input.value, raw: val } // keep raw text while it’s incomplete
+                                        );
+                                    }}
+                                    label="Phone number"
+                                    placeholder="Enter phone number"
+                                    defaultCountry="PL"
+                                    error={meta.touched && Boolean(meta.error)}
+                                    helperText={
+                                        meta.touched ? meta.error : undefined
+                                    }
+                                    disabled={isLoading}
+                                    fullWidth
+                                />
+                            );
+                        }}
                     </Field>
                 </Grid>
                 <Grid size={{ xs: 12, sm: 6 }}>

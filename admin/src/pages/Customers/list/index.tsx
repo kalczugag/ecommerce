@@ -48,11 +48,23 @@ const columns = [
         },
         sortingFn: "alphanumeric",
     }),
-    columnHelper.accessor("phone", {
-        header: "Phone number",
-        cell: (info) => info.getValue() ?? "-",
-        sortingFn: "basic",
-    }),
+    columnHelper.accessor(
+        (row) => {
+            if (!row.phone?.countryCallingCode && !row.phone?.nationalNumber) {
+                return undefined;
+            }
+
+            return `${row.phone?.countryCallingCode ?? ""} ${
+                row.phone?.nationalNumber ?? ""
+            }`.trim();
+        },
+        {
+            header: "Phone number",
+            cell: (info) => info.getValue() ?? "-",
+            sortingFn: "basic",
+        }
+    ),
+
     columnHelper.accessor("email", {
         header: "Email",
         cell: (info) => info.getValue(),
