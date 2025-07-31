@@ -40,14 +40,3 @@ export const normalizeValues = <T>(values: T): T => {
     });
     return JSON.parse(json);
 };
-
-export const parsePhone = (value: string) => {
-    const phone = parsePhoneNumberFromString(value);
-
-    if (!phone) return { countryCallingCode: "", nationalNumber: "" };
-
-    return {
-        countryCallingCode: `+${phone.countryCallingCode}`,
-        nationalNumber: phone.nationalNumber,
-    };
-};

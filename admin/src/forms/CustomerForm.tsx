@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Field, FormSpy, useForm } from "react-final-form";
+import { Field, FormSpy } from "react-final-form";
 import { useGetRolesQuery } from "@/store";
 import {
     required,
@@ -28,7 +28,6 @@ import {
 } from "@mui/material";
 import { MuiTelInput } from "mui-tel-input";
 import { PhotoCamera } from "@mui/icons-material";
-import { parsePhone } from "@/utils/helpers";
 import { countries } from "@/constants/countries";
 import parsePhoneNumberFromString from "libphonenumber-js";
 
@@ -50,7 +49,7 @@ const VisuallyHiddenInput = styled("input")({
 });
 
 type PhoneValue = {
-    raw: string; // what the user actually typed
+    raw: string;
     countryCallingCode?: string;
     nationalNumber?: string;
 };
@@ -309,7 +308,7 @@ const CustomerForm = ({ isLoading, isUpdateForm }: CustomerFormProps) => {
                                                       nationalNumber:
                                                           phone.nationalNumber,
                                                   }
-                                                : { ...input.value, raw: val } // keep raw text while it’s incomplete
+                                                : { ...input.value, raw: val }
                                         );
                                     }}
                                     label="Phone number"
