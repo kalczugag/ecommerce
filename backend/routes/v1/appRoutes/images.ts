@@ -6,7 +6,7 @@ import methods from "../../../controllers/appControllers/images";
 const images = (router: express.Router) => {
     router.get(
         "/images/auth",
-        passport.authenticate("jwt", { session: false }),
+        passport.authenticate(["jwt", "google"], { session: false }),
         methods.auth
     );
 };

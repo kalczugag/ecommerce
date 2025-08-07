@@ -1,10 +1,13 @@
 import {
     ExtractJwt,
-    Strategy,
+    Strategy as JWTStrategy,
     StrategyOptionsWithoutRequest,
 } from "passport-jwt";
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import passport from "passport";
 import { UserModel } from "../models/User";
+import { RoleModel } from "../models/Role";
+import _ from "lodash";
 
 const opts: StrategyOptionsWithoutRequest = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -13,7 +16,7 @@ const opts: StrategyOptionsWithoutRequest = {
 };
 
 passport.use(
-    new Strategy(opts, async (payload, done) => {
+    new JWTStrategy(opts, async (payload, done) => {
         try {
             const user = await UserModel.findById(payload.sub)
                 .populate("_role")
@@ -28,4 +31,47 @@ passport.use(
             return done(error, false);
         }
     })
+);
+
+passport.use(
+    new GoogleStrategy(
+        {
+            clientID: process.env.GOOGLE_CLIENT_ID!,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+            callbackURL: "http://localhost:3000/auth/v1/callback",
+            scope: ["email", "profile"],
+            proxy: true,
+        },
+        async (accessToken, refreshToken, profile, done) => {
+            const existingUser = await UserModel.findOne({
+                googleId: profile.id,
+                email: profile.emails?.[0].value,
+            });
+
+            if (existingUser) return done(null, existingUser);
+
+            let defaultRole = await RoleModel.findOne({
+                name: "client",
+            }).exec();
+
+            if (!defaultRole) {
+                defaultRole = await RoleModel.create({
+                    name: "client",
+                    permissions: ["read"],
+                });
+            }
+
+            const newUser = new UserModel({
+                googleId: profile.id,
+                firstName: profile.name?.givenName,
+                lastName: profile.name?.familyName,
+                email: profile.emails?.[0].value,
+                _role: defaultRole._id,
+            });
+
+            await newUser.save().catch((err) => done(err, false));
+
+            return done(null, newUser);
+        }
+    )
 );

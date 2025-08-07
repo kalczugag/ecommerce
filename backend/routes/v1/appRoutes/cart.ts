@@ -6,13 +6,13 @@ import methods from "../../../controllers/appControllers/cart";
 const cart = (router: express.Router) => {
     router.get(
         "/cart",
-        passport.authenticate("jwt", { session: false }),
+        passport.authenticate(["jwt", "google"], { session: false }),
         methods.read
     );
 
     router.patch(
         "/cart/:id/:promoCode?",
-        passport.authenticate("jwt", { session: false }),
+        passport.authenticate(["jwt", "google"], { session: false }),
         methods.update
     );
 };

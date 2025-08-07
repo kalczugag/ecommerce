@@ -8,7 +8,7 @@ const reviews = (router: express.Router) => {
 
     router.post(
         "/reviews",
-        passport.authenticate("jwt", { session: false }),
+        passport.authenticate(["jwt", "google"], { session: false }),
         methods.create
     );
 };
