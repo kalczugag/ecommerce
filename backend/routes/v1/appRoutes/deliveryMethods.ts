@@ -11,14 +11,14 @@ const deliveryMethods = (router: express.Router) => {
 
     router.post(
         "/deliveryMethods",
-        passport.authenticate("jwt", { session: false }),
+        passport.authenticate(["jwt", "google"], { session: false }),
         hasRole("admin"),
         methods.create
     );
 
     router.patch(
         "/deliveryMethods/:id",
-        passport.authenticate("jwt", { session: false }),
+        passport.authenticate(["jwt", "google"], { session: false }),
         hasRole("admin"),
         methods.update
     );

@@ -6,7 +6,7 @@ import methods from "../../../controllers/appControllers/wishlist";
 const wishlist = (router: express.Router) => {
     router.patch(
         "/wishlist",
-        passport.authenticate("jwt", { session: false }),
+        passport.authenticate(["jwt", "google"], { session: false }),
         methods.update
     );
 };

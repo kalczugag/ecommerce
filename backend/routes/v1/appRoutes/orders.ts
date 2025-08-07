@@ -9,7 +9,7 @@ const orders = (router: express.Router) => {
 
     router.get(
         "/orders/userId/:userId",
-        passport.authenticate("jwt", { session: false }),
+        passport.authenticate(["jwt", "google"], { session: false }),
         methods.readByUserId
     );
 
@@ -17,14 +17,14 @@ const orders = (router: express.Router) => {
 
     router.delete(
         "/orders/:id",
-        passport.authenticate("jwt", { session: false }),
+        passport.authenticate(["jwt", "google"], { session: false }),
         isOwner("order"),
         methods.delete
     );
 
     router.patch(
         "/orders/:id",
-        passport.authenticate("jwt", { session: false }),
+        passport.authenticate(["jwt", "google"], { session: false }),
         hasAddress,
         isOwner("order"),
         methods.update

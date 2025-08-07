@@ -82,6 +82,7 @@ const userSchema = new mongoose.Schema<User>(
     {
         _cart: { type: mongoose.Schema.Types.ObjectId, ref: "Cart" },
         _wishlist: { type: mongoose.Schema.Types.ObjectId, ref: "Wishlist" },
+        _google: { type: String, required: false, select: false },
         firstName: { type: String, required: true },
         lastName: { type: String, required: true },
         avatar: {

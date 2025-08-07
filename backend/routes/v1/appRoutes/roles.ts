@@ -7,13 +7,13 @@ import { hasRole } from "../../../middlewares";
 const roles = (router: express.Router) => {
     router.get(
         "/roles",
-        passport.authenticate("jwt", { session: false }),
+        passport.authenticate(["jwt", "google"], { session: false }),
         hasRole("admin"),
         methods.read
     );
     router.post(
         "/roles",
-        passport.authenticate("jwt", { session: false }),
+        passport.authenticate(["jwt", "google"], { session: false }),
         hasRole("admin"),
         methods.create
     );

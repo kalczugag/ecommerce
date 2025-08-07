@@ -35,7 +35,7 @@ export const createUser = async (
 
         const newUser = new UserModel({
             ...params,
-            role,
+            _role: role,
         });
 
         await newUser.save();

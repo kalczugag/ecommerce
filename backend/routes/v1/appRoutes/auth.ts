@@ -7,7 +7,7 @@ import { cache } from "../../../middlewares";
 const auth = (router: express.Router) => {
     router.get(
         "/auth/current_user",
-        passport.authenticate("jwt", { session: false }),
+        passport.authenticate(["jwt", "google"], { session: false }),
         // cache("current_user"),
         methods.readCurrentUser
     );

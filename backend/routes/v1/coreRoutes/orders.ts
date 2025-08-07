@@ -7,49 +7,49 @@ import { hasRole } from "../../../middlewares";
 const orders = (router: express.Router) => {
     router.get(
         "/orders",
-        passport.authenticate("jwt", { session: false }),
+        passport.authenticate(["jwt", "google"], { session: false }),
         hasRole("admin"),
         methods.read
     );
 
     router.get(
         "/orders/summary",
-        passport.authenticate("jwt", { session: false }),
+        passport.authenticate(["jwt", "google"], { session: false }),
         hasRole("admin"),
         methods.summary
     );
 
     router.get(
         "/orders/cron",
-        passport.authenticate("jwt", { session: false }),
+        passport.authenticate(["jwt", "google"], { session: false }),
         hasRole("admin"),
         methods.updateToCron
     );
 
     router.post(
         "/orders/recalculate/:id",
-        passport.authenticate("jwt", { session: false }),
+        passport.authenticate(["jwt", "google"], { session: false }),
         hasRole("admin"),
         methods.recalculate
     );
 
     router.patch(
         "/orders/:id",
-        passport.authenticate("jwt", { session: false }),
+        passport.authenticate(["jwt", "google"], { session: false }),
         hasRole("admin"),
         methods.update
     );
 
     router.delete(
         "/orders/:id",
-        passport.authenticate("jwt", { session: false }),
+        passport.authenticate(["jwt", "google"], { session: false }),
         hasRole("admin"),
         methods.delete
     );
 
     router.delete(
         "/orders/:orderId/item/:itemId",
-        passport.authenticate("jwt", { session: false }),
+        passport.authenticate(["jwt", "google"], { session: false }),
         hasRole("admin"),
         methods.deleteItem
     );

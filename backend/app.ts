@@ -6,14 +6,12 @@ import cors from "cors";
 import session from "express-session";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
+import passport from "passport";
 
 import appRouter from "./routes/v1/appRouter";
 import coreRouter from "./routes/v1/coreRouter";
 
 import "./config/passport";
-import { cleanUpOrders, syncOrderNumberCounter } from "./utils/orderHelpers";
-import { FeaturedCampaignModel } from "./models/FeaturedCampaign";
-import { UserModel } from "./models/User";
 
 const app = express();
 
@@ -42,6 +40,8 @@ app.use(
         },
     })
 );
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.post(
     "/api/v1/webhook",

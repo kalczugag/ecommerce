@@ -54,6 +54,7 @@ interface User {
     _cart: string | Cart;
     _wishlist: string | Wishlist;
     _role: Role | string;
+    _google?: string;
     avatar?: {
         url: string;
         imageId: string;

@@ -15,21 +15,21 @@ const products = (router: express.Router) => {
 
     router.post(
         "/products",
-        passport.authenticate("jwt", { session: false }),
+        passport.authenticate(["jwt", "google"], { session: false }),
         hasRole("admin"),
         methods.create
     );
 
     router.patch(
         "/products/:id",
-        passport.authenticate("jwt", { session: false }),
+        passport.authenticate(["jwt", "google"], { session: false }),
         hasRole("admin"),
         methods.update
     );
 
     router.delete(
         "/products/:id",
-        passport.authenticate("jwt", { session: false }),
+        passport.authenticate(["jwt", "google"], { session: false }),
         hasRole("admin"),
         methods.delete
     );
