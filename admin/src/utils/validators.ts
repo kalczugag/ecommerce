@@ -38,3 +38,10 @@ export const compose = (
         );
     };
 };
+
+export const validateFile = (file: File | null) => {
+    if (!file) return undefined;
+    return file.size > 3 * 1024 * 1024
+        ? "File too large (max 3 MB)"
+        : undefined;
+};

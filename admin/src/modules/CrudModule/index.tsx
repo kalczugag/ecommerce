@@ -1,49 +1,127 @@
-import { ReactNode, useMemo } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
+import {
+    ColumnDef,
+    getCoreRowModel,
+    useReactTable,
+    SortingState,
+} from "@tanstack/react-table";
+import TableContext from "@/contexts/TableContext";
+import useDebounce from "@/hooks/useDebounce";
+import { normalizeValues } from "@/utils/helpers";
 import CrudLayout from "@/layouts/CrudLayout";
-import Table from "@/components/Table";
+import Table, { type EnhancedTableProps } from "@/components/Table2";
+import { Checkbox } from "@mui/material";
+import TableFilters from "@/components/Table2/components/TableFilters";
 
-export interface TableColumnProps<T = any> {
-    label: string;
-    render: (row: T) => ReactNode;
+export interface CrudModuleProps<T>
+    extends Partial<Omit<EnhancedTableProps<T>, "isLoading">> {
+    actionForm?: ReactNode;
+    withTable?: boolean;
 }
 
-export interface CrudModuleProps {
-    config?: {
-        tableConfig: TableColumnProps[];
-        tableData: any[];
-        action?: (arg: string) => void;
-        total?: number;
-        bolder?: string;
-        isLoading: boolean;
-    };
-    actionForm: JSX.Element;
-    padding?: boolean;
-}
+const createSelectColumn = <T extends object>(): ColumnDef<T, unknown> => ({
+    id: "select",
+    header: ({ table }) => (
+        <Checkbox
+            checked={table.getIsAllRowsSelected()}
+            indeterminate={table.getIsSomeRowsSelected()}
+            onChange={table.getToggleAllRowsSelectedHandler()}
+        />
+    ),
+    cell: ({ row }) => (
+        <Checkbox
+            checked={row.getIsSelected()}
+            indeterminate={row.getIsSomeSelected()}
+            disabled={!row.getCanSelect()}
+            onChange={row.getToggleSelectedHandler()}
+        />
+    ),
+    enableSorting: false,
+});
 
-const CrudModule = ({ config, actionForm }: CrudModuleProps) => {
-    const hasTableConfig = config && config.tableConfig && config.tableData;
+const CrudModule = <T extends object>({
+    columns,
+    queryFn,
+    actionForm,
+    withTable = true,
+}: CrudModuleProps<T>) => {
+    const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 5 });
+    const [sorting, setSorting] = useState<SortingState>([]);
+    const [globalFilter, setGlobalFilters] = useState<any>([]);
 
-    const enhancedTableData = useMemo(() => {
-        return config?.tableData && config?.action
-            ? config.tableData.map((row) => ({
-                  ...row,
-                  bolder: config.bolder || false,
-                  handleDelete: () => config.action!(row._id),
-              }))
-            : config?.tableData;
-    }, [config?.action, config?.bolder, config?.tableData]);
+    const [trigger, result] = queryFn?.() || [];
+    const { data, isFetching } = result || {};
+
+    const queryArgs = useMemo(() => {
+        if (!withTable) return null;
+
+        return {
+            skip: pagination.pageIndex,
+            limit: pagination.pageSize,
+            sort: sorting.map(
+                (s) => `${s.desc ? "-" : ""}${s.id.toLowerCase()}`
+            ),
+            filter: globalFilter,
+        };
+    }, [
+        pagination.pageIndex,
+        pagination.pageSize,
+        sorting,
+        globalFilter,
+        withTable,
+    ]);
+
+    useEffect(() => {
+        if (withTable && trigger && queryArgs) trigger(queryArgs, true);
+    }, [queryArgs]);
+
+    const extendedColumns = useMemo<ColumnDef<T, any>[]>(() => {
+        if (!columns) return [];
+        return [createSelectColumn<T>(), ...columns];
+    }, [columns]);
+
+    const table = useReactTable({
+        data: data?.result || [],
+        columns: extendedColumns,
+        rowCount: data?.count,
+        state: {
+            pagination,
+            sorting,
+            globalFilter,
+        },
+        enableRowSelection: true,
+        manualPagination: true,
+        manualSorting: true,
+        manualFiltering: true,
+        onPaginationChange: setPagination,
+        onSortingChange: setSorting,
+        onGlobalFilterChange: setGlobalFilters,
+        getCoreRowModel: getCoreRowModel(),
+    });
+
+    const handleSubmit = useDebounce((values: any) => {
+        if (withTable) setGlobalFilters(normalizeValues(values));
+    }, 300);
+
+    const hasTable = withTable && table && columns && queryFn;
+    const headerContent = hasTable ? (
+        <TableFilters onSubmit={handleSubmit}>{actionForm}</TableFilters>
+    ) : (
+        <>{actionForm}</>
+    );
 
     return (
-        <CrudLayout headerPanel={actionForm}>
-            {hasTableConfig && (
-                <Table
-                    headerOptions={config.tableConfig}
-                    totalItems={config.total}
-                    rowData={enhancedTableData!}
-                    isLoading={config.isLoading}
-                />
-            )}
-        </CrudLayout>
+        <TableContext.Provider value={table}>
+            <CrudLayout headerPanel={headerContent}>
+                {hasTable && (
+                    <Table
+                        columns={columns}
+                        queryFn={queryFn}
+                        isLoading={isFetching}
+                    />
+                )}
+            </CrudLayout>
+        </TableContext.Provider>
     );
 };
 

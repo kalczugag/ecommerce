@@ -7,6 +7,7 @@ import { WishlistModel } from "../../../models/Wishlist";
 import type { PaginatedProducts } from "../../../types/Product";
 import type { Category } from "../../../types/Category";
 import type { User } from "../../../types/User";
+import { parse } from "path";
 
 const parser = new MongooseQueryParser();
 
@@ -21,6 +22,13 @@ export const getAllProducts = async (
     const { random, category, ...rest } = req.query;
     const user = req.user ? (req.user as User) : null;
     const parsedQuery = parser.parse(rest);
+
+    if (Array.isArray(parsedQuery.filter?.quantity)) {
+        parsedQuery.filter = {
+            ...parsedQuery.filter,
+            quantity: parsedQuery.filter.quantity[0],
+        };
+    }
 
     const page = parsedQuery.skip
         ? parseInt(parsedQuery.skip as unknown as string, 10)

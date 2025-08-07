@@ -74,6 +74,7 @@ export const campaignsApi = apiSlice.injectEndpoints({
 
 export const {
     useGetAllCampaignsQuery,
+    useLazyGetAllCampaignsQuery,
     useGetCampaignByIdQuery,
     useAddCampaignMutation,
 } = campaignsApi;

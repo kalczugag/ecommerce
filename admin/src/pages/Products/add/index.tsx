@@ -14,12 +14,11 @@ const ProductsAdd = () => {
 
     const { data, isLoading } = useGetGroupedCategoriesQuery({
         sorted: true,
-        named: true,
     });
     const [addProduct, result] = useAddProductMutation();
 
     const handleSubmit = async (values: Product) => {
-        const { quantity, ...rest } = values;
+        const { quantity, tags, ...rest } = values;
 
         handleMutation({
             values: {
@@ -37,7 +36,7 @@ const ProductsAdd = () => {
                 <CreateForm
                     handleSubmit={handleSubmit}
                     isLoading={result.isLoading}
-                    formValuesDisplay
+                    // formValuesDisplay
                     formElements={
                         <ProductForm
                             data={data?.result}

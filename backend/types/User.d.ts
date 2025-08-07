@@ -4,7 +4,7 @@ import type { ShippingAddress } from "./Order";
 import type { Role } from "./Role";
 import type { Wishlist } from "./Wishlist";
 
-export interface Locale {
+interface Locale {
     is_eu?: boolean;
     country_name: string;
     country_code?: string;
@@ -26,18 +26,45 @@ export interface Locale {
     time_zone: string;
 }
 
-export interface User {
+interface CountryOption {
+    code: string;
+    label: string;
+    phone: string;
+}
+
+interface UserAddress {
+    street1: string;
+    street2: string;
+    city: string;
+    region?: string;
+    postalCode: string;
+    country: CountryOption;
+    raw?: string;
+}
+
+interface PhoneNumber {
+    countryCallingCode: string;
+    nationalNumber: string;
+    extension?: string;
+    raw?: string;
+}
+
+interface User {
     _id?: string;
     _cart: string | Cart;
     _wishlist: string | Wishlist;
     _role: Role | string;
+    avatar?: {
+        url: string;
+        imageId: string;
+    };
     firstName: string;
     lastName: string;
     preferences: "men" | "women" | "unisex" | "kids" | "all";
     locale: Locale;
     birthday?: Date;
-    address?: ShippingAddress;
-    phone?: string;
+    address?: UserAddress;
+    phone?: PhoneNumber;
     email: string;
     refreshToken: {
         token: string;
@@ -50,8 +77,17 @@ export interface User {
     updatedAt: Date;
 }
 
-export interface PaginatedUsers extends ParsedQs {
+interface PaginatedUsers extends ParsedQs {
     roleName?: string;
     page: number;
     pageSize: number;
 }
+
+export {
+    User,
+    Locale,
+    PaginatedUsers,
+    CountryOption,
+    UserAddress,
+    PhoneNumber,
+};

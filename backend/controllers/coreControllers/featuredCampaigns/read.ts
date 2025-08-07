@@ -23,14 +23,39 @@ export const getAllCampaigns = async (
         : 5;
 
     try {
-        const campaigns = await FeaturedCampaignModel.find(parsedQuery.filter)
-            .populate(parsedQuery.populate)
-            .select(parsedQuery.select)
-            .sort(parsedQuery.sort)
-            .skip(page * pageSize)
-            .limit(pageSize)
-            .lean()
-            .exec();
+        const campaigns = await FeaturedCampaignModel.aggregate([
+            { $match: parsedQuery.filter },
+            {
+                $addFields: {
+                    statusPriority: {
+                        $switch: {
+                            branches: [
+                                {
+                                    case: { $eq: ["$status", "active"] },
+                                    then: 1,
+                                },
+                                {
+                                    case: { $eq: ["$status", "scheduled"] },
+                                    then: 2,
+                                },
+                                {
+                                    case: { $eq: ["$status", "inactive"] },
+                                    then: 3,
+                                },
+                                {
+                                    case: { $eq: ["$status", "completed"] },
+                                    then: 4,
+                                },
+                            ],
+                            default: 99,
+                        },
+                    },
+                },
+            },
+            { $sort: { statusPriority: 1 } },
+            { $skip: page * pageSize },
+            { $limit: pageSize },
+        ]);
 
         const totalDocuments = await FeaturedCampaignModel.countDocuments(
             parsedQuery.filter

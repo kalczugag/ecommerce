@@ -3,7 +3,6 @@ import { successResponse, errorResponse } from "../../../handlers/apiResponse";
 import schema from "./schemaValidate";
 import { UserModel } from "../../../models/User";
 import type { User } from "../../../types/User";
-import { genPassword } from "../../../utils/helpers";
 import { RoleModel } from "../../../models/Role";
 
 export const createUser = async (
@@ -27,8 +26,6 @@ export const createUser = async (
     let params = req.body;
 
     try {
-        const { salt, hash } = genPassword(params.password);
-
         let defaultRole: any;
         if (!params._role) {
             defaultRole = await RoleModel.findOne({ name: "client" }).exec();
@@ -38,8 +35,6 @@ export const createUser = async (
 
         const newUser = new UserModel({
             ...params,
-            hash,
-            salt,
             role,
         });
 

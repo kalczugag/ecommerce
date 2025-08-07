@@ -19,18 +19,35 @@ export const getAllUsers = async (
         ? parseInt(parsedQuery.limit as unknown as string, 10)
         : 5;
 
+    const match: Record<string, any> = {};
+
+    const { search } = parsedQuery.filter;
+
+    if (search) {
+        match.$or = [
+            { firstName: { $regex: search, $options: "i" } },
+            { lastName: { $regex: search, $options: "i" } },
+            { phone: { $regex: search, $options: "i" } },
+            { email: { $regex: search, $options: "i" } },
+        ];
+    }
+
     try {
-        const users = await UserModel.find(parsedQuery.filter)
-            .populate(parsedQuery.populate)
+        let query = UserModel.find(match)
             .select(parsedQuery.select)
             .sort(parsedQuery.sort)
             .skip(page * pageSize)
-            .limit(pageSize)
-            .exec();
+            .limit(pageSize);
 
-        const totalDocuments = await UserModel.countDocuments(
-            parsedQuery.filter
-        );
+        if (parsedQuery.populate) {
+            query = query.populate(parsedQuery.populate);
+        }
+
+        query = query.populate("_role");
+
+        const users = await query.exec();
+
+        const totalDocuments = await UserModel.countDocuments(match);
 
         if (!users || users.length === 0) {
             return res

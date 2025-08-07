@@ -1,64 +1,183 @@
-import { useGetAllProductsQuery, useDeleteProductMutation } from "@/store";
-import { sortConfig, tableConfig } from "./config";
+import { useMemo } from "react";
+import { Field } from "react-final-form";
+import { createColumnHelper } from "@tanstack/react-table";
+import { useLazyGetAllProductsQuery, useDeleteProductMutation } from "@/store";
 import { useTitle } from "@/hooks/useTitle";
-import usePagination from "@/hooks/usePagination";
-import useSortedData from "@/hooks/useSortedData";
-import useDebounce from "@/hooks/useDebounce";
 import { useHandleMutation } from "@/hooks/useHandleMutation";
+import {
+    Avatar,
+    Box,
+    Checkbox,
+    FormControl,
+    InputLabel,
+    ListItemText,
+    MenuItem,
+    OutlinedInput,
+    Select,
+    Stack,
+    Typography,
+} from "@mui/material";
 import CrudModule from "@/modules/CrudModule";
-import SortForm from "@/forms/SortForm";
+import TableActions from "@/components/Table2/components/TableActions";
+import type { Product } from "@/types/Product";
+import moment from "moment";
 import SearchItem from "@/components/SearchItem";
 
-const ProductsList = () => {
-    const [pagination] = usePagination();
-    useTitle("Products - List");
+const columnHelper = createColumnHelper<Product>();
+
+const columns = [
+    columnHelper.accessor("title", {
+        header: "Product",
+        cell: (info) => (
+            <Stack direction="row" spacing={2} alignItems="center">
+                <Avatar
+                    variant="square"
+                    src={info.row.original.imageUrl[0]}
+                    alt="product image"
+                    sx={{ width: 60, height: 60, borderRadius: 2 }}
+                />
+                <Stack spacing={0.3}>
+                    <Typography variant="body2" fontWeight={500}>
+                        {info.getValue()}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                        {info.row.original.thirdLevelCategory.name}
+                    </Typography>
+                </Stack>
+            </Stack>
+        ),
+        sortingFn: "alphanumeric",
+    }),
+    columnHelper.accessor("createdAt", {
+        header: "Create at",
+        cell: (info) => {
+            const date = moment(info.getValue()).format("DD MMM YYYY");
+            const time = moment(info.getValue()).format("hh:mm A");
+
+            return (
+                <Stack direction="column" spacing={0.3}>
+                    <Typography variant="body2">{date}</Typography>
+                    <Typography
+                        variant="subtitle2"
+                        fontSize={12}
+                        color="text.secondary"
+                    >
+                        {time}
+                    </Typography>
+                </Stack>
+            );
+        },
+        sortingFn: "datetime",
+    }),
+    columnHelper.accessor("quantity", {
+        header: "Stock",
+        cell: (info) => {
+            const percentage = Math.floor(((info.getValue() ?? 0) / 150) * 100);
+            const color =
+                percentage > 50 ? "green" : percentage < 50 ? "orange" : "red";
+
+            return (
+                <Stack direction="column" alignItems="center" spacing={1}>
+                    <Box
+                        sx={{
+                            width: "100%",
+                            minWidth: "100px",
+                            height: 6,
+                            borderRadius: 4,
+                            overflow: "hidden",
+                        }}
+                        className="bg-[#E0E0E0] dark:bg-dark-primary"
+                    >
+                        <Box
+                            sx={{
+                                width: `${percentage}%`,
+                                height: "100%",
+                                backgroundColor: color,
+                            }}
+                        />
+                    </Box>
+                    <Box sx={{ color: "text.secondary" }}>
+                        {info.getValue()} in stock
+                    </Box>
+                </Stack>
+            );
+        },
+        sortingFn: "basic",
+    }),
+    columnHelper.accessor((row) => `$${row.price.toFixed(2)}`, {
+        header: "Price",
+        cell: (info) => info.getValue(),
+        sortingFn: "basic",
+    }),
+    columnHelper.display({
+        id: "actions",
+        cell: ({ row }) => <ActionCell row={row} />,
+        enableSorting: false,
+    }),
+];
+
+const ActionCell = ({ row }: { row: any }) => {
     const { handleMutation } = useHandleMutation();
-
-    const { sortCriteria, setSortCriteria } = useSortedData();
-    const { data, isFetching } = useGetAllProductsQuery({
-        ...pagination,
-        ...sortCriteria,
-    });
-
-    const [deleteProduct, result] = useDeleteProductMutation();
-
-    const handleSort = (sortValues: any) => {
-        setSortCriteria(sortValues);
-    };
-
-    const handleSearch = useDebounce((search: { search: string }) => {
-        const filter = { $text: { $search: search.search } };
-
-        setSortCriteria({ filter });
-    }, 250);
+    const [deleteProduct] = useDeleteProductMutation();
 
     const handleDelete = (id: string) => {
-        // handleMutation({
-        //     values: id,
-        //     mutation: deleteProduct,
-        // });
         alert(
             "Delete functionality is disabled for now. Please check the code comments."
         );
-    };
-
-    const config = {
-        tableConfig,
-        tableData: data?.result || [],
-        total: data?.count || 0,
-        action: handleDelete,
-        isLoading: isFetching || result.isLoading,
+        // handleMutation({
+        //     values: id,
+        //     mutation: deleteProduct,
+        //     successMessage: "Product deleted successfully",
+        //     errorMessage: "Failed to delete product",
+        // });
     };
 
     return (
+        <TableActions id={row.original._id || ""} handleDelete={handleDelete} />
+    );
+};
+
+const stockOptions = [
+    { value: { $gt: 0 }, label: "In stock" },
+    { value: { $lt: 30 }, label: "Low stock" },
+    { value: { $lte: 0 }, label: "Out of stock" },
+];
+
+const ProductsList = () => {
+    useTitle("Products - List");
+
+    const filterElements = useMemo(
+        () => (
+            <Stack direction="row" spacing={2}>
+                <Field name="quantity">
+                    {({ input }) => (
+                        <FormControl sx={{ minWidth: 200 }}>
+                            <InputLabel>Stock</InputLabel>
+                            <Select
+                                {...input}
+                                input={<OutlinedInput label="Stock" />}
+                            >
+                                {stockOptions.map((option, index) => (
+                                    // @ts-expect-error ignoring object type for values
+                                    <MenuItem key={index} value={option.value}>
+                                        {option.label}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    )}
+                </Field>
+                <SearchItem />
+            </Stack>
+        ),
+        []
+    );
+
+    return (
         <CrudModule
-            config={config}
-            actionForm={
-                <div className="space-y-4">
-                    <SearchItem handleSubmit={handleSearch} />
-                    <SortForm config={sortConfig} handleSubmit={handleSort} />
-                </div>
-            }
+            actionForm={filterElements}
+            columns={columns}
+            queryFn={useLazyGetAllProductsQuery}
         />
     );
 };

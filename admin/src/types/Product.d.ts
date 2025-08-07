@@ -15,6 +15,7 @@ export interface Product {
         quantity: number;
     }[];
     quantity?: number;
+    tags?: string[];
     analytics: {
         average: number;
         reviewCount: number;
@@ -25,4 +26,6 @@ export interface Product {
     secondLevelCategory: Category;
     thirdLevelCategory: Category;
     description?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
 }

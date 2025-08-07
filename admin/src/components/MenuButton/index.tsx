@@ -1,5 +1,12 @@
 import { ReactNode, useState } from "react";
-import { Button, IconButton, Menu, MenuItem } from "@mui/material";
+import {
+    Button,
+    IconButton,
+    ListItemIcon,
+    ListItemText,
+    Menu,
+    MenuItem,
+} from "@mui/material";
 
 interface MenuButtonProps {
     children: ReactNode;
@@ -7,6 +14,7 @@ interface MenuButtonProps {
     size?: "small" | "medium" | "large";
     elements: {
         label: ReactNode;
+        icon?: ReactNode;
         onClick?: () => void;
     }[];
 }
@@ -44,7 +52,8 @@ const MenuButton = ({
                             el.onClick?.();
                         }}
                     >
-                        {el.label}
+                        {el.icon && <ListItemIcon>{el.icon}</ListItemIcon>}
+                        <ListItemText>{el.label}</ListItemText>
                     </MenuItem>
                 ))}
             </Menu>

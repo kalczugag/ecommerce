@@ -183,6 +183,8 @@ interface UpdateOrder extends Omit<Order, "_user" | "shipments"> {
 interface PaginatedOrders extends ParsedQs {
     skip: number;
     limit: number;
+    orderDate?: Date;
+    search?: string;
 }
 
 export {

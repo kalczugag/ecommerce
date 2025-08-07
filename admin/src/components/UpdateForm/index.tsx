@@ -2,14 +2,14 @@ import { cloneElement, isValidElement, ReactElement, ReactNode } from "react";
 import { Form, FormSpy } from "react-final-form";
 import arrayMutators from "final-form-arrays";
 import { useNavigate } from "react-router-dom";
-import { Button, Divider } from "@mui/material";
+import { Button } from "@mui/material";
 import Loading from "../Loading";
 import AlertDialog from "../AlertDialog";
 import Review from "../Review";
-import FormValuesDisplay from "../FormValuesDisplay";
 
 interface UpdateModalProps {
     formElements: ReactNode;
+    buttonText?: string;
     initialValues: any;
     isLoading: boolean;
     formValuesDisplay?: boolean;
@@ -18,6 +18,7 @@ interface UpdateModalProps {
 
 const UpdateForm = ({
     handleSubmit,
+    buttonText,
     initialValues,
     formElements,
     isLoading,
@@ -56,30 +57,18 @@ const UpdateForm = ({
                                             <div />
                                         )}
                                     </div>
-                                    {formValuesDisplay && (
-                                        <>
-                                            <Divider
-                                                flexItem
-                                                orientation="vertical"
-                                                sx={{ mx: 2 }}
-                                            />
-                                            <FormValuesDisplay
-                                                values={values}
-                                            />
-                                        </>
-                                    )}
                                 </div>
                             )}
                         </FormSpy>
-                        <div className="flex space-x-2 mt-8">
-                            <Button
+                        <div className="flex justify-end space-x-2 mt-8">
+                            {/* <Button
                                 type="button"
                                 variant="contained"
                                 color="inherit"
                                 onClick={() => navigate(-1)}
                             >
                                 Cancel
-                            </Button>
+                            </Button> */}
                             <AlertDialog
                                 title="Are you sure?"
                                 content={<Review values={values} />}
@@ -92,7 +81,7 @@ const UpdateForm = ({
                                         variant="contained"
                                         onClick={props.open}
                                     >
-                                        Save
+                                        {buttonText || "Save changes"}
                                     </Button>
                                 )}
                             </AlertDialog>

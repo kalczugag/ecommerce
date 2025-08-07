@@ -32,11 +32,16 @@ const CustomersEdit = () => {
         }
     };
 
+    const user = data?.result || {};
+
     return (
         <CrudModule
             actionForm={
                 <UpdateForm
-                    initialValues={data?.result}
+                    initialValues={{
+                        ...user,
+                        fullName: user.firstName + " " + user.lastName,
+                    }}
                     handleSubmit={handleSubmit}
                     isLoading={isLoading || result.isLoading}
                     formElements={<CustomerForm isLoading={result.isLoading} />}

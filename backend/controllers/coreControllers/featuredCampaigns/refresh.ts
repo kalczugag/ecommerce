@@ -9,59 +9,51 @@ export const refreshCampaigns = async (
     res: express.Response
 ) => {
     try {
-        const camapigns = await FeaturedCampaignModel.find({});
+        const campaigns = await FeaturedCampaignModel.find({});
+        const now = new Date();
 
-        const filteredCampaigns = camapigns.reduce(
-            (acc, campaign) => {
-                if (campaign.status === "active") {
-                    acc.active += 1;
-                } else if (campaign.status === "inactive") {
-                    acc.inactive += 1;
-                } else if (campaign.status === "scheduled") {
-                    acc.scheduled += 1;
-                } else if (campaign.status === "completed") {
-                    acc.completed += 1;
-                }
+        const summary = {
+            active: 0,
+            inactive: 0,
+            scheduled: 0,
+            completed: 0,
+            total: 0,
+        };
 
-                acc.total++;
+        const updatePromises = campaigns.map(async (campaign) => {
+            let newStatus = campaign.status;
 
-                return acc;
-            },
-            {
-                active: 0,
-                inactive: 0,
-                scheduled: 0,
-                completed: 0,
-                total: 0,
+            if (campaign.endDate < now) {
+                newStatus = "completed";
+            } else if (campaign.startDate > now) {
+                newStatus = "scheduled";
+            } else if (campaign.startDate <= now && campaign.endDate >= now) {
+                newStatus = "active";
+            } else {
+                newStatus = "inactive";
             }
-        );
 
-        const campaignsGlobalSummary =
-            await CampaignsGlobalSummaryModel.findOne({});
+            if (campaign.status !== newStatus) {
+                campaign.status = newStatus;
+                await campaign.save({ validateBeforeSave: false });
+            }
 
-        let refreshedCampaignsGlobalSummary;
-        if (!campaignsGlobalSummary) {
-            refreshedCampaignsGlobalSummary = new CampaignsGlobalSummaryModel(
-                filteredCampaigns
+            summary[newStatus]++;
+            summary.total++;
+        });
+
+        await Promise.all(updatePromises);
+
+        let refreshedCampaignsGlobalSummary =
+            await CampaignsGlobalSummaryModel.findOneAndUpdate(
+                {},
+                { $set: summary },
+                { new: true, upsert: true }
             );
-            refreshedCampaignsGlobalSummary.save();
-        } else {
-            refreshedCampaignsGlobalSummary =
-                await CampaignsGlobalSummaryModel.findOneAndUpdate(
-                    {},
-                    { $set: filteredCampaigns }
-                );
-        }
 
         return res
             .status(201)
-            .json(
-                successResponse(
-                    filteredCampaigns,
-                    "Refreshed successfully",
-                    201
-                )
-            );
+            .json(successResponse(summary, "Refreshed successfully", 201));
     } catch (error) {
         console.error(error);
         return res

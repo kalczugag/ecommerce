@@ -39,7 +39,7 @@ const ProductsEdit = () => {
         return <NotFound />;
 
     const handleSubmit = async (values: Product) => {
-        const { quantity, ...rest } = values;
+        const { quantity, tags, ...rest } = values;
 
         handleMutation({
             values: {

@@ -1,16 +1,44 @@
 import mongoose from "mongoose";
 import { CartModel } from "./Cart";
-import type { Locale, User } from "../types/User";
-import type { ShippingAddress } from "../types/Order";
+import type {
+    CountryOption,
+    Locale,
+    PhoneNumber,
+    User,
+    UserAddress,
+} from "../types/User";
 import { WishlistModel } from "./Wishlist";
 
-const addressSchema = new mongoose.Schema<ShippingAddress>(
+const countryOptionSchema = new mongoose.Schema<CountryOption>(
     {
-        street: { type: String, required: false },
-        city: { type: String, required: false },
-        state: { type: String, required: false },
-        postalCode: { type: String, required: false },
-        country: { type: String, required: false },
+        code: { type: String, required: true },
+        label: { type: String, required: true },
+        phone: { type: String, required: true },
+    },
+    { _id: false }
+);
+
+const phoneNumberSchema = new mongoose.Schema<PhoneNumber>(
+    {
+        countryCallingCode: { type: String, required: false },
+        nationalNumber: { type: String, required: false },
+        extension: { type: String, required: false },
+        raw: { type: String, required: false },
+    },
+    { _id: false }
+);
+
+const addressSchema = new mongoose.Schema<UserAddress>(
+    {
+        street1: { type: String, required: true },
+        street2: { type: String, required: false },
+        city: { type: String, required: true },
+        region: { type: String, required: false, alias: "state" },
+        postalCode: { type: String, required: true },
+        country: {
+            type: countryOptionSchema,
+        },
+        raw: { type: String, required: false },
     },
     { _id: false }
 );
@@ -56,6 +84,10 @@ const userSchema = new mongoose.Schema<User>(
         _wishlist: { type: mongoose.Schema.Types.ObjectId, ref: "Wishlist" },
         firstName: { type: String, required: true },
         lastName: { type: String, required: true },
+        avatar: {
+            url: { type: String },
+            imageId: { type: String },
+        },
         preferences: [
             {
                 type: mongoose.Schema.Types.ObjectId,
@@ -70,11 +102,11 @@ const userSchema = new mongoose.Schema<User>(
         },
         locale: { type: userLocaleSchema, required: false, select: false },
         birthday: { type: Date, required: false },
-        address: { type: addressSchema, required: false },
-        phone: { type: String, required: false },
+        address: { type: addressSchema, required: false, default: undefined },
+        phone: { type: phoneNumberSchema, required: false, default: undefined },
         email: { type: String, required: true, unique: true },
-        hash: { type: String, required: true, select: false },
-        salt: { type: String, required: true, select: false },
+        hash: { type: String, required: false, select: false },
+        salt: { type: String, required: false, select: false },
         refreshToken: {
             type: refreshTokenSchema,
             required: false,

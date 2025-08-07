@@ -1,8 +1,14 @@
 import express from "express";
+import { MongooseQueryParser } from "mongoose-query-parser";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import tz from "dayjs/plugin/timezone";
 import { errorResponse, successResponse } from "../../../handlers/apiResponse";
 import { OrderModel } from "../../../models/Order";
 import { PaginatedOrders } from "../../../types/Order";
-import { MongooseQueryParser } from "mongoose-query-parser";
+
+dayjs.extend(utc);
+dayjs.extend(tz);
 
 const statusPriority = {
     placed: 1,
@@ -29,9 +35,66 @@ export const getAllOrders = async (
         ? parseInt(parsedQuery.limit as unknown as string, 10)
         : 5;
 
+    const match: Record<string, any> = {};
+
+    const { search, orderDate } = parsedQuery.filter;
+
+    if (orderDate) {
+        const iso = new Date(orderDate);
+
+        const localDay = dayjs(iso).tz("Europe/Warsaw");
+
+        const start = localDay.startOf("day").utc().toDate();
+        const end = localDay.add(1, "day").startOf("day").utc().toDate();
+
+        match.createdAt = { $gte: start, $lt: end };
+    }
+
+    if (search) {
+        const parsedNumber = parseInt(search, 10);
+        const isNum = !isNaN(parsedNumber);
+
+        match.$or = [
+            ...(isNum ? [{ orderNumber: parsedNumber }] : []),
+            { "_user.firstName": { $regex: search, $options: "i" } },
+            { "_user.lastName": { $regex: search, $options: "i" } },
+            { "_user.email": { $regex: search, $options: "i" } },
+        ];
+    }
+
     try {
-        const orders = await OrderModel.aggregate([
-            { $match: parsedQuery.filter },
+        const pipeline = [
+            {
+                $lookup: {
+                    from: "baseitems",
+                    localField: "items",
+                    foreignField: "_id",
+                    as: "items",
+                },
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "_user",
+                    foreignField: "_id",
+                    pipeline: [
+                        { $project: { firstName: 1, lastName: 1, email: 1 } },
+                    ],
+                    as: "_user",
+                },
+            },
+            {
+                $lookup: {
+                    from: "payments",
+                    localField: "payments",
+                    foreignField: "_id",
+                    pipeline: [{ $project: { paymentStatus: 1 } }],
+                    as: "payments",
+                },
+            },
+            {
+                $match: match,
+            },
             {
                 $addFields: {
                     statusPriority: {
@@ -48,41 +111,35 @@ export const getAllOrders = async (
                 },
             },
             {
-                $lookup: {
-                    from: "users",
-                    localField: "_user",
-                    foreignField: "_id",
-                    pipeline: [{ $project: { firstName: 1, lastName: 1 } }],
-                    as: "_user",
-                },
-            },
-            {
                 $set: {
                     _user: { $arrayElemAt: ["$_user", 0] },
                 },
             },
+            { $sort: { statusPriority: 1 as 1, createdAt: -1 as -1 } },
+        ];
+
+        const result = await OrderModel.aggregate([
+            ...pipeline,
             {
-                $lookup: {
-                    from: "payments",
-                    localField: "payments",
-                    foreignField: "_id",
-                    pipeline: [{ $project: { paymentStatus: 1 } }],
-                    as: "payments",
+                $facet: {
+                    data: [{ $skip: page * pageSize }, { $limit: pageSize }],
+                    total: [{ $count: "count" }],
                 },
             },
-            { $sort: { statusPriority: 1, createdAt: -1 } },
-            { $skip: page * pageSize },
-            { $limit: pageSize },
         ]);
 
-        const totalDocuments = await OrderModel.countDocuments(
-            parsedQuery.filter
-        );
+        // const countResult = await OrderModel.aggregate([
+        //     ...pipeline,
+        //     { $count: "total" },
+        // ]);
+
+        const orders = result[0]?.data || [];
+        const totalDocuments = result[0]?.total[0]?.count || 0;
 
         if (!orders.length) {
             return res
                 .status(404)
-                .json(errorResponse(null, "No orders found", 404));
+                .json(errorResponse([], "No orders found", 404));
         }
 
         return res

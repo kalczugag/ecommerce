@@ -15,16 +15,13 @@ const GeneralSettingsModule = () => {
     }
 
     return (
-        <>
-            <FormControl>
-                <InputLabel>Theme</InputLabel>
-                <Select value={mode} label="Theme" onChange={handleChange}>
-                    <MenuItem value="light">Light</MenuItem>
-                    <MenuItem value="dark">Dark</MenuItem>
-                </Select>
-            </FormControl>
-            <Divider />
-        </>
+        <FormControl>
+            <InputLabel>Theme</InputLabel>
+            <Select value={mode} label="Theme" onChange={handleChange}>
+                <MenuItem value="light">Light</MenuItem>
+                <MenuItem value="dark">Dark</MenuItem>
+            </Select>
+        </FormControl>
     );
 };
 

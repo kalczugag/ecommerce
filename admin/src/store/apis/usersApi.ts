@@ -26,7 +26,7 @@ export const userApi = apiSlice.injectEndpoints({
                 }
 
                 return {
-                    url: "/users",
+                    url: "/admin/users",
                     method: "GET",
                     params: queryParams,
                     keepUnusedDataFor: 300,
@@ -85,7 +85,7 @@ export const userApi = apiSlice.injectEndpoints({
 
         addUser: builder.mutation<ApiResponseObject<User>, User>({
             query: (values) => ({
-                url: "/users",
+                url: "/admin/users",
                 method: "POST",
                 body: values,
             }),
@@ -132,6 +132,7 @@ export const userApi = apiSlice.injectEndpoints({
 
 export const {
     useGetAllUsersQuery,
+    useLazyGetAllUsersQuery,
     useGetUsersByRoleQuery,
     useGetUserByIdQuery,
     useAddUserMutation,
