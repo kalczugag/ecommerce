@@ -49,12 +49,26 @@ interface PhoneNumber {
     raw?: string;
 }
 
+type Provider =
+    | "local"
+    | "google"
+    | "facebook"
+    | "github"
+    | "apple"
+    | "twitter"
+    | "microsoft"
+    | "linkedin"
+    | "discord"
+    | "spotify"
+    | "custom";
+
 interface User {
     _id?: string;
     _cart: string | Cart;
     _wishlist: string | Wishlist;
     _role: Role | string;
-    _google?: string;
+    provider?: Provider | string;
+    providerAccountId?: string;
     avatar?: {
         url: string;
         imageId: string;
@@ -67,6 +81,7 @@ interface User {
     address?: UserAddress;
     phone?: PhoneNumber;
     email: string;
+    emailVerified: Date | null;
     refreshToken: {
         token: string;
         expires: string;

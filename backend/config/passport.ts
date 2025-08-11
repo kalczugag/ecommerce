@@ -1,10 +1,11 @@
+import passport from "passport";
 import {
     ExtractJwt,
     Strategy as JWTStrategy,
     StrategyOptionsWithoutRequest,
 } from "passport-jwt";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
-import passport from "passport";
+import { Strategy as FacebookStrategy } from "passport-facebook";
 import { UserModel } from "../models/User";
 import { RoleModel } from "../models/Role";
 import _ from "lodash";
@@ -38,7 +39,7 @@ passport.use(
         {
             clientID: process.env.GOOGLE_CLIENT_ID!,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-            callbackURL: "http://localhost:3000/auth/v1/callback",
+            callbackURL: "http://localhost:3000/auth/v1/google/callback",
             scope: ["email", "profile"],
             proxy: true,
         },
@@ -73,5 +74,16 @@ passport.use(
 
             return done(null, newUser);
         }
+    )
+);
+
+passport.use(
+    new FacebookStrategy(
+        {
+            clientID: process.env.FACEBOOK_CLIENT_ID!,
+            clientSecret: process.env.FACEBOOK_CLIENT_SECRET!,
+            callbackURL: "http://localhost:3000/auth/v1/facebook/callback",
+        },
+        async (accessToken, refreshToken, profile, done) => {}
     )
 );

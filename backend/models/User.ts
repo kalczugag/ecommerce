@@ -82,7 +82,6 @@ const userSchema = new mongoose.Schema<User>(
     {
         _cart: { type: mongoose.Schema.Types.ObjectId, ref: "Cart" },
         _wishlist: { type: mongoose.Schema.Types.ObjectId, ref: "Wishlist" },
-        _google: { type: String, required: false, select: false },
         firstName: { type: String, required: true },
         lastName: { type: String, required: true },
         avatar: {
@@ -101,11 +100,14 @@ const userSchema = new mongoose.Schema<User>(
             ref: "Role",
             required: false,
         },
+        provider: { type: String, required: false },
+        providerAccountId: { type: String, required: false },
         locale: { type: userLocaleSchema, required: false, select: false },
         birthday: { type: Date, required: false },
         address: { type: addressSchema, required: false, default: undefined },
         phone: { type: phoneNumberSchema, required: false, default: undefined },
         email: { type: String, required: true, unique: true },
+        emailVerified: { type: Date, default: null },
         hash: { type: String, required: false, select: false },
         salt: { type: String, required: false, select: false },
         refreshToken: {
@@ -123,6 +125,8 @@ userSchema.index({
     email: "text",
     phone: "text",
 });
+
+userSchema.index({ email: 1 }, { unique: true, sparse: true });
 
 userSchema.post("save", async function (doc) {
     try {
