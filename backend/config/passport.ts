@@ -40,7 +40,6 @@ passport.use(
             clientID: process.env.GOOGLE_CLIENT_ID!,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
             callbackURL: "http://localhost:3000/auth/v1/google/callback",
-            scope: ["email", "profile"],
             proxy: true,
         },
         async (accessToken, refreshToken, profile, done) => {
@@ -83,6 +82,7 @@ passport.use(
             clientID: process.env.FACEBOOK_CLIENT_ID!,
             clientSecret: process.env.FACEBOOK_CLIENT_SECRET!,
             callbackURL: "http://localhost:3000/auth/v1/facebook/callback",
+            enableProof: true,
         },
         async (accessToken, refreshToken, profile, done) => {}
     )
