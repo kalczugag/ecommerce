@@ -34,56 +34,56 @@ passport.use(
     })
 );
 
-passport.use(
-    new GoogleStrategy(
-        {
-            clientID: process.env.GOOGLE_CLIENT_ID!,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-            callbackURL: "http://localhost:3000/auth/v1/google/callback",
-            proxy: true,
-        },
-        async (accessToken, refreshToken, profile, done) => {
-            const existingUser = await UserModel.findOne({
-                googleId: profile.id,
-                email: profile.emails?.[0].value,
-            });
+// passport.use(
+//     new GoogleStrategy(
+//         {
+//             clientID: process.env.GOOGLE_CLIENT_ID!,
+//             clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+//             callbackURL: "http://localhost:3000/auth/v1/google/callback",
+//             proxy: true,
+//         },
+//         async (accessToken, refreshToken, profile, done) => {
+//             const existingUser = await UserModel.findOne({
+//                 googleId: profile.id,
+//                 email: profile.emails?.[0].value,
+//             });
 
-            if (existingUser) return done(null, existingUser);
+//             if (existingUser) return done(null, existingUser);
 
-            let defaultRole = await RoleModel.findOne({
-                name: "client",
-            }).exec();
+//             let defaultRole = await RoleModel.findOne({
+//                 name: "client",
+//             }).exec();
 
-            if (!defaultRole) {
-                defaultRole = await RoleModel.create({
-                    name: "client",
-                    permissions: ["read"],
-                });
-            }
+//             if (!defaultRole) {
+//                 defaultRole = await RoleModel.create({
+//                     name: "client",
+//                     permissions: ["read"],
+//                 });
+//             }
 
-            const newUser = new UserModel({
-                googleId: profile.id,
-                firstName: profile.name?.givenName,
-                lastName: profile.name?.familyName,
-                email: profile.emails?.[0].value,
-                _role: defaultRole._id,
-            });
+//             const newUser = new UserModel({
+//                 googleId: profile.id,
+//                 firstName: profile.name?.givenName,
+//                 lastName: profile.name?.familyName,
+//                 email: profile.emails?.[0].value,
+//                 _role: defaultRole._id,
+//             });
 
-            await newUser.save().catch((err) => done(err, false));
+//             await newUser.save().catch((err) => done(err, false));
 
-            return done(null, newUser);
-        }
-    )
-);
+//             return done(null, newUser);
+//         }
+//     )
+// );
 
-passport.use(
-    new FacebookStrategy(
-        {
-            clientID: process.env.FACEBOOK_CLIENT_ID!,
-            clientSecret: process.env.FACEBOOK_CLIENT_SECRET!,
-            callbackURL: "http://localhost:3000/auth/v1/facebook/callback",
-            enableProof: true,
-        },
-        async (accessToken, refreshToken, profile, done) => {}
-    )
-);
+// passport.use(
+//     new FacebookStrategy(
+//         {
+//             clientID: process.env.FACEBOOK_CLIENT_ID!,
+//             clientSecret: process.env.FACEBOOK_CLIENT_SECRET!,
+//             callbackURL: "http://localhost:3000/auth/v1/facebook/callback",
+//             enableProof: true,
+//         },
+//         async (accessToken, refreshToken, profile, done) => {}
+//     )
+// );
