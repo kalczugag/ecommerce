@@ -20,7 +20,6 @@ import {
     ListItemButton,
     ListItemIcon,
     ListItemText,
-    Tooltip,
 } from "@mui/material";
 import Copyright from "../Copyright";
 import type { NavLinksMenuProps, NavLink } from "./types";
@@ -138,67 +137,68 @@ const DesktopMenu = ({ links, fontSize = "medium" }: NavLinksMenuProps) => {
                                             collapsed ? false : true
                                         }
                                     >
-                                        <Tooltip
-                                            title={collapsed ? link.label : ""}
-                                            placement="right"
-                                            disableHoverListener={!collapsed}
+                                        <ListItemButton
+                                            onClick={() => handleClick(link)}
+                                            sx={{
+                                                minHeight: 48,
+                                                justifyContent: collapsed
+                                                    ? "center"
+                                                    : "initial",
+                                                px: collapsed ? 1 : 2,
+                                            }}
                                         >
-                                            <ListItemButton
-                                                onClick={() =>
-                                                    handleClick(link)
-                                                }
+                                            <ListItemIcon
                                                 sx={{
-                                                    minHeight: 48,
-                                                    justifyContent: collapsed
-                                                        ? "center"
-                                                        : "initial",
-                                                    px: collapsed ? 1 : 2,
+                                                    color: "#e5e5e5",
+                                                    minWidth: collapsed
+                                                        ? 0
+                                                        : 40,
+                                                    mr: collapsed ? "auto" : 2,
+                                                    justifyContent: "center",
                                                 }}
                                             >
-                                                <ListItemIcon
-                                                    sx={{
-                                                        color: "#e5e5e5",
-                                                        minWidth: collapsed
-                                                            ? 0
-                                                            : 40,
-                                                        mr: collapsed
-                                                            ? "auto"
-                                                            : 2,
-                                                        justifyContent:
-                                                            "center",
-                                                    }}
-                                                >
-                                                    {link.icon ? (
-                                                        link.icon
-                                                    ) : index % 2 === 0 ? (
-                                                        <Inbox
-                                                            fontSize={fontSize}
-                                                        />
-                                                    ) : (
-                                                        <Mail
-                                                            fontSize={fontSize}
-                                                        />
-                                                    )}
-                                                </ListItemIcon>
-                                                {!collapsed && (
-                                                    <ListItemText
-                                                        primary={link.label}
-                                                        primaryTypographyProps={{
-                                                            sx: fontSizeMap[
-                                                                fontSize
-                                                            ].primary,
-                                                        }}
+                                                {link.icon ? (
+                                                    <Box position="relative">
+                                                        {link.icon}
+                                                        {hasSubLinks &&
+                                                            collapsed && (
+                                                                <ChevronRight
+                                                                    fontSize={
+                                                                        fontSize
+                                                                    }
+                                                                    sx={{
+                                                                        position:
+                                                                            "absolute",
+                                                                    }}
+                                                                />
+                                                            )}
+                                                    </Box>
+                                                ) : index % 2 === 0 ? (
+                                                    <Inbox
+                                                        fontSize={fontSize}
                                                     />
+                                                ) : (
+                                                    <Mail fontSize={fontSize} />
                                                 )}
-                                                {!collapsed &&
-                                                    hasSubLinks &&
-                                                    (isOpen ? (
-                                                        <ExpandLess />
-                                                    ) : (
-                                                        <ExpandMore />
-                                                    ))}
-                                            </ListItemButton>
-                                        </Tooltip>
+                                            </ListItemIcon>
+                                            {!collapsed && (
+                                                <ListItemText
+                                                    primary={link.label}
+                                                    primaryTypographyProps={{
+                                                        sx: fontSizeMap[
+                                                            fontSize
+                                                        ].primary,
+                                                    }}
+                                                />
+                                            )}
+                                            {!collapsed &&
+                                                hasSubLinks &&
+                                                (isOpen ? (
+                                                    <ExpandLess />
+                                                ) : (
+                                                    <ExpandMore />
+                                                ))}
+                                        </ListItemButton>
                                     </ListItem>
                                     {hasSubLinks && !collapsed && (
                                         <Collapse
