@@ -20,15 +20,17 @@ import {
     ListItemButton,
     ListItemIcon,
     ListItemText,
+    useMediaQuery,
 } from "@mui/material";
 import Copyright from "../Copyright";
 import type { NavLinksMenuProps, NavLink } from "./types";
 
 const DesktopMenu = ({ links, fontSize = "medium" }: NavLinksMenuProps) => {
+    const isMobile = useMediaQuery("(max-width: 1024px)");
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const { pathname } = useLocation();
-    const { collapsed } = useAppSelector((state) => state.sidebar);
+    const { collapsed, isOpen } = useAppSelector((state) => state.sidebar);
 
     const [activeKeys, setActiveKeys] = useState<string[]>([]);
 
@@ -44,6 +46,7 @@ const DesktopMenu = ({ links, fontSize = "medium" }: NavLinksMenuProps) => {
 
     const handleClick = (link: NavLink, isSubLink = false) => {
         if (link.to) {
+            if (isMobile && isOpen) toggleDrawer(false);
             if (link.to !== pathname) navigate(link.to);
             if (!isSubLink && (!link.subLinks || link.subLinks.length === 0))
                 collapseAll();
@@ -62,23 +65,25 @@ const DesktopMenu = ({ links, fontSize = "medium" }: NavLinksMenuProps) => {
             role="presentation"
             className="py-6 bg-dark-primary text-text-dark dark:bg-darker h-full relative transition-all duration-300"
         >
-            <IconButton
-                onClick={toggleCollapse}
-                size="small"
-                sx={{
-                    position: "absolute",
-                    right: "-10px",
-                    top: "20px",
-                    backgroundColor: "background.paper",
-                    boxShadow: 1,
-                    zIndex: 1,
-                    "&:hover": {
-                        backgroundColor: "action.hover",
-                    },
-                }}
-            >
-                {collapsed ? <ChevronRight /> : <ChevronLeft />}
-            </IconButton>
+            {!isMobile && (
+                <IconButton
+                    onClick={toggleCollapse}
+                    size="small"
+                    sx={{
+                        position: "absolute",
+                        right: "-10px",
+                        top: "20px",
+                        backgroundColor: "background.paper",
+                        boxShadow: 1,
+                        zIndex: 1,
+                        "&:hover": {
+                            backgroundColor: "action.hover",
+                        },
+                    }}
+                >
+                    {collapsed ? <ChevronRight /> : <ChevronLeft />}
+                </IconButton>
+            )}
 
             <div
                 className={`relative flex items-center ${
