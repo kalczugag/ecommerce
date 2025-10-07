@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toggleCollapsed, toggleSidebar } from "@/store";
 import { useAppDispatch, useAppSelector } from "@/hooks/useStore";
@@ -33,6 +33,10 @@ const DesktopMenu = ({ links, fontSize = "medium" }: NavLinksMenuProps) => {
     const { collapsed, isOpen } = useAppSelector((state) => state.sidebar);
 
     const [activeKeys, setActiveKeys] = useState<string[]>([]);
+
+    useEffect(()=>{
+        if(isMobile && collapsed) dispatch(toggleCollapsed(false));
+    },[isMobile])
 
     const fontSizeMap = {
         small: { primary: { fontSize: "0.875rem" }, section: "text-xs" },
