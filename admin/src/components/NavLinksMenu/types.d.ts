@@ -7,10 +7,12 @@ export interface NavLink {
     onClick?: () => void;
 }
 
+export interface NavLinkSection {
+    sectionLabel: string;
+    elements: NavLink[];
+}
+
 export interface NavLinksMenuProps {
-    links: {
-        sectionLabel: string;
-        elements: NavLink[];
-    }[];
+    links: NavLinkSection[];
     fontSize?: "small" | "medium" | "large";
 }

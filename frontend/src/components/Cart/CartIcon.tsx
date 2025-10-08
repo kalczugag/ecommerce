@@ -208,7 +208,7 @@ const CartIcon = ({ count, isMobile }: CartIconProps) => {
                                         <Button
                                             variant="contained"
                                             onClick={handleCheckout}
-                                            loading={loading.add}
+                                            loading={loading.add ?? false}
                                             loadingPosition="end"
                                             disabled={loading.get || isEmpty}
                                         >

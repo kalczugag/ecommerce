@@ -1,28 +1,11 @@
 import { Fragment, useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { toggleCollapsed, toggleSidebar } from "@/store";
 import { useAppDispatch, useAppSelector } from "@/hooks/useStore";
-import {
-    ChevronLeft,
-    ChevronRight,
-    ExpandLess,
-    ExpandMore,
-    Inbox,
-    Mail,
-} from "@mui/icons-material";
-import {
-    Box,
-    Collapse,
-    Divider,
-    IconButton,
-    List,
-    ListItem,
-    ListItemButton,
-    ListItemIcon,
-    ListItemText,
-    useMediaQuery,
-} from "@mui/material";
+import { toggleCollapsed, toggleSidebar } from "@/store";
+import { ChevronLeft, ChevronRight } from "@mui/icons-material";
+import { Box, Divider, IconButton, useMediaQuery } from "@mui/material";
 import Copyright from "../Copyright";
+import MenuSection from "./MenuSection";
 import type { NavLinksMenuProps, NavLink } from "./types";
 
 const DesktopMenu = ({ links, fontSize = "medium" }: NavLinksMenuProps) => {
@@ -34,18 +17,16 @@ const DesktopMenu = ({ links, fontSize = "medium" }: NavLinksMenuProps) => {
 
     const [activeKeys, setActiveKeys] = useState<string[]>([]);
 
-    useEffect(()=>{
-        if(isMobile && collapsed) dispatch(toggleCollapsed(false));
-    },[isMobile])
+    useEffect(() => {
+        if (isMobile && collapsed) dispatch(toggleCollapsed(false));
+    }, [isMobile]);
 
-    const fontSizeMap = {
-        small: { primary: { fontSize: "0.875rem" }, section: "text-xs" },
-        medium: { primary: { fontSize: "1rem" }, section: "text-sm" },
-        large: { primary: { fontSize: "1.125rem" }, section: "text-base" },
-    };
+    useEffect(() => {
+        if (collapsed) setActiveKeys([]);
+    }, [collapsed]);
 
     const toggleCollapse = () => dispatch(toggleCollapsed(!collapsed));
-    const toggleDrawer = (newOpen: boolean) => dispatch(toggleSidebar(newOpen));
+    const toggleDrawer = (open: boolean) => dispatch(toggleSidebar(open));
     const collapseAll = () => setActiveKeys([]);
 
     const handleClick = (link: NavLink, isSubLink = false) => {
@@ -80,9 +61,7 @@ const DesktopMenu = ({ links, fontSize = "medium" }: NavLinksMenuProps) => {
                         backgroundColor: "background.paper",
                         boxShadow: 1,
                         zIndex: 1,
-                        "&:hover": {
-                            backgroundColor: "action.hover",
-                        },
+                        "&:hover": { backgroundColor: "action.hover" },
                     }}
                 >
                     {collapsed ? <ChevronRight /> : <ChevronLeft />}
@@ -106,11 +85,12 @@ const DesktopMenu = ({ links, fontSize = "medium" }: NavLinksMenuProps) => {
                         <img
                             src="/icons/logoWhite.svg"
                             alt="logo"
-                            style={{ height: "60px", width: "120px" }}
+                            style={{ height: 60, width: 120 }}
                         />
                     </Link>
                 )}
             </div>
+
             {links.map((section, index) => (
                 <Fragment key={section.sectionLabel}>
                     {index !== 0 && (
@@ -118,176 +98,20 @@ const DesktopMenu = ({ links, fontSize = "medium" }: NavLinksMenuProps) => {
                             sx={{
                                 marginBottom: "16px",
                                 marginLeft: collapsed ? "0" : "16px",
-                                marginRight: collapsed ? "0" : undefined,
                                 borderColor: "#6b7280",
                             }}
                         />
                     )}
-                    <List
-                        subheader={
-                            !collapsed && (
-                                <h5
-                                    className={`px-4 text-gray-400 text-sm font-semibold ${fontSizeMap[fontSize].section}`}
-                                >
-                                    {section.sectionLabel}
-                                </h5>
-                            )
-                        }
-                    >
-                        {section.elements.map((link, index) => {
-                            const hasSubLinks =
-                                link.subLinks && link.subLinks.length > 0;
-                            const isOpen = activeKeys.includes(link.key);
-
-                            return (
-                                <Fragment key={link.key}>
-                                    <ListItem
-                                        disablePadding={
-                                            collapsed ? false : true
-                                        }
-                                    >
-                                        <ListItemButton
-                                            onClick={() => handleClick(link)}
-                                            sx={{
-                                                minHeight: 48,
-                                                justifyContent: collapsed
-                                                    ? "center"
-                                                    : "initial",
-                                                px: collapsed ? 1 : 2,
-                                            }}
-                                        >
-                                            <ListItemIcon
-                                                sx={{
-                                                    color: "#e5e5e5",
-                                                    minWidth: collapsed
-                                                        ? 0
-                                                        : 40,
-                                                    mr: collapsed ? "auto" : 2,
-                                                    justifyContent: "center",
-                                                }}
-                                            >
-                                                {link.icon ? (
-                                                    <Box position="relative">
-                                                        {link.icon}
-                                                        {hasSubLinks &&
-                                                            collapsed && (
-                                                                <ChevronRight
-                                                                    fontSize={
-                                                                        fontSize
-                                                                    }
-                                                                    sx={{
-                                                                        position:
-                                                                            "absolute",
-                                                                    }}
-                                                                />
-                                                            )}
-                                                    </Box>
-                                                ) : index % 2 === 0 ? (
-                                                    <Inbox
-                                                        fontSize={fontSize}
-                                                    />
-                                                ) : (
-                                                    <Mail fontSize={fontSize} />
-                                                )}
-                                            </ListItemIcon>
-                                            {!collapsed && (
-                                                <ListItemText
-                                                    primary={link.label}
-                                                    primaryTypographyProps={{
-                                                        sx: fontSizeMap[
-                                                            fontSize
-                                                        ].primary,
-                                                    }}
-                                                />
-                                            )}
-                                            {!collapsed &&
-                                                hasSubLinks &&
-                                                (isOpen ? (
-                                                    <ExpandLess />
-                                                ) : (
-                                                    <ExpandMore />
-                                                ))}
-                                        </ListItemButton>
-                                    </ListItem>
-                                    {hasSubLinks && !collapsed && (
-                                        <Collapse
-                                            in={isOpen}
-                                            timeout="auto"
-                                            unmountOnExit
-                                        >
-                                            <List
-                                                component="div"
-                                                disablePadding
-                                                sx={{
-                                                    position: "relative",
-                                                    pl: 5.5,
-                                                    "&:before": {
-                                                        content: '""',
-                                                        position: "absolute",
-                                                        top: 0,
-                                                        bottom: 22,
-                                                        left: 27,
-                                                        width: 2,
-                                                        backgroundColor:
-                                                            "#9ca3af",
-                                                    },
-                                                }}
-                                            >
-                                                {link.subLinks?.map(
-                                                    (subLink) => (
-                                                        <ListItem
-                                                            key={subLink.key}
-                                                            disablePadding
-                                                            sx={{
-                                                                pl: 3,
-                                                                position:
-                                                                    "relative",
-                                                                "&:before": {
-                                                                    content:
-                                                                        '""',
-                                                                    position:
-                                                                        "absolute",
-                                                                    top: "50%",
-                                                                    left: "-16px",
-                                                                    width: 40,
-                                                                    height: 2,
-                                                                    backgroundColor:
-                                                                        "#9ca3af",
-                                                                },
-                                                            }}
-                                                        >
-                                                            <ListItemButton
-                                                                onClick={() =>
-                                                                    handleClick(
-                                                                        subLink,
-                                                                        true
-                                                                    )
-                                                                }
-                                                            >
-                                                                <ListItemText
-                                                                    primary={
-                                                                        subLink.label
-                                                                    }
-                                                                    primaryTypographyProps={{
-                                                                        sx: fontSizeMap[
-                                                                            fontSize
-                                                                        ]
-                                                                            .primary,
-                                                                    }}
-                                                                />
-                                                            </ListItemButton>
-                                                        </ListItem>
-                                                    )
-                                                )}
-                                            </List>
-                                        </Collapse>
-                                    )}
-                                </Fragment>
-                            );
-                        })}
-                    </List>
+                    <MenuSection
+                        section={section}
+                        collapsed={collapsed}
+                        fontSize={fontSize}
+                        activeKeys={activeKeys}
+                        handleClick={handleClick}
+                    />
                 </Fragment>
             ))}
+
             {!collapsed && <Copyright />}
         </Box>
     );
