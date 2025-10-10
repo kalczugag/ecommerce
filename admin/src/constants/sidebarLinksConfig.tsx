@@ -7,7 +7,7 @@ import {
     Layers,
     Storage,
 } from "@mui/icons-material";
-import type { NavLink } from "@/components/NavLinksMenu";
+import type { NavLink } from "@/components/NavLinksMenu/types";
 
 interface LinksProps {
     sectionLabel: string;
